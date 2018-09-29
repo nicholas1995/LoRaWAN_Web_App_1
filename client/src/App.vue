@@ -1,12 +1,17 @@
 <template>
   <div id="app">
-    <router-view></router-view>
+    <!--<router-view></router-view>-->
+    <register></register>
   </div>
 </template>
 
 <script>
+import register from './components/Register'
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+    register
+  }
 }
 </script>
 

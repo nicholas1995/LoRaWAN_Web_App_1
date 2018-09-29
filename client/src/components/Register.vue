@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Register</h1>
+    <h1>Register User </h1>
       <!--First Name-->
       <input  
         type="string"
@@ -58,7 +58,7 @@
   
 
 <script>
-import AuthenticationService from '../services/AuthenticationService.js'
+import AuthenticationService from '../services/AuthenticationService.js';
 export default {
   data () {
     return {
@@ -70,6 +70,9 @@ export default {
       email: "",
       password: ""
     }
+  },
+  components: {
+    
   },
   methods: {
     async register (){
