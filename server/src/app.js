@@ -10,8 +10,8 @@ app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors()); //DO RESEACH ON THIS.... 29:42 on first video
 
-app.get('/', (req, res) => {
-    res.send(`Hello World`);
+app.post('/register', (req, res) => {
+    res.send(`Hello ${req.body.email} World`);
 });
 
 app.listen(config.port, () =>{
