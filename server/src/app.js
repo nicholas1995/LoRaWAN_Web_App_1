@@ -6,7 +6,7 @@ const mysql = require('mysql');
 const config = require('./configeration/config');
 const app = express();
 
-app.use(morgan('combined'));
+//app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors()); //DO RESEACH ON THIS.... 29:42 on first video
 

@@ -14,6 +14,32 @@ module.exports = ((app, db) => {
             }
         });
     });
-});
 
- 
+        //User Login
+        app.post('/login', (req, res) => {
+            let sql = `SELECT *
+            FROM users
+            WHERE email = '${req.body.email}'`;
+        let query = db.query(sql, (err, result) => {
+            if(err){
+                res.status(500).send('Problem occured while trying to connect.');
+            }
+            else{
+                if(result== '')
+                {   //Email does not exists
+                    res.status(403).send('Incorrect email or password!'); 
+                }
+                else{
+                    if(req.body.password == result[0].password){
+                        //Correct Credentials
+                        res.status(200).send('Logged In!');
+                    }
+                    else{
+                        //Incorrect Password
+                        res.status(403).send('Incorrect  password!');
+                    }
+                }
+            }
+        });
+}); 
+}); 
