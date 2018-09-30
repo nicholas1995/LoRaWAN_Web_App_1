@@ -30,29 +30,29 @@ module.exports = {
 
             switch (error.details[0].context.key) {
                 case 'email':
-                    res.send('You must provide valid email');
+                    res.status(422).send('You must provide valid email');
                     break;
                 case 'password':
-                    res.send('Enter valid password');
+                    res.status(422).send('Enter valid password');
                     break;
                 case 'first_name':
-                    res.send('Enter Valied First Name');
+                    res.status(422).send('Enter Valied First Name');
                     break;
                 case 'last_name': 
-                    res.send('Enter valid Last Name');
+                    res.status(422).send('Enter valid Last Name');
                     break;
                 case 'address':
-                    res.send('Enter Valid Address');
+                    res.status(422).send('Enter Valid Address');
                     break;
                 case 'home_phone':
                 console.log(req.body.home_phone);
-                    res.send('Enter valid Home Phone Number');
+                    res.status(422).send('Enter valid Home Phone Number');
                     break;
                 case 'mobile_phone':
-                    res.send('Enter valid Mobile Phone Number');
+                    res.status(422).send('Enter valid Mobile Phone Number');
                     break;
                 default:
-                res.send('Invalid Information');
+                res.status(422).send('Invalid Information');
             }
         } else {
             next();

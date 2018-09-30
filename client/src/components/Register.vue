@@ -57,6 +57,8 @@
         v-model="password"
         placeholder="Password"/> 
       <br>
+      {{error}}
+      <br>
       <button
       @click= "register">Register </button>
 
@@ -75,7 +77,8 @@ export default {
       home_phone: "",
       mobile_phone: "",
       email: "",
-      password: ""
+      password: "",
+      error: ""
     }
   },
   components: {
@@ -83,16 +86,21 @@ export default {
   },
   methods: {
     async register (){
-      const response = await AuthenticationService.register({
+      try{
+      await AuthenticationService.register({
         first_name: this.first_name,
         last_name: this.last_name ,
         address: this.address ,
         home_phone: this.home_phone ,
         mobile_phone: this.mobile_phone ,
         email: this.email ,
-        password: this.password 
+        password: this.password
       });
-      console.log(response.data);
+      }catch(error){      
+        console.log(error.response.data);
+        this.error = error.response.data;
+      }
+
     }
   }
 }
