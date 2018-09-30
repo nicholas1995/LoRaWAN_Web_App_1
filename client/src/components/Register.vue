@@ -97,7 +97,6 @@ export default {
         password: this.password
       });
       }catch(error){      
-        console.log(error.response.data);
         this.error = error.response.data;
       }
 
