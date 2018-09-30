@@ -2,6 +2,7 @@
   <div>
     <h1>Register User </h1>
       <!--First Name-->
+      First Name<br>
       <input  
         type="string"
         name="first_name"
@@ -9,6 +10,7 @@
         placeholder="First name"/> 
       <br>
       <!--Last Name-->
+      Last Name<br>
       <input  
         type="string"
         name="last_name"
@@ -16,6 +18,7 @@
         placeholder="Last name"/> 
       <br>
       <!--Address-->
+      Address<br>
       <input  
         type="string"
         name="address"
@@ -23,6 +26,7 @@
         placeholder="Address"/> 
       <br>
       <!--Home Phone-->
+      Home Phone<br>
       <input  
         type="tel"
         name="home_phone"
@@ -30,6 +34,7 @@
         placeholder="Home Phone"/> 
       <br>
       <!--Mobile Phone-->
+      Mobile Phone<br>
       <input  
         type="tel"
         name="mobile_phone"
@@ -37,6 +42,7 @@
         placeholder="Mobile Phone"/> 
       <br>
       <!--EMAIL-->
+      Email<br>
       <input    
         type="email"
         name="email"
@@ -44,6 +50,7 @@
         placeholder="Email"/> 
       <br>
       <!--Password-->
+      Password<br>
       <input    
         type="password"
         name="password"

@@ -14,8 +14,13 @@ module.exports = {
                 new RegExp('^[a-zA-Z]{1,32}$')
             ),
             address: Joi.string().min(1).max(40),
-            home_phone: Joi.number(),
-            mobile_phone: Joi.number()
+            home_phone: Joi.string().regex(
+                new RegExp('^[0-9]{7,10}$')
+            ),
+            mobile_phone: Joi.string().regex(
+                new RegExp('^[0-9]{7,10}$')
+            ),
+            
 
         }
         const {error, value} = Joi.validate(req.body, schema)
