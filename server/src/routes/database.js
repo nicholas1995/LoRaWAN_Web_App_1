@@ -1,4 +1,6 @@
 const CreateUserPolicy = require('../policies/CreateUserPolicy');
+const jwebt = require('jsonwebtoken');
+const config = require('../configeration/config');
 module.exports = ((app, db) => {
     //Create User
     app.post('/register', CreateUserPolicy.register, (req, res) => {
@@ -32,14 +34,16 @@ module.exports = ((app, db) => {
                 else{
                     if(req.body.password == result[0].password){
                         //Correct Credentials
-                        res.status(200).send('Logged In!');
+                        res.send({
+                           user: result[0]
+                        });
                     }
                     else{
                         //Incorrect Password
-                        res.status(403).send('Incorrect  password!');
+                        res.status(403).send('Incorrect  password!'); 
                     }
                 }
-            }
+            } 
         });
 }); 
 }); 

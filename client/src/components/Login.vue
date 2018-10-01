@@ -27,32 +27,36 @@
   
 
 <script>
-import AuthenticationService from '../services/AuthenticationService.js';
+import AuthenticationService from "../services/AuthenticationService.js";
 export default {
-  data () {
+  data() {
     return {
       email: "",
       password: "",
       error: ""
-    }
+    };
   },
-  components: {
-    
-  },
+  components: {},
   methods: {
-    async login (){
-      try{
-      await AuthenticationService.login({
-        email: this.email ,
-        password: this.password
-      });
-      }catch(error){      
+    async login() {
+      var response;
+      var check = 0; //this is to ensure that only when correct data is entered we log the user information 
+      try {
+        response = await AuthenticationService.login({
+          email: this.email,
+          password: this.password
+        });
+      } catch (error) {
         this.error = error.response.data;
+        check = 1;
       }
-
+      if (check == 0) {
+        console.log(response.data);
+      }
+      check = 0;
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
