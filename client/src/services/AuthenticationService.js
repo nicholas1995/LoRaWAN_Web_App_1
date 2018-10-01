@@ -7,5 +7,9 @@ export default {
     },
     login(credentials){
         return Api().post('login', credentials); 
+    },
+    loginNewUser(credentials){
+        console.log(credentials);
+        return Api().post('login/newuser', credentials); 
     }
 };
