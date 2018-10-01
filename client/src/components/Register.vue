@@ -58,15 +58,6 @@
           autocomplete="off"
           placeholder="Email"/> 
         <br>
-        <!--Password-->
-        Password<br>
-        <input    
-          type="password"
-          name="password"
-          v-model="password"
-          autocomplete="off"
-          placeholder="Password"/> 
-        <br>
         {{error}}
       </form>
       <br>
@@ -88,7 +79,6 @@ export default {
       home_phone: "",
       mobile_phone: "",
       email: "",
-      password: "",
       error: ""
     }
   },
@@ -104,8 +94,7 @@ export default {
         address: this.address ,
         home_phone: this.home_phone ,
         mobile_phone: this.mobile_phone ,
-        email: this.email ,
-        password: this.password
+        email: this.email 
       });
       }catch(error){      
         this.error = error.response.data;
