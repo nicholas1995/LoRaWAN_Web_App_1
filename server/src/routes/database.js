@@ -1,6 +1,27 @@
 const CreateUserPolicy = require('../policies/CreateUserPolicy');
 const jwebt = require('jsonwebtoken');
 const config = require('../configeration/config');
+
+function jwebtUserSignin(user){
+    return jwebt.sign(user, config.authentication.jwebtSecret, {
+        expiresIn: '24h'
+    });
+}
+
+function toJSON(user) { //this converts the user data returned from the database query to a json object
+    return {
+        "email": user[0].email,
+        "first_name": user[0].first_name,
+        "last_name": user[0].last_name,
+        "password": user[0].password,
+        "address": user[0].address,
+        "home_phone": user[0].home_phone,
+        "mobile_phone": user[0].mobile_phone,
+        "date_created": user[0].date_created
+    }
+};
+
+
 module.exports = ((app, db) => {
     //Create User
     app.post('/register', CreateUserPolicy.register, (req, res) => {
@@ -34,8 +55,10 @@ module.exports = ((app, db) => {
                 else{
                     if(req.body.password == result[0].password){
                         //Correct Credentials
+                        var userJSON = toJSON(result);
                         res.send({
-                           user: result[0]
+                           user: userJSON,
+                           token: jwebtUserSignin(userJSON)
                         });
                     }
                     else{
@@ -46,4 +69,4 @@ module.exports = ((app, db) => {
             } 
         });
 }); 
-}); 
+});  

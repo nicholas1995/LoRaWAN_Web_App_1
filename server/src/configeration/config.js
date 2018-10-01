@@ -6,5 +6,8 @@ module.exports = {
         user     : 'root',
         password : '',
         database: 'application'
-    }  
+    },
+    authentication:{
+        jwebtSecret: 'project'
+    }
 }
