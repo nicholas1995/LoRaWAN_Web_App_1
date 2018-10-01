@@ -2,62 +2,73 @@
   <div>
     <h1>Register User </h1>
       <!--First Name-->
-      First Name<br>
-      <input  
-        type="string"
-        name="first_name"
-        v-model="first_name"
-        placeholder="First name"/> 
-      <br>
-      <!--Last Name-->
-      Last Name<br>
-      <input  
-        type="string"
-        name="last_name"
-        v-model="last_name"
-        placeholder="Last name"/> 
-      <br>
-      <!--Address-->
-      Address<br>
-      <input  
-        type="string"
-        name="address"
-        v-model="address"
-        placeholder="Address"/> 
-      <br>
-      <!--Home Phone-->
-      Home Phone<br>
-      <input  
-        type="tel"
-        name="home_phone"
-        v-model="home_phone"
-        placeholder="Home Phone"/> 
-      <br>
-      <!--Mobile Phone-->
-      Mobile Phone<br>
-      <input  
-        type="tel"
-        name="mobile_phone"
-        v-model="mobile_phone"
-        placeholder="Mobile Phone"/> 
-      <br>
-      <!--EMAIL-->
-      Email<br>
-      <input    
-        type="email"
-        name="email"
-        v-model="email"
-        placeholder="Email"/> 
-      <br>
-      <!--Password-->
-      Password<br>
-      <input    
-        type="password"
-        name="password"
-        v-model="password"
-        placeholder="Password"/> 
-      <br>
-      {{error}}
+      <form
+      name = "NewUser"
+      autocomplete="off">
+        First Name<br>
+        <input  
+          type="string"
+          name="first_name"
+          v-model="first_name"
+          autocomplete="off"
+          placeholder="First name"/> 
+        <br>
+        <!--Last Name-->
+        Last Name<br>
+        <input  
+          type="string"
+          name="last_name"
+          v-model="last_name"
+          autocomplete="off"
+          placeholder="Last name"/> 
+        <br>
+        <!--Address-->
+        Address<br>
+        <input  
+          type="string"
+          name="address"
+          v-model="address"
+          autocomplete="off"
+          placeholder="Address"/> 
+        <br>
+        <!--Home Phone-->
+        Home Phone<br>
+        <input  
+          type="tel"
+          name="home_phone"
+          v-model="home_phone"
+          autocomplete="off"
+          placeholder="Home Phone"/> 
+        <br>
+        <!--Mobile Phone-->
+        Mobile Phone<br>
+        <input  
+          type="tel"
+          name="mobile_phone"
+          v-model="mobile_phone"
+          autocomplete="off"
+          placeholder="Mobile Phone"/> 
+        <br>
+        <!--EMAIL-->
+        Email<br>
+        <input    
+          type="email"
+          name="email"
+          v-model="email"
+          autocomplete="off"
+          placeholder="Email"/> 
+        <br>
+        <!--Password-->
+        Password<br>
+        <input    
+          type="password"
+          name="password"
+          v-model="password"
+          autocomplete="off"
+          placeholder="Password"/> 
+        <br>
+        {{error}}
+      </form>
       <br>
       <button
       @click= "register">Register </button>
