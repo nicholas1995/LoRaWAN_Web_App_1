@@ -2,6 +2,8 @@ const CreateUserPolicy = require('../policies/CreateUserPolicy');
 const jwebt = require('jsonwebtoken');
 const config = require('../configeration/config');
 const Math = require('mathjs');
+const nodemailer = require('nodemailer');
+
 
 
 function jwebtUserSignin(user){
@@ -27,6 +29,26 @@ function randomPasswordGenerator(){
     return Math.random(0,2).toString(36).substring(2, 10) 
 };
 
+//Create Email to send to user
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth:{
+        user: 'lorawanconsole@gmail.com',
+        pass: 'LoRaWAN1234'
+    }
+});
+
+function mailOptions(user,password) {
+    return {
+        from: 'lorawanconsole@gmail.com',
+        to: user.email,
+        subject: 'Login Credentials LoRaWAN Console',
+        html: `<h1>Good Day ${user.first_name}</h1> 
+        <p>Your credentials were added to the LoRaWAN system.</p>
+        <p>Please login using your email and the following password credential</p>
+        <h2>Password: ${password}</h2>`
+    }
+};
 
 
 module.exports = ((app, db) => {
@@ -42,6 +64,13 @@ module.exports = ((app, db) => {
             }else{
             console.log(result);
                 res.status(201).send('User Created....');
+                transporter.sendMail(mailOptions(req.body,pw),(error, info) => {
+                    if (error) {
+                        console.log(error);
+                      } else {
+                        console.log('Email sent: ' + info.response);
+                      }
+                });
             }
         });
     });
