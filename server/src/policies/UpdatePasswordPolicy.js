@@ -2,7 +2,6 @@ const Joi = require('joi');
 
 module.exports = {
     updateUserPassword (user,res, next){
-        console.log(user);
         const schema = {
             newpassword: Joi.string().regex(
                 new RegExp('^[a-zA-Z0-9\@\_\%\&]{8,32}$')

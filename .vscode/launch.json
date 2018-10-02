@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/server/src/policies/UpdatePasswordPolicy.js",
+            "program": "${workspaceFolder}/server/delete1.js",
             "stopOnEntry": true
         }
     ]

@@ -9,5 +9,13 @@ module.exports = {
     },
     authentication:{
         jwebtSecret: 'project'
+    },
+    email:{
+        service: 'gmail',
+        auth: {
+            user: 'lorawanconsole@gmail.com',
+            pass: 'LoRaWAN1234'
+        }
+
     }
 }
