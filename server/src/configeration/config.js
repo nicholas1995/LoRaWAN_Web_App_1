@@ -8,7 +8,7 @@ module.exports = {
         database: 'application'
     },
     authentication:{
-        jwebtSecret: 'project'
+        jwtSecret: 'project'
     },
     email:{
         service: 'gmail',

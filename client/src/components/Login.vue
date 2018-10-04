@@ -17,7 +17,7 @@
         v-model="password"
         placeholder="Password"/> 
       <br>
-      {{error}}
+      {{message}}
       <br>
       <button
       @click= "login">Login </button>
@@ -33,27 +33,24 @@ export default {
     return {
       email: "",
       password: "",
-      error: ""
+      message: ""
     };
   },
   components: {},
   methods: {
     async login() {
       var response;
-      var check = 0; //this is to ensure that only when correct data is entered we log the user information 
       try {
         response = await AuthenticationService.login({
           email: this.email,
           password: this.password
         });
+        this.message = response.data.message;
+        console.log('token: ' +response.data.token);
+
       } catch (error) {
-        this.error = error.response.data;
-        check = 1;
+        this.message = error.response.data;
       }
-      if (check == 0) {
-        console.log(response.data);
-      }
-      check = 0;
     }
   }
 };

@@ -58,9 +58,8 @@
           autocomplete="off"
           placeholder="Email"/> 
         <br>
-        {{error}}
+        {{message}}
       </form>
-      <br>
       <button
       @click= "register">Register </button>
 
@@ -69,9 +68,10 @@
   
 
 <script>
-import AuthenticationService from '../services/AuthenticationService.js';
+import AuthenticationService from "../services/AuthenticationService.js";
+import Axios from '../../../../../../Users/nicholasmitchell/LoRaWAN_Web_App_1/client/node_modules/axios/index.js';
 export default {
-  data () {
+  data() {
     return {
       first_name: "",
       last_name: "",
@@ -79,30 +79,30 @@ export default {
       home_phone: "",
       mobile_phone: "",
       email: "",
-      error: ""
-    }
+      message: ""
+    };
   },
-  components: {
-    
-  },
+  components: {},
   methods: {
-    async register (){
-      try{
-      await AuthenticationService.register({
-        first_name: this.first_name,
-        last_name: this.last_name ,
-        address: this.address ,
-        home_phone: this.home_phone ,
-        mobile_phone: this.mobile_phone ,
-        email: this.email 
-      });
-      }catch(error){      
-        this.error = error.response.data;
-      }
+    async register() {
+      try {
+      const response = await AuthenticationService.register({
+          first_name: this.first_name,
+          last_name: this.last_name,
+          address: this.address,
+          home_phone: this.home_phone,
+          mobile_phone: this.mobile_phone,
+          email: this.email
+        });
+        this.message = response.data;
+      } 
+      catch (error) {
+        this.message = error.response.data;
 
+      } 
     }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

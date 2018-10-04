@@ -25,7 +25,7 @@
         v-model="newpassword"
         placeholder="New Password"/> 
       <br>
-      {{error}}
+      {{message}}
       <br>
       <button
       @click= "login">Login </button>
@@ -42,29 +42,24 @@ export default {
       email: "",
       password: "",
       newpassword: "",
-      error: ""
+      message: ""
     };
   },
   components: {},
   methods: {
     async login() {
       var response;
-      var check = 0; //this is to ensure that only when correct data is entered we log the user information 
       try {
         response = await AuthenticationService.loginNewUser({
           email: this.email,
           password: this.password,
           newpassword: this.newpassword
-
         });
+        this.message = response.data.message;
+        console.log('Token: '+ response.data.token);
       } catch (error) {
-        this.error = error.response.data;
-        check = 1;
+        this.message = error.response.data;
       }
-      if (check == 0) {
-        console.log(response.data);
-      }
-      check = 0;
     }
   }
 };
