@@ -1,16 +1,25 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-    <!--<register></register>-->
-  </div>
+  <body>
+    <div id="app">
+      <v-app>
+        <v-content>
+              <toolbar></toolbar>
+      <br>
+      <router-view></router-view>
+        </v-content>
+      </v-app>
+    </div>
+  </body>
 </template>
 
 <script>
 import register from './components/Register'
 import login from './components/Login'
+import toolbar from './components/Toolbar'
 export default {
   name: 'App',
   components:{
+    toolbar,
     register,
     login
   }

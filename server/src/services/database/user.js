@@ -32,7 +32,7 @@ function encrypt(password) {
 }
 //Function compares the plain text password and the encryted password stored in the 
 //database and returns 1 if they are the same and 0 if they are different 
-function compare(data, encrypted) {
+function compare(data, encrypted) { 
   try {
     return new Promise((resolve, reject) => {
       bcrypt.compare(data, encrypted, (error, result) => {
@@ -67,7 +67,7 @@ module.exports = {
       }).catch(function(err) {
         //This needs to be split up into two errors. One if the database is not runing the second if the user already esists
         //res.status(500).send("Problem occured while trying to connect.");
-        res.status(409).send("User already exists in the database");
+        res.status(409).send("User already exists in the database"); 
       });
   },
 

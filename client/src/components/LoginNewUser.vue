@@ -1,38 +1,44 @@
 <template>
-  <div>
-    <h1>New User Login</h1>
-      <!--EMAIL-->
-      Email<br>
-      <input    
-        type="email"
-        name="email"
-        v-model="email"
-        placeholder="Email"/> 
-      <br>
-      <!--Existing Password-->
-      Password<br>
-      <input    
-        type="password"
-        name="password"
-        v-model="password"
-        placeholder="Password"/> 
-      <br>
-      <!--New Password-->
-      New Password<br>
-      <input    
-        type="password"
-        name="newpassword"
-        v-model="newpassword"
-        placeholder="New Password"/> 
-      <br>
+<v-content>
+  <v-layout >
+    <v-flex xs4 offset-xs4>
+      <div>
+ <v-form class=" elevation-3 pl-4 pr-4 pt-2 pb-2">
+   <!--Email-->
+    <v-text-field
+      v-model="email"
+      label="E-mail"
+      required
+    ></v-text-field>
+   <!--Password-->
+    <v-text-field
+      v-model="password"
+      type="password"
+      label="Password"
+      required
+    ></v-text-field>
+    <!--New Password-->
+    <v-text-field
+      v-model="newpassword"
+      type="password"
+      label="New password"
+      required
+    ></v-text-field>
+    <div>
       {{message}}
-      <br>
-      <button
-      @click= "login">Login </button>
-
+    </div>
+    <v-btn class="grey lighten-2"
+      @click="login"
+    >
+      Login
+    </v-btn>
+  </v-form>
   </div>
+  </v-flex>
+</v-layout>
+  </v-content>
 </template>
-  
+
 
 <script>
 import AuthenticationService from "../services/AuthenticationService.js";
@@ -57,9 +63,10 @@ export default {
         });
         this.message = response.data.message;
         console.log('Token: '+ response.data.token);
+        this.$router.push('../dashboard');
       } catch (error) {
         this.message = error.response.data;
-      }
+      } 
     }
   }
 };
