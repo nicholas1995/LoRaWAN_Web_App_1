@@ -3,23 +3,20 @@ const Joi = require('joi');
 module.exports = {
     register (req, res, next){
         const schema = {
-            first_name: Joi.string().regex(
-                new RegExp('^[a-zA-Z]{1,32}$')
+            first_name: Joi.string().required().regex(
+                new RegExp('^[a-zA-Z]{2,32}$')
             ),
-            last_name: Joi.string().regex(
-                new RegExp('^[a-zA-Z]{1,32}$')
+            last_name: Joi.string().required().regex(
+                new RegExp('^[a-zA-Z]{2,32}$')
             ),
-            address: Joi.string().min(1).max(40),
-            home_phone: Joi.string().regex(
+            address: Joi.string().required().min(1).max(40),
+            home_phone: Joi.string().required().regex(
                 new RegExp('^[0-9]{7,10}$')
             ),
-            mobile_phone: Joi.string().regex(
+            mobile_phone: Joi.string().required().regex(
                 new RegExp('^[0-9]{7,10}$')
             ),
-            email: Joi.string().email().required(),
-            password: Joi.string().regex(
-                new RegExp('^[a-zA-Z0-9\@\_\%\&]{8,32}$')
-            )
+            email: Joi.string().email().required()
         }
         const {error, value} = Joi.validate(req.body, schema)
         if (error) {
@@ -41,9 +38,6 @@ module.exports = {
                     break;
                 case 'email':
                     res.status(422).send('You must provide valid email');
-                    break;
-                case 'password':
-                    res.status(422).send('Enter valid password');
                     break;
                 default:
                     res.status(422).send('Invalid Information');
