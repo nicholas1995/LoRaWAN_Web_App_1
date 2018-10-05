@@ -3,11 +3,11 @@
     <v-toolbar-title>Private Marine IoT Network Console </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down ">
-      <v-btn class="grey lighten-2">
-        <router-link to="login">Login</router-link>
+      <v-btn class="grey lighten-2" @click="login">
+        Login
         </v-btn>
-        <v-btn class="grey lighten-2">
-        <router-link to="register">Register</router-link>
+        <v-btn class="grey lighten-2" @click="register">
+          Register
         </v-btn>
     </v-toolbar-items>
   </v-toolbar>
@@ -24,6 +24,12 @@ export default {
   },
   components: {},
   methods: {
+    login(){
+      this.$router.push('login');
+    },
+    register(){
+      this.$router.push('register');
+    }
 }
 }
 </script>
