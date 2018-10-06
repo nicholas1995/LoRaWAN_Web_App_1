@@ -4,6 +4,7 @@ const db = require("../db");
 const jwt = require("../services/jwt");
 const bcrypt = require("bcrypt-nodejs");
 const UpdatePasswordPolicy = require("../policies/UpdatePasswordPolicy");
+const user_db = require('../services/database/users_db');
 
 //Creates a random password of length 8 using characters 0-9 and
 function randomPasswordGenerator() {
@@ -46,15 +47,15 @@ function compare(data, encrypted) {
   } catch (err) {
     console.log("Compare password error");
   }
-}
+} 
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 module.exports = {
-  //Registerq
-  register: async function(req, res, next) {
+  //Add User
+  add_user: async function(req, res, next) {
     let pw = randomPasswordGenerator();
     let pw_encrypt = await encrypt(pw);
-    let sql = `INSERT INTO users (email,first_name,last_name,password,address,home_phone,mobile_phone,new_user)
-    VALUES ('${req.body.email}','${req.body.first_name}','${req.body.last_name}','${pw_encrypt}','${req.body.address}','${req.body.home_phone}','${req.body.mobile_phone}','1')`;
-    let query = db.queryAsync(sql).then(function(result) {
+    user_db.add_user(req, pw_encrypt).then( (result) => {
         res.status(200).send({message:"User Created...."});
         email.transporter.sendMail(email.mailOptions(req.body, pw),(error, info) => {
             if (error) {
@@ -64,18 +65,25 @@ module.exports = {
             }
           }
         ); 
-      }).catch(function(err) {
+      }).catch( (err) => {
         //This needs to be split up into two errors. One if the database is not runing the second if the user already esists
         //res.status(500).send("Problem occured while trying to connect.");
         res.status(409).send({error:"User already exists in the database"}); 
       });
   },
+    //Get Users
+    get_users: async function(req,res){
+      user_db.get_users().then((result)=>{
+            res.status(200).send(result);
+        }).catch((error) => {
+            res.status(500).send({error:"Problem occured while trying to connect."});
+        })
+    },
 
   //Login
   login: function(req, res) {
     if(req.body.newuser==0){
-      let sql = `SELECT * FROM users WHERE email = '${req.body.email}'`;
-      let query = db.queryAsync(sql).then(async function(result){
+      user_db.get_single_user(req.body.email).then(async (result) => {
           if (result == "") {
             //Email does not exists
             res.status(403).send({error:"Incorrect email or password!"});
@@ -104,12 +112,11 @@ module.exports = {
               res.status(403).send({error:"Incorrect  password!"});
             }
           }
-        }).catch(function(err){
+        }).catch((err) => {
           res.status(500).send({error:"Problem occured while trying to connect."});
         })
     }else if(req.body.newuser==1){
-        let sql = `SELECT * FROM users WHERE email = '${req.body.email}'`;
-      let query = db.queryAsync(sql).then(async function(result){
+      user_db.get_single_user(req.body.email).then(async (result) => {
         if (result == "") {
           //Email does not exists
           res.status(403).send({error:"Incorrect email or password!"});
@@ -145,7 +152,7 @@ module.exports = {
             res.status(403).send({error:"Incorrect password!"});
           }
         }
-      }).catch(function(err){
+      }).catch((err) =>{
         res.status(500).send({error:"Problem occured while trying to connect."});
       })
     }
