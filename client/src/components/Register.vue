@@ -93,6 +93,7 @@ export default {
           email: this.email
         });
         this.message = response.data.message;
+        this.$router.push('dashboard');
       } catch (error) {
         this.message = error.response.data.error;
       }

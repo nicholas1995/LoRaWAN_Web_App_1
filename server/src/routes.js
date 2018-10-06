@@ -11,4 +11,7 @@ module.exports = ((app) => {
 
     //Get Users
     app.get('/users', user.get_users);
+
+    //Delete User 
+    app.post('/user/delete', user.delete_user);
 });   

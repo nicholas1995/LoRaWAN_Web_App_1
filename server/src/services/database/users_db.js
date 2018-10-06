@@ -15,5 +15,10 @@ module.exports = {
     get_single_user: function(email){
         let sql = `SELECT * FROM users WHERE email = '${email}'`;
         return db.queryAsync(sql);
+    },
+    delete_user: function(email){
+        let sql =`DELETE FROM users
+        WHERE email='${email}'`;
+        return db.queryAsync(sql);
     }
 }

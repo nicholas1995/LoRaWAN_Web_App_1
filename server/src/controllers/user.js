@@ -74,11 +74,35 @@ module.exports = {
     //Get Users
     get_users: async function(req,res){
       user_db.get_users().then((result)=>{
-            res.status(200).send(result);
+            res.status(200).send({
+              users: result});
         }).catch((error) => {
             res.status(500).send({error:"Problem occured while trying to connect."});
         })
     },
+  //Delete User
+  delete_user: async function (req, res) {
+    console.log('Called')
+    user_db.get_single_user(req.body.email).then(result => { //Make sure the user exists
+      if (result == "") {
+        res.status(404).send({
+          error: "User does not exists"
+        })
+        console.log('User does not exists');
+      } else {
+        user_db.delete_user(req.body.email).then(result => {
+          res.status(200).send({
+            message: 'User account Deleted'
+          });
+          console.log('User Deleted....');
+        }).catch(error => {
+          console.log('Error');
+        })
+      }
+    }).catch(error => {
+      res.status(500).send({error:"Problem occured while trying to connect."});
+    })
+  },
 
   //Login
   login: function(req, res) {

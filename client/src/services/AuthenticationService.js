@@ -10,5 +10,11 @@ export default {
     },
     loginNewUser(credentials){
         return Api.post('login/newuser', credentials); 
+    },
+    get_users(){
+        return Api.get('users');
+    },
+    delete_user(credentials){
+        return Api.post('/user/delete', credentials);
     }
 };

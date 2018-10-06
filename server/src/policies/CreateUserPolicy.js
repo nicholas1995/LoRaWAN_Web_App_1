@@ -11,10 +11,10 @@ module.exports = {
             ),
             address: Joi.string().min(1).max(40),
             home_phone: Joi.string().regex(
-                new RegExp('^[0-9]{7,10}$')
+                new RegExp('^[0-9]{10,10}$')
             ),
             mobile_phone: Joi.string().regex(
-                new RegExp('^[0-9]{7,10}$')
+                new RegExp('^[0-9]{10,10}$')
             ),
             email: Joi.string().email().required(),
             password: Joi.string().regex(
