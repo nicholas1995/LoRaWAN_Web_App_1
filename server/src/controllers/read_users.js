@@ -1,4 +1,4 @@
-const db = require('../databasetest');
+const db = require('../services/database/databasetest');
 
 module.exports = {
     read_user: async function(req,res){

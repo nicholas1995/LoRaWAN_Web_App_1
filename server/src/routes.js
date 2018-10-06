@@ -1,6 +1,6 @@
 const CreateUserPolicy = require('./policies/CreateUserPolicy');
-const database_user = require('./services/database/user');
-const read_user = require('./services/users/read_users');
+const database_user = require('./controllers/user');
+const read_user = require('./controllers/read_users');
 
 
 module.exports = ((app) => {

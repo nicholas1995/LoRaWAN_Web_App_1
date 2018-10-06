@@ -1,9 +1,9 @@
-const email = require("../email");
+const email = require("../services/email");
 const Math = require("mathjs");
-const db = require("../../db");
-const jwt = require("../../controllers/jwt");
+const db = require("../db");
+const jwt = require("../services/jwt");
 const bcrypt = require("bcrypt-nodejs");
-const UpdatePasswordPolicy = require("../../policies/UpdatePasswordPolicy");
+const UpdatePasswordPolicy = require("../policies/UpdatePasswordPolicy");
 
 //Creates a random password of length 8 using characters 0-9 and
 function randomPasswordGenerator() {
