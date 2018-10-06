@@ -73,7 +73,7 @@ module.exports = {
 
   //Login
   login: function(req, res) {
-    let sql = `SELECT *FROM users WHERE email = '${req.body.email}'`;
+    let sql = `SELECT * FROM users WHERE email = '${req.body.email}'`;
     let query = db.queryAsync(sql).then(async function(result){
         if (result == "") {
           //Email does not exists

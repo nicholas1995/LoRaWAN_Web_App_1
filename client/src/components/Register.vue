@@ -1,59 +1,64 @@
 <template>
-<v-content>
-  <v-layout >
-    <v-flex xs4 offset-xs4>
-      <div>
- <v-form class=" elevation-3 pl-4 pr-4 pt-2 pb-2">
-   <!--First Name -->
-    <v-text-field
-      v-model="first_name"
-      label="First Name"
-      required
-    ></v-text-field>
-  <!--Last Name-->
-    <v-text-field
-      v-model="last_name"
-      label="Last Name"
-      required
-    ></v-text-field>
-  <!--Address-->
-    <v-text-field
-      v-model="address"
-      label="Address"
-      required
-    ></v-text-field>
-  <!--Home Phone-->
-    <v-text-field
-      :mask="mask"
-      v-model="home_phone"
-      label="Home Phone"
-      required
-    ></v-text-field>
-  <!--Mobile Phone-->
-    <v-text-field
-      :mask="mask"
-      v-model="mobile_phone"
-      label="Mobile Phone"
-      required
-    ></v-text-field>
-  <!--Email-->
-    <v-text-field
-      v-model="email"
-      label="Email Address"
-      required
-    ></v-text-field>
-    <div>
-      {{message}}
-    </div>
-    <v-btn class="grey lighten-2"
-      @click="register"
-    >
-      Register User
-    </v-btn>
-  </v-form>
-  </div>
-  </v-flex>
-</v-layout>
+  <v-content>
+    <v-container fluid fill-height>
+      <v-layout align-center justify-center>
+        <v-flex xs12 sm8 md4>
+          <v-card class=" elevation-10 ">
+            <v-toolbar light class="grey lighten-2 ">
+              <v-toolbar-title>Login Form</v-toolbar-title>
+            </v-toolbar>
+          </v-card>
+          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5">
+            <!--First Name -->
+              <v-text-field
+                v-model="first_name"
+                label="First Name"
+                required
+              ></v-text-field>
+            <!--Last Name-->
+              <v-text-field
+                v-model="last_name"
+                label="Last Name"
+                required
+              ></v-text-field>
+            <!--Address-->
+              <v-text-field
+                v-model="address"
+                label="Address"
+                required
+              ></v-text-field>
+            <!--Home Phone-->
+              <v-text-field
+                :mask="mask"
+                v-model="home_phone"
+                label="Home Phone"
+                required
+              ></v-text-field>
+            <!--Mobile Phone-->
+              <v-text-field
+                :mask="mask"
+                v-model="mobile_phone"
+                label="Mobile Phone"
+                required
+              ></v-text-field>
+            <!--Email-->
+              <v-text-field
+                v-model="email"
+                label="Email Address"
+                required
+              ></v-text-field>
+              <div>
+                {{message}}
+              </div>
+              <v-btn class="grey lighten-2"
+                @click="register"
+              >
+                Register User
+              </v-btn>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
   </v-content>
 </template>
 

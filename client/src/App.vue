@@ -1,15 +1,18 @@
 <template>
+<html>
   <body>
     <div id="app">
       <v-app>
         <v-content>
-              <toolbar></toolbar>
-      <br>
-      <router-view></router-view>
+          <v-container>
+            <toolbar></toolbar>
+            <router-view></router-view>
+          </v-container>
         </v-content>
       </v-app>
     </div>
   </body>
+  </html>
 </template>
 
 <script>

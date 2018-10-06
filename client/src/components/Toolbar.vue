@@ -1,12 +1,12 @@
 <template>
-  <v-toolbar fixed color ="grey lighten-2">
+  <v-toolbar fixed color ="grey lighten-2" >
     <v-toolbar-title>Private Marine IoT Network Console </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down ">
-      <v-btn class="grey lighten-2" @click="login">
+      <v-btn class="grey lighten-2" @click="login" flat>
         Login
         </v-btn>
-        <v-btn class="grey lighten-2" @click="register">
+        <v-btn class="grey lighten-2" @click="register" flat>
           Register
         </v-btn>
     </v-toolbar-items>
