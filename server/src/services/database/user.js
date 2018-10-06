@@ -63,7 +63,7 @@ module.exports = {
               console.log("Email sent: " + info.response);
             }
           }
-        );
+        ); 
       }).catch(function(err) {
         //This needs to be split up into two errors. One if the database is not runing the second if the user already esists
         //res.status(500).send("Problem occured while trying to connect.");
@@ -130,7 +130,7 @@ module.exports = {
                     console.log("Password Updated....");
                   });
                   var userJSON = toJSON(result);
-                  res.send({
+                  res.send({ 
                     user: userJSON,
                     token: jwt.jwtUserSignin(userJSON),
                     message: 'Password Updated!'

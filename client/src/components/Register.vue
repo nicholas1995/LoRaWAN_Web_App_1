@@ -47,7 +47,7 @@
                 label="Email Address"
                 required
               ></v-text-field>
-              <div>
+              <div div class="text">
                 {{message}}
               </div>
               <v-btn class="grey lighten-2"
