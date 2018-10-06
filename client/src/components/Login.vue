@@ -49,6 +49,7 @@ export default {
   },
   components: {},
   methods: {
+
     async login() {
       var response;
       try {
@@ -57,7 +58,7 @@ export default {
           password: this.password
         });
         this.message = response.data.message;
-        console.log("token: " + response.data.token);
+        this.$store.commit('login',{token: response.data.token});
         this.$router.push('dashboard');
       } catch (error) {
         this.message = error.response.data;

@@ -67,7 +67,7 @@ export default {
           newpassword: this.newpassword
         });
         this.message = response.data.message;
-        console.log('Token: '+ response.data.token);
+        this.$store.commit('login',{token: response.data.token});
         this.$router.push('../dashboard');
       } catch (error) {
         this.message = error.response.data;
@@ -79,4 +79,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.rounded-card{
+    border-radius:50px;
+}
 </style>

@@ -3,12 +3,15 @@
     <v-toolbar-title>Private Marine IoT Network Console </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down ">
-      <v-btn class="grey lighten-2" @click="login" flat>
+      <v-btn class="grey lighten-2" @click="login" flat v-if="this.$store.state.loginState">
         Login
-        </v-btn>
-        <v-btn class="grey lighten-2" @click="register" flat>
+      </v-btn>
+      <v-btn class="grey lighten-2" @click="logout" flat v-if="(!this.$store.state.loginState)">
+        Logout
+      </v-btn>
+      <v-btn class="grey lighten-2" @click="register" flat>
           Register
-        </v-btn>
+      </v-btn>
     </v-toolbar-items>
   </v-toolbar>
 </template>
@@ -29,6 +32,10 @@ export default {
     },
     register(){
       this.$router.push('register');
+    },
+    logout(){
+      this.$store.commit('logout');
+      this.$router.push('login');
     }
 }
 }

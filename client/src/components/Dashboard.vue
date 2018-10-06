@@ -1,6 +1,6 @@
 <template>
 <v-content>
-  DashBoard Page
+  <h3>Your token is: {{this.$store.state.token}}</h3>
 </v-content>
 </template>
   
