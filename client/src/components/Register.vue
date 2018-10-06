@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="grey lighten-2 ">
-              <v-toolbar-title>Login Form</v-toolbar-title>
+              <v-toolbar-title>Register Form</v-toolbar-title>
             </v-toolbar>
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5">
@@ -92,9 +92,9 @@ export default {
           mobile_phone: this.mobile_phone,
           email: this.email
         });
-        this.message = response.data;
+        this.message = response.data.message;
       } catch (error) {
-        this.message = error.response.data;
+        this.message = error.response.data.error;
       }
     }
   }

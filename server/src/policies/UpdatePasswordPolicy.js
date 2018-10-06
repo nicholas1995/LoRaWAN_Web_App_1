@@ -9,10 +9,10 @@ module.exports = {
         }
         const {error, value} = Joi.validate(user, schema)
         if (error) {
-            res.status(422).send('Enter valid password');
+            res.status(422).send({error:'Enter valid password'});
         } else {
             next();
         }
     }
-    
+     
 }    

@@ -44,7 +44,7 @@ function compare(data, encrypted) {
       });
     });
   } catch (err) {
-    console.log("Compare password");
+    console.log("Compare password error");
   }
 }
 module.exports = {
@@ -55,7 +55,7 @@ module.exports = {
     let sql = `INSERT INTO users (email,first_name,last_name,password,address,home_phone,mobile_phone,new_user)
     VALUES ('${req.body.email}','${req.body.first_name}','${req.body.last_name}','${pw_encrypt}','${req.body.address}','${req.body.home_phone}','${req.body.mobile_phone}','1')`;
     let query = db.queryAsync(sql).then(function(result) {
-        res.status(200).send("User Created....");
+        res.status(200).send({message:"User Created...."});
         email.transporter.sendMail(email.mailOptions(req.body, pw),(error, info) => {
             if (error) {
               console.log(error);
@@ -67,83 +67,89 @@ module.exports = {
       }).catch(function(err) {
         //This needs to be split up into two errors. One if the database is not runing the second if the user already esists
         //res.status(500).send("Problem occured while trying to connect.");
-        res.status(409).send("User already exists in the database"); 
+        res.status(409).send({error:"User already exists in the database"}); 
       });
   },
 
   //Login
   login: function(req, res) {
-    let sql = `SELECT * FROM users WHERE email = '${req.body.email}'`;
-    let query = db.queryAsync(sql).then(async function(result){
-        if (result == "") {
-          //Email does not exists
-          res.status(403).send("Incorrect email or password!");
-        } else {
-              let encryted_data = await compare(req.body.password, result[0].password)
-          if (encryted_data ==1) {
-            //Correct Credentials
-            if (result[0].new_user == "1") {
-              //Prevent someone from logging in without changing the default password
-              res.status(412).send("Need to change default password!");
-            } else {
-              var userJSON = toJSON(result);
-              res.send({
-                user: userJSON,
-                token: jwt.jwtUserSignin(userJSON),
-                message: 'Successful Login'
-              });
-            }
-          }else {
-            //Incorrect Password
-            res.status(403).send("Incorrect  password!");
-          }
-      }
-    }).catch(function(err){
-      res.status(500).send("Problem occured while trying to connect.");
-    })
-  },
-  //Login New User
-  login_new_user: function(req, res) {
-    let sql = `SELECT * FROM users WHERE email = '${req.body.email}'`;
-    let query = db.queryAsync(sql).then(async function(result){
-      if (result == "") {
-        //Email does not exists
-        res.status(403).send("Incorrect email or password!");
-      } else {
-        let encryted_data = await compare(req.body.password, result[0].password)
-        if (encryted_data == 1) {
-          //Correct Credentials
-          if (result[0].new_user == "1") {
-            //Prevent someone from logging in without changing the default password
-            var newUserObject = {
-              newpassword: req.body.newpassword
-            }; //Ensure to make sure new user password meets password policy and then update the database with this new password
-            UpdatePasswordPolicy.updateUserPassword(newUserObject,res,async function() {
-                let encrypted_password = await encrypt(newUserObject.newpassword);
-                let sql = `UPDATE users SET password = '${encrypted_password}', new_user = 'false' WHERE email = '${req.body.email}';`;
-                let query = db.query(sql, (err, result) => {
-                  if (err) throw err;
-                  console.log("Password Updated....");
-                });
+    if(req.body.newuser==0){
+      let sql = `SELECT * FROM users WHERE email = '${req.body.email}'`;
+      let query = db.queryAsync(sql).then(async function(result){
+          if (result == "") {
+            //Email does not exists
+            res.status(403).send({error:"Incorrect email or password!"});
+          } else {
+                let encryted_data = await compare(req.body.password, result[0].password)
+            if (encryted_data ==1) {
+              //Correct Credentials
+              if (result[0].new_user == "1") {
+                //Prevent someone from logging in without changing the default password
+                res.send({
+                  message:"Need to change default password!",
+                  user: {
+                    email: result[0].email,
+                    new_user: result[0].new_user
+                  }});
+              } else {
                 var userJSON = toJSON(result);
                 res.send({
                   user: userJSON,
                   token: jwt.jwtUserSignin(userJSON),
-                  message: 'Password Updated!'
+                  message: 'Successful Login'
                 });
               }
-            );
-          } else {
-            res.status(401).send("Only change password on FIRST Login!");
+            }else {
+              //Incorrect Password
+              res.status(403).send({error:"Incorrect  password!"});
+            }
           }
+        }).catch(function(err){
+          res.status(500).send({error:"Problem occured while trying to connect."});
+        })
+    }else if(req.body.newuser==1){
+        let sql = `SELECT * FROM users WHERE email = '${req.body.email}'`;
+      let query = db.queryAsync(sql).then(async function(result){
+        if (result == "") {
+          //Email does not exists
+          res.status(403).send({error:"Incorrect email or password!"});
         } else {
-          //Incorrect Password
-          res.status(403).send("Incorrect password!");
+          let encryted_data = await compare(req.body.password, result[0].password)
+          if (encryted_data == 1) {
+            //Correct Credentials
+            if (result[0].new_user == "1") {
+              //Prevent someone from logging in without changing the default password
+              var newUserObject = {
+                newpassword: req.body.newpassword
+              }; //Ensure to make sure new user password meets password policy and then update the database with this new password
+              UpdatePasswordPolicy.updateUserPassword(newUserObject,res,async function() {
+                  let encrypted_password = await encrypt(newUserObject.newpassword);
+                  let sql = `UPDATE users SET password = '${encrypted_password}', new_user = 'false' WHERE email = '${req.body.email}';`;
+                  let query = db.query(sql, (err, result) => {
+                    if (err) throw err;
+                    console.log("Password Updated....");
+                  });
+                  var userJSON = toJSON(result);
+                  res.send({
+                    user: userJSON,
+                    token: jwt.jwtUserSignin(userJSON),
+                    message: 'Password Updated!'
+                  });
+                }
+              );
+            } else {
+              res.status(401).send({error:"Only change password on FIRST Login!"});
+            }
+          } else {
+            //Incorrect Password
+            res.status(403).send({error:"Incorrect password!"});
+          }
         }
-      }
-    }).catch(function(err){
-      res.status(500).send("Problem occured while trying to connect.");
-    })
+      }).catch(function(err){
+        res.status(500).send({error:"Problem occured while trying to connect."});
+      })
+    }
   }
 };
 
+ 

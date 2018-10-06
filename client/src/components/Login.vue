@@ -22,12 +22,20 @@
                 label="Password"
                 required
               ></v-text-field>
+              <div v-if="(this.newuser)">
+                <v-text-field 
+                  v-model="newpassword"
+                  type="password"
+                  label="New Password"
+                  required
+                ></v-text-field>
+              </div>
               <div>
               {{message}}
               </div>
               <v-btn class="grey lighten-2"
                 @click="login"
-              >Login
+              >Login 
               </v-btn>
             </v-card>
           </v-flex>
@@ -44,6 +52,8 @@ export default {
     return {
       email: "",
       password: "",
+      newpassword: "",
+      newuser: 0,
       message: ""
     };
   },
@@ -53,15 +63,23 @@ export default {
     async login() {
       var response;
       try {
-        response = await AuthenticationService.login({
+        response =await AuthenticationService.login({
           email: this.email,
-          password: this.password
+          password: this.password,
+          newpassword: this.newpassword,
+          newuser: this.newuser
         });
+        if(response.data.user.new_user==1){
+          this.newuser = response.data.user.new_user;
+        }
+        else{
         this.message = response.data.message;
         this.$store.commit('login',{token: response.data.token});
         this.$router.push('dashboard');
+        }
+        this.message = response.data.message;
       } catch (error) {
-        this.message = error.response.data;
+        this.message = error.response.data.error;
       }
     }
   }
