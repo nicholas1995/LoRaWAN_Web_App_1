@@ -1,6 +1,6 @@
 <template>
   <v-content>
-    <div v-if="!this.$store.state.loginState">
+    <div v-if="!this.$store.state.loginState"> 
       <v-btn @click="get_users">Get Users</v-btn>
       <div>
     <v-toolbar class="elevation-1" color="grey lighten-3">
@@ -74,26 +74,29 @@ export default {
           { text: 'Mobile Phone', value: 'mobile_phone', sortable: false },
           { text: 'Actions', value: 'name', sortable: false }
 
-        ],
-      users: []
+        ]
+    }
+  },
+  computed: {
+    users () {
+      return this.$store.state.users
     }
   },
   methods: {
     login(){
       this.$router.push('login');
     },
-    async get_users(){
-        let response = await AuthenticationService.get_users();
-        this.users = response.data.users;
-        console.log(this.users);
+    get_users(){
+      this.$store.dispatch('get_users');
+      console.log(this.$store.state.users);
     },
-      async deleteItem(user){
-        let response = await AuthenticationService.delete_user({
-          email: user.email
-        });
-        console.log(response.data.message);
-    }, add_user(){
-      this.$router.push('register');
+    deleteItem(user){
+      if(confirm('Are you sure you want to delete this user?') == true){
+        this.$store.dispatch('delete_user', {user})
+      };
+    }, 
+    add_user(){
+      this.$router.push('register'); 
     }
   }
 }

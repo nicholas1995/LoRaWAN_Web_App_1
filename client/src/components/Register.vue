@@ -92,7 +92,7 @@ export default {
           mobile_phone: this.mobile_phone,
           email: this.email
         });
-        this.message = response.data.message;
+        this.$store.dispatch('get_users');
         this.$router.push('dashboard');
       } catch (error) {
         this.message = error.response.data.error;

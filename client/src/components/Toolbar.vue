@@ -1,6 +1,11 @@
 <template>
   <v-toolbar fixed color ="grey lighten-2" >
     <v-toolbar-title>Private Marine IoT Network Console </v-toolbar-title>
+      <v-divider
+        class="mx-2"
+        inset
+        vertical
+      ></v-divider>
     <v-spacer></v-spacer>
     <v-toolbar-items class="hidden-sm-and-down ">
       <v-btn class="grey lighten-2" @click="login" flat v-if="this.$store.state.loginState">
@@ -8,9 +13,6 @@
       </v-btn>
       <v-btn class="grey lighten-2" @click="logout" flat v-if="(!this.$store.state.loginState)">
         Logout
-      </v-btn>
-      <v-btn class="grey lighten-2" @click="register" flat>
-          Register
       </v-btn>
     </v-toolbar-items>
   </v-toolbar>
