@@ -2,8 +2,8 @@ const db = require("../../db");
 
 module.exports = {
     add_user: function(req, pw_encrypt){
-        let sql = `INSERT INTO users (email,first_name,last_name,password,address,home_phone,mobile_phone,new_user)
-    VALUES ('${req.body.email}','${req.body.first_name}','${req.body.last_name}','${pw_encrypt}','${req.body.address}','${req.body.home_phone}','${req.body.mobile_phone}','1')`;
+        let sql = `INSERT INTO users (email,first_name,last_name,password,address,home_phone,mobile_phone,new_user,user_class)
+    VALUES ('${req.body.email}','${req.body.first_name}','${req.body.last_name}','${pw_encrypt}','${req.body.address}','${req.body.home_phone}','${req.body.mobile_phone}','1', '${req.body.user_class}')`;
     return db.queryAsync(sql);
     },
     get_users: function(){

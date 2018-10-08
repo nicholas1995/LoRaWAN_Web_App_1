@@ -41,6 +41,12 @@
                 label="Mobile Phone"
                 required
               ></v-text-field>
+            <!--User Class-->
+              <v-text-field
+                v-model="user_class"
+                label="User Class"
+                required
+              ></v-text-field>
             <!--Email-->
               <v-text-field
                 v-model="email"
@@ -77,7 +83,8 @@ export default {
       mobile_phone: "",
       email: "",
       message: "",
-      mask:'phone'
+      mask:'phone',
+      user_class: ""
     };
   },
   components: {},
@@ -90,7 +97,8 @@ export default {
           address: this.address,
           home_phone: this.home_phone,
           mobile_phone: this.mobile_phone,
-          email: this.email
+          email: this.email,
+          user_class: this.user_class
         });
         this.$store.dispatch('get_users');
         this.$router.push('dashboard');

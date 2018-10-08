@@ -76,6 +76,7 @@ export default {
         this.message = response.data.message;
         console.log(response.data.token);
         this.$store.commit('login',{token: response.data.token});
+        console.log(this.$store.state.token);
         this.$router.push('dashboard');
         }
         this.message = response.data.message;
