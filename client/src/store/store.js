@@ -1,10 +1,14 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import AuthenticationService from "../services/AuthenticationService";
+import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
+  plugins: [
+    createPersistedState()
+  ],
   state: {
     token: "",
     loginState: 1,
@@ -15,9 +19,10 @@ export default new Vuex.Store({
       this.state.token = token.token;
       this.state.loginState = !this.state.loginState;
     },
-    logout(state) {
+    logout(state) { //this is to ensure that when you log out no information of the state is stored on the local storage 
       this.state.token = "";
-      this.state.loginState = !this.statec.loginState;
+      this.state.loginState = !this.state.loginState;
+      this.state.users = [];
     },
     store_users(state, payload) {
       state.users = payload.payload;
