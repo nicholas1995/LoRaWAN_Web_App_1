@@ -108,6 +108,7 @@ module.exports = {
   login: function(req, res) {
     if(req.body.newuser==0){
       user_db.get_single_user(req.body.email).then(async (result) => {
+        console.log(result[0]);
           if (result == "") {
             //Email does not exists
             res.status(403).send({error:"Incorrect email or password!"});
