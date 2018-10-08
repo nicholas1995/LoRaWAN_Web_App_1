@@ -6,7 +6,7 @@ import createPersistedState from 'vuex-persistedstate'
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  //plugins: [createPersistedState()],
+  plugins: [createPersistedState()],
   state: {
     token: "",
     loginState: 1,
@@ -19,7 +19,7 @@ export default new Vuex.Store({
     },
     logout(state) {
       this.state.token = "";
-      this.state.loginState = !this.statec.loginState;
+      this.state.loginState = !this.state.loginState;
     },
     store_users(state, payload) {
       state.users = payload.payload;

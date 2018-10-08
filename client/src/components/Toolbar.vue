@@ -11,7 +11,7 @@
       <v-btn class="grey lighten-2" @click="login" flat v-if="this.$store.state.loginState">
         Login
       </v-btn>
-      <v-btn class="grey lighten-2" @click="logout" flat v-if="(!this.$store.state.loginState)">
+      <v-btn class="grey lighten-2" @click="logout" flat v-if="!this.$store.state.loginState">
         Logout
       </v-btn>
     </v-toolbar-items>
@@ -36,6 +36,7 @@ export default {
       this.$router.push('register');
     },
     logout(){
+      console.log('here');
       this.$store.commit('logout');
       this.$router.push('login');
     }
