@@ -36,7 +36,7 @@ export default new Vuex.Store({
           context.commit("store_users", { payload });
         })
         .catch(err => {
-          console.log(err);
+          console.log('Do not have permission to view page');
         });
     },
     delete_user(context, { user }) {
