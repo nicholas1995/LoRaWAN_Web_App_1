@@ -17,7 +17,8 @@ module.exports = {
             html: `<h1>Good Day ${user.first_name}</h1> 
             <p>Your credentials were added to the LoRaWAN system.</p>
             <p>Please login using your email and the following password</p>
-            <h2>Password: ${password}</h2>`
+            <h2>Password: ${password}</h2>
+            <p>Link: http://localhost:8080/#/login</p>`
         }
     }
 }

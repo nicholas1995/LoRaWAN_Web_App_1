@@ -1,21 +1,18 @@
 const CreateUserPolicy = require('./policies/CreateUserPolicy');
-const database_user = require('./services/database/user');
-
-
-
-
-
-
+const user = require('./controllers/user');
+const authenticate = require('./policies/isAuthenticated');
 
 
 module.exports = ((app) => {
-    //Create User
-    app.post('/register', CreateUserPolicy.register, database_user.register);
+    //Add User
+    app.post('/register',authenticate, CreateUserPolicy.register, user.add_user);
 
     //User Login
-    app.post('/login', database_user.login);
+    app.post('/login', user.login);
 
-    //User New User
-    app.post('/login/newuser', database_user.login_new_user);
-        
-});  
+    //Get Users
+    app.get('/users',authenticate, user.get_users);
+
+    //Delete User 
+    app.post('/user/delete', user.delete_user);
+});    

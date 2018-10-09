@@ -8,7 +8,7 @@ const app = express();
 //app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors()); //DO RESEACH ON THIS.... 29:42 on first video
-
+require('./passport');
 //Start Express Server
 app.listen(config.port, () =>{
     console.log('Server started on port: '+ config.port)
