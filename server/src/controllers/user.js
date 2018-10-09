@@ -125,7 +125,7 @@ module.exports = {
                     new_user: result[0].new_user
                   }});
               } else {
-                var userJSON = toJSON(result);
+                let userJSON = toJSON(result);
                 res.send({
                   user: userJSON,
                   token: jwt.jwtUserSignin(userJSON),
@@ -138,6 +138,7 @@ module.exports = {
             }
           }
         }).catch((err) => {
+          console.log(err)
           res.status(500).send({error:"Problem occured while trying to connect."});
         })
     }else if(req.body.newuser==1){

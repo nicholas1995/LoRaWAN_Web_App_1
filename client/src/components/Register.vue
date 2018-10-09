@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="grey lighten-2 ">
-              <v-toolbar-title>Register Form</v-toolbar-title>
+              <v-toolbar-title>Register</v-toolbar-title>
             </v-toolbar>
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5">
@@ -39,6 +39,12 @@
                 :mask="mask"
                 v-model="mobile_phone"
                 label="Mobile Phone"
+                required
+              ></v-text-field>
+            <!--User Class-->
+              <v-text-field
+                v-model="user_class"
+                label="User Class"
                 required
               ></v-text-field>
             <!--Email-->
@@ -77,7 +83,8 @@ export default {
       mobile_phone: "",
       email: "",
       message: "",
-      mask:'phone'
+      mask:'phone',
+      user_class: ""
     };
   },
   components: {},
@@ -90,7 +97,8 @@ export default {
           address: this.address,
           home_phone: this.home_phone,
           mobile_phone: this.mobile_phone,
-          email: this.email
+          email: this.email,
+          user_class: this.user_class
         });
         this.$store.dispatch('get_users');
         this.$router.push('dashboard');

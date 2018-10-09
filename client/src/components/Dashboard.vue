@@ -31,6 +31,8 @@
           <td class="text-xs-left">{{ props.item.address }}</td>
           <td class="text-xs-left">{{ props.item.home_phone }}</td>
           <td class="text-xs-left">{{ props.item.mobile_phone }}</td>
+          <td class="text-xs-left">{{ props.item.date_created }}</td>
+          <td class="text-xs-left">{{ props.item.user_class}}</td>
         <td class="justify-center layout px-0">
           <v-icon
             small
@@ -66,12 +68,14 @@ export default {
   data(){
     return {
       headers: [
-          { text: 'Email', value: 'email' ,sortable: false},
+          { text: 'Email', value: 'email' ,sortable: true},
           { text: 'First Name', value: 'first_name' },
           { text: 'Last Name', value: 'last_name' },
           { text: 'Address', value: 'Address', sortable: false },
           { text: 'Home Phone', value: 'home_phone', sortable: false },
           { text: 'Mobile Phone', value: 'mobile_phone', sortable: false },
+          { text: 'Date Created', value: 'date_created', sortable: true },
+          { text: 'User Class', value: 'user_class', sortable: true },
           { text: 'Actions', value: 'name', sortable: false }
 
         ]

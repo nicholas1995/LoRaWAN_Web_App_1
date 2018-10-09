@@ -1,25 +1,32 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import AuthenticationService from "../services/AuthenticationService";
-import createPersistedState from 'vuex-persistedstate'
+
+import createPersistedState from 'vuex-persistedstate';
+
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  plugins: [createPersistedState()],
+  strict: true,
+  plugins: [
+    createPersistedState()
+  ],
   state: {
     token: "",
     loginState: 1,
-    users: []
+    users: [] 
   },
   mutations: {
     login(state, token) {
+      console.log(token.token);
       this.state.token = token.token;
       this.state.loginState = !this.state.loginState;
     },
-    logout(state) {
+    logout(state) { //this is to ensure that when you log out no information of the state is stored on the local storage 
       this.state.token = "";
       this.state.loginState = !this.state.loginState;
+      this.state.users = [];
     },
     store_users(state, payload) {
       state.users = payload.payload;
@@ -33,7 +40,7 @@ export default new Vuex.Store({
           context.commit("store_users", { payload });
         })
         .catch(err => {
-          console.log(err);
+          console.log('Do not have permission to view page');
         });
     },
     delete_user(context, { user }) {
