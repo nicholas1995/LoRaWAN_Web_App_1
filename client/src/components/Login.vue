@@ -5,7 +5,7 @@
           <v-flex xs12 sm8 md4 >
             <v-card class=" elevation-10 ">
               <v-toolbar light class="grey lighten-2 ">
-                  <v-toolbar-title>Login Form</v-toolbar-title>
+                  <v-toolbar-title>Login</v-toolbar-title>
               </v-toolbar>
             </v-card>
             <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5">
@@ -74,9 +74,7 @@ export default {
         }
         else{
         this.message = response.data.message;
-        console.log(response.data.token);
         this.$store.commit('login',{token: response.data.token});
-        console.log(this.$store.state.token);
         this.$router.push('dashboard');
         }
         this.message = response.data.message;

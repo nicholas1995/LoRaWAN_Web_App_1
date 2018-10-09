@@ -130,7 +130,6 @@ module.exports = {
                   token: jwt.jwtUserSignin(userJSON),
                   message: 'Successful Login'
                 });
-                console.log(jwt.jwtUserSignin(userJSON));
               }
             }else {
               //Incorrect Password

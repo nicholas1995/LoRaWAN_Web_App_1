@@ -2,7 +2,6 @@ const passport = require('passport');
 
 module.exports = function(req,res, next){
     passport.authenticate('jwt', function(err, user, info) {
-        console.log(req.rawHeaders)
         if(err){
             res.status(403).send({
                 error: 'Do not have access to this resource'

@@ -8,7 +8,7 @@ module.exports = {
     },
     get_users: function(){
         let sql = `SELECT 
-        email, first_name, last_name, address, home_phone, mobile_phone, date_created 
+        email, first_name, last_name, address, home_phone, mobile_phone, date_created, user_class 
         FROM users`;
         return db.queryAsync(sql);
     },

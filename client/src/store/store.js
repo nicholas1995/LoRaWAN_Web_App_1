@@ -13,10 +13,11 @@ export default new Vuex.Store({
   state: {
     token: "",
     loginState: 1,
-    users: []
+    users: [] 
   },
   mutations: {
     login(state, token) {
+      console.log(token.token);
       this.state.token = token.token;
       this.state.loginState = !this.state.loginState;
     },

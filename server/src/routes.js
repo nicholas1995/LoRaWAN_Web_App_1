@@ -15,4 +15,4 @@ module.exports = ((app) => {
 
     //Delete User 
     app.post('/user/delete', user.delete_user);
-});   
+});    
