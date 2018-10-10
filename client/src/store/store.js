@@ -15,18 +15,21 @@ export default new Vuex.Store({
   state: {
     token: "",
     loginState: 1,
+    user_class: '',
     users: [] 
   },
   mutations: {
-    login(state, token) {
-      console.log(token.token);
-      this.state.token = token.token;
+    login(state, data) {
+      this.state.token = data.token;
       this.state.loginState = !this.state.loginState;
+      this.state.user_class = data.user_class;
     },
     logout(state) { //this is to ensure that when you log out no information of the state is stored on the local storage 
       this.state.token = "";
+      this.state.user_class = "";
       this.state.loginState = !this.state.loginState;
       this.state.users = [];
+      
     },
     store_users(state, payload) {
       state.users = payload.payload;

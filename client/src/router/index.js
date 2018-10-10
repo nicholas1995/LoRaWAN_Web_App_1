@@ -3,8 +3,9 @@ import Router from 'vue-router'
 import Toolbar from '@/components/Toolbar'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
-import LoginNewUser from '@/components/LoginNewUser'
+import Dashboard_Software_Admin from '@/components/Dashboard_Software_Admin'
 import Dashboard from '@/components/Dashboard'
+
 
 
 
@@ -27,11 +28,6 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: Login
-    },
-    {
-      path: '/login/newuser',
-      name: 'newuser',
-      component: LoginNewUser
     },
     {
       path: '/dashboard',

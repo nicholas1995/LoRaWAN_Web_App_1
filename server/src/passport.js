@@ -8,7 +8,7 @@ passport.use(new JwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.authentication.jwtSecret
 }, function(jwt_payload, done) {
-        if(jwt_payload.user_class == 'Software_Admin'){
+        if(jwt_payload.user_class == 'Software Admin'){
             console.log('Granted Access to ' + jwt_payload.email);
             return done(null, true)
         }else{

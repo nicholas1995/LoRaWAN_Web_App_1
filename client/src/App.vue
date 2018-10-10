@@ -19,12 +19,14 @@
 import register from './components/Register'
 import login from './components/Login'
 import toolbar from './components/Toolbar'
+import dashboard_software_admin from './components/Dashboard_Software_Admin'
 export default {
   name: 'App',
   components:{
     toolbar,
     register,
-    login
+    login,
+    dashboard_software_admin
   }
 }
 </script>

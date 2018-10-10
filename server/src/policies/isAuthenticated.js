@@ -6,6 +6,11 @@ module.exports = function(req,res, next){
             res.status(403).send({
                 error: 'Do not have access to this resource'
             });
+        }
+        else if(!user){
+            res.status(403).send({
+                error: 'Do not have access to this resource'
+            });
         }else{
             req.user = user;
             next();

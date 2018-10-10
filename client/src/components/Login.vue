@@ -73,9 +73,10 @@ export default {
           this.newuser = response.data.user.new_user;
         }
         else{
-        this.message = response.data.message;
-        this.$store.commit('login',{token: response.data.token});
-        this.$router.push('dashboard');
+          console.log(response.data.user_class)
+          this.message = response.data.message;
+          this.$store.commit('login',{token: response.data.token, user_class: response.data.user_class});
+          this.$router.push('dashboard');
         }
         this.message = response.data.message;
       } catch (error) {

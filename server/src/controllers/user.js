@@ -125,6 +125,7 @@ module.exports = {
                 let userJSON = toJSON(result);
                 res.send({
                   user: userJSON,
+                  user_class: result[0].user_class,
                   token: jwt.jwtUserSignin(userJSON),
                   message: 'Successful Login'
                 });
@@ -162,6 +163,7 @@ module.exports = {
                   var userJSON = toJSON(result);
                   res.send({ 
                     user: userJSON,
+                    user_class: result[0].user_class,
                     token: jwt.jwtUserSignin(userJSON),
                     message: 'Password Updated!'
                   });
