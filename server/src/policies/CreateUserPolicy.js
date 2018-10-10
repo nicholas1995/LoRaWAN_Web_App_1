@@ -4,11 +4,11 @@ module.exports = {
     register (req, res, next){
         console.log(req.body.user_class)
         const schema = {
-            first_name: Joi.string().regex(
-                new RegExp('^[a-zA-Z]{1,32}$')
+            first_name: Joi.string().required().regex(
+                new RegExp('^[a-zA-Z]{2,32}$')
             ),
-            last_name: Joi.string().regex(
-                new RegExp('^[a-zA-Z]{1,32}$')
+            last_name: Joi.string().required().regex(
+                new RegExp('^[a-zA-Z]{2,32}$')
             ),
             address: Joi.string().min(1).max(40),
             home_phone: Joi.string().regex(
