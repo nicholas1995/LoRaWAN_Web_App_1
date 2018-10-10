@@ -25,6 +25,21 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
+          <td class="justify-center layout px-0">
+            <v-icon
+              small
+              class="mr-2"
+              @click="editItem(props.item)"
+            >
+              edit
+            </v-icon>
+            <v-icon
+              small
+              @click="deleteItem(props.item)"
+            >
+              delete
+            </v-icon>
+          </td>
           <td class="text-xs-left">{{ props.item.email }}</td>
           <td class="text-xs-left">{{ props.item.first_name }}</td>
           <td class="text-xs-left">{{ props.item.last_name }}</td>
@@ -33,21 +48,6 @@
           <td class="text-xs-left">{{ props.item.mobile_phone }}</td>
           <td class="text-xs-left">{{ props.item.date_created }}</td>
           <td class="text-xs-left">{{ props.item.user_class}}</td>
-        <td class="justify-center layout px-0">
-          <v-icon
-            small
-            class="mr-2"
-            @click="editItem(props.item)"
-          >
-            edit
-          </v-icon>
-          <v-icon
-            small
-            @click="deleteItem(props.item)"
-          >
-            delete
-          </v-icon>
-        </td>
       </template>
     </v-data-table>
   </div>
@@ -68,6 +68,7 @@ export default {
   data(){
     return {
       headers: [
+          { text: 'Actions', value: 'name', sortable: false },
           { text: 'Email', value: 'email' ,sortable: true},
           { text: 'First Name', value: 'first_name' },
           { text: 'Last Name', value: 'last_name' },
@@ -75,9 +76,7 @@ export default {
           { text: 'Home Phone', value: 'home_phone', sortable: false },
           { text: 'Mobile Phone', value: 'mobile_phone', sortable: false },
           { text: 'Date Created', value: 'date_created', sortable: true },
-          { text: 'User Class', value: 'user_class', sortable: true },
-          { text: 'Actions', value: 'name', sortable: false }
-
+          { text: 'User Class', value: 'user_class', sortable: true }
         ]
     }
   },

@@ -8,13 +8,15 @@
               <v-toolbar-title>Register</v-toolbar-title>
             </v-toolbar>
           </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5">
+          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
             <!--First Name -->
+            <v-flex >
               <v-text-field
                 v-model="first_name"
                 label="First Name"
                 required
               ></v-text-field>
+              </v-flex>
             <!--Last Name-->
               <v-text-field
                 v-model="last_name"
@@ -41,18 +43,18 @@
                 label="Mobile Phone"
                 required
               ></v-text-field>
-            <!--User Class-->
-              <v-text-field
-                v-model="user_class"
-                label="User Class"
-                required
-              ></v-text-field>
             <!--Email-->
               <v-text-field
                 v-model="email"
                 label="Email Address"
                 required
               ></v-text-field>
+            <!--User Class-->
+              <v-select
+                :items="user_class"
+                v-model="user_class_selected"
+                label="User Class"
+              ></v-select>
               <div div class="text">
                 {{message}}
               </div>
@@ -84,7 +86,8 @@ export default {
       email: "",
       message: "",
       mask:'phone',
-      user_class: ""
+      user_class: ['IoT Network Admin', 'Software Admin', 'Analyst', 'Fisher'],
+      user_class_selected: ""
     };
   },
   components: {},
@@ -98,7 +101,7 @@ export default {
           home_phone: this.home_phone,
           mobile_phone: this.mobile_phone,
           email: this.email,
-          user_class: this.user_class
+          user_class: this.user_class_selected
         });
         this.$store.dispatch('get_users');
         this.$router.push('dashboard');

@@ -17,9 +17,7 @@ function toJSON(user) {
   //this converts the user data returned from the database query to a json object
   return {
     email: user[0].email,
-    first_name: user[0].first_name,
-    last_name: user[0].last_name,
-    password: user[0].password
+    user_class: user[0].user_class
   };
 }
 function encrypt(password) {
@@ -108,7 +106,6 @@ module.exports = {
   login: function(req, res) {
     if(req.body.newuser==0){
       user_db.get_single_user(req.body.email).then(async (result) => {
-        console.log(result[0]);
           if (result == "") {
             //Email does not exists
             res.status(403).send({error:"Incorrect email or password!"});
