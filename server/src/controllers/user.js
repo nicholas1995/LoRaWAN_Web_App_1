@@ -66,7 +66,7 @@ module.exports = {
       }).catch( (err) => {
         //This needs to be split up into two errors. One if the database is not runing the second if the user already esists
         //res.status(500).send("Problem occured while trying to connect.");
-        res.status(409).send({error:"User already exists in the database"}); 
+        res.status(409).send({error:"Email address already in use by another user account "}); 
       });
   },
     //Get Users
@@ -80,7 +80,6 @@ module.exports = {
     },
   //Delete User
   delete_user: async function (req, res) {
-    console.log('Called')
     user_db.get_single_user(req.body.email).then(result => { //Make sure the user exists
       if (result == "") {
         res.status(404).send({
@@ -108,7 +107,7 @@ module.exports = {
       user_db.get_single_user(req.body.email).then(async (result) => {
           if (result == "") {
             //Email does not exists
-            res.status(403).send({error:"Incorrect email or password!"});
+            res.status(403).send({error:"Incorrect email or password"});
           } else {
                 let encryted_data = await compare(req.body.password, result[0].password)
             if (encryted_data ==1) {

@@ -54,7 +54,7 @@ export default new Vuex.Store({
           context.dispatch("get_users");
         })
         .catch(err => {
-          console.log(err);
+          console.log('Do not have permission to view page');
         });
     }
   }

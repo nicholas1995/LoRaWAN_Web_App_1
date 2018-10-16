@@ -25,6 +25,7 @@ export default {
         return Api.get('users');
     },
     delete_user(credentials){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.post('/user/delete', credentials);
     }
 };  

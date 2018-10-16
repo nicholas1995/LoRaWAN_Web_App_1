@@ -71,8 +71,7 @@ export default {
         });
         if(response.data.user.new_user==1){
           this.newuser = response.data.user.new_user;
-        }
-        else{
+        }else{
           console.log(response.data.user_class)
           this.message = response.data.message;
           this.$store.commit('login',{token: response.data.token, user_class: response.data.user_class});

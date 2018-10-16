@@ -17,7 +17,7 @@ module.exports = {
             mobile_phone: Joi.string().regex(
                 new RegExp('^[0-9]{10,10}$')
             ),
-            email: Joi.string().email().required(),
+            email: Joi.string().email({ minDomainAtoms: 2 }).required(),
             password: Joi.string().regex(
                 new RegExp('^[a-zA-Z0-9\@\_\%\&]{8,32}$')
             ),
@@ -27,28 +27,28 @@ module.exports = {
         if (error) {
             switch (error.details[0].context.key) {
                 case 'first_name':
-                    res.status(422).send({error:'Enter Valied First Name'});
+                    res.status(422).send({error:'Invalid First Name'});
                     break;
                 case 'last_name':
-                    res.status(422).send({error:'Enter valid Last Name'});
+                    res.status(422).send({error:'Invalid Last Name'});
                     break;
                 case 'address':
-                    res.status(422).send({error:'Enter Valid Address'});
+                    res.status(422).send({error:'Invalid Address'});
                     break;
                 case 'home_phone':
-                    res.status(422).send({error:'Enter valid Home Phone Number'});
+                    res.status(422).send({error:'Invalid Home Phone Number'});
                     break;
                 case 'mobile_phone':
-                    res.status(422).send({error:'Enter valid Mobile Phone Number'});
+                    res.status(422).send({error:'Invalid Mobile Phone Number'});
                     break;
                 case 'email':
-                    res.status(422).send({error:'You must provide valid email'});
+                    res.status(422).send({error:'Invalid email'});
                     break;
                 case 'password':
-                    res.status(422).send({error:'Enter valid password'});
+                    res.status(422).send({error:'Invalid password'});
                     break;
                 case 'user_class':
-                    res.status(422).send({error:'Enter valid user class'});
+                    res.status(422).send({error:'Invalid user class'});
                     break;
                 default:
                     res.status(422).send({error:'Invalid Information'});

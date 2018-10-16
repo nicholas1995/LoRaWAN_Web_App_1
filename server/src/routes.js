@@ -14,5 +14,5 @@ module.exports = ((app) => {
     app.get('/users',authenticate, user.get_users);
 
     //Delete User 
-    app.post('/user/delete', user.delete_user);
+    app.post('/user/delete',authenticate, user.delete_user);
 });    
