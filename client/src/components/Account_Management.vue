@@ -1,7 +1,5 @@
 <template>
-  <v-content>
-    <div v-if="!this.$store.state.loginState"> 
-      <div>
+  <v-content v-if="this.$store.state.user_class == 'Software Admin'">
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>USERS</v-toolbar-title>
       <v-divider
@@ -49,14 +47,6 @@
           <td class="text-xs-left">{{ props.item.user_class}}</td>
       </template>
     </v-data-table>
-  </div>
-
-    
-    </div>
-    <div v-if="this.$store.state.loginState">
-      <h3>You do not have access to this page. Please go to the login page</h3>
-      <v-btn @click="login">Login</v-btn>
-    </div>
   </v-content>
 </template>
   
@@ -79,11 +69,16 @@ export default {
         ]
     }
   },
-  created: function () {this.$store.dispatch('get_users');
+  created: function () {
+    if(this.$store.state.user_class =='Software Admin'){
+        this.$store.dispatch('get_users');
+    }else{
+      alert('You do not have access to this page');
+        this.$router.push('dashboard');
+      }
   },
   destroyed: function(){
     this.$store.commit('get_users_destroy');
-    console.log('here 2')
   },
   computed: {
     users () {

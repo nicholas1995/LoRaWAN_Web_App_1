@@ -48,22 +48,35 @@ export default {
   data() {
     return {
       drawer: null,
-            items: [
-          { title: 'Account Management', icon: 'people_outlined'},
+            items_all: [
+          { title: 'Network', icon: 'domain'},
+          { title: 'Sub-Network', icon: ''},
+          { title: 'Gateway', icon: 'settings_input_antenna'},
           { title: 'Gateway Stats', icon: 'settings_input_antenna'},
-          { title: 'End Device Data', icon: 'directions_boat'},
-          { title: 'Map', icon: 'map'}
-        ]
+          { title: 'End Device', icon: 'directions_boat'},
+          { title: 'End Device Data', icon: 'table'},
+          { title: 'Map', icon: 'map'},
+          { title: 'Error Logs', icon: 'error'},
+          { title: 'Account Management', icon: 'people_outlined'}
+        ],
+        items:[]
     };
   },
-  components: {},
-  create: function(){
-    console.log('created');
+  created: function () {
+    if(this.$store.state.user_class =='IoT Network Admin'){
+      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7]];
+    }else if(this.$store.state.user_class =='Software Admin'){
+      this.items = [this.items_all[8],this.items_all[7],this.items_all[3],this.items_all[5],this.items_all[6]];
+    }else if(this.$store.state.user_class =='Analyst'){
+      this.items = [this.items_all[5],this.items_all[6]];
+    }else if(this.$store.state.user_class =='Fisher'){
+      this.items = [this.items_all[5],this.items_all[6]];
+    }
   },
+  components: {},
   methods: {
     login(item){
       if(item=="Account Management"){
-        console.log('here');
         this.$router.push('accountmanagement'); 
       }
       else{

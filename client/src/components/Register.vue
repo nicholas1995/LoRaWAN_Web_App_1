@@ -1,6 +1,5 @@
 <template>
-  <v-content>
-    <div v-if="!this.$store.state.loginState">
+  <v-content v-if="this.$store.state.user_class == 'Software Admin'">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -68,11 +67,6 @@
         </v-flex>
       </v-layout>
     </v-container>
-    </div>
-    <div v-if="this.$store.state.loginState">
-      <h3>You do not have access to this page. Please go to the login page</h3>
-      <v-btn @click="login">Login</v-btn>
-    </div>
   </v-content>
 </template>
 
@@ -96,6 +90,12 @@ export default {
       user_class_selected: ""
     };
   },
+  beforeCreate: function () {
+    if(this.$store.state.user_class !='Software Admin'){
+      alert('You do not have access to this page');
+      this.$router.push('dashboard');
+    }
+  },
   components: {},
   methods: {
     async register() {
@@ -110,13 +110,10 @@ export default {
           user_class: this.user_class_selected
         });
         this.$store.dispatch('get_users');
-        this.$router.push('dashboard');
+        this.$router.push('accountmanagement');
       } catch (error) {
         this.message = error.response.data.error;
       }
-    },
-    login(){
-      this.$router.push('login');
     }
   }
 };

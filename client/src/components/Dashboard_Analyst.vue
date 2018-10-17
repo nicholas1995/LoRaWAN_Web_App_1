@@ -1,13 +1,6 @@
 <template>
-  <v-content>
-    <div v-if="!this.$store.state.loginState"> 
+  <v-content v-if="this.$store.state.user_class == 'Analyst'">>
       Welcome Analyst
-    </div>
-
-    <div v-if="this.$store.state.loginState">
-      <h3>You do not have access to this page. Please go to the login page</h3>
-      <v-btn @click="login">Login</v-btn>
-    </div>
   </v-content>
 </template>
   
@@ -19,13 +12,17 @@ export default {
 
     }
   },
+  beforeCreate: function () {
+    if(this.$store.state.user_class !='Analyst'){
+      alert('You do not have access to this page');
+      this.$router.push('login');
+    }
+  },
   computed: {
 
   },
   methods: {
-    login(){
-      this.$router.push('login');
-    }
+
   }
 }
 
