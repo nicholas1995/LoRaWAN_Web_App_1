@@ -15,4 +15,7 @@ module.exports = ((app) => {
 
     //Delete User 
     app.post('/user/delete',authenticate, user.delete_user);
+
+    //Update User
+    app.put('/user/update',authenticate,CreateUserPolicy.update_user, user.update_user);
 });    

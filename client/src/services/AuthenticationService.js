@@ -27,5 +27,9 @@ export default {
     delete_user(credentials){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.post('/user/delete', credentials);
+    },
+    update_user(credentials){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.put('/user/update', credentials);
     }
 };  

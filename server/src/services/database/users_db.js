@@ -20,5 +20,11 @@ module.exports = {
         let sql =`DELETE FROM users
         WHERE email='${email}'`; 
         return db.queryAsync(sql);
+    },
+    update_user: function(req){
+        let sql = `UPDATE users
+        SET first_name= '${req.body.first_name}', last_name= '${req.body.last_name}', address= '${req.body.address}', home_phone= '${req.body.home_phone}', mobile_phone= '${req.body.mobile_phone}'
+        WHERE email ='${req.body.email}'`;
+        return db.queryAsync(sql);
     }
 }

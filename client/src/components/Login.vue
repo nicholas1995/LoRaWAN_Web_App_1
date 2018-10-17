@@ -74,7 +74,7 @@ export default {
         }else{
           console.log(response.data.user_class)
           this.message = response.data.message;
-          this.$store.commit('login',{token: response.data.token, user_class: response.data.user_class});
+          this.$store.commit('login',{token: response.data.token, user_class: response.data.user_class, user_name: response.data.user_name});
           this.$router.push('dashboard');
         }
         this.message = response.data.message;

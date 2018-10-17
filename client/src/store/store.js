@@ -13,26 +13,41 @@ export default new Vuex.Store({
     createPersistedState()
   ],
   state: {
+    user:{
+      user_name: ''
+    },
+    update_user: {}, //this stores the user object to be obdated
     token: "",
     loginState: 1,
+    loginSt: 0,
     user_class: '',
-    users: [] 
+    users: []
   },
   mutations: {
     login(state, data) {
       this.state.token = data.token;
       this.state.loginState = !this.state.loginState;
       this.state.user_class = data.user_class;
+      this.state.user.user_name = data.user_name;
     },
     logout(state) { //this is to ensure that when you log out no information of the state is stored on the local storage 
       this.state.token = "";
       this.state.user_class = "";
       this.state.loginState = !this.state.loginState;
       this.state.users = [];
+      this.state.user.user_name = "";
+      this.state.update_user = {};
       
     },
     store_users(state, payload) {
       state.users = payload.payload;
+    },
+    update_user(state, user){
+      state.update_user = user;
+    },
+    get_users_destroy(state){
+      state.users = [];
+      console.log('sdfsdfsadfg')
     }
   },
   actions: {

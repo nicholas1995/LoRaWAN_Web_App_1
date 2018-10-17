@@ -5,8 +5,15 @@
       <v-app>
         <v-content>
           <v-container>
-            <toolbar></toolbar>
-            <router-view></router-view>
+            <toolbar @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer"></toolbar>
+            <v-layout>
+              <v-flex >
+                <navigation_drawer ref="drawer" flat v-if="!this.$store.state.loginState"></navigation_drawer>
+              </v-flex>
+              <v-flex xs12>
+                 <router-view></router-view>
+              </v-flex>
+            </v-layout>
           </v-container>
         </v-content>
       </v-app>
@@ -20,13 +27,15 @@ import register from './components/Register'
 import login from './components/Login'
 import toolbar from './components/Toolbar'
 import dashboard_software_admin from './components/Dashboard_Software_Admin'
+import navigation_drawer from './components/Navigation_Drawer'
 export default {
   name: 'App',
   components:{
     toolbar,
     register,
     login,
-    dashboard_software_admin
+    dashboard_software_admin,
+    navigation_drawer
   }
 }
 </script>

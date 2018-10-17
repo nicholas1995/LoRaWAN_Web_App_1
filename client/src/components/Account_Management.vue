@@ -1,7 +1,6 @@
 <template>
   <v-content>
     <div v-if="!this.$store.state.loginState"> 
-      <v-btn @click="get_users">Get Users</v-btn>
       <div>
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>USERS</v-toolbar-title>
@@ -80,6 +79,12 @@ export default {
         ]
     }
   },
+  created: function () {this.$store.dispatch('get_users');
+  },
+  destroyed: function(){
+    this.$store.commit('get_users_destroy');
+    console.log('here 2')
+  },
   computed: {
     users () {
       return this.$store.state.users
@@ -88,9 +93,6 @@ export default {
   methods: {
     login(){
       this.$router.push('login');
-    },
-    get_users(){
-      this.$store.dispatch('get_users');
     },
     update_User(user){
       this.$store.commit('update_user', {user});

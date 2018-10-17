@@ -126,7 +126,8 @@ module.exports = {
                   user: userJSON,
                   user_class: result[0].user_class,
                   token: jwt.jwtUserSignin(userJSON),
-                  message: 'Successful Login'
+                  message: 'Successful Login',
+                  user_name: (result[0].first_name + " " + result[0].last_name)
                 });
               }
             }else {
@@ -164,7 +165,8 @@ module.exports = {
                     user: userJSON,
                     user_class: result[0].user_class,
                     token: jwt.jwtUserSignin(userJSON),
-                    message: 'Password Updated!'
+                    message: 'Password Updated!',
+                    user_name: (result[0].first_name + " " + result[0].last_name)
                   });
                 }
               );
@@ -180,6 +182,13 @@ module.exports = {
         res.status(500).send({error:"Problem occured while trying to connect."});
       })
     }
+  },
+  update_user: function(req,res){
+    user_db.update_user(req).then( result => {
+        res.status(200).send({message: 'User details updated.'});
+    }).catch(err => {
+      res.status(500).send({error:"Problem occured while trying to connect."});
+    });
   }
 };
 

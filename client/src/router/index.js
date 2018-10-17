@@ -3,11 +3,9 @@ import Router from 'vue-router'
 import Toolbar from '@/components/Toolbar'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
-import Dashboard_Software_Admin from '@/components/Dashboard_Software_Admin'
 import Dashboard from '@/components/Dashboard'
-
-
-
+import Update_user from '../components/Update_User.vue'
+import Account_Management from '../components/Account_Management.vue'
 
 
 Vue.use(Router)
@@ -33,6 +31,16 @@ export default new Router({
       path: '/dashboard',
       name: 'dashboard',
       component: Dashboard
+    },
+    {
+      path: '/updateuser',
+      name: 'updateuser',
+      component: Update_user
+    },
+    {
+      path: '/accountmanagement',
+      name: 'accountmanagement',
+      component: Account_Management
     }
   ]
 })
