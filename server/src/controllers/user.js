@@ -73,6 +73,7 @@ module.exports = {
   },
     //Get Users
     get_users: async function(req,res){
+      console.log(req);
       user_db.get_users().then((result)=>{
             res.status(200).send({
               users: result});
