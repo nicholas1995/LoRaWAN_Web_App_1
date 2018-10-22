@@ -79,6 +79,9 @@ export default {
       if(item=="Account Management"){
         this.$router.push('accountmanagement'); 
       }
+      else if(item=="Map"){
+        this.$router.push('map'); 
+      }
       else{
         this.$router.push('dashboard'); 
       }

@@ -46,6 +46,7 @@ function compare(data, encrypted) {
     console.log("Compare password error");
   }
 } 
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 module.exports = {
@@ -57,6 +58,7 @@ module.exports = {
         res.status(200).send({message:"User Created...."});
         email.transporter.sendMail(email.mailOptions(req.body, pw),(error, info) => {
             if (error) {
+              console.log('Error sending email');
               console.log(error);
             } else {
               console.log("Email sent: " + info.response);
@@ -77,13 +79,13 @@ module.exports = {
         }).catch((error) => {
             res.status(500).send({error:"Problem occured while trying to connect."});
         })
-    },
+    }, 
   //Delete User
   delete_user: async function (req, res) {
     user_db.get_single_user(req.body.email).then(result => { //Make sure the user exists
-      if (result == "") {
+      if (result == "") { 
         res.status(404).send({
-          error: "User does not exists"
+          error: "User does not exists" 
         })
         console.log('User does not exists');
       } else {
@@ -99,7 +101,7 @@ module.exports = {
     }).catch(error => {
       res.status(500).send({error:"Problem occured while trying to connect."});
     })
-  },
+  }, 
 
   //Login
   login: function(req, res) {
@@ -189,7 +191,19 @@ module.exports = {
     }).catch(err => {
       res.status(500).send({error:"Problem occured while trying to connect."});
     });
+  },
+  profile: function(req,res){
+    try{
+      res.status(200).send({user:{
+        first_name: req.user[0].first_name,
+        last_name: req.user[0].last_name,
+        address: req.user[0].address,
+        home_phone: req.user[0].home_phone,
+        mobile_phone: req.user[0].mobile_phone,
+        email: req.user[0].email
+      }});
+    }catch(err){
+      console.log('Error trying to send profile information');
+    }
   }
 };
-
- 

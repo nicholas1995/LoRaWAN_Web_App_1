@@ -3,9 +3,10 @@ import Router from 'vue-router'
 import Toolbar from '@/components/Toolbar'
 import Register from '@/components/Register'
 import Login from '@/components/Login'
-import Dashboard from '@/components/Dashboard'
+import Dashboard from './../components/Dashboard/Dashboard.vue'
 import Update_user from '../components/Update_User.vue'
 import Account_Management from '../components/Account_Management.vue'
+import Interactive_Map from '../components/Map.vue'
 
 
 Vue.use(Router)
@@ -41,6 +42,11 @@ export default new Router({
       path: '/accountmanagement',
       name: 'accountmanagement',
       component: Account_Management
+    },
+    {
+      path: '/map',
+      name: 'map',
+      component: Interactive_Map
     }
   ]
 })

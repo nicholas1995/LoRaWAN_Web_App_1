@@ -16,6 +16,9 @@
       <v-btn class="grey lighten-2" @click="login" flat v-if="this.$store.state.loginState">
         Login
       </v-btn>
+      <v-icon large @click="edit_account"  v-if="!this.$store.state.loginState" class=" mt-3 mr-3">
+        account_box
+      </v-icon>
       <v-btn class="grey lighten-2" @click="logout" flat v-if="!this.$store.state.loginState">
         Logout
       </v-btn>
@@ -26,6 +29,7 @@
   
 
 <script>
+import AuthenticationService from "../services/AuthenticationService.js";
 export default {
   data() {
     return {
@@ -37,11 +41,18 @@ export default {
     login(){
       this.$router.push('login');
     },
-    register(){
-      this.$router.push('register');
+    async edit_account() {
+      try{
+        this.$store.commit('update_self', 1);
+        const response = await AuthenticationService.get_profile_information();
+        let user = response.data.user;
+        this.$store.commit('update_user', {user});
+        this.$router.push('updateuser'); 
+      }catch(error){
+        console.log({location: "Toolbar",error})
+      }
     },
     logout(){
-      console.log('here');
       this.$store.commit('logout');
       this.$router.push('login');
     }

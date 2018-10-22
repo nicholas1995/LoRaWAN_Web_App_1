@@ -14,12 +14,13 @@ export default new Vuex.Store({
   ],
   state: {
     user:{
-      user_name: ''
+      user_name: '',
+      email: ''
     },
     update_user: {}, //this stores the user object to be obdated
+    update_self: 0, //this is used to track if the software admin is updating his account or another user
     token: "",
     loginState: 1,
-    loginSt: 0,
     user_class: '',
     users: []
   },
@@ -29,6 +30,7 @@ export default new Vuex.Store({
       this.state.loginState = !this.state.loginState;
       this.state.user_class = data.user_class;
       this.state.user.user_name = data.user_name;
+      this.state.user.email = data.email;
     },
     logout(state) { //this is to ensure that when you log out no information of the state is stored on the local storage 
       this.state.token = "";
@@ -36,6 +38,7 @@ export default new Vuex.Store({
       this.state.loginState = !this.state.loginState;
       this.state.users = [];
       this.state.user.user_name = "";
+      this.state.user.email = "";
       this.state.update_user = {};
       
     },
@@ -45,9 +48,15 @@ export default new Vuex.Store({
     update_user(state, user){
       state.update_user = user;
     },
+    update_user_destroy(state,name){
+      state.update_user = {};
+      state.user.user_name = name.full_name;
+    },
     get_users_destroy(state){
       state.users = [];
-      console.log('sdfsdfsadfg')
+    },
+    update_self(state, value){
+      state.update_self =value;
     }
   },
   actions: {

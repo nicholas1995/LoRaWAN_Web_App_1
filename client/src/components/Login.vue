@@ -72,9 +72,8 @@ export default {
         if(response.data.user.new_user==1){
           this.newuser = response.data.user.new_user;
         }else{
-          console.log(response.data.user_class)
           this.message = response.data.message;
-          this.$store.commit('login',{token: response.data.token, user_class: response.data.user_class, user_name: response.data.user_name});
+          this.$store.commit('login',{token: response.data.token, user_class: response.data.user_class, user_name: response.data.user_name, email: response.data.user.email});
           this.$router.push('dashboard');
         }
         this.message = response.data.message;

@@ -58,7 +58,6 @@ module.exports = {
         }
     },
     update_user (req, res, next){
-        console.log(req.body.user_class)
         const schema = {
             first_name: Joi.string().required().regex(
                 new RegExp('^[a-zA-Z]{2,32}$')
@@ -75,7 +74,7 @@ module.exports = {
                 new RegExp('^[0-9]{10,10}$')
             )
         }
-        const {error, value} = Joi.validate(req.body, schema)
+        const {error, value} = Joi.validate(req.body, schema) 
         if (error) {
             switch (error.details[0].context.key) {
                 case 'first_name':

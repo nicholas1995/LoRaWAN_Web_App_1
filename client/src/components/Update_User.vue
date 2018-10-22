@@ -1,5 +1,5 @@
 <template>
-  <v-content v-if="this.$store.state.user_class == 'Software Admin'">
+  <v-content v-if="!this.$store.state.loginState " >
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -81,10 +81,21 @@ export default {
     };
   },
   beforeCreate: function () {
-    if(this.$store.state.user_class !='Software Admin'){
+    if(this.$store.state.loginState){
       alert('You do not have access to this page');
       this.$router.push('dashboard');
     }
+    else if(this.$store.state.update_user =={}){
+      this.$router.push('dashboard');
+    }
+  },
+  destroyed: function(){
+    if(this.$store.state.update_self == 1){
+      let full_name = this.first_name + " " + this.last_name;
+      this.$store.commit('update_user_destroy',{full_name});
+    }
+
+    this.$store.commit('update_self', 0);//reset back to zero 
   },
   components: {},
   methods: {
@@ -116,7 +127,11 @@ export default {
           email: this.$store.state.update_user.user.email
         });
         this.$store.dispatch('get_users');
-        this.$router.push('accountmanagement');
+        if(this.$store.state.user_class == "Software Admin"){
+          this.$router.push('accountmanagement');
+        }else{
+          this.$router.push('dashboard');
+        }
         this.message = response.data.message;
       } catch (error) {
         this.message = error.response.data.error;

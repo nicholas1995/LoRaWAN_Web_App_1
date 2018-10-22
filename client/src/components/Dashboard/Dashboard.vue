@@ -23,7 +23,7 @@
   
 
 <script>
-import AuthenticationService from "../services/AuthenticationService.js";
+import AuthenticationService from "../../services/AuthenticationService.js";
 import dashboard_iot_network_admin from './Dashboard_IoT_Network_Admin'
 import dashboard_software_admin from './Dashboard_Software_Admin'
 import dashboard_analyst from './Dashboard_Analyst'

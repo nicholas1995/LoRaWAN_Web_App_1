@@ -12,7 +12,7 @@ export default {
     //A funtion that hits a post to localhost:3000/register. It passes the credentials to the server
     register(credentials){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('register', credentials); 
+        return Api.post('user', credentials); 
     },
     login(credentials){
         return Api.post('login', credentials); 
@@ -22,14 +22,18 @@ export default {
     },
     get_users(){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get('users');
+        return Api.get('user');
     },
     delete_user(credentials){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('/user/delete', credentials);
+        return Api.delete('/user', {data: credentials});
     },
     update_user(credentials){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.put('/user/update', credentials);
+        return Api.put('/user', credentials);
+    },
+    get_profile_information(){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get('/profile', );
     }
 };  

@@ -23,18 +23,12 @@
 </template>
 
 <script>
-import register from './components/Register'
-import login from './components/Login'
 import toolbar from './components/Toolbar'
-import dashboard_software_admin from './components/Dashboard_Software_Admin'
 import navigation_drawer from './components/Navigation_Drawer'
 export default {
   name: 'App',
   components:{
     toolbar,
-    register,
-    login,
-    dashboard_software_admin,
     navigation_drawer
   }
 }
