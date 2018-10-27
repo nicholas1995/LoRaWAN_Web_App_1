@@ -57,17 +57,15 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, minLength } from 'vuelidate/lib/validators'
+import { maxLength, minLength } from 'vuelidate/lib/validators'
 export default {
   mixins: [validationMixin],
   validations: {
       name: {
-        required,
         maxLength: maxLength(20),
         minLength: minLength(2)
       },      
       display_name: {
-        required,
         maxLength: maxLength(20),
         minLength: minLength(2)
       }
@@ -89,7 +87,6 @@ export default {
       if (!this.$v.name.$error)return errors
       !this.$v.name.maxLength && errors.push('Name must be 20 characters or longer')
       !this.$v.name.minLength && errors.push('Name must be 2 characters or longer.')
-      !this.$v.name.required && errors.push('Name is required.')
       return errors;
     },
     display_nameErrors(){
@@ -97,7 +94,6 @@ export default {
       if (!this.$v.display_name.$error)return errors
       !this.$v.display_name.maxLength && errors.push('Display Name must be 20 characters or longer')
       !this.$v.display_name.minLength && errors.push('Display Name must be 2 characters or longer.')
-      !this.$v.display_name.required && errors.push('Display Name is required.')
       return errors;
     }
   },
@@ -107,7 +103,12 @@ export default {
       if(this.$v.name.$invalid || this.$v.display_name.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
-        console.log(this.network);
+        if(this.name == ""){
+          this.name = this.network.name;
+        }
+        if(this.display_name == ""){
+          this.display_name = this.network.display_name;
+        }
         if(this.can_have_gateways =="")this.can_have_gateways =false; //needed to set empty radio to false
         this.message = "";
         AuthenticationService.update_networks({
