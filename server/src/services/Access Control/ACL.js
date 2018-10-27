@@ -1,13 +1,17 @@
 const ACL = {
     Iot_Network_Admin:
         {
+            users: {
+                read: 'Self',
+                update: 'Self',
+            },
             networks: {
                 read: 'All',
                 update: 'All',
                 delete: 'All',
                 create: 'All'
             },
-            subnetworks: {
+            sub_networks: {
                 read: 'All',
                 update: 'All',
                 delete: 'All',
@@ -37,8 +41,8 @@ const ACL = {
                 update: 'All',
                 delete: 'All',
                 create: 'All'
-            },
-            subnetworks: {
+            }, 
+            sub_networks: {
                 read: 'All'
             },
             end_devices: {
@@ -54,7 +58,11 @@ const ACL = {
         },
     Analyst:
         {
-            subnetworks: {
+            users: {
+                read: 'Self',
+                update: 'Self',
+            }, 
+            sub_networks: {
                 read: 'All'
             },
             end_devices: {
@@ -70,6 +78,10 @@ const ACL = {
         },
     Fisher:
         {
+            users: {
+                read: 'Self',
+                update: 'Self',
+            }, 
             end_device_data: {
                 read: 'Self'
             }

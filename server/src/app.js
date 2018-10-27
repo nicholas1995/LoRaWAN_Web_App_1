@@ -5,6 +5,7 @@ const morgan = require('morgan'); //logs which device etc hit the request
 const config = require('./configeration/config');
 const app = express();
 
+
 //app.use(morgan('combined'));
 app.use(bodyParser.json());
 app.use(cors()); //DO RESEACH ON THIS.... 29:42 on first video
@@ -17,3 +18,11 @@ app.listen(config.port, () =>{
 const db = require('./db');
 module.exports = app;
 require('./routes')(app);
+
+
+let i= 0;
+function intervalFunct(){
+    console.log('interval: '+ i);
+    i++;
+} 
+setInterval(intervalFunct,60000);     

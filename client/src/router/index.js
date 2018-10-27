@@ -7,6 +7,9 @@ import Dashboard from './../components/Dashboard/Dashboard.vue'
 import Update_user from '../components/Update_User.vue'
 import Account_Management from '../components/Account_Management.vue'
 import Interactive_Map from '../components/Map.vue'
+import Network from '../components/Network/Network.vue'
+import Sub_Network from '../components/Sub_Network/Sub_Network.vue'
+
 
 
 Vue.use(Router)
@@ -47,6 +50,16 @@ export default new Router({
       path: '/map',
       name: 'map',
       component: Interactive_Map
+    },
+    {
+      path: '/network',
+      name: 'network',
+      component: Network
+    },
+    {
+      path: '/subnetwork',
+      name: 'subnetwork',
+      component: Sub_Network
     }
   ]
 })

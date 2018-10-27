@@ -81,6 +81,7 @@ export default {
     };
   },
   beforeCreate: function () {
+    //check valid request
     if(this.$store.state.loginState){
       alert('You do not have access to this page');
       this.$router.push('dashboard');
@@ -126,7 +127,6 @@ export default {
           mobile_phone: this.mobile_phone,
           email: this.$store.state.update_user.user.email
         });
-        this.$store.dispatch('get_users');
         if(this.$store.state.user_class == "Software Admin"){
           this.$router.push('accountmanagement');
         }else{

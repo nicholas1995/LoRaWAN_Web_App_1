@@ -73,7 +73,6 @@ module.exports = {
   },
     //Get Users
     get_users: async function(req,res){
-      console.log(req);
       user_db.get_users().then((result)=>{
             res.status(200).send({
               users: result});
@@ -186,6 +185,7 @@ module.exports = {
       })
     }
   },
+  //Update User
   update_user: function(req,res){
     user_db.update_user(req).then( result => {
         res.status(200).send({message: 'User details updated.'});
@@ -193,6 +193,7 @@ module.exports = {
       res.status(500).send({error:"Problem occured while trying to connect."});
     });
   },
+  //Get Profile Information
   profile: function(req,res){
     try{
       res.status(200).send({user:{
@@ -206,5 +207,8 @@ module.exports = {
     }catch(err){
       console.log('Error trying to send profile information');
     }
+  },
+  test: function(req,res){
+    console.log(res);
   }
 };

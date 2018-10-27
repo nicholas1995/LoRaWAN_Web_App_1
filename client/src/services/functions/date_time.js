@@ -1,6 +1,3 @@
-
-
-
 module.exports = {
 //This function takes the month in numerical form from 0:11 and reutrn the first 3 letters of the month
 return_month: function(month){

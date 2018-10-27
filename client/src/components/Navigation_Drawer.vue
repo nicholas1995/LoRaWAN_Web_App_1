@@ -78,11 +78,13 @@ export default {
     login(item){
       if(item=="Account Management"){
         this.$router.push('accountmanagement'); 
-      }
-      else if(item=="Map"){
+      }else if(item=="Network"){
+        this.$router.push('network'); 
+      }else if(item=="Sub-Network"){
+        this.$router.push('subnetwork'); 
+      }else if(item=="Map"){
         this.$router.push('map'); 
-      }
-      else{
+      }else{
         this.$router.push('dashboard'); 
       }
     }

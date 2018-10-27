@@ -35,24 +35,29 @@ function convert_method(method){
         break;
     }
     return access;
-}
+} 
 
 module.exports = {
-    grant_access: function(user_class, ability, method){
+    check_permission: function(user_class, ability, method){
         let user = convert_user_class(user_class);
         let access = convert_method(method);
-        if(ACL[user].hasOwnProperty(ability)){
-            if(ACL[user][ability].hasOwnProperty(access)){
-                if(ACL[user][ability][access] == 'All'){
-                    console.log('Has Access to All');
+        if(ACL[user].hasOwnProperty(ability)){ //See if the user class of the user has permission to use the ability( eg networks, users)
+            if(ACL[user][ability].hasOwnProperty(access)){ //See if the user class of the user has the ability to perform that specified action on the resource (eg read users)
+                if(ACL[user][ability][access] == 'All'){ //See if the user class of the user has the ability to perform the action on all or a specific item
+                    //console.log('Has Access to All');
+                    return 'all';
                 }else{
-                    console.log('Has Access to Self');
+                    //console.log('Has Access to Self');
+                    return 'self';
                 }
             }else{
-                console.log('Do not have Access!');
+                //console.log('Do not have Access!');
+                return 'NA';
             }
         }else{
-            console.log('Do not have Access!');
+            //console.log('Do not have Access!');
+            return 'NA';
         }  
     }
 } 
+ 
