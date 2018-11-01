@@ -5,6 +5,10 @@ const morgan = require('morgan'); //logs which device etc hit the request
 const config = require('./configeration/config');
 const app = express();
 
+const mqtt = require('mqtt');
+// to be changed to own local server/service
+const client = mqtt.connect('http://broker.hivemq.com');
+
 
 //app.use(morgan('combined'));
 app.use(bodyParser.json());
@@ -25,4 +29,18 @@ function intervalFunct(){
     console.log('interval: '+ i);
     i++;
 } 
-setInterval(intervalFunct,60000);     
+//setInterval(intervalFunct,6000);     
+
+
+
+/*  client.on('connect', () => { 
+    client.subscribe('lora/#',()=> {
+        console.log('subscribed') 
+    });
+});
+
+client.on('message', function (topic, message) { 
+    // message is Buffer
+    console.log('MSG: %s: %s', topic, message);
+  })  */
+  

@@ -10,14 +10,14 @@
       <v-spacer></v-spacer>
           <v-toolbar-items class="hidden-sm-and-down ">
       <v-icon large 
-            class="mr-1 mt-3" @click.stop="$emit('create-sub_network')" >
+            class="mr-1 mt-3" @click.stop="$emit('create_sub_network', sub_networks)" >
         person_add
       </v-icon>
     </v-toolbar-items>
     </v-toolbar>
     <v-data-table
       :headers="headers"
-      :items="sub_network"
+      :items="sub_networks"
       hide-actions
       class="elevation-1"
     >
@@ -26,14 +26,14 @@
             <v-icon 
               small
               class="mr-2 pt-3"
-              @click.stop="$emit('update-sub_network',props.item)"
+              @click.stop="$emit('update_sub_network',{'sub_network_update':props.item,'sub_networks':sub_networks})"
             >
               edit
             </v-icon>
             <v-icon 
               small
               class="pt-3"
-              @click="delete_sub_network(props.item)"
+              @click="delete_sub_neworks(props.item)"
             >
               delete
             </v-icon>
@@ -63,38 +63,27 @@ export default {
           { text: 'Description', value: 'description' ,sortable: false},
           { text: 'Network ID', value: 'network_id' , sortable: true },
           { text: 'Service Profile ID', value: 'service_profile_id', sortable: true },
-          { text: 'Service Profile Name', value: 'service_profile_name', sortable: true },
+          { text: 'Service Profile Name', value: 'service_profile_name', sortable: false },
         ],
-        sub_network: [{
-          sub_network_id: '111',
-          sub_network_name: 'High Street',
-          description: 'This subnetwork is located on high street',
-          network_id: '111',
-          service_profile_id: '123',
-          service_profile_name: 'Service'
-        },{
-          sub_network_id: '222',
-          sub_network_name: 'La Romain',
-          description: 'This subnetwork is located on la romain',
-          network_id: '222',
-          service_profile_id: '123',
-          service_profile_name: 'Service 1'
-        },{
-          sub_network_id: '333',
-          sub_network_name: 'Port of Spain',
-          description: 'This subnetwork is located on POS',
-          network_id: '333',
-          service_profile_id: '123',
-          service_profile_name: 'Service 3'
-        },
-        ]
-      
+        sub_networks: []
+    }
+  },
+  props: [
+    'sub_network'
+  ],
+  watch: {
+    sub_network: function(){
+      this.sub_networks = this.sub_network;
     }
   },
   created: function () {
+    AuthenticationService.get_sub_networks().then(result => {
+      this.sub_networks = result.data.sub_networks_lora;
+    }).catch(err => {
+      //Error requesting the subnetworks from the server
+    })
   },
   destroyed: function(){
-    this.$store.commit('get_users_destroy');
   },
   computed: {
     users () {
@@ -105,21 +94,17 @@ export default {
     }
   },
   methods: {
-    login(){
-      this.$router.push('login');
-    },
-    update_User(user){
-      this.$store.commit('update_user', {user});
-      this.$router.push('updateuser'); 
-    },
-    deleteItem(user){
-      if(confirm('Are you sure you want to delete this user?') == true){
-        this.$store.dispatch('delete_user', {user})
+    delete_sub_neworks(sub_network){
+      if(confirm('Are you sure you want to delete this Sub-Network?') == true){
+        AuthenticationService.delete_sub_networks(sub_network.sub_network_id).then(result => {
+          let data = JSON.parse(result.data.data);
+          this.sub_networks = data;
+          console.log(data)
+        }).catch(err => {
+
+        })
       };
     }, 
-    add_user(){
-      this.$router.push('register'); 
-    } 
   },
   filters: {
         //This function accepts the date and time in ISO 8601 Date and Time in UTC and return DD-MON-YY HH:MM:SS

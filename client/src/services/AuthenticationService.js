@@ -43,20 +43,44 @@ export default {
         return Api.get('networks');
     },
     create_networks(data){
+        data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('networks',data);
+        return Api.post('networks',{data});
     },
-    update_networks(payload){
-        let data = { //to remove the id from the body so we do not need to change validate policy
-            can_have_gateways: payload.can_have_gateways,
-            name: payload.name,
-            display_name: payload.display_name,
-        }
+    update_networks(data, id){
+        data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.put(`/networks/${payload.id}`,data);
+        return Api.put(`/networks/${id}`,{data});
     },
     delete_networks(network){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.delete(`/networks/${network.id}`);
+    },
+
+    //Sub Networks
+    get_sub_networks(){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get('/sub_networks');
+    },
+    create_sub_networks(data){
+        data = JSON.stringify(data);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.post('/sub_networks',{data});
+    },
+    update_sub_networks(data, sub_network_id){
+        data = JSON.stringify(data);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/sub_networks/${sub_network_id}`, { data });
+    },
+    delete_sub_networks(sub_network_id){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/sub_networks/${sub_network_id}`);
+    },
+
+    //Service Profile
+    get_service_profile(network_id){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/service_profiles/${network_id}`);
     }
+
 };  

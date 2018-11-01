@@ -13,35 +13,28 @@
             <v-flex >
               <v-text-field
                 v-model="sub_network_name"
-                hint= 'Sub-Network Name'
-                :label="this.sub_network.sub_network_name"
-                required
+                label= 'Sub-Network Name'
+                :hint="'Current Name: '+this.sub_network_update.sub_network_name"
+                :error-messages = "sub_network_name_Errors"
+                @keyup="$v.sub_network_name.$touch() && $v.u.$touch()" 
               ></v-text-field>
               </v-flex>
             <!--Description  -->
             <v-flex >
               <v-text-field
                 v-model="description"
-                hint= 'Description'
-                :label="this.sub_network.description"
-                required
+                label= 'Description'
+                :hint="'Current Description: '+this.sub_network_update.description"
+                :error-messages = "description_Errors"
+                @keyup="$v.description.$touch()" 
               ></v-text-field>
               </v-flex>
-            <!--Network Name-->
-              <v-combobox
-                v-model="network_name"
-                :items="items"
-                chips
-                hint= 'Network Name'
-                :label="this.sub_network.network_name"
-              ></v-combobox>
             <!--Service Profile Name-->
               <v-combobox
-                v-model="service_profile_name"
-                :items="items"
-                chips
-                hint= 'Service Profile Namee'
-                :label="this.sub_network.service_profile_name"
+                v-model="service_profile_form"
+                :placeholder ="'Current SP: '+this.sub_network_update.service_profile_id"
+                :items="service_profile_names"
+                label= 'Service Profile'
               ></v-combobox>
             <!-- Message -->
               <div div class="text">
@@ -53,7 +46,7 @@
                 Update Sub-Network
               </v-btn>
              <v-btn class="grey lighten-2"
-                @click.stop="$emit('sub_network_management')">
+                @click.stop="$emit('sub_network_management_no_change')">
                 Cancel
               </v-btn>
           </v-card>
@@ -67,32 +60,108 @@
 
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
+import { validationMixin } from 'vuelidate'
+import { required, maxLength, minLength } from 'vuelidate/lib/validators'
+import functions from "../../services/functions/forms_functions.js"
+
+
+const unique= function(value){
+   let i;
+  let x = 1; //0 fail, 1 pass
+  for(i=0; i< this.sub_networks.length; i++){
+    if(value ==this.sub_networks[i].sub_network_name){
+      if(value == this.sub_network_update.sub_network_name){
+        return x;
+      }else return 0;
+    }
+  } 
+  return x; 
+}
+
+
 export default {
+  mixins: [validationMixin],
+  validations: {
+    sub_network_name: {
+      u: unique,
+      maxLength: maxLength(20),
+      minLength: minLength(2)
+    },      
+    description: {
+      maxLength: maxLength(60),
+      minLength: minLength(2)
+    }
+  },
+  computed: {
+    sub_network_name_Errors(){
+      const errors=[];
+      if (!this.$v.sub_network_name.$error)return errors
+      !this.$v.sub_network_name.u && errors.push('Sub-Network name must be unique')
+      !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer')
+      !this.$v.sub_network_name.minLength && errors.push('Sub-Network name must be 2 characters or longer.')
+      return errors;
+    },
+    description_Errors(){
+      const errors=[];
+      if (!this.$v.description.$error)return errors
+      !this.$v.description.maxLength && errors.push('Description must be 60 characters or longer')
+      !this.$v.description.minLength && errors.push('Description must be 2 characters or longer.')
+      return errors;
+    }
+  },
   data() {
     return {
       sub_network_name: "",
       description: "",
-      network_name: "",
-      service_profile_name: "",
+      service_profile_form: "",
       message: "",
-      items:[]
+      service_profile_names: []
     };
   },
   props:[
-   'sub_network'
+   'sub_networks',
+   'sub_network_update'
   ],
   created: function () {
-    console.log('here 0');
+    AuthenticationService.get_service_profile(this.sub_network_update.network_id).then(result => {
+      for(let i =0; i< result.data.service_profiles.length; i++){
+          this.service_profile_names.push(result.data.service_profiles[i].serviceProfileID.concat("-",result.data.service_profiles[i].name));
+        }
+      }).catch(err=> {
+        //Error requesting service profiles from server
+      })
   },
-  destroyed: function(){
-    console.log('here 4');
-  },
-  components: {},
   methods: {
     update_sub_network() {
-      console.log('here 1');
-      this.$emit('sub_network_management')
-      console.log('here 2');
+      if(this.$v.sub_network_name.$invalid || this.$v.description.$invalid ){
+        this.message ="Error in Form. Please fix and resubmit!"
+      }else{
+        if(this.sub_network_name == ""){
+          this.sub_network_name = this.sub_network_update.sub_network_name;
+        }
+        if(this.description == ""){
+          this.description = this.sub_network_update.description;
+        }
+        if(this.service_profile_form == ""){
+          this.service_profile_id = this.sub_network_update.service_profile_id;
+        }
+        else{
+          this.service_profile_id=functions.extract_id(this.service_profile_form);
+        }
+        this.message = "";
+        AuthenticationService.update_sub_networks({
+          sub_network_name: this.sub_network_name,
+          description: this.description,
+          network_id: this.sub_network_update.network_id,
+          service_profile_id: this.service_profile_id,
+        }, this.sub_network_update.sub_network_id).then(result => {
+          let data = result.data.data;
+          data = JSON.parse(data);
+          this.$emit('sub_network_management', data);
+        }).catch(err => {
+          //Error updating sub-network
+        })
+      }
     }
   }
 };

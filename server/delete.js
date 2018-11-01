@@ -25,6 +25,14 @@ network_db.get_networks().then( result => {
     console.log(err);
 }) */
 
-let x = '/gatewaysfg'
-let y = x.lastIndexOf('/');
-console.log(y);
+const unique = function(sub_network_names, input){
+    let i;
+    let value = 1; //0 fail, 1 pass
+    for(i=0; i< sub_network_names.length; i++){
+      if(input ==sub_network_names[i]){
+        return 0;
+      }
+    }
+    return value;
+  }
+  console.log(unique(['SP 1', 'SP 2'], 'SP'));

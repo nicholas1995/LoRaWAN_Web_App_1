@@ -15,7 +15,7 @@
                 v-model="name"
                 hint= 'Network Name'
                 :error-messages = "nameErrors"
-                :label="this.network.name"
+                :label="this.network_update.name"
                 @keyup="$v.name.$touch()" 
               ></v-text-field>
               </v-flex>
@@ -24,13 +24,13 @@
                 v-model="display_name"
                 :error-messages = "display_nameErrors"
                 hint= 'Display Name'
-                :label="this.network.display_name"
+                :label="this.network_update.display_name"
                 @keyup="$v.display_name.$touch()"
               ></v-text-field>
             <!--Can Have Gateways-->
               <v-checkbox
-                :v-model="can_have_gateways"
-                :label="`Can Have Gateways: ${this.network.can_have_gateways}`"
+                v-model="can_have_gateways"
+                :label="`Can Have Gateways: ${this.network_update.can_have_gateways}`"
                 required
               ></v-checkbox>
 
@@ -57,17 +57,31 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { maxLength, minLength } from 'vuelidate/lib/validators'
+import { maxLength, alphaNum } from 'vuelidate/lib/validators'
+
+const unique= function(value){
+   let i;
+  let x = 1; //0 fail, 1 pass
+  for(i=0; i< this.networks.length; i++){
+    if(value ==this.networks[i].name){
+      if(value == this.network_update.name){
+        return x;
+      }else return 0;
+    }
+  } 
+  return x; 
+}
+
 export default {
   mixins: [validationMixin],
   validations: {
       name: {
-        maxLength: maxLength(20),
-        minLength: minLength(2)
+        maxLength: maxLength(80),
+        alphaNum,
+        u: unique,
       },      
       display_name: {
-        maxLength: maxLength(20),
-        minLength: minLength(2)
+        maxLength: maxLength(30),
       }
     },
   data() {
@@ -79,44 +93,48 @@ export default {
     };
   },
   props:[
-   'network'
+   'networks',
+   'network_update'
   ],
   computed: {
     nameErrors(){
       const errors=[];
       if (!this.$v.name.$error)return errors
       !this.$v.name.maxLength && errors.push('Name must be 20 characters or longer')
-      !this.$v.name.minLength && errors.push('Name must be 2 characters or longer.')
+      !this.$v.name.alphaNum && errors.push('Name must only contain letters and numbers')
+      !this.$v.name.u && errors.push('Name must be unique')
       return errors;
     },
     display_nameErrors(){
       const errors=[];
       if (!this.$v.display_name.$error)return errors
       !this.$v.display_name.maxLength && errors.push('Display Name must be 20 characters or longer')
-      !this.$v.display_name.minLength && errors.push('Display Name must be 2 characters or longer.')
       return errors;
     }
   },
   methods: {
     update_network() {
+      console.log(this.can_have_gateways);
       this.$v.$touch();
       if(this.$v.name.$invalid || this.$v.display_name.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         if(this.name == ""){
-          this.name = this.network.name;
+          this.name = this.network_update.name;
         }
         if(this.display_name == ""){
-          this.display_name = this.network.display_name;
+          this.display_name = this.network_update.display_name;
         }
-        if(this.can_have_gateways =="")this.can_have_gateways =false; //needed to set empty radio to false
+        if(this.can_have_gateways ==""){
+          console.log('here')
+          this.can_have_gateways =false; //needed to set empty radio to false
+        }
         this.message = "";
         AuthenticationService.update_networks({
-          id: this.network.id,
           name: this.name,
           display_name: this.display_name,
           can_have_gateways: this.can_have_gateways
-      }).then(result => {
+      }, this.network_update.id).then(result => {
         this.$emit('network_management', result.data); //passing the revecived array of networks to the parent component [Network]
       }).catch(err => {
         console.log(err);

@@ -58,19 +58,31 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, minLength } from 'vuelidate/lib/validators'
+import { required, maxLength, alphaNum } from 'vuelidate/lib/validators'
+
+const unique= function(value){
+   let i;
+  let x = 1; //0 fail, 1 pass
+  for(i=0; i< this.networks.length; i++){
+    if(value ==this.networks[i].name){
+      return 0;
+    }
+  } 
+  return x; 
+}
+
 export default {
 mixins: [validationMixin],
   validations: {
       name: {
         required,
-        maxLength: maxLength(20),
-        minLength: minLength(2)
+        maxLength: maxLength(80),
+        alphaNum,
+        u: unique,
       },      
       display_name: {
         required,
-        maxLength: maxLength(20),
-        minLength: minLength(2)
+        maxLength: maxLength(30),
       }
     },
   data() {
@@ -81,6 +93,9 @@ mixins: [validationMixin],
       message: "",
     };
   },
+  props:[
+   'networks'
+  ],
   beforeCreate: function () {
 
   },
@@ -89,15 +104,16 @@ mixins: [validationMixin],
       const errors=[];
       if (!this.$v.name.$error)return errors
       !this.$v.name.maxLength && errors.push('Name must be 20 characters or longer')
-      !this.$v.name.minLength && errors.push('Name must be 2 characters or longer.')
+      !this.$v.name.alphaNum && errors.push('Name must only contain letters and numbers')
       !this.$v.name.required && errors.push('Name is required.')
+      !this.$v.name.u && errors.push('Name must be unique')
+
       return errors;
     },
       display_nameErrors(){
       const errors=[];
       if (!this.$v.display_name.$error)return errors
       !this.$v.display_name.maxLength && errors.push('Display Name must be 20 characters or longer')
-      !this.$v.display_name.minLength && errors.push('Display Name must be 2 characters or longer.')
       !this.$v.display_name.required && errors.push('Display Name is required.')
       return errors;
     }

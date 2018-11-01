@@ -15,16 +15,23 @@ const db = mysql.createConnection({
 });
 
 //Connect to database
-db.connect(err => {
-  try {
-    if (err) {
-      throw err;
-    }
-  } catch (err) {console.log("Database not available...");}
-  if(!err){
+let i=0;
+connect_db();
+function connect_db(){
+  db.connect(err => {
+    try {
+      if (err) {
+        console.log('Error in database.. Reconnecting: ' + i);
+        i = i++
+        //connect_db();
+      }
+    } catch (err) { console.log("Database not available..."); }
+    if (!err) {
       console.log("Mysql Connected...");
     }
 
-});
+  });  
+}
+
 module.exports = db;   
    

@@ -2,57 +2,118 @@ const lora_app_server = require('../services/API/lora_app_server');
 const db = require('../services/database/networks_db');
 const compare = require('../services/compare');
 
+
+function network_api_request_data(data, type) {
+    let request;
+    if (type == 0) {//get form 
+        request = {
+            limit: 100,
+            //offset: null,
+            //search: null
+        }
+    }
+    else if (type == 1) {//create form
+        request ={
+            "organization":{
+            "canHaveGateways": data.can_have_gateways,
+            "displayName": `${data.display_name}`,
+            "name": `${data.name}`
+            }
+        }
+    } else if (type == 2) {//Update form
+        request = {
+            "organization": {
+                "canHaveGateways": data.can_have_gateways,
+                "displayName": `${data.display_name}`,
+                "name": `${data.name}`
+            }
+        }
+    }
+    return request;
+}
+
+function convert_names_networks(networks) {
+    //console.log(sub_networks);
+    let networks_return = [];
+    let network = {
+        can_have_gateways: null,
+        created_at: null,
+        display_name: null,
+        id: null,
+        name: null,
+        updated_at: null
+    };
+    for (let i = 0; i < networks.length; i++) {
+        network.can_have_gateways = networks[i].canHaveGateways;
+        network.created_at = networks[i].createdAt;
+        network.display_name = networks[i].displayName;
+        network.id = networks[i].id;
+        network.name = networks[i].name;
+        network.updated_at = networks[i].updatedAt;
+        networks_return[i] = network;
+        network = {
+            can_have_gateways: null,
+            created_at: null,
+            display_name: null,
+            id: null,
+            name: null,
+            updated_at: null
+        };
+
+    }
+    return networks_return;
+}
+
+
 module.exports = {
     get_networks: function(req, res) {
-        lora_app_server.get_organizations()
+        let data = network_api_request_data(null, 0);
+        lora_app_server.get_organizations(data)
             .then(result => {
-                let networks_lora = result.data.result;
+                let networks_lora = convert_names_networks(result.data.result);
                 db.get_networks().then(result => {
-                    compare.compare(networks_lora,result);
+                    compare.compare_networks(networks_lora,result);
                     res.status(200).send({networks_lora});
                 }).catch(err => {
                     //ERROR from the call from the db
-                    console.log(err);
+                    console.log('Error getting networks from db');
                 }) 
             }).catch(err => {
                 //error trying to get networks from lora
                 console.log(err);
             })  
-    },
+    }, 
     create_networks: function(req, res){
-        let apiCreateOrganizationRequest ={
-                "canHaveGateways": req.body.can_have_gateways,
-                "displayName": req.body.display_name,
-                "name": req.body.name
-        }
-        lora_app_server.create_organizations(apiCreateOrganizationRequest).then(result => {
-            db.create_network(result.data.id, req.body.name, req.body.display_name).then(result => {
-                lora_app_server.get_organizations().then(result => {
-                    let networks_lora = result.data.result;
+        let data = JSON.parse(req.body.data);
+        let request_body = network_api_request_data(data, 1);
+
+        lora_app_server.create_organizations(request_body).then(result => {
+            db.create_network(result.data.id, data.name, data.display_name).then(result => {
+                request_body = network_api_request_data(null, 0);
+                lora_app_server.get_organizations(request_body).then(result => {
+                    let networks_lora = convert_names_networks(result.data.result);
                     res.status(200).send(networks_lora);
                 }).catch(err => {
                     console.log('Error getting networks from lora');
                     //Error from trying to get networks from lora
                 })
             }).catch(err => {
-                console.log('Error Updating database');//Error updating database
+                console.log(err);//Error updating database
             })
         }).catch(err => {
-            console.log('Error received from posting network to lora');
+            console.log(err);
             //Error received from request sent to lora
         })
     },
     update_networks: function(req, res){
-        let apiUpdateOrganizationRequest = {
-            "id": req.params.id,
-            "canHaveGateways": req.body.can_have_gateways,
-            "displayName": req.body.display_name,
-            "name": req.body.name
-        }
-        lora_app_server.update_organizations(apiUpdateOrganizationRequest).then(result => {
-            db.update_networks_all_parameters(apiUpdateOrganizationRequest).then(result => {
-                lora_app_server.get_organizations().then(result => {
-                    let networks_lora = result.data.result;
+        let data = JSON.parse(req.body.data);
+        let request_body = network_api_request_data(data, 2);
+
+        lora_app_server.update_organizations(request_body,req.params.id).then(result => {
+            db.update_networks_all_parameters(data, req.params.id).then(result => {
+                request_body = network_api_request_data(null, 0);
+                lora_app_server.get_organizations(request_body).then(result => {
+                    let networks_lora = convert_names_networks(result.data.result);
                     res.status(200).send(networks_lora);
                 }).catch(err => {
                     //Error requesting networks from lora app server
@@ -65,11 +126,12 @@ module.exports = {
             console.log('err');
         })
     },
-    delete_networks: function(req, res){
+    delete_networks: async function(req, res){
         lora_app_server.delete_organizations(req.params.id).then(result => {
             db.update_network('deleted', 1, req.params.id).then(result => {
-                lora_app_server.get_organizations().then(result => {
-                    let networks_lora = result.data.result;
+                let request_body = network_api_request_data(null, 0);
+                lora_app_server.get_organizations(request_body).then(result => {
+                    let networks_lora = convert_names_networks(result.data.result);
                     res.status(200).send(networks_lora);
                 }).catch(err => {
                     //Error requesting networks form lora app server

@@ -1,13 +1,13 @@
 <template>
   <v-content v-if="this.$store.state.user_class == 'IoT Network Admin'">
       <div v-show="this.read== 1">
-        <network_management v-bind:network='this.network' @create-network= create_network() @update-network="update_network($event) "></network_management>
+        <network_management v-bind:network='this.network' @create_network= create_network($event) @update_network="update_network($event) "></network_management>
       </div>
       <div v-if="this.create == 1">
-        <create_network @network_management= read_network($event) @network_management_no_change= cancel()></create_network>
+        <create_network v-bind:networks='this.network' @network_management= read_network($event) @network_management_no_change= cancel()></create_network>
       </div>
       <div v-else-if="this.update== 1">
-        <update_network v-bind:network='this.network_update' @network_management= read_network($event) @network_management_no_change= cancel()></update_network>  <!--Dynamically passing prop to child component -->
+        <update_network v-bind:networks='this.network' v-bind:network_update='this.network_update' @network_management= read_network($event) @network_management_no_change= cancel()></update_network>  <!--Dynamically passing prop to child component -->
       </div>
 
     <div v-else-if="this.$store.state.loginState">
@@ -50,7 +50,8 @@ export default {
   computed: {
   },
   methods: {
-    create_network(){
+    create_network(data){
+      this.network =data;
       this.create =1;
       this.read =0;
       this.update =0;
@@ -62,7 +63,8 @@ export default {
       this.update =0;
     },
     update_network(data){
-      this.network_update = data;
+      this.network = data.networks;
+      this.network_update = data.network_update;
       this.create =0;
       this.read =0;
       this.update =1;

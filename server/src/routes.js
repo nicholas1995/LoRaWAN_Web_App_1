@@ -3,8 +3,12 @@ const user = require('./controllers/user');
 const authenticate = require('./policies/isAuthenticated');
 const grant_access = require('./services/Access Control/grant_access');
 const networks = require('./controllers/networks');
+const sub_networks = require('./controllers/sub_networks');
+const service_profiles = require('./controllers/service_profiles');
 const simulation = require('./simulation_lora'); //This is used to simulate the lora app server
 const Network_Policy = require('./policies/NetworkPolicies');
+const sub_network_policy = require('./policies/Sub_network_policies');
+
 
 
 module.exports = ((app) => {
@@ -39,12 +43,27 @@ module.exports = ((app) => {
     app.put('/networks/:id',authenticate,grant_access,Network_Policy.create,networks.update_networks);
 
     //Networks (Delete)
-    app.delete('/networks/:id',authenticate,grant_access,networks.delete_networks)
+    app.delete('/networks/:id',authenticate,grant_access,networks.delete_networks);
+
+    //----------------------Sub Networks-----------------
+
+    //Sub_Networks (Read)
+    app.get('/sub_networks',authenticate,grant_access,sub_networks.get);
+
+    //Sub_Networks (Create)
+    app.post('/sub_networks',authenticate,grant_access,sub_network_policy.create,sub_networks.create);
+
+    //Sub_Networks (Update)
+    app.put('/sub_networks/:sub_network_id', authenticate, grant_access,sub_network_policy.update, sub_networks.update)
+
+    //Sub_Networks (Delete)
+    app.delete('/sub_networks/:sub_network_id', authenticate, grant_access, sub_networks.delete)
+
+    //----------------------Service Profile----------------------
+    app.get('/service_profiles/:network_id',authenticate,grant_access,service_profiles.get)
 
 
-
-
-
+    //----------------------Simulate Lora API-----------------
     //simulation routes for the lora 
     app.get('/api/organizations', simulation.read_networks);
 
@@ -56,5 +75,20 @@ module.exports = ((app) => {
 
     //simulation routes for the lora 
     app.delete('/api/organizations/:id', simulation.delete_networks);
+
+    //simulation routes for the lora 
+    app.get('/api/applications', simulation.get_applications);
+
+    app.post('/api/applications', simulation.create_applications);
+
+    app.put("/api/applications/:id", simulation.update_applications);
+
+    app.delete("/api/applications/:id", simulation.delete_applications);
+
+
+
+    app.get('/api/service-profiles', simulation.get_service_profiles);
+
+    
 
 });     

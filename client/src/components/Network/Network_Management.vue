@@ -10,7 +10,7 @@
       <v-spacer></v-spacer>
           <v-toolbar-items class="hidden-sm-and-down ">
       <v-icon large 
-            class="mr-1 mt-3" @click.stop="$emit('create-network')" >
+            class="mr-1 mt-3" @click.stop="$emit('create_network', networks)" >
         person_add
       </v-icon>
     </v-toolbar-items>
@@ -26,13 +26,13 @@
             <v-icon 
               small
               class="mr-2 pt-3"
-              @click.stop="$emit('update-network',props.item)"
+              @click.stop="$emit('update_network',{network_update:props.item,networks:networks})"
             >
               edit
             </v-icon>
             <v-icon 
               small
-              class="pt-3"
+              class="pt-3 pr-3"
               @click="delete_network(props.item)"
             >
               delete
@@ -76,14 +76,12 @@ export default {
       console.log('Error');
     })
   },
-  destroyed: function(){
-    this.$store.commit('get_users_destroy');
-  },
   props:[
    'network'
   ],
   watch: {
     network: function(){   
+      console.log('Prop')
       this.networks = this.network;
       }
   },

@@ -33,6 +33,9 @@ const ACL = {
                 read: 'All',
                 export: 'All'
             },
+            service_profiles: {
+                read: 'All'
+            }
         },
     Software_Admin:
         {
