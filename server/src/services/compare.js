@@ -4,7 +4,7 @@ const sub_network_db = require('./database/sub_networks_db');
 
 
 module.exports = {
-    compare_networks: function(lora, db){
+    compare_networks: async function(lora, db){
         let i;
         let accounted_for =[];
         let added_lora = []; 
@@ -74,61 +74,62 @@ module.exports = {
         }
         
     }, 
-    compare_sub_networks: function(lora, db){
+    compare_sub_networks: async function(lora, db){
         let i;
         let accounted_for =[];
         let added_lora = [];
-        console.log(lora);
-        for(i=0; i<lora.length; i++){
-            let j;
-            if(db.length ==0){
-                added_lora.push(i);
-                console.log('Network Added');
-            }
-            for(j =0; j<db.length; j++){
-                if(lora[i].sub_network_id==db[j].id){
-                    if(lora[i].sub_network_name==db[j].name){
-                        accounted_for.push(j);
-                        console.log('Same Information');
-                        break;
-                    }else if(lora[i].sub_network_name!=db[j].name){
-                        sub_network_db.update('name', lora[i].sub_network_name, lora[i].sub_network_id).then(result => {
-
-                        }).catch(err => {
-                            console.log('err 1');
-                        })
-                        accounted_for.push(j);
-                        console.log('Different name');
-                        break;
-                    }
-                } 
-                else if(j ==(db.length-1)){
+        try{
+            for(i=0; i<lora.length; i++){
+                let j;
+                if(db.length ==0){
                     added_lora.push(i);
                     console.log('Network Added');
-                }else if(lora[i].sub_network_id!=db[j].id){
+                }
+                for(j =0; j<db.length; j++){
+                    if(lora[i].sub_network_id==db[j].id){
+                        if(lora[i].sub_network_name==db[j].name){
+                            accounted_for.push(j);
+                            console.log('Same Information');
+                            break;
+                        }else if(lora[i].sub_network_name!=db[j].name){
+                            await sub_network_db.update('name', lora[i].sub_network_name, lora[i].sub_network_id)
+                            .catch(err => {
+                                throw err;
+                            })
+                            accounted_for.push(j);
+                            console.log('Different name');
+                            break;
+                        }
+                    } 
+                    else if(j ==(db.length-1)){
+                        added_lora.push(i);
+                        console.log('Network Added');
+                    }else if(lora[i].sub_network_id!=db[j].id){
+                    }
                 }
             }
-        }
-        let k;
-        for(k =0; k< added_lora.length; k++){
-            sub_network_db.create_sub_network(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].sub_network_name, lora[added_lora[k]].network_id).then(result => {
-            }).catch(err => {
-                console.log('Err 2');
-            })
-            console.log('Inserted Added Network');
-        }
-        let l;
-        for(l=0; l<db.length; l++){
-            let index = accounted_for.indexOf(l);
-            if(index ==-1){
-                sub_network_db.update('deleted', 1, db[l].id).then(result => {
-
-                }).catch(err => {
-                    console.log(' 3');
+            let k;
+            for(k =0; k< added_lora.length; k++){
+                await sub_network_db.create_sub_network(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].sub_network_name, lora[added_lora[k]].network_id)
+                .catch(err => {
+                    throw err;
                 })
-                console.log('Network Deleted');
+                console.log('Inserted Added Network');
             }
+            let l;
+            for(l=0; l<db.length; l++){
+                let index = accounted_for.indexOf(l);
+                if(index ==-1){
+                    await sub_network_db.update('deleted', 1, db[l].id)
+                    .catch(err => {
+                        throw err;
+                    })
+                    console.log('Network Deleted');
+                }
+            }
+        
+        } catch (err) {
+            throw err;
         }
-      
     }
 }

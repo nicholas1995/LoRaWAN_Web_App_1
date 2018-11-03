@@ -70,7 +70,7 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { required, maxLength } from 'vuelidate/lib/validators'
+import { required, maxLength, alphaNum } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
 
 
@@ -95,6 +95,7 @@ export default {
   mixins: [validationMixin],
   validations: {
     sub_network_name: {
+      alphaNum,
       required,
       u: unique,
       maxLength: maxLength(80),
@@ -115,6 +116,7 @@ export default {
       const errors=[];
       if (!this.$v.sub_network_name.$error)return errors
       !this.$v.sub_network_name.u && errors.push('Sub-Network name must be unique')
+      !this.$v.sub_network_name.alphaNum && errors.push('Name must only contain letters and numbers')
       !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer')
       !this.$v.sub_network_name.required && errors.push('Sub-Network name is required.')
       return errors;
@@ -165,7 +167,7 @@ export default {
         this.service_profile_names =[];
         this.service_profile_form =[];
         this.sub_networks_same_network =[];
-        this.network_id=functions.extract_id(this.network_name_form) //extract id of network
+        this.network_id=functions.extract_id(this.network_name_form); //extract id of network
         for(let i =0; i<this.sub_network.length; i++){
           if(this.network_id == this.sub_network[i].network_id){
             this.sub_networks_same_network.push(this.sub_network[i]);
@@ -187,6 +189,8 @@ export default {
       for(i = 0; i < result.data.networks_lora.length; i++){
         this.network_names.push(result.data.networks_lora[i].id.concat("-",result.data.networks_lora[i].name));
       }
+    }).catch(err => {
+      //Error getting networks from server
     })
   },
   methods: {
@@ -203,7 +207,9 @@ export default {
           network_id: this.network_id,
           service_profile_id: this.service_profile_id
         }).then(result => {
-           this.$emit('sub_network_management', result.data.sub_networks_lora);
+          let data = result.data.sub_networks_lora;
+          data = JSON.parse(data);
+          this.$emit('sub_network_management', data);
         }).catch(err => {
           console.log(err);
           //Error trying to create subnetwork

@@ -5,7 +5,7 @@ const instance = axios.create({
     baseURL: 'http://localhost:8080', 
 });
 let token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJleHAiOjE1NDExMjg0NzMsImlzcyI6ImxvcmEtYXBwLXNlcnZlciIsIm5iZiI6MTU0MTA0MjA3Mywic3ViIjoidXNlciIsInVzZXJuYW1lIjoiYWRtaW4ifQ.ZW3UPYDCsUVGosathBo1j-gzj_j8XpHCTvx8OiIluMY";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJleHAiOjE1NDEyNjgyMTYsImlzcyI6ImxvcmEtYXBwLXNlcnZlciIsIm5iZiI6MTU0MTE4MTgxNiwic3ViIjoidXNlciIsInVzZXJuYW1lIjoiYWRtaW4ifQ.q6hCrqrkY7FmU1WG-NUtAcvvna41upTH4km7CEldzNE";
 module.exports = {
   //------------------------Organizations------------------------
   //---------Read---------
@@ -42,8 +42,8 @@ module.exports = {
   },
   //---------Update---------
   update: function(data, id){
-      let apiUpdateApplicationRequest = JSON.stringify(data);
-      return instance.put(`/api/applications/${id}`, {apiUpdateApplicationRequest})
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+      return instance.put(`/api/applications/${id}`, data)
   },
    //---------Delete---------
   delete: function(id){
@@ -52,7 +52,7 @@ module.exports = {
   }, 
 
 
-  //Service Profile 
+  //Service Profile  
   //Service Profile(Read)
   get_service_profiles: function (data, id) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;

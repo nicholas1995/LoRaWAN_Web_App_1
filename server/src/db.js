@@ -13,7 +13,7 @@ const db = mysql.createConnection({
   password: config.db.password,
   database: config.db.database
 });
-
+ 
 //Connect to database
 let i=0;
 connect_db();

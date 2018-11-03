@@ -18,5 +18,5 @@ module.exports ={
         (id, name, network_ID)
         VALUES ('${id}', '${name}', '${network_ID}')`;
         return db.queryAsync(sql);
-    }
+    } 
 }

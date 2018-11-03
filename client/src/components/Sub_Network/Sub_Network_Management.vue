@@ -97,9 +97,8 @@ export default {
     delete_sub_neworks(sub_network){
       if(confirm('Are you sure you want to delete this Sub-Network?') == true){
         AuthenticationService.delete_sub_networks(sub_network.sub_network_id).then(result => {
-          let data = JSON.parse(result.data.data);
+          let data = JSON.parse(result.data.sub_networks_lora);
           this.sub_networks = data;
-          console.log(data)
         }).catch(err => {
 
         })

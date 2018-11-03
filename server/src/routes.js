@@ -64,7 +64,7 @@ module.exports = ((app) => {
 
 
     //----------------------Simulate Lora API-----------------
-    //simulation routes for the lora 
+    //simulation routes for the lora  
     app.get('/api/organizations', simulation.read_networks);
 
     //simulation routes for the lora 

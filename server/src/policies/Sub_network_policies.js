@@ -39,8 +39,8 @@ module.exports = {
     update(req, res, next) {
         let data = JSON.parse(req.body.data);
         const schema = {
-            sub_network_name: Joi.string().required().min(2).max(20),
-            description: Joi.string().required().min(2).max(60),
+            sub_network_name: Joi.string().required().max(80),
+            description: Joi.string().required().max(200),
             network_id: Joi.string().required(),
             service_profile_id: Joi.string().required(),
         }

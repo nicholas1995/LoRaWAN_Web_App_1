@@ -64,24 +64,33 @@ function convert_names_networks(networks) {
     return networks_return;
 }
 
-
 module.exports = {
-    get_networks: function(req, res) {
-        let data = network_api_request_data(null, 0);
-        lora_app_server.get_organizations(data)
-            .then(result => {
-                let networks_lora = convert_names_networks(result.data.result);
-                db.get_networks().then(result => {
-                    compare.compare_networks(networks_lora,result);
-                    res.status(200).send({networks_lora});
-                }).catch(err => {
-                    //ERROR from the call from the db
-                    console.log('Error getting networks from db');
-                }) 
-            }).catch(err => {
-                //error trying to get networks from lora
-                console.log(err);
-            })  
+    get_networks: async function(req, res) {
+        let request_body = network_api_request_data(null, 0);
+        let networks_lora;
+        try{
+            networks_lora = await lora_app_server.get_organizations(request_body)
+            .catch(err => {
+                throw err;
+            });
+            networks_lora = convert_names_networks(networks_lora.data.result);
+            let networks_db = await db.get_networks()
+            .catch(err => {
+                throw {err:err,
+                    info: 'ERRRRROROROROROROOROR'};
+            });
+            await compare.compare_networks(networks_lora, networks_db)
+            .catch(err => {
+                throw {err:err,
+                    info: 'ERRRRROROROROROROOROR'};
+            });
+            //res.status(200).send({networks_lora});
+
+        }catch(err){
+            console.log(err.info);
+        }finally{
+            res.status(200).send({ networks_lora });
+        }
     }, 
     create_networks: function(req, res){
         let data = JSON.parse(req.body.data);

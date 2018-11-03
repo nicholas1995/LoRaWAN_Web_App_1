@@ -23,7 +23,6 @@ const db = require('./db');
 module.exports = app;
 require('./routes')(app);
 
-
 let i= 0;
 function intervalFunct(){
     console.log('interval: '+ i);
@@ -35,12 +34,12 @@ function intervalFunct(){
 
 /*  client.on('connect', () => { 
     client.subscribe('lora/#',()=> {
-        console.log('subscribed') 
-    });
+        console.log('subscribed')  
+    }); 
 });
 
-client.on('message', function (topic, message) { 
+client.on('message', function (topic, message) {  
     // message is Buffer
     console.log('MSG: %s: %s', topic, message);
   })  */
-  
+    
