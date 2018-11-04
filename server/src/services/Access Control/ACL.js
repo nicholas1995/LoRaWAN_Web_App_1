@@ -17,7 +17,7 @@ const ACL = {
                 delete: 'All',
                 create: 'All'
             },
-            end_devices: {
+            devices: {
                 read: 'All',
                 update: 'All',
                 delete: 'All',
@@ -34,6 +34,9 @@ const ACL = {
                 export: 'All'
             },
             service_profiles: {
+                read: 'All'
+            },
+            device_profiles: {
                 read: 'All'
             }
         },

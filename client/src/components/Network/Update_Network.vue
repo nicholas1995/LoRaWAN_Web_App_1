@@ -12,25 +12,23 @@
             <!--Network Name -->
             <v-flex >
               <v-text-field
-                v-model="name"
-                hint= 'Network Name'
-                :error-messages = "nameErrors"
-                :label="this.network_update.name"
-                @keyup="$v.name.$touch()" 
+                v-model="network_name"
+                label= 'Network Name'
+                :error-messages = "network_nameErrors"
+                @keyup="$v.network_name.$touch()" 
               ></v-text-field>
               </v-flex>
             <!--Network Display Name-->
               <v-text-field
                 v-model="display_name"
+                label= 'Display Name'
                 :error-messages = "display_nameErrors"
-                hint= 'Display Name'
-                :label="this.network_update.display_name"
                 @keyup="$v.display_name.$touch()"
               ></v-text-field>
             <!--Can Have Gateways-->
               <v-checkbox
                 v-model="can_have_gateways"
-                :label="`Can Have Gateways: ${this.network_update.can_have_gateways}`"
+                label="Can Have Gateways"
                 required
               ></v-checkbox>
 
@@ -57,85 +55,81 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { maxLength, alphaNum } from 'vuelidate/lib/validators'
+import { maxLength, helpers } from 'vuelidate/lib/validators'
 
 const unique= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
-  for(i=0; i< this.networks.length; i++){
-    if(value ==this.networks[i].name){
-      if(value == this.network_update.name){
+  for(i=0; i< this.networks_prop.length; i++){
+    if(value ==this.networks_prop[i].network_name){
+      if(value == this.network_update.network_name){
         return x;
       }else return 0;
     }
   } 
   return x; 
 }
+const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 export default {
   mixins: [validationMixin],
   validations: {
-      name: {
+      network_name: {
         maxLength: maxLength(80),
-        alphaNum,
+        alpha_num_dash,
         u: unique,
       },      
       display_name: {
-        maxLength: maxLength(30),
+        maxLength: maxLength(60),
       }
     },
   data() {
     return {
-      name: "",
+      network_name: "",
       display_name: "",
       can_have_gateways: "",
       message: ""
     };
   },
   props:[
-   'networks',
+   'networks_prop',
    'network_update'
   ],
+  created: function () {
+    this.network_name = this.network_update.network_name;
+    this.display_name = this.network_update.display_name;
+    this.can_have_gateways = this.network_update.can_have_gateways;
+  },
   computed: {
-    nameErrors(){
+    network_nameErrors(){
       const errors=[];
-      if (!this.$v.name.$error)return errors
-      !this.$v.name.maxLength && errors.push('Name must be 20 characters or longer')
-      !this.$v.name.alphaNum && errors.push('Name must only contain letters and numbers')
-      !this.$v.name.u && errors.push('Name must be unique')
+      if (!this.$v.network_name.$error)return errors
+      !this.$v.network_name.maxLength && errors.push('Name must be 80 characters or less.')
+      !this.$v.network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
+      !this.$v.network_name.u && errors.push('Name must be unique.')
       return errors;
     },
     display_nameErrors(){
       const errors=[];
       if (!this.$v.display_name.$error)return errors
-      !this.$v.display_name.maxLength && errors.push('Display Name must be 20 characters or longer')
+      !this.$v.display_name.maxLength && errors.push('Display Name must be 60 characters or less.')
       return errors;
     }
   },
   methods: {
     update_network() {
-      console.log(this.can_have_gateways);
       this.$v.$touch();
-      if(this.$v.name.$invalid || this.$v.display_name.$invalid){
+      if(this.$v.network_name.$invalid || this.$v.display_name.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
-        if(this.name == ""){
-          this.name = this.network_update.name;
-        }
-        if(this.display_name == ""){
-          this.display_name = this.network_update.display_name;
-        }
-        if(this.can_have_gateways ==""){
-          console.log('here')
-          this.can_have_gateways =false; //needed to set empty radio to false
-        }
         this.message = "";
         AuthenticationService.update_networks({
-          name: this.name,
+          network_name: this.network_name,
           display_name: this.display_name,
           can_have_gateways: this.can_have_gateways
-      }, this.network_update.id).then(result => {
-        this.$emit('network_management', result.data); //passing the revecived array of networks to the parent component [Network]
+      }, this.network_update.network_id).then(result => {
+        let data = JSON.parse(result.data.networks_lora);
+        this.$emit('network_management', data); //passing the revecived array of networks to the parent component [Network]
       }).catch(err => {
         console.log(err);
       })

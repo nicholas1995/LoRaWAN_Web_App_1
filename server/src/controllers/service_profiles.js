@@ -61,13 +61,19 @@ function convert_names_service_profiles(service_profiles) {
 }  
 module.exports = {
     get: async function(req, res){
-        let data_api = service_profile_api_request_data(null, 0);
         try{
-            let service_profiles = await lora_app_server.get_service_profiles(data_api,req.params.network_id);
+            let data_api = service_profile_api_request_data(null, 0);
+            let service_profiles = await lora_app_server.get_service_profiles(data_api,req.params.network_id)
+            .catch(err => {
+                throw err;
+                //Error getting service profiles from the Lora App Server
+            })
             service_profiles= service_profiles.data.result;
             service_profiles = convert_names_service_profiles(service_profiles);
+            service_profiles = JSON.stringify(service_profiles);
             res.status(200).send({service_profiles});
         }catch(err) {
+            console.log(err);
             //Error trying to request service profiles from lora app server
         }
     }   

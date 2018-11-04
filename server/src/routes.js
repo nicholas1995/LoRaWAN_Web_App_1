@@ -4,10 +4,14 @@ const authenticate = require('./policies/isAuthenticated');
 const grant_access = require('./services/Access Control/grant_access');
 const networks = require('./controllers/networks');
 const sub_networks = require('./controllers/sub_networks');
+const devices = require("./controllers/devices");
 const service_profiles = require('./controllers/service_profiles');
+const device_profiles = require("./controllers/device_profiles");
 const simulation = require('./simulation_lora'); //This is used to simulate the lora app server
-const Network_Policy = require('./policies/NetworkPolicies');
-const sub_network_policy = require('./policies/Sub_network_policies');
+const Network_Policy = require('./policies/network_policy');
+const sub_network_policy = require('./policies/sub_network_policy');
+const device_policy = require("./policies/device_policy");
+
 
 
 
@@ -31,8 +35,8 @@ module.exports = ((app) => {
     //Get Profile Information
     app.get('/profile',authenticate, user.profile);
 
+
     //---------------------Networks---------------------
-    
     //Networks (Read)
     app.get('/networks',authenticate,grant_access,networks.get_networks);
 
@@ -40,13 +44,13 @@ module.exports = ((app) => {
     app.post('/networks',authenticate,grant_access,Network_Policy.create,networks.create_networks);
 
     //Networks (Update)
-    app.put('/networks/:id',authenticate,grant_access,Network_Policy.create,networks.update_networks);
+    app.put('/networks/:network_id',authenticate,grant_access,Network_Policy.create,networks.update_networks);
 
     //Networks (Delete)
-    app.delete('/networks/:id',authenticate,grant_access,networks.delete_networks);
+    app.delete('/networks/:network_id',authenticate,grant_access,networks.delete_networks);
+
 
     //----------------------Sub Networks-----------------
-
     //Sub_Networks (Read)
     app.get('/sub_networks',authenticate,grant_access,sub_networks.get);
 
@@ -59,8 +63,29 @@ module.exports = ((app) => {
     //Sub_Networks (Delete)
     app.delete('/sub_networks/:sub_network_id', authenticate, grant_access, sub_networks.delete)
 
+
+    //----------------------Devices-----------------
+    //Devices (Read)
+    app.get('/devices', authenticate, grant_access, devices.get);
+
+    //Devices (Create)
+    app.post("/devices", authenticate, grant_access, device_policy.create, devices.create); //need to add in device validation
+
+    //Devices (Update)
+    app.put("/devices/:device_eui", authenticate, grant_access, device_policy.update, devices.update); //need to add in device validation
+
+    //Devices (Delete)
+    app.delete('/devices/:device_eui', authenticate, grant_access, devices.delete)
+
+
     //----------------------Service Profile----------------------
     app.get('/service_profiles/:network_id',authenticate,grant_access,service_profiles.get)
+
+    //----------------------Device Profile----------------------
+    app.get('/device_profiles/:sub_network_id', authenticate, grant_access, device_profiles.get)
+
+
+
 
 
     //----------------------Simulate Lora API-----------------

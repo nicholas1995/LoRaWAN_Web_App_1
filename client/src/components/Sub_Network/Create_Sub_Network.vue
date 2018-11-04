@@ -70,7 +70,7 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, alphaNum } from 'vuelidate/lib/validators'
+import { required, maxLength, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
 
 
@@ -88,14 +88,14 @@ const unique= function(value){
 
   }
     return x; 
-
 }
+const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 export default {
   mixins: [validationMixin],
   validations: {
     sub_network_name: {
-      alphaNum,
+      alpha_num_dash,
       required,
       u: unique,
       maxLength: maxLength(80),
@@ -116,8 +116,8 @@ export default {
       const errors=[];
       if (!this.$v.sub_network_name.$error)return errors
       !this.$v.sub_network_name.u && errors.push('Sub-Network name must be unique')
-      !this.$v.sub_network_name.alphaNum && errors.push('Name must only contain letters and numbers')
-      !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer')
+      !this.$v.sub_network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
+      !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer.')
       !this.$v.sub_network_name.required && errors.push('Sub-Network name is required.')
       return errors;
     },
@@ -157,40 +157,39 @@ export default {
     };
   },
   props:[
-   'sub_network'
+   'sub_network_prop'
   ],
   watch: {
-    sub_network: function(){   
-      this.sub_networks = this.sub_network;
-      },
     network_name_form: function(){
         this.service_profile_names =[];
         this.service_profile_form =[];
         this.sub_networks_same_network =[];
-        this.network_id=functions.extract_id(this.network_name_form); //extract id of network
-        for(let i =0; i<this.sub_network.length; i++){
-          if(this.network_id == this.sub_network[i].network_id){
-            this.sub_networks_same_network.push(this.sub_network[i]);
+        this.network_id=functions.extract_id_id_name(this.network_name_form); //extract id of network
+        for(let i =0; i<this.sub_network_prop.length; i++){
+          if(this.network_id == this.sub_network_prop[i].network_id){
+            this.sub_networks_same_network.push(this.sub_network_prop[i]);
           }
         }
         AuthenticationService.get_service_profile(this.network_id).then(result => {
-          for(let i =0; i< result.data.service_profiles.length; i++){
-            this.service_profile_names.push(result.data.service_profiles[i].service_profile_name.concat("-",result.data.service_profiles[i].service_profile_id));
+          let service_profiles = JSON.parse(result.data.service_profiles);
+          for(let i =0; i< service_profiles.length; i++){
+            this.service_profile_names.push(service_profiles[i].service_profile_name.concat(":",service_profiles[i].service_profile_id));
           }
         }).catch(err=> {
+          console.log(err);
           //Error requesting service profiles from server
         })
       }
   },
   created: function () {
-    this.sub_networks = this.sub_network;
     AuthenticationService.get_networks().then(result => {
-      let i;
-      for(i = 0; i < result.data.networks_lora.length; i++){
-        this.network_names.push(result.data.networks_lora[i].id.concat("-",result.data.networks_lora[i].name));
+      let networks_lora = JSON.parse(result.data.networks_lora);
+      for(let i = 0; i < networks_lora.length; i++){
+        this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
       }
     }).catch(err => {
       //Error getting networks from server
+      console.log(err);
     })
   },
   methods: {
@@ -200,15 +199,14 @@ export default {
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
-        this.service_profile_id=functions.extract_id_service_profile(this.service_profile_form);//Extract id of service profile
+        this.service_profile_id=functions.extract_id_name_id(this.service_profile_form);//Extract id of service profile
         AuthenticationService.create_sub_networks({
           sub_network_name: this.sub_network_name,
           description: this.description,
           network_id: this.network_id,
           service_profile_id: this.service_profile_id
         }).then(result => {
-          let data = result.data.sub_networks_lora;
-          data = JSON.parse(data);
+          let data = JSON.parse(result.data.sub_networks_lora);
           this.$emit('sub_network_management', data);
         }).catch(err => {
           console.log(err);

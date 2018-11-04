@@ -4,16 +4,17 @@ module.exports = {
     create (req, res, next){
         let data = JSON.parse(req.body.data);
         const schema = {
-            sub_network_name: Joi.string().required().max(80),
+            sub_network_name: Joi.string().required().max(80).regex(
+                new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
             description: Joi.string().required().max(200),
-            network_id: Joi.string().required(),
+            network_id: Joi.number().required(),
             service_profile_id: Joi.string().required(),
         }
         const { error, value } = Joi.validate(data, schema)
         if (error) {
             switch (error.details[0].context.key) {
                 case 'sub_network_name':
-                console.log('name')
+                    console.log('sub_network_name')
                     res.status(422).send({error:'Invalid Sub-Network Name'});
                     break;
                 case 'description':
@@ -39,16 +40,17 @@ module.exports = {
     update(req, res, next) {
         let data = JSON.parse(req.body.data);
         const schema = {
-            sub_network_name: Joi.string().required().max(80),
+            sub_network_name: Joi.string().required().max(80).regex(
+                new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
             description: Joi.string().required().max(200),
-            network_id: Joi.string().required(),
+            network_id: Joi.number().required(),
             service_profile_id: Joi.string().required(),
         }
         const { error, value } = Joi.validate(data, schema)
         if (error) {
             switch (error.details[0].context.key) {
                 case 'sub_network_name':
-                    console.log('name')
+                    console.log("sub_network_name");
                     res.status(422).send({ error: 'Invalid Sub-Network Name' });
                     break;
                 case 'description':

@@ -38,8 +38,8 @@
               delete
             </v-icon>
           </td>
-          <td class="text-xs-left">{{ props.item.id }}</td>
-          <td class="text-xs-left">{{ props.item.name }}</td>
+          <td class="text-xs-left">{{ props.item.network_id }}</td>
+          <td class="text-xs-left">{{ props.item.network_name }}</td>
           <td class="text-xs-left">{{ props.item.display_name }}</td>
           <td class="text-xs-left">{{ props.item.can_have_gateways }}</td>
           <td class="text-xs-left">{{ props.item.created_at | return_date}}</td>
@@ -59,8 +59,8 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
-          { text: 'Network ID', value: 'id' ,sortable: true},
-          { text: 'Network Name', value: 'name' , sortable: false },
+          { text: 'Network ID', value: 'network_id' ,sortable: true},
+          { text: 'Network Name', value: 'network_name' , sortable: false },
           { text: 'Display Name', value: 'display_name' , sortable: false },
           { text: 'Can Have Gateways', value: 'can_have_gateways', sortable: false },
           { text: 'Created At', value: 'created_at', sortable: true },
@@ -71,9 +71,9 @@ export default {
   },
   created: function () {
     AuthenticationService.get_networks().then(result => {
-      this.networks = result.data.networks_lora;
+      this.networks = JSON.parse(result.data.networks_lora);
     }).catch(err => {
-      console.log('Error');
+      console.log(err);
     })
   },
   props:[
@@ -81,7 +81,6 @@ export default {
   ],
   watch: {
     network: function(){   
-      console.log('Prop')
       this.networks = this.network;
       }
   },
@@ -89,9 +88,10 @@ export default {
   methods: {
     delete_network(network){
       if(confirm('Are you sure you want to delete this network?') == true){
-        AuthenticationService.delete_networks(network).then(result => {
-          this.networks = result.data;
+        AuthenticationService.delete_networks(network.network_id).then(result => {
+          this.networks = JSON.parse(result.data.networks_lora);
         }).catch(err => {
+          console.log(err);
           //Error requesting through the server to delete a network on the lora app server
         })
       }; 

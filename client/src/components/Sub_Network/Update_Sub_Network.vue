@@ -52,7 +52,7 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, alphaNum } from 'vuelidate/lib/validators'
+import { required, maxLength, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
 
 
@@ -68,13 +68,13 @@ const unique= function(value){
     } 
     return x; 
 }
-
+const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 export default {
   mixins: [validationMixin],
   validations: {
     sub_network_name: {
-      alphaNum,
+      alpha_num_dash,
       required,
       u: unique,
       maxLength: maxLength(80),
@@ -89,8 +89,8 @@ export default {
       const errors=[];
       if (!this.$v.sub_network_name.$error)return errors
       !this.$v.sub_network_name.u && errors.push('Sub-Network name must be unique')
-      !this.$v.sub_network_name.alphaNum && errors.push('Name must only contain letters and numbers')
-      !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer')
+      !this.$v.sub_network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
+      !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer.')
       !this.$v.sub_network_name.required && errors.push('Sub-Network name is required.')
       return errors;
     },
@@ -110,13 +110,13 @@ export default {
     };
   },
   props:[
-   'sub_networks',
+   'sub_network_prop',
    'sub_network_update'
   ],
   created: function () {
-    for(let i =0; i<this.sub_networks.length; i++){
-      if(this.sub_network_update.network_id == this.sub_networks[i].network_id){
-        this.sub_networks_same_network.push(this.sub_networks[i]);
+    for(let i =0; i<this.sub_network_prop.length; i++){
+      if(this.sub_network_update.network_id == this.sub_network_prop[i].network_id){
+        this.sub_networks_same_network.push(this.sub_network_prop[i]);
       }
     }
     this.sub_network_name = this.sub_network_update.sub_network_name;
@@ -135,10 +135,10 @@ export default {
           network_id: this.sub_network_update.network_id,
           service_profile_id: this.sub_network_update.service_profile_id,
         }, this.sub_network_update.sub_network_id).then(result => {
-          let data = result.data.sub_networks_lora;
-          data = JSON.parse(data);
+          let data = JSON.parse(result.data.sub_networks_lora);
           this.$emit('sub_network_management', data);
         }).catch(err => {
+          console.log(err);
           //Error updating sub-network
         })
       }

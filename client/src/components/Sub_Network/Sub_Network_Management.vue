@@ -69,16 +69,16 @@ export default {
     }
   },
   props: [
-    'sub_network'
+    'sub_network_prop'
   ],
   watch: {
-    sub_network: function(){
-      this.sub_networks = this.sub_network;
+    sub_network_prop: function(){
+      this.sub_networks = this.sub_network_prop;
     }
   },
   created: function () {
     AuthenticationService.get_sub_networks().then(result => {
-      this.sub_networks = result.data.sub_networks_lora;
+      this.sub_networks = JSON.parse(result.data.sub_networks_lora);
     }).catch(err => {
       //Error requesting the subnetworks from the server
     })

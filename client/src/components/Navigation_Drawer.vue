@@ -50,11 +50,11 @@ export default {
       drawer: null,
             items_all: [
           { title: 'Network', icon: 'domain'},
-          { title: 'Sub-Network', icon: ''},
+          { title: 'Sub-Network', icon: 'apps'},
           { title: 'Gateway', icon: 'settings_input_antenna'},
           { title: 'Gateway Stats', icon: 'settings_input_antenna'},
-          { title: 'End Device', icon: 'directions_boat'},
-          { title: 'End Device Data', icon: 'table'},
+          { title: 'Device', icon: 'directions_boat'},
+          { title: 'Device Data', icon: 'table'},
           { title: 'Map', icon: 'map'},
           { title: 'Error Logs', icon: 'error'},
           { title: 'Account Management', icon: 'people_outlined'}
@@ -82,6 +82,8 @@ export default {
         this.$router.push('network'); 
       }else if(item=="Sub-Network"){
         this.$router.push('subnetwork'); 
+      }else if(item=="Device"){
+        this.$router.push('device'); 
       }else if(item=="Map"){
         this.$router.push('map'); 
       }else{

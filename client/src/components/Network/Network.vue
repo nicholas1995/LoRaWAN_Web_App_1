@@ -4,10 +4,10 @@
         <network_management v-bind:network='this.network' @create_network= create_network($event) @update_network="update_network($event) "></network_management>
       </div>
       <div v-if="this.create == 1">
-        <create_network v-bind:networks='this.network' @network_management= read_network($event) @network_management_no_change= cancel()></create_network>
+        <create_network v-bind:networks_prop='this.network' @network_management= read_network($event) @network_management_no_change= cancel()></create_network>
       </div>
       <div v-else-if="this.update== 1">
-        <update_network v-bind:networks='this.network' v-bind:network_update='this.network_update' @network_management= read_network($event) @network_management_no_change= cancel()></update_network>  <!--Dynamically passing prop to child component -->
+        <update_network v-bind:networks_prop='this.network' v-bind:network_update='this.network_update' @network_management= read_network($event) @network_management_no_change= cancel()></update_network>  <!--Dynamically passing prop to child component -->
       </div>
 
     <div v-else-if="this.$store.state.loginState">

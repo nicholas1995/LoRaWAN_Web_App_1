@@ -52,9 +52,9 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.put(`/networks/${id}`,{data});
     },
-    delete_networks(network){
+    delete_networks(id){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.delete(`/networks/${network.id}`);
+        return Api.delete(`/networks/${id}`);
     },
 
     //Sub Networks
@@ -77,10 +77,36 @@ export default {
         return Api.delete(`/sub_networks/${sub_network_id}`);
     },
 
+    //Devices
+    get_devices() {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get('/devices');
+    },
+    create_devices(data) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.post('/devices', { data });
+    },
+    update_devices(data, device_eui) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/devices/${device_eui}`, { data });
+    },
+    delete_devices(device_eui) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/devices/${device_eui}`);
+    },
+
     //Service Profile
     get_service_profile(network_id){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/service_profiles/${network_id}`);
-    }
+    },
 
+
+    //Device Profile
+    get_device_profiles(sub_network_id) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/device_profiles/${sub_network_id}`);
+    }
 };  

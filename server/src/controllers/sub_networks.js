@@ -58,31 +58,6 @@ async function get_sub_networks(){
     }
 }
 
-async function get_compare_sub_networks(){
-    let sub_networks_lora ;
-    let sub_networks_db;
-    try{
-        sub_networks_lora = await get_sub_networks()
-        .catch(err => {
-                throw err;
-        })
-        sub_networks_db= await db_sub_networks.get_sub_networks()
-        .catch(err => {
-            throw err;
-        })
-        await compare.compare_sub_networks(sub_networks_lora,sub_networks_db)
-        .catch(err => {
-            throw err;
-        });
-        return sub_networks_lora;
-    }catch(err){
-        throw err;
-    }finally{
-        //console.log("hdbfsghsdgflhbsdlfgsf");
-    } 
-    
-}
-
 function convert_names_sub_networks(sub_networks){
     let sub_networks_return = [];
     let sub_network = { 
@@ -116,8 +91,19 @@ function convert_names_sub_networks(sub_networks){
 module.exports = {
     get: async function(req, res){
         try{
-            let sub_networks_lora = await get_compare_sub_networks();
-            //console.log(sub_networks_lora)
+            let sub_networks_lora = await get_sub_networks()
+                .catch(err => {
+                    throw err;
+                })
+            let sub_networks_db = await db_sub_networks.get_sub_networks()
+                .catch(err => {
+                    throw err;
+                })
+            await compare.compare_sub_networks(sub_networks_lora, sub_networks_db)
+                .catch(err => {
+                    throw err;
+                });
+            sub_networks_lora = JSON.stringify(sub_networks_lora);
             res.status(200).send({sub_networks_lora});
         }
         catch(err){
@@ -125,13 +111,10 @@ module.exports = {
         }
     },
     create: async function(req, res){
-        let data = JSON.parse(req.body.data);
-        let result;
-        let request_body;
-        let sub_networks_lora;
         try{
-            request_body = sub_network_api_request_data(data, 1);
-            result = await lora_app_server.create_applications(request_body)
+            let data = JSON.parse(req.body.data);
+            let request_body = sub_network_api_request_data(data, 1);
+            let result = await lora_app_server.create_applications(request_body)
             .catch(err => {
                 //Error updating application on lora app server
                 throw err;
@@ -141,7 +124,7 @@ module.exports = {
                 throw err;
                 //Error creating sub network in database 
             });
-            sub_networks_lora = await get_sub_networks()
+            let sub_networks_lora = await get_sub_networks()
             .catch(err => {
                 throw err; 
                 //Error getting networks from lora app server
@@ -154,12 +137,10 @@ module.exports = {
         }
     },
     update: async function(req, res){ 
-        let data = JSON.parse(req.body.data);
-        let request_body = sub_network_api_request_data(data, 2);
-        let result; 
-        let sub_networks_lora;
         try{
-            result = await lora_app_server.update(request_body, req.params.sub_network_id)
+            let data = JSON.parse(req.body.data);
+            let request_body = sub_network_api_request_data(data, 2);
+            let result = await lora_app_server.update(request_body, req.params.sub_network_id)
             .catch(err => {
                 throw err;
                 //Error updating lora app server Sub network    
@@ -169,7 +150,7 @@ module.exports = {
                 throw err;
                 //Error updating sub network record in the database
             });
-            sub_networks_lora = await get_sub_networks()
+            let sub_networks_lora = await get_sub_networks()
             .catch(err => {
                 throw err;
                 //Error getting the sub networks from the lora app server
@@ -178,15 +159,12 @@ module.exports = {
             res.status(200).send({ sub_networks_lora });
         }catch(err){
             console.log(err);
-        }finally{
-
         }
     },
     delete: async function(req ,res){
-        let result;
         let sub_networks_lora;
         try{
-            result = await lora_app_server.delete(req.params.sub_network_id)
+            let result = await lora_app_server.delete(req.params.sub_network_id)
             .catch(err => {
                 throw err;
                 //Error delete subnetwork form lora app server

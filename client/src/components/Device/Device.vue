@@ -3,13 +3,13 @@
     <div v-if="!this.$store.state.loginState"> 
 
       <div v-show="this.read== 1">
-        <sub_network_management v-bind:sub_network_prop='this.sub_networks'  @create_sub_network=" create_sub_network($event)" @update_sub_network="update_sub_network($event)"></sub_network_management>
+        <device_management v-bind:devices_prop='this.devices'  @create_device=" create_device($event)" @update_device="update_device($event)"></device_management>
       </div>
       <div v-if="this.create == 1">
-        <create_sub_network v-bind:sub_network_prop='this.sub_networks' @sub_network_management= read_sub_network($event) @sub_network_management_no_change="cancel() "></create_sub_network>
+        <create_device v-bind:devices_prop='this.devices' @device_management= read_device($event) @device_management_no_change="cancel() "></create_device>
       </div>
       <div v-else-if="this.update== 1">
-        <update_sub_network v-bind:sub_network_prop='this.sub_networks' v-bind:sub_network_update='this.sub_network_update' @sub_network_management= read_sub_network($event) @sub_network_management_no_change="cancel() "></update_sub_network>  <!--Dynamically passing prop to child component -->
+        <update_device v-bind:devices_prop='this.devices' v-bind:device_update='this.device_update' @device_management= read_device($event) @device_management_no_change="cancel() "></update_device>  <!--Dynamically passing prop to child component -->
       </div>
 
     <div v-else-if="this.$store.state.loginState">
@@ -23,23 +23,23 @@
 
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
-import sub_network_management from './Sub_Network_Management'
-import create_sub_network from './Create_Sub_Network'
-import update_sub_network from './Update_Sub_Network'
+import device_management from './Device_Management'
+import create_device from './Create_Device'
+import update_device from './Update_Device'
 
 export default {
   components:{
-    sub_network_management,
-    create_sub_network,
-    update_sub_network
+    device_management,
+    create_device,
+    update_device
   },
   data(){
     return {
       create: 0,
       read: 0,
       update: 0,
-      sub_networks: null,
-      sub_network_update: null    
+      devices: null,
+      device_update: null    
     }
   },
   created: function () {
@@ -53,21 +53,21 @@ export default {
   computed: {
   },
   methods: {
-    create_sub_network(data){
-      this.sub_networks = data
+    create_device(data){
+      this.devices = data
       this.create =1;
       this.read =0;
       this.update =0;
     },
-    read_sub_network(data){
-      this.sub_networks = data;
+    read_device(data){
+      this.devices = data
       this.create =0;
       this.read =1;
       this.update =0;
     },
-    update_sub_network(data){
-      this.sub_networks = data.sub_networks;
-      this.sub_network_update = data.sub_network_update;
+    update_device(data){
+      this.devices = data.devices;
+      this.device_update = data.device_update;
       this.create =0;
       this.read =0;
       this.update =1;

@@ -4,14 +4,15 @@ module.exports = {
     create (req, res, next){
         let data = JSON.parse(req.body.data);
         const schema = { 
-            name: Joi.string().alphanum().required().max(80), 
-            display_name: Joi.string().required().max(20), 
+            network_name: Joi.string().required().max(80).regex(
+                new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
+            display_name: Joi.string().required().max(60), 
             can_have_gateways: Joi.boolean().insensitive(true) };
         const {error, value} = Joi.validate(data, schema)
         if (error) {
             switch (error.details[0].context.key) {
-                case 'name':
-                console.log('name')
+                case 'network_name':
+                console.log('network_name')
                     res.status(422).send({error:'Invalid Network Name'});
                     break;
                 case 'display_name':

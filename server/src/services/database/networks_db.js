@@ -21,7 +21,7 @@ module.exports ={
     },
     update_networks_all_parameters: function(data, id){
         let sql = `UPDATE networks
-        SET name = '${data.name}', display_name= '${data.display_name}'
+        SET name = '${data.network_name}', display_name= '${data.display_name}'
         WHERE id = '${id}'`;
         return db.queryAsync(sql);
     }
