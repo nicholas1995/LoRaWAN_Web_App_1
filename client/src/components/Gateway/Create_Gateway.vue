@@ -465,7 +465,6 @@ export default {
           fine_time_stamp_key: this.fine_time_stamp_key,
           fpga_id: this.fpga_id,
         }).then(result => {
-          console.log('hereeeeeeee')
           let data = JSON.parse(result.data.gateways_lora);
           this.$emit('gateway_management', data);
         }).catch(err => {

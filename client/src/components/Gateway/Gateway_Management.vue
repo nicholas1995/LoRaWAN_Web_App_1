@@ -8,11 +8,14 @@
         vertical
       ></v-divider>
       <v-spacer></v-spacer>
-          <v-toolbar-items class="hidden-sm-and-down ">
-      <v-icon large 
-            class="mr-1 mt-3" @click.stop="$emit('create_gateway', gateways)" >
-        person_add
-      </v-icon>
+      <v-toolbar-items class="hidden-sm-and-down ">
+      <v-tooltip bottom>
+        <v-icon large slot="activator"
+              class="mr-1 mt-3" @click.stop="$emit('create_gateway', gateways)" >
+          add_box
+        </v-icon>
+        <span>Add Gateway</span>
+      </v-tooltip>
     </v-toolbar-items>
     </v-toolbar>
     <v-data-table
@@ -23,20 +26,26 @@
     >
       <template slot="items" slot-scope="props">
           <td class="justify-center layout px-0">
-            <v-icon 
-              small
-              class="mr-2 pt-3"
-              @click.stop="$emit('update_gateway',{'gateway_update':props.item,'gateways':gateways})"
-            >
-              edit
-            </v-icon>
-            <v-icon 
-              small
-              class="pt-3"
-              @click="delete_gateways(props.item)"
-            >
-              delete
-            </v-icon>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="mr-2 pt-3"
+                @click.stop="$emit('update_gateway',{'gateway_update':props.item,'gateways':gateways})"
+              >
+                edit
+              </v-icon>
+            <span>Edit {{props.item.gateway_name}}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="pt-3"
+                @click="delete_gateways(props.item)"
+              >
+                delete
+              </v-icon>
+            <span>Delete {{props.item.gateway_name}}</span>
+            </v-tooltip>
           </td>
           <td class="text-xs-left">{{ props.item.gateway_name }}</td>
           <td class="text-xs-left">{{ props.item.gateway_id}}</td>
@@ -60,13 +69,13 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
-          { text: 'Gateway Name', value: 'gateway_name' , sortable: true },
+          { text: 'Gateway Name', value: 'gateway_name' , sortable: false },
           { text: 'Gateway ID', value: 'gateway_id' , sortable: true },
           { text: 'Description', value: 'description' ,sortable: false},
           { text: 'Network ID', value: 'network_id' , sortable: true },
           { text: 'Network Server ID', value: 'network_server_id' , sortable: true },
           { text: 'Created At', value: 'created_at', sortable: true },
-          { text: 'Updated At', value: 'updated_at', sortable: false },
+          { text: 'Updated At', value: 'updated_at', sortable: true },
         ],
         gateways: []
     }

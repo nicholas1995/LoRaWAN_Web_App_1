@@ -126,8 +126,8 @@ function convert_name_gateway_single(result){
 
 async function get_gateways() {
     try {
-        let request_body = gateway_api_request_data(null, 0);
-        let gateways = await lora_app_server.get_gateways(request_body)
+        let request_params = gateway_api_request_data(null, 0);
+        let gateways = await lora_app_server.get_gateways(request_params)
             .catch(err => {
                 throw err;
             });
