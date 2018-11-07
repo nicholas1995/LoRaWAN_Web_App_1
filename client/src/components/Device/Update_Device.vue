@@ -114,7 +114,7 @@ export default {
       if (!this.$v.device_name.$error)return errors
       !this.$v.device_name.u && errors.push('Device name must be unique')
       !this.$v.device_name.alpha_num_dash && errors.push('Device name must only contain letters, numbers and dashes')
-      !this.$v.device_name.maxLength && errors.push('Device name must be 20 characters or longer')
+      !this.$v.device_name.maxLength && errors.push('Device name must be 80 characters or less')
       !this.$v.device_name.required && errors.push('Device name is required.')
       return errors;
     }, 

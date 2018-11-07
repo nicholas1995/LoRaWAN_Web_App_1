@@ -25,7 +25,7 @@
                 label="Device EUI"
                 :error-messages = "device_eui_Errors"
                 @keyup="$v.device_eui.$touch()" 
-              ></v-text-field>
+              ></v-text-field> 
               </v-flex>
             <!--Description  -->
             <v-flex >
@@ -109,11 +109,15 @@ const unique_device_name= function(value){
     } 
 
   }
-    return x; 
+    return x;  
 }
 const first_digit_not_0 = function(value){
   let x = 1; //0 fail, 1 pass
-  if(value[0] == 0) x = 0;
+  if(value.length >1){   //if it is more than one digit in length 
+    if(value[0] == 0){
+      x = 0;
+      }
+  }
   return x;
 }
 
@@ -157,7 +161,7 @@ export default {
       if (!this.$v.device_name.$error)return errors
       !this.$v.device_name.u && errors.push('Sub-Network name must be unique')
       !this.$v.device_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes')
-      !this.$v.device_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer')
+      !this.$v.device_name.maxLength && errors.push('Sub-Network name must be 80 characters or less')
       !this.$v.device_name.required && errors.push('Sub-Network name is required.')
       return errors;
     }, 

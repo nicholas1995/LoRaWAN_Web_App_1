@@ -14,7 +14,7 @@ function device_api_request_data(data, type) {
     else if (type == 1) {//create form
         if(data.reference_altitude ==""){
             request = {
-                "device": {
+                device: {
                     "name": `${data.device_name}`,
                     "devEUI": `${data.device_eui}`,
                     "description": `${data.description}`,
@@ -195,7 +195,7 @@ module.exports = {
             let result = await lora_app_server.delete_devices(req.params.device_eui)
                 .catch(err => {
                     throw err;
-                    //Error delete subnetwork form lora app server
+                    //Error delete device form lora app server
                 });
             await db.update('deleted',1,req.params.device_eui)
                 .catch(err => {

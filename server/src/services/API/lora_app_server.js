@@ -5,7 +5,7 @@ const instance = axios.create({
     baseURL: 'http://localhost:8080', 
 });
 let token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJleHAiOjE1NDE0NDQ4NDgsImlzcyI6ImxvcmEtYXBwLXNlcnZlciIsIm5iZiI6MTU0MTM1ODQ0OCwic3ViIjoidXNlciIsInVzZXJuYW1lIjoiYWRtaW4ifQ.TbwmIHzZNr6WaDYxvqcxKYKf2XEunXOYFGYc1A32VQk";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJleHAiOjE3MTYyMzkwNTAsImlzcyI6ImxvcmEtYXBwLXNlcnZlciIsIm5iZiI6MTU0MTM1ODQ0OCwic3ViIjoidXNlciIsInVzZXJuYW1lIjoiYWRtaW4ifQ.283SFXl8zV4IirYWAYuw5wl8x5iz5ZvGR1H8kz6LkmQ";
 module.exports = {
   //------------------------Organizations------------------------
   //---------Read---------
@@ -63,14 +63,41 @@ module.exports = {
     return instance.post("/api/devices", data);
   },
   //---------Update---------
-  update_devices: function (data, device_eui) {
+  update_devices: function(data, device_eui) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.put(`/api/devices/${device_eui}`, data);
   },
   //---------Delete---------
-  delete_devices: function (device_eui) {
+  delete_devices: function(device_eui) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.delete(`/api/devices/${device_eui}`);
+  },
+
+  //------------------------Gateways------------------------
+  //---------Read---------
+  get_gateways: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/gateways?limit=${data.limit}`);
+  },
+  //---------Read ONE---------
+  get_gateway_one: function(gateway_id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/gateways/${gateway_id}`);
+  },
+  //--------- Create---------
+  create_gateways: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.post("/api/gateways", data);
+  },
+  //---------Update---------
+  update_gateways: function(data, gateway_id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.put(`/api/gateways/${gateway_id}`, data);
+  },
+  //---------Delete---------
+  delete_gateways: function(gateway_id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.delete(`/api/gateways/${gateway_id}`);
   },
 
   //------------------------Service Profile------------------------
@@ -88,6 +115,20 @@ module.exports = {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.get(
       `/api/device-profiles?limit=${data.limit}&applicationID=${id}`
+    );
+  },
+
+  //------------------------Network Servers------------------------
+  get_network_servers: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/network-servers?limit=${data.limit}`);
+  },
+
+  //------------------------Gateway Profiles------------------------
+  get_gateway_profiles: function(data, network_server_id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(
+      `/api/gateway-profiles?limit=${data.limit}&networkServerID=${network_server_id}`
     );
   }
 };  

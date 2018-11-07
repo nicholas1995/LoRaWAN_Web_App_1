@@ -97,6 +97,31 @@ export default {
         return Api.delete(`/devices/${device_eui}`);
     },
 
+
+    //Gateways
+    get_gateways(){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get('/gateways');
+    },
+    get_gateway(gateway_id) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/gateway/${gateway_id}`);
+    },
+    create_gateways(data){
+        data = JSON.stringify(data);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.post('/gateways', { data });
+    }, 
+    update_gateways(data, gateway_id) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/gateways/${gateway_id}`, { data });
+    },
+    delete_gateways(gateway_id) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/gateways/${gateway_id}`);
+    },
+
     //Service Profile
     get_service_profile(network_id){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
@@ -108,5 +133,17 @@ export default {
     get_device_profiles(sub_network_id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/device_profiles/${sub_network_id}`);
+    },
+
+    //Network servers
+    get_network_servers(){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get('/network_servers');
+    },
+
+    //Gateway profiles
+    get_gateway_profiles(network_server_id){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/gateway_profiles/${network_server_id}`);
     }
 };  

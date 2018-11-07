@@ -117,7 +117,7 @@ export default {
       if(date == "" || date == null){
         full_date = "N/A"
       }else{
-        let date = new Date(date);
+        date = new Date(date);
         let month = date_time.return_month(date.getMonth()); //returns the month in 3 letters
         let day = date_time.add_zero(date.getDate());
         let year = date.getUTCFullYear() -2000; //converts the full year to 2 digits 

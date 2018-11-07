@@ -1,6 +1,7 @@
 const lora_app_server = require('../services/API/lora_app_server');
 const db = require('../services/database/networks_db');
 const compare = require('../services/compare');
+const VError = require('verror');
 
 
 function network_api_request_data(data, type) {
@@ -67,9 +68,16 @@ function convert_names_networks(networks) {
 async function get_networks(){
     try{
     let request_body = network_api_request_data(null, 0);
-    let networks_lora = await lora_app_server.get_organizations(request_body)
+        let networks_lora = await lora_app_server.get_organizations(request_body) //error here
         .catch(err => {
-            throw err;
+            let error = new VError({
+                'name': `${err.name}`,
+                'cause': err,
+                'info': {
+                    'response':`${err.response.data.error}`
+                }
+            }); 
+            throw error;
         });
     networks_lora = convert_names_networks(networks_lora.data.result);
     return networks_lora;
@@ -84,7 +92,13 @@ module.exports = {
             let networks_lora = await get_networks()
             .catch(err => {
                 //Error getting networks from lora app server
-                throw err;
+                var error = new VError({
+                    'name': `${err.name}`,
+                    'cause': err,
+                    'info': {
+                    }
+                }, 'fetch networks from lora api'); 
+                throw error;
             })
             let networks_db = await db.get_networks()
             .catch(err => {
@@ -99,7 +113,8 @@ module.exports = {
             networks_lora = JSON.stringify(networks_lora);
             res.status(200).send({networks_lora});
         }catch(err){
-            console.log(err);
+            //console.log('ddfgfdgfd');
+            res.status(402).send({message:"failed"});
         }
     }, 
     create_networks: async function(req, res){

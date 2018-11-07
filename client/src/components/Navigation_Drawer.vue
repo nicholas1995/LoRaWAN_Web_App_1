@@ -54,7 +54,7 @@ export default {
           { title: 'Gateway', icon: 'settings_input_antenna'},
           { title: 'Gateway Stats', icon: 'settings_input_antenna'},
           { title: 'Device', icon: 'directions_boat'},
-          { title: 'Device Data', icon: 'table'},
+          { title: 'Device Data', icon: 'view_comfy'},
           { title: 'Map', icon: 'map'},
           { title: 'Error Logs', icon: 'error'},
           { title: 'Account Management', icon: 'people_outlined'}
@@ -82,6 +82,8 @@ export default {
         this.$router.push('network'); 
       }else if(item=="Sub-Network"){
         this.$router.push('subnetwork'); 
+      }else if(item=="Gateway"){
+        this.$router.push('gateway'); 
       }else if(item=="Device"){
         this.$router.push('device'); 
       }else if(item=="Map"){

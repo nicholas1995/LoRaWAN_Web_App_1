@@ -29,6 +29,9 @@ const ACL = {
                 delete: 'All',
                 create: 'All'
             },
+            gateway: {
+                read: 'All'
+            },
             end_device_data: {
                 read: 'All',
                 export: 'All'
@@ -38,7 +41,13 @@ const ACL = {
             },
             device_profiles: {
                 read: 'All'
-            }
+            },
+            network_servers:{ 
+                read: 'All'
+            },
+            gateway_profiles:{ 
+                read: 'All'
+            }       
         },
     Software_Admin:
         {

@@ -73,7 +73,9 @@ export default {
     AuthenticationService.get_networks().then(result => {
       this.networks = JSON.parse(result.data.networks_lora);
     }).catch(err => {
-      console.log(err);
+      console.log(err.response.data.message);
+      alert(err.response.data.message)
+      
     })
   },
   props:[
