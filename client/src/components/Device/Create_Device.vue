@@ -107,7 +107,15 @@ const unique_device_name= function(value){
         x= 0;
       }
     } 
-
+  }
+    return x;  
+}
+const unique_device_eui= function(value){
+  let x = 1; //0 fail, 1 pass
+    for(let i=0; i< this.devices_prop.length; i++){
+      if(value ==this.devices_prop[i].device_eui){      
+      x= 0;
+    }
   }
     return x;  
 }
@@ -138,7 +146,8 @@ export default {
       hex,
       maxLength: maxLength(16),
       minLength: minLength(16),
-      required
+      required,
+      u:unique_device_eui
     },
     description: {
       required,
@@ -171,6 +180,7 @@ export default {
       !this.$v.device_eui.hex && errors.push('Device EUI must be a valid HEX ')
       !this.$v.device_eui.maxLength && errors.push('Device EUI must be 16 characters')
       !this.$v.device_eui.minLength && errors.push(`Device EUI must be 16 characters: ${(16 - this.device_eui.length)}`)
+      !this.$v.device_eui.u && errors.push('Device EUI must be unique.')
       !this.$v.device_eui.required && errors.push('Device EUI is required.')
       return errors;
     },
