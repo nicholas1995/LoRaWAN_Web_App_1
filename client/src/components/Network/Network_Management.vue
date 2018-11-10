@@ -8,11 +8,14 @@
         vertical
       ></v-divider>
       <v-spacer></v-spacer>
-          <v-toolbar-items class="hidden-sm-and-down ">
-      <v-icon large 
-            class="mr-1 mt-3" @click.stop="$emit('create_network', networks)" >
-        person_add
-      </v-icon>
+      <v-toolbar-items class="hidden-sm-and-down ">
+        <v-tooltip bottom>
+          <v-icon large slot="activator"
+                class="mr-1 mt-3" @click.stop="$emit('create_network', networks)" >
+            add_box
+          </v-icon>
+          <span>Create Network</span>
+        </v-tooltip>
     </v-toolbar-items>
     </v-toolbar>
     <v-data-table
@@ -23,20 +26,26 @@
     >
       <template slot="items" slot-scope="props">
           <td class="justify-center layout px-0">
-            <v-icon 
-              small
-              class="mr-2 pt-3"
-              @click.stop="$emit('update_network',{network_update:props.item,networks:networks})"
-            >
-              edit
-            </v-icon>
-            <v-icon 
-              small
-              class="pt-3 pr-3"
-              @click="delete_network(props.item)"
-            >
-              delete
-            </v-icon>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="mr-2 pt-3"
+                @click.stop="$emit('update_network',{network_update:props.item,networks:networks})"
+              >
+                edit
+              </v-icon>
+            <span>Edit {{props.item.network_name}}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="pt-3 pr-3"
+                @click="delete_network(props.item)"
+              >
+                delete
+              </v-icon>
+            <span>Delete {{props.item.network_name}}</span>
+            </v-tooltip>
           </td>
           <td class="text-xs-left">{{ props.item.network_id }}</td>
           <td class="text-xs-left">{{ props.item.network_name }}</td>
@@ -72,10 +81,9 @@ export default {
   created: function () {
     AuthenticationService.get_networks().then(result => {
       this.networks = JSON.parse(result.data.networks_lora);
+      this.$emit('message_display',{message:result.data.message, type:result.data.type})   
     }).catch(err => {
-      console.log(err.response.data.message);
-      alert(err.response.data.message)
-      
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
     })
   },
   props:[
@@ -92,9 +100,10 @@ export default {
       if(confirm('Are you sure you want to delete this network?') == true){
         AuthenticationService.delete_networks(network.network_id).then(result => {
           this.networks = JSON.parse(result.data.networks_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
-          console.log(err);
           //Error requesting through the server to delete a network on the lora app server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       }; 
     }
@@ -108,7 +117,7 @@ export default {
       let year = date.getUTCFullYear() -2000; //converts the full year to 2 digits 
       let hour = date_time.add_zero(date.getHours());
       let minutes = date_time.add_zero(date.getUTCMinutes());
-      let seconds = date_time.add_zero(date.getUTCSeconds());
+      let seconds = date_time.add_zero(date.getUTCSeconds()); 
       let full_date = day+"-"+month+"-"+year +" " + hour +":"+ minutes+":"+ seconds;
       return full_date;
     } 

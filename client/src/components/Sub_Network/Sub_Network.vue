@@ -3,13 +3,13 @@
     <div v-if="!this.$store.state.loginState"> 
 
       <div v-show="this.read== 1">
-        <sub_network_management v-bind:sub_network_prop='this.sub_networks'  @create_sub_network=" create_sub_network($event)" @update_sub_network="update_sub_network($event)"></sub_network_management>
+        <sub_network_management v-bind:sub_network_prop='this.sub_networks'  @create_sub_network=" create_sub_network($event)" @update_sub_network="update_sub_network($event)" @message_display="message_display($event)"></sub_network_management>
       </div>
       <div v-if="this.create == 1">
-        <create_sub_network v-bind:sub_network_prop='this.sub_networks' @sub_network_management= read_sub_network($event) @sub_network_management_no_change="cancel() "></create_sub_network>
+        <create_sub_network v-bind:sub_network_prop='this.sub_networks' @sub_network_management= read_sub_network($event) @sub_network_management_no_change="cancel() " @message_display="message_display($event)"></create_sub_network>
       </div>
       <div v-else-if="this.update== 1">
-        <update_sub_network v-bind:sub_network_prop='this.sub_networks' v-bind:sub_network_update='this.sub_network_update' @sub_network_management= read_sub_network($event) @sub_network_management_no_change="cancel() "></update_sub_network>  <!--Dynamically passing prop to child component -->
+        <update_sub_network v-bind:sub_network_prop='this.sub_networks' v-bind:sub_network_update='this.sub_network_update' @sub_network_management= read_sub_network($event) @sub_network_management_no_change="cancel()" @message_display="message_display($event)"></update_sub_network>  <!--Dynamically passing prop to child component -->
       </div>
 
     <div v-else-if="this.$store.state.loginState">
@@ -17,6 +17,23 @@
       <v-btn @click="login">Login</v-btn>
     </div>
     </div>
+      <v-snackbar
+        v-model="snackbar"
+        bottom="bottom"
+        left="left"
+        multi-line="multi-line"
+        right="right"
+        :timeout="this.timeout"
+        auto-height="auto-height"
+        :color ="this.color"
+      >
+        {{ this.message }}
+        <v-btn
+          flat
+          @click="snackbar = 0"
+        >        Close
+        </v-btn>
+      </v-snackbar>
   </v-content>
 </template>
   
@@ -39,7 +56,11 @@ export default {
       read: 0,
       update: 0,
       sub_networks: null,
-      sub_network_update: null    
+      sub_network_update: null,
+      snackbar:0,
+      timeout: 1500,
+      color: "error",
+      message: "blank"
     }
   },
   created: function () {
@@ -80,6 +101,11 @@ export default {
     login(){
       this.$router.push('dashboard');
     },
+    message_display(data){
+      this.snackbar=1;
+      this.color =data.type;
+      this.message = data.message;
+    }
   }
 }
 

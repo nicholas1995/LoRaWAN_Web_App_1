@@ -17,4 +17,4 @@ passport.use(new JwtStrategy({
             return done(err, false);
         })
     }
-));   
+));    

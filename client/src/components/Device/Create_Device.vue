@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="device_name"
-                label="Device Name"
+                label="Device Name*"
                 :error-messages = "device_name_Errors"
                 @keyup="$v.device_name.$touch()" 
               ></v-text-field>
@@ -22,7 +22,7 @@
             <v-flex >
               <v-text-field
                 v-model="device_eui"
-                label="Device EUI"
+                label="Device EUI*"
                 :error-messages = "device_eui_Errors"
                 @keyup="$v.device_eui.$touch()" 
               ></v-text-field> 
@@ -33,7 +33,7 @@
                 auto-grow
                 rows="1"
                 v-model="description"
-                label="Description"
+                label="Description*"
                 :error-messages = "description_Errors"
                 @keyup="$v.description.$touch()" 
               ></v-textarea>
@@ -42,7 +42,7 @@
               <v-select
                 v-model="sub_network_name_form"
                 :items="this.sub_network_names"
-                label="Sub-Network"
+                label="Sub-Network*"
                 :error-messages = "sub_network_name_form_Errors"
                 @blur="$v.sub_network_name_form.$touch()" 
               ></v-select>
@@ -50,7 +50,7 @@
               <v-select
                 v-model="device_profile_name_form"
                 :items="this.device_profile_names"
-                label="Device Profile"
+                label="Device Profile*"
                 :error-messages = "device_profile_name_form_Errors"
                 @blur="$v.device_profile_name_form.$touch()" 
               ></v-select>
@@ -58,7 +58,7 @@
               <v-flex >
                 <v-text-field
                   v-model="reference_altitude"
-                  label="Reference Altitude"
+                  label="Reference Altitude*"
                   suffix = "meters"
                   :error-messages = "reference_altitude_Errors"
                   @keyup="$v.reference_altitude.$touch()" 
@@ -238,8 +238,8 @@ export default {
             this.device_profile_names.push(device_profiles[i].device_profile_name.concat(":",device_profiles[i].device_profile_id));
           }
         }).catch(err=> {
-          console.log(err)
-          //Error requesting service profiles from server
+          //Error requesting device profiles from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       }
   },
@@ -250,7 +250,8 @@ export default {
         this.sub_network_names.push(sub_networks_lora[i].sub_network_id.concat(":",sub_networks_lora[i].sub_network_name));
       }
     }).catch(err => {
-      //Error getting networks from server
+      //Error getting sub-networks from server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
     })
   },
   methods: {
@@ -273,10 +274,11 @@ export default {
           skip_frame_counter: this.skip_frame_counter,
         }).then(result => {
           let data = JSON.parse(result.data.devices_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
           this.$emit('device_management', data);
         }).catch(err => {
-          console.log(err);
-          //Error trying to create subnetwork
+          //Error trying to create device
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       } 
     }

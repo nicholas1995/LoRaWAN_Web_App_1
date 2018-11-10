@@ -1,4 +1,6 @@
 const lora_app_server = require("../services/API/lora_app_server");
+const error = require("../services/errors");
+const VError = require("verror");
 
 function network_server_api_request_data(data, type) {
   let request;
@@ -64,8 +66,9 @@ async function get_network_servers(){
         let request_body = network_server_api_request_data(null, 0);
         let network_servers = await lora_app_server.get_network_servers(request_body)
             .catch(err => {
-                throw err;
                 //Error getting network servers from lora app server
+                let error = new VError("%s", err.message);
+                throw error;
             });
         network_servers = convert_names_network_servers(network_servers.data.result);
         return network_servers;
@@ -79,13 +82,14 @@ module.exports = {
         try {
             let network_servers_lora = await get_network_servers()
                 .catch(err => {
-                    throw err;
                     //Error getting network_servers from lora app server
+                    throw error.error_message("network servers : lora app server", err.message);
                 });
             network_servers_lora = JSON.stringify(network_servers_lora);
-            res.status(200).send({ network_servers_lora });
+            res.status(200).send({ network_servers_lora: network_servers_lora, message: 'Network Servers fetched', type: 'success' });
         } catch (err) {
             console.log(err);
+            res.status(500).send({ message: "Failed to get network servers", type: 'error' });
         }
     }
 }

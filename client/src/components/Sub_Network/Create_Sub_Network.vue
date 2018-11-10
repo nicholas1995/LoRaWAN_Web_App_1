@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="sub_network_name"
-                label="Sub-Network Name"
+                label="Sub-Network Name*"
                 :error-messages = "sub_network_name_Errors"
                 @keyup="$v.sub_network_name.$touch() && $v.u.$touch()" 
               ></v-text-field>
@@ -24,7 +24,7 @@
                 auto-grow
                 rows="1"
                 v-model="description"
-                label="Description"
+                label="Description*"
                 :error-messages = "description_Errors"
                 @keyup="$v.description.$touch()" 
               ></v-textarea>
@@ -33,7 +33,7 @@
               <v-select
                 v-model="network_name_form"
                 :items="this.network_names"
-                label="Network Name"
+                label="Network Name*"
                 :error-messages = "network_name_form_Errors"
                 @blur="$v.network_name_form.$touch()" 
               ></v-select>
@@ -41,7 +41,7 @@
               <v-select
                 v-model="service_profile_form"
                 :items="this.service_profile_names"
-                label="Service Profile Name"
+                label="Service Profile Name*"
                 :error-messages = "service_profile_form_Errors"
                 @blur="$v.service_profile_form.$touch()" 
               ></v-select>
@@ -176,8 +176,8 @@ export default {
             this.service_profile_names.push(service_profiles[i].service_profile_name.concat(":",service_profiles[i].service_profile_id));
           }
         }).catch(err=> {
-          console.log(err);
           //Error requesting service profiles from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       }
   },
@@ -189,7 +189,7 @@ export default {
       }
     }).catch(err => {
       //Error getting networks from server
-      console.log(err);
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
     })
   },
   methods: {
@@ -207,10 +207,10 @@ export default {
           service_profile_id: this.service_profile_id
         }).then(result => {
           let data = JSON.parse(result.data.sub_networks_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('sub_network_management', data);
         }).catch(err => {
-          console.log(err);
-          //Error trying to create subnetwork
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       } 
     }

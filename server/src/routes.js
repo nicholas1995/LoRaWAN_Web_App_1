@@ -61,13 +61,16 @@ module.exports = ((app) => {
 
     //Sub_Networks (Update)
     app.put("/sub_networks/:sub_network_id", authenticate, grant_access, sub_network_policy.update, sub_networks.update);
-
+ 
     //Sub_Networks (Delete)
     app.delete("/sub_networks/:sub_network_id", authenticate, grant_access, sub_networks.delete);
 
     //----------------------Devices-----------------
     //Devices (Read)
     app.get("/devices", authenticate, grant_access, devices.get);
+
+    //Device (Read one)
+    app.get("/device/:device_eui", authenticate, grant_access, devices.get_one);
 
     //Devices (Create)
     app.post("/devices", authenticate, grant_access, device_policy.create, devices.create); //need to add in device validation

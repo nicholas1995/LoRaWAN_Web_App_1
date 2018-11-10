@@ -11,7 +11,7 @@ module.exports = {
             description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
             device_profile_id: Joi.string().required(),
-            reference_altitude: Joi.number().greater(0),
+            reference_altitude: Joi.number().greater(-1),
             skip_frame_counter: Joi.boolean().required()
         } 
         const { error, value } = Joi.validate(data, schema)
@@ -61,6 +61,7 @@ module.exports = {
             description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
             device_profile_id: Joi.string().required(),
+            reference_altitude: Joi.number().greater(-1),
             skip_frame_counter: Joi.boolean().required()
         }
         const { error, value } = Joi.validate(data, schema)
@@ -85,6 +86,10 @@ module.exports = {
                 case 'device_profile_id':
                     console.log("device_profile_id");
                     res.status(422).send({ error: 'Invalid device profile ID.' });
+                    break;
+                case 'reference_altitude':
+                    console.log("reference_altitude");
+                    res.status(422).send({ error: 'Invalid reference altitude.' });
                     break;
                 case 'skip_frame_counter':
                     console.log("skip_frame_counter");

@@ -1,4 +1,5 @@
 const lora_app_server = require('../services/API/lora_app_server');
+const error = require("../services/errors");
 
 function service_profile_api_request_data(data, type) {
     let request;
@@ -65,8 +66,8 @@ module.exports = {
             let data_api = service_profile_api_request_data(null, 0);
             let service_profiles = await lora_app_server.get_service_profiles(data_api,req.params.network_id)
             .catch(err => {
-                throw err;
                 //Error getting service profiles from the Lora App Server
+                throw error.error_message("get service-profiles : lora app server", err.message);
             })
             service_profiles= service_profiles.data.result;
             service_profiles = convert_names_service_profiles(service_profiles);
@@ -75,6 +76,7 @@ module.exports = {
         }catch(err) {
             console.log(err);
             //Error trying to request service profiles from lora app server
+            res.status(500).send({ message: "Failed to get service profiles", type: 'error' });
         }
     }   
 

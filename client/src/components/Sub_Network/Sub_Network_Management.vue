@@ -8,12 +8,15 @@
         vertical
       ></v-divider>
       <v-spacer></v-spacer>
-          <v-toolbar-items class="hidden-sm-and-down ">
-      <v-icon large 
-            class="mr-1 mt-3" @click.stop="$emit('create_sub_network', sub_networks)" >
-        person_add
-      </v-icon>
-    </v-toolbar-items>
+      <v-toolbar-items class="hidden-sm-and-down ">
+        <v-tooltip bottom>
+          <v-icon large slot="activator"
+                class="mr-1 mt-3" @click.stop="$emit('create_sub_network', sub_networks)" >
+            add_box
+          </v-icon>
+          <span>Create Sub-Network</span>
+        </v-tooltip>
+      </v-toolbar-items>
     </v-toolbar>
     <v-data-table
       :headers="headers"
@@ -23,20 +26,26 @@
     >
       <template slot="items" slot-scope="props">
           <td class="justify-center layout px-0">
-            <v-icon 
-              small
-              class="mr-2 pt-3"
-              @click.stop="$emit('update_sub_network',{'sub_network_update':props.item,'sub_networks':sub_networks})"
-            >
-              edit
-            </v-icon>
-            <v-icon 
-              small
-              class="pt-3"
-              @click="delete_sub_neworks(props.item)"
-            >
-              delete
-            </v-icon>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="mr-2 pt-3"
+                @click.stop="$emit('update_sub_network',{'sub_network_update':props.item,'sub_networks':sub_networks})"
+              >
+                edit
+              </v-icon>
+              <span>Edit {{props.item.sub_network_name}}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="pt-3"
+                @click="delete_sub_neworks(props.item)"
+              >
+                delete
+              </v-icon>
+              <span>Delete {{props.item.sub_network_name}}</span>
+            </v-tooltip>
           </td>
           <td class="text-xs-left">{{ props.item.sub_network_id }}</td>
           <td class="text-xs-left">{{ props.item.sub_network_name}}</td>
@@ -79,8 +88,10 @@ export default {
   created: function () {
     AuthenticationService.get_sub_networks().then(result => {
       this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+      this.$emit('message_display',{message:result.data.message, type:result.data.type})  
     }).catch(err => {
       //Error requesting the subnetworks from the server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
     })
   },
   destroyed: function(){
@@ -97,10 +108,10 @@ export default {
     delete_sub_neworks(sub_network){
       if(confirm('Are you sure you want to delete this Sub-Network?') == true){
         AuthenticationService.delete_sub_networks(sub_network.sub_network_id).then(result => {
-          let data = JSON.parse(result.data.sub_networks_lora);
-          this.sub_networks = data;
+          this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
-
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       };
     }, 

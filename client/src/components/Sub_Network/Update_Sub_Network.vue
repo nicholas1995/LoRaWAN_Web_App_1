@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="sub_network_name"
-                label= 'Sub-Network Name'
+                label= 'Sub-Network Name*'
                 :error-messages = "sub_network_name_Errors"
                 @keyup="$v.sub_network_name.$touch() && $v.u.$touch()" 
               ></v-text-field>
@@ -22,7 +22,7 @@
             <v-flex >
               <v-text-field
                 v-model="description"
-                label= 'Description'
+                label= 'Description*'
                 :error-messages = "description_Errors"
                 @keyup="$v.description.$touch()" 
               ></v-text-field>
@@ -134,13 +134,14 @@ export default {
           description: this.description,
           network_id: this.sub_network_update.network_id,
           service_profile_id: this.sub_network_update.service_profile_id,
-        }, this.sub_network_update.sub_network_id).then(result => {
-          let data = JSON.parse(result.data.sub_networks_lora);
-          this.$emit('sub_network_management', data);
-        }).catch(err => {
-          console.log(err);
-          //Error updating sub-network
-        })
+          }, this.sub_network_update.sub_network_id)
+          .then(result => {
+            let data = JSON.parse(result.data.sub_networks_lora);
+            this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+            this.$emit('sub_network_management', data);
+          }).catch(err => {
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
+          })
       }
     }
   }

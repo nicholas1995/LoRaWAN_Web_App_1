@@ -8,12 +8,15 @@
         vertical
       ></v-divider>
       <v-spacer></v-spacer>
-          <v-toolbar-items class="hidden-sm-and-down ">
-      <v-icon large 
-            class="mr-1 mt-3" @click.stop="$emit('create_device', devices)" >
-        person_add
-      </v-icon>
-    </v-toolbar-items>
+      <v-toolbar-items class="hidden-sm-and-down ">
+        <v-tooltip bottom>
+          <v-icon large slot="activator"
+                class="mr-1 mt-3" @click.stop="$emit('create_device', devices)" >
+            add_box
+          </v-icon>
+          <span>Create Device</span>
+        </v-tooltip>
+      </v-toolbar-items>
     </v-toolbar>
     <v-data-table
       :headers="headers"
@@ -23,20 +26,26 @@
     >
       <template slot="items" slot-scope="props">
           <td class="justify-center layout px-0">
-            <v-icon 
-              small
-              class="mr-2 pt-3"
-              @click.stop="$emit('update_device',{'device_update':props.item,'devices':devices})"
-            >
-              edit
-            </v-icon>
-            <v-icon 
-              small
-              class="pt-3"
-              @click="delete_device(props.item)"
-            >
-              delete
-            </v-icon>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="mr-2 pt-3"
+                @click.stop="$emit('update_device',{'device_update':props.item,'devices':devices})"
+              >
+                edit
+              </v-icon>
+            <span>Edit {{props.item.device_name}}</span>
+            </v-tooltip>
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="pt-3"
+                @click="delete_device(props.item)"
+              >
+                delete
+              </v-icon>
+              <span>Delete {{props.item.device_name}}</span>
+            </v-tooltip>
           </td>
           <td class="text-xs-left">{{ props.item.device_name }}</td>
           <td class="text-xs-left">{{ props.item.device_eui}}</td>
@@ -91,9 +100,10 @@ export default {
   created: function () {
     AuthenticationService.get_devices().then(result => {
       this.devices = JSON.parse(result.data.devices_lora);
+      this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
     }).catch(err => {
-      console.log(err)
-      //Error requesting the subnetworks from the server
+      //Error getting the devices from the server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
     })
   },
   destroyed: function(){
@@ -103,8 +113,10 @@ export default {
       if(confirm('Are you sure you want to delete this Device?') == true){
         AuthenticationService.delete_devices(device.device_eui).then(result => {
           this.devices  = JSON.parse(result.data.devices_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
-          console.log(err);
+          //Error deleting device 
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
       };
     }, 

@@ -3,13 +3,13 @@
     <div v-if="!this.$store.state.loginState"> 
 
       <div v-show="this.read== 1">
-        <gateway_management v-bind:gateways_prop='this.gateways'  @create_gateway=" create_gateway($event)" @update_gateway="update_gateway($event)"></gateway_management>
+        <gateway_management v-bind:gateways_prop='this.gateways'  @create_gateway=" create_gateway($event)" @update_gateway="update_gateway($event)" @message_display="message_display($event)"></gateway_management>
       </div>
       <div v-if="this.create == 1">
-        <create_gateway v-bind:gateways_prop='this.gateways' @gateway_management= read_gateway($event) @gateway_management_no_change="cancel() "></create_gateway>
+        <create_gateway v-bind:gateways_prop='this.gateways' @gateway_management= read_gateway($event) @gateway_management_no_change="cancel() " @message_display="message_display($event)"></create_gateway>
       </div>
       <div v-else-if="this.update== 1">
-        <update_gateway v-bind:gateways_prop='this.gateways' v-bind:gateway_update='this.gateway_update' @gateway_management= read_gateway($event) @gateway_management_no_change="cancel() "></update_gateway>  <!--Dynamically passing prop to child component -->
+        <update_gateway v-bind:gateways_prop='this.gateways' v-bind:gateway_update='this.gateway_update' @gateway_management= read_gateway($event) @gateway_management_no_change="cancel()" @message_display="message_display($event)"></update_gateway>  <!--Dynamically passing prop to child component -->
       </div>
 
     <div v-else-if="this.$store.state.loginState">
@@ -17,6 +17,23 @@
       <v-btn @click="login">Login</v-btn>
     </div>
     </div>
+      <v-snackbar
+        v-model="snackbar"
+        bottom="bottom"
+        left="left"
+        multi-line="multi-line"
+        right="right"
+        :timeout="this.timeout"
+        auto-height="auto-height"
+        :color ="this.color"
+      >
+        {{ this.message }}
+        <v-btn
+          flat
+          @click="snackbar = 0"
+        >        Close
+        </v-btn>
+    </v-snackbar>
   </v-content>
 </template>
   
@@ -39,7 +56,11 @@ export default {
       read: 0,
       update: 0,
       gateways: null,
-      gateway_update: null    
+      gateway_update: null,
+      snackbar:0,
+      timeout: 1500,
+      color: "error",
+      message: "blank" 
     }
   },
   created: function () {
@@ -80,6 +101,11 @@ export default {
     login(){
       this.$router.push('dashboard');
     },
+    message_display(data){
+      this.snackbar=1;
+      this.color =data.type;
+      this.message = data.message;
+    }
   }
 }
 

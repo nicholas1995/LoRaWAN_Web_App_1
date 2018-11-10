@@ -1,4 +1,6 @@
 const lora_app_server = require("../services/API/lora_app_server");
+const error = require("../services/errors");
+const VError = require("verror");
 
 function gateway_profiles_request_data(data, type) {
     let request;
@@ -67,8 +69,9 @@ async function get_gateway_profiles(req) {
         let request_body = gateway_profiles_request_data(null, 0);
         let gateway_profiles = await lora_app_server.get_gateway_profiles(request_body, req.params.network_server_id)
             .catch(err => {
-                throw err;
                 //Error getting gateway profiles from lora app server
+                let error = new VError("%s", err.message);
+                throw error;
             });
         gateway_profiles = convert_names_gateway_profiles(gateway_profiles.data.result);
         return gateway_profiles;
@@ -79,16 +82,18 @@ async function get_gateway_profiles(req) {
 }
 module.exports = {
     get: async function (req, res) {
+        let gateway_profiles_lora;
         try {
-            let gateway_profiles_lora = await get_gateway_profiles(req)
+            gateway_profiles_lora = await get_gateway_profiles(req)
                 .catch(err => {
-                    throw err;
                     //Error getting gateway_profiles from lora app server
+                    throw error.error_message("get gateway profiles", err.message);
                 });
             gateway_profiles_lora = JSON.stringify(gateway_profiles_lora);
-            res.status(200).send({ gateway_profiles_lora });
+            res.status(200).send({ gateway_profiles_lora: gateway_profiles_lora, message: 'Gateway profiles fetched', type: 'success' });
         } catch (err) {
             console.log(err);
+            res.status(500).send({ message: "Failed to get gateway profiles", type: 'error' });
         }
     }
 }

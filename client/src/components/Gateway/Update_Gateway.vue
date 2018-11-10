@@ -29,14 +29,6 @@
                 @keyup="$v.description.$touch()" 
               ></v-textarea>
               </v-flex>
-            <!--Network Name-->
-              <v-select
-                v-model="network_name_form"
-                :items="this.networks_can_have_gateways"
-                label="Network*"
-                :error-messages = "network_name_form_Errors"
-                @blur="$v.network_name_form.$touch()" 
-              ></v-select>
             <!--Network Server Name-->
               <v-select
                 v-model="network_server_name_form"
@@ -243,18 +235,11 @@ export default {
       !this.$v.gateway_name.required && errors.push('Gateway name is required.')
       return errors;
     }, 
-
     description_Errors(){
       const errors=[];
       if (!this.$v.description.$error)return errors
       !this.$v.description.maxLength && errors.push('Description must be 200 characters or less')
       !this.$v.description.required && errors.push('Description is required.')
-      return errors;
-    },
-    network_name_form_Errors(){
-      const errors=[];
-      if (!this.$v.network_name_form.$error)return errors
-      !this.$v.network_name_form.required && errors.push('Network is required.')
       return errors;
     },
     network_server_name_form_Errors(){
@@ -326,7 +311,6 @@ export default {
     return {
       gateway_name: '',
       description: '',
-      network_name_form: '', //this is the variable that holds the selected network 'id:name'
       network_server_name_form: '', //this is the variable that holds the selected network server 'id:name'
       gateway_profile_name_form: '', //this is the variable that holds the selected gateway profile 'id:name'
       gateway_accuracy: '',
@@ -343,7 +327,6 @@ export default {
       gateway_profile_id: '', //this is the gateway profile id of the selected gateway profile
 
 
-      network_names: [],
       network_server_names: [],
       gateway_profile_names: [], 
       gateway_location_source: ['UNKNOWN','GPS', 'CONFIG', 'GEO_RESOLVER'],
@@ -358,15 +341,6 @@ export default {
    'gateway_update'
   ],
   watch: {
-    network_name_form: function(){
-      this.gateways_same_network = [];
-      this.network_id = functions.extract_id_id_name(this.network_name_form);
-      for(let i = 0; i< this.gateways_prop.length; i++){
-        if(this.gateways_prop[i].network_id == this.network_id){
-          this.gateways_same_network.push(this.gateways_prop[i]);
-        }
-      }
-    },
     network_server_name_form: function(){
         this.gateway_profile_names =[];
         this.gateway_profile_name_form =[];
@@ -381,33 +355,37 @@ export default {
             }
           }
         }).catch(err=> {
-          console.log(err)
           //Error requesting service profiles from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
       } 
   },
   created: async function () {
     let gateway;
       await AuthenticationService.get_gateway(this.gateway_update.gateway_id).then(result => {
-             gateway = JSON.parse(result.data.gateway);
+            gateway = JSON.parse(result.data.gateway);
+            this.gateway_name = gateway.gateway_name;
+            this.description = gateway.description;
+            this.network_id = gateway.network_id,
+            this.network_Server_id = gateway.network_server_id,
+            this.gateway_profile_id =gateway.gateway_profile_id,
+            this.gateway_accuracy = gateway.gateway_accuracy;
+            this.gateway_altitude = gateway.gateway_altitude;
+            this.gateway_latitude = gateway.gateway_latitude;
+            this.gateway_longitude = gateway.gateway_longitude;
+            this.gateway_location_source_form = gateway.gateway_location_source_form;
+            this.discovery_enabled = gateway.discovery_enabled;
+            this.fine_time_stamp_key = gateway.fine_time_stamp_key; 
+            this.fpga_id = gateway.fpga_id;
           }).catch(err => {
             //Error getting gateway to be updated information
-            console.log(err);
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
           });
-      this.gateway_name = gateway.gateway_name;
-      this.description = gateway.description;
-      this.network_id = gateway.network_id,
-      this.network_Server_id = gateway.network_server_id,
-      this.gateway_profile_id =gateway.gateway_profile_id,
-      this.gateway_accuracy = gateway.gateway_accuracy;
-      this.gateway_altitude = gateway.gateway_altitude;
-      this.gateway_latitude = gateway.gateway_latitude;
-      this.gateway_longitude = gateway.gateway_longitude;
-      this.gateway_location_source_form = gateway.gateway_location_source_form;
-      this.discovery_enabled = gateway.discovery_enabled;
-      this.fine_time_stamp_key = gateway.fine_time_stamp_key; 
-      this.fpga_id = gateway.fpga_id;
-
+    for(let i = 0; i< this.gateways_prop.length; i++){
+      if(this.gateways_prop[i].network_id == this.network_id){
+        this.gateways_same_network.push(this.gateways_prop[i]);
+        }
+      }
     AuthenticationService.get_network_servers().then(result => {
       let network_servers = JSON.parse(result.data.network_servers_lora);
       for(let i = 0; i < network_servers.length; i++){
@@ -418,30 +396,14 @@ export default {
       }
     }).catch(err => {
       //Error getting network servers from lora app server
-      console.log(err);
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
     });
-    AuthenticationService.get_networks().then(result => {
-      let networks = JSON.parse(result.data.networks_lora);
-      let j = 0;
-      for(let i = 0; i < networks.length; i++){
-        if(networks[i].can_have_gateways ==1){
-          this.networks_can_have_gateways.push(networks[i].network_id.concat(":",networks[i].network_name));
-          if(networks[i].network_id == gateway.network_id){
-            this.network_name_form = this.networks_can_have_gateways[j];
-          }
-          j = j+1;
-        }
-      };
-    }).catch(err => {
-      //Error getting networks from lora app server
-      console.log(err);
-    })
   },
   methods: {
     create_gateway(){
       this.$v.$touch();
       if(this.$v.gateway_name.$invalid || this.$v.description.$invalid 
-      || this.$v.network_name_form.$invalid || this.$v.network_server_name_form.$invalid || this.$v.gateway_profile_name_form.$invalid 
+      || this.$v.network_server_name_form.$invalid || this.$v.gateway_profile_name_form.$invalid 
       || this.$v.gateway_accuracy.$invalid || this.$v.gateway_altitude.$invalid || this.$v.gateway_latitude.$invalid
       || this.$v.gateway_longitude.$invalid || this.$v.gateway_location_source_form.$invalid || this.$v.fine_time_stamp_key.$invalid
       || this.$v.fpga_id.$invalid ){
@@ -467,10 +429,11 @@ export default {
           fpga_id: this.fpga_id,
         }, this.gateway_update.gateway_id).then(result => {
           let data = JSON.parse(result.data.gateways_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('gateway_management', data);
         }).catch(err => {
-          console.log(err);
           //Error trying to create subnetwork
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
       } 
     }

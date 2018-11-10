@@ -23,6 +23,9 @@ const ACL = {
                 delete: 'All',
                 create: 'All'
             },
+            device: {
+                read: 'All'
+            },
             gateways: {
                 read: 'All',
                 update: 'All',

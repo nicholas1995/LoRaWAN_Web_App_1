@@ -17,7 +17,7 @@
                 <v-text-field
                   v-model="network_name"
                   :error-messages = "network_nameErrors"
-                  label="Network Name"
+                  label="Network Name*"
                   @keyup="$v.network_name.$touch()" 
                 ></v-text-field>
                 </v-flex>
@@ -25,7 +25,7 @@
                 <v-text-field
                   v-model="display_name"
                   :error-messages = "display_nameErrors"
-                  label="Display Name"
+                  label="Display Name*"
                   @keyup="$v.display_name.$touch()"
                 ></v-text-field>
               <!--Can Have Gateways-->
@@ -91,7 +91,7 @@ mixins: [validationMixin],
       network_name: '',
       display_name: "",
       can_have_gateways: "",
-      message: "",
+      message: ""
     };
   },
   props:[
@@ -134,9 +134,10 @@ mixins: [validationMixin],
           can_have_gateways: this.can_have_gateways
         }).then(result => {
           let data = JSON.parse(result.data.networks_lora);
-          this.$emit('network_management', data); //passing the revecived array of networks to the parent component [Network]
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$emit('network_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
         }).catch(err => {
-          console.log(err);
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
         })
       }
     },

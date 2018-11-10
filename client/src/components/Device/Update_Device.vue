@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="device_name"
-                label="Device Name"
+                label="Device Name*"
                 :error-messages = "device_name_Errors"
                 @keyup="$v.device_name.$touch()" 
               ></v-text-field>
@@ -24,7 +24,7 @@
                 auto-grow
                 rows="1"
                 v-model="description"
-                label="Description"
+                label="Description*"
                 :error-messages = "description_Errors"
                 @keyup="$v.description.$touch()" 
               ></v-textarea>
@@ -33,10 +33,20 @@
               <v-select
                 v-model="device_profile_name_form"
                 :items="this.device_profile_names"
-                label="Device Profile"
+                label="Device Profile*"
                 :error-messages = "device_profile_name_form_Errors"
                 @blur="$v.device_profile_name_form.$touch()" 
               ></v-select>
+            <!--Reference Altitude-->
+              <v-flex >
+                <v-text-field
+                  v-model="reference_altitude"
+                  label="Reference Altitude*"
+                  suffix = "meters"
+                  :error-messages = "reference_altitude_Errors"
+                  @keyup="$v.reference_altitude.$touch()" 
+                ></v-text-field>
+                </v-flex>
               <!--Skip Frame Counter-->
                 <v-checkbox
                   v-model="skip_frame_counter"
@@ -88,6 +98,16 @@ const unique_device_name= function(value){
     return x; 
 }
 
+const first_digit_not_0 = function(value){
+  let x = 1; //0 fail, 1 pass
+  if(value.length >1){   //if it is more than one digit in length 
+    if(value[0] == 0){
+      x = 0;
+      }
+  }
+  return x;
+}
+
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 
@@ -106,6 +126,10 @@ export default {
     },         
     device_profile_name_form: {
       required,
+    },
+    reference_altitude: {
+      numeric,
+      num :first_digit_not_0
     }
   },
   computed: {
@@ -130,6 +154,13 @@ export default {
       if (!this.$v.device_profile_name_form.$error)return errors
       !this.$v.device_profile_name_form.required && errors.push('Device Profile is required.')
       return errors;
+    },
+    reference_altitude_Errors(){
+      const errors=[];
+      if (!this.$v.reference_altitude.$error)return errors
+      !this.$v.reference_altitude.numeric && errors.push('Reference altitude must be a number.')     
+      !this.$v.reference_altitude.num && errors.push('Reference altitude cannot start with 0.')     
+      return errors;
     }
   },
   data() {
@@ -138,6 +169,8 @@ export default {
       description: '',
       device_profile_name_form: '', //this is the variable that holds the selected device profile 'id:name'
       skip_frame_counter: "",
+      reference_altitude: '',
+
       device_profile_id: '', //this is the device profile id of the selected device profile
       device_profile_names: [], //this is the variable that holds all the names to display on the form for the device profiles name:id
       message: '',
@@ -148,9 +181,18 @@ export default {
    'devices_prop',
    'device_update'
   ],
-  created: function () {
-    this.device_name = this.device_update.device_name;
-    this.description = this.device_update.description;
+  created: async function () {
+    let device;
+    AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
+        device = JSON.parse(result.data.device);
+        this.device_name = device.device_name;
+        this.description = device.description;
+        this.reference_altitude = device.reference_altitude;
+        this.skip_frame_counter = device.skip_frame_counter
+      }).catch(err => {
+        //Error getting network to be updated information
+        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+      });
     this.device_profile_name_form = this.device_update.device_profile_name.concat(":",this.device_update.device_profile_id);
     for(let i =0; i<this.devices_prop.length; i++){ //get the devices under the same sub_network
       if(this.device_update.sub_network_id == this.devices_prop[i].sub_network_id){
@@ -164,12 +206,14 @@ export default {
       }
     }).catch(err => {
       //Error getting networks from server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
     })
   },
   methods: {
     update_device(){
       this.$v.$touch();
-      if(this.$v.device_name.$invalid || this.$v.description.$invalid || this.$v.device_profile_name_form.$invalid ){
+      if(this.$v.device_name.$invalid || this.$v.description.$invalid 
+      || this.$v.device_profile_name_form.$invalid || this.$v.reference_altitude.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         if(this.skip_frame_counter =="")this.skip_frame_counter =false; //needed to set empty radio to false
@@ -181,13 +225,15 @@ export default {
           description: this.description,
           sub_network_id: this.device_update.sub_network_id,
           device_profile_id: this.device_profile_id,
+          reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,
         }, this.device_update.device_eui).then(result => {
           let data = JSON.parse(result.data.devices_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
           this.$emit('device_management', data);
         }).catch(err => {
-          console.log(err);
-          //Error trying to create subnetwork
+          //Error trying to update device
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
       } 
     }

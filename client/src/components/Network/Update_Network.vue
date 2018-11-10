@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="network_name"
-                label= 'Network Name'
+                label= 'Network Name*'
                 :error-messages = "network_nameErrors"
                 @keyup="$v.network_name.$touch()" 
               ></v-text-field>
@@ -21,7 +21,7 @@
             <!--Network Display Name-->
               <v-text-field
                 v-model="display_name"
-                label= 'Display Name'
+                label= 'Display Name*'
                 :error-messages = "display_nameErrors"
                 @keyup="$v.display_name.$touch()"
               ></v-text-field>
@@ -128,10 +128,11 @@ export default {
           display_name: this.display_name,
           can_have_gateways: this.can_have_gateways
       }, this.network_update.network_id).then(result => {
-        let data = JSON.parse(result.data.networks_lora);
-        this.$emit('network_management', data); //passing the revecived array of networks to the parent component [Network]
+          let data = JSON.parse(result.data.networks_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$emit('network_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
       }).catch(err => {
-        console.log(err);
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
       })
       }
     } 

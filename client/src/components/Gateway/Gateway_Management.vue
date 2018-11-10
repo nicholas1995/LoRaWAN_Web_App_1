@@ -14,7 +14,7 @@
               class="mr-1 mt-3" @click.stop="$emit('create_gateway', gateways)" >
           add_box
         </v-icon>
-        <span>Add Gateway</span>
+        <span>Create Gateway</span>
       </v-tooltip>
     </v-toolbar-items>
     </v-toolbar>
@@ -90,22 +90,22 @@ export default {
   },
   created: function () {
     AuthenticationService.get_gateways().then(result => {
-      this.gateways = JSON.parse(result.data.gateways_lora);
+      this.gateways = JSON.parse(result.data.gateways_lora); 
+      this.$emit('message_display',{message:result.data.message, type:result.data.type})   
     }).catch(err => {
-      console.log(err)
       //Error requesting the gateways from the server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
     })
-  },
-  destroyed: function(){
   },
   methods: {
     delete_gateways(gateway){
       if(confirm('Are you sure you want to delete this Gateway?') == true){
         AuthenticationService.delete_gateways(gateway.gateway_id).then(result => {
           this.gateways  = JSON.parse(result.data.gateways_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
-          console.log(err);
           //Error deleting gateways from the lora server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
       };
     }, 

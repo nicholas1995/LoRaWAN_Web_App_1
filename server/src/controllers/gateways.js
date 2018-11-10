@@ -1,4 +1,6 @@
 const lora_app_server = require("../services/API/lora_app_server");
+const error = require("../services/errors");
+const VError = require("verror");
 
 
 function gateway_api_request_data(data, type) {
@@ -54,9 +56,6 @@ function gateway_api_request_data(data, type) {
         }
     }
     return request;
-}
-function p(){
-    console.log('hereeee');
 }
 
 function convert_names_gateways(gateways) {
@@ -129,7 +128,8 @@ async function get_gateways() {
         let request_params = gateway_api_request_data(null, 0);
         let gateways = await lora_app_server.get_gateways(request_params)
             .catch(err => {
-                throw err;
+                let error = new VError("%s", err.message);
+                throw error;
             });
         gateways = convert_names_gateways(gateways.data.result);
         return gateways;
@@ -140,24 +140,32 @@ async function get_gateways() {
  
 module.exports = {
     get: async function(req, res){
+        let error_location = null; //0=lora
+        let gateways_lora;
         try{
-            let gateways_lora = await get_gateways()
+            gateways_lora = await get_gateways()
             .catch(err => {
-                throw err;
                 //Error getting gateways from lora app server
+                error_location = 0;
+                throw error.error_message("get gateways : lora app server", err.message);
             });
             gateways_lora = JSON.stringify(gateways_lora);
-            res.status(200).send({ gateways_lora });
+            res.status(200).send({ gateways_lora: gateways_lora, message: 'Gateways fetched', type: 'success' });
         }catch(err){
             console.log(err);
+            if (error_location == 0) {
+                res.status(500).send({ message: "Failed to get gateways", type: 'error' });
+            }else {
+                res.status(500).send({ message: 'Error', type: 'error' })
+            }
         }
     },
     get_one: async function (req, res) {
         try {
             let gateway = await lora_app_server.get_gateway_one(req.params.gateway_id)
                 .catch(err => {
-                    throw err;
                     //Error getting gateways from lora app server
+                    throw error.error_message("get gateway : lora app server", err.message);
                 });
             gateway = gateway.data.gateway;
             gateway = convert_name_gateway_single(gateway);
@@ -165,59 +173,101 @@ module.exports = {
             res.status(200).send({ gateway });
         } catch (err) {
             console.log(err);
+            res.status(500).send({ message: "Failed to get gateway", type: 'error' });
         }
     },
     create: async function(req, res){
+        let error_location = null; //0=lora 1=lora
+        let gateways_lora;
         try{
             let data = JSON.parse(req.body.data);
             let request_body = gateway_api_request_data(data, 1);
             result = await lora_app_server.create_gateways(request_body)
             .catch(err => {
-                throw err;
                 //Error creating gateway 
+                error_location = 0;
+                throw error.error_message("create gateways : lora app server", err.message);
             });
-            let gateways_lora = await get_gateways()
+            gateways_lora = await get_gateways()
             .catch(err => {
-                throw err;
                 //Error getting gateways from lora app server
+                error_location = 1;
+                throw error.error_message("create gateways : lora app server", err.message);
             });
             gateways_lora = JSON.stringify(gateways_lora);
-            res.status(200).send({ gateways_lora });
+            res.status(201).send({ gateways_lora: gateways_lora, message: 'Gateway created', type: 'success' });
         }catch(err){
             console.log(err);
+            if (error_location == 0) {
+                res.status(500).send({ message: "Failed to create gateway", type: 'error' });
+            } else if (error_location == 1) {
+                gateways_lora = JSON.stringify([]);
+                res.status(201).send({ gateways_lora: gateways_lora, message: "Gateway Created. Failed to fetch gateways", type: 'info' })
+            } else {
+                res.status(500).send({ message: 'Error', type: 'error' })
+            }
         }
     },
     update: async function(req, res){
+        let error_location = null; //0=lora 1=lora
+        let gateways_lora;
         try{
             let data = JSON.parse(req.body.data);
             let request_body = gateway_api_request_data(data, 1);
             await lora_app_server.update_gateways(request_body, req.params.gateway_id)
                 .catch(err => {
-                    throw err;
+                    //Error updating gateway
+                    error_location = 0;
+                    throw error.error_message("update gateways : lora app server", err.message);
                 });
-            let gateways_lora = await get_gateways()
+            gateways_lora = await get_gateways()
                 .catch(err => {
-                    throw err;
                     //Error getting gateways from lora app server
+                    error_location = 1;
+                    throw error.error_message("update gateways : lora app server", err.message);
                 });
             gateways_lora = JSON.stringify(gateways_lora);
-            res.status(200).send({ gateways_lora });
+            res.status(201).send({ gateways_lora: gateways_lora, message: 'Gateway updated', type: 'success' });
         }catch(err){
             console.log(err);
+            if (error_location == 0) {
+                res.status(500).send({ message: "Failed to update gateway", type: 'error' });
+            } else if (error_location == 1) {
+                gateways_lora = JSON.stringify([]);
+                res.status(201).send({ gateways_lora: gateways_lora, message: "Gateway updated. Failed to fetch gateways", type: 'info' })
+            } else {
+                res.status(500).send({ message: 'Error', type: 'error' })
+            }
         }
     },
     delete: async function(req, res){
-        let result = await lora_app_server.delete_gateways(req.params.gateway_id)
-            .catch(err => {
-                throw err;
-                //Error delete gateway form lora app server
-            });
-        let gateways_lora = await get_gateways()
-            .catch(err => {
-                throw err;
-                //Error getting gateways from lora app server
-            });
-        gateways_lora = JSON.stringify(gateways_lora); 
-        res.status(200).send({ gateways_lora }); 
+        let error_location = null; //0=lora 1=lora
+        let gateways_lora;
+        try{
+            await lora_app_server.delete_gateways(req.params.gateway_id)
+                .catch(err => {
+                    //Error delete gateway form lora app server
+                    error_location = 0;
+                    throw error.error_message("delete gateway : lora app server", err.message);
+                });
+            gateways_lora = await get_gateways()
+                .catch(err => {
+                    //Error getting gateways from lora app server
+                    error_location = 1;
+                    throw error.error_message("delete gateways : lora app server", err.message);
+                });
+            gateways_lora = JSON.stringify(gateways_lora); 
+            res.status(200).send({ gateways_lora: gateways_lora, message: 'Gateway deleted', type: 'success' });
+        }catch(err){
+            console.log(err);
+            if (error_location == 0) {
+                res.status(500).send({ message: "Failed to delete gateway", type: 'error' });
+            } else if (error_location == 1) {
+                gateways_lora = JSON.stringify([]);
+                res.status(200).send({ gateways_lora: gateways_lora, message: "Gateway deleted. Failed to fetch gateways", type: 'info' })
+            } else {
+                res.status(500).send({ message: 'Error', type: 'error' })
+            }
+        }
     }
 }

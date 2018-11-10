@@ -3,13 +3,13 @@
     <div v-if="!this.$store.state.loginState"> 
 
       <div v-show="this.read== 1">
-        <device_management v-bind:devices_prop='this.devices'  @create_device=" create_device($event)" @update_device="update_device($event)"></device_management>
+        <device_management v-bind:devices_prop='this.devices' @create_device=" create_device($event)" @update_device="update_device($event)" @message_display="message_display($event)"></device_management>
       </div>
       <div v-if="this.create == 1">
-        <create_device v-bind:devices_prop='this.devices' @device_management= read_device($event) @device_management_no_change="cancel() "></create_device>
+        <create_device v-bind:devices_prop='this.devices' @device_management= read_device($event) @device_management_no_change="cancel() " @message_display="message_display($event)"></create_device>
       </div>
       <div v-else-if="this.update== 1">
-        <update_device v-bind:devices_prop='this.devices' v-bind:device_update='this.device_update' @device_management= read_device($event) @device_management_no_change="cancel() "></update_device>  <!--Dynamically passing prop to child component -->
+        <update_device v-bind:devices_prop='this.devices' v-bind:device_update='this.device_update' @device_management= read_device($event) @device_management_no_change="cancel()" @message_display="message_display($event)"></update_device>  <!--Dynamically passing prop to child component -->
       </div>
 
     <div v-else-if="this.$store.state.loginState">
@@ -17,6 +17,23 @@
       <v-btn @click="login">Login</v-btn>
     </div>
     </div>
+    <v-snackbar
+      v-model="snackbar"
+      bottom="bottom"
+      left="left"
+      multi-line="multi-line"
+      right="right"
+      :timeout="this.timeout"
+      auto-height="auto-height"
+      :color ="this.color"
+    >
+      {{ this.message }}
+      <v-btn
+        flat
+        @click="snackbar = 0"
+      >        Close
+      </v-btn>
+    </v-snackbar>
   </v-content>
 </template>
   
@@ -39,7 +56,11 @@ export default {
       read: 0,
       update: 0,
       devices: null,
-      device_update: null    
+      device_update: null,
+      snackbar:0,
+      timeout: 1500,
+      color: "error",
+      message: "blank" 
     }
   },
   created: function () {
@@ -80,6 +101,11 @@ export default {
     login(){
       this.$router.push('dashboard');
     },
+    message_display(data){
+      this.snackbar=1;
+      this.color =data.type;
+      this.message = data.message;
+    }
   }
 }
 

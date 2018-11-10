@@ -84,9 +84,9 @@
                 </v-flex>
             <!--Gateway Latitude-->
               <v-flex >
-                <v-text-field
+                <v-text-field 
                   v-model="gateway_latitude"
-                  label="Gateway Latitude*"
+                  label="Gateway Latitude*" 
                   :error-messages = "gateway_latitude_Errors"
                   @keyup="$v.gateway_latitude.$touch()" 
                 ></v-text-field>
@@ -240,7 +240,7 @@ export default {
     gateway_latitude: {
       required,
       decimal
-    },      
+    },       
     gateway_longitude: {
       required,
       decimal
@@ -411,8 +411,8 @@ export default {
             this.gateway_profile_names.push(gateway_profiles[i].gateway_profile_name.concat(":",gateway_profiles[i].gateway_profile_id));
           }
         }).catch(err=> {
-          console.log(err)
           //Error requesting service profiles from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       }
   },
@@ -423,7 +423,7 @@ export default {
         this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
       }
     }).catch(err => {
-      console.log(err);
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
     });
     AuthenticationService.get_networks().then(result => {
       let networks = JSON.parse(result.data.networks_lora);
@@ -433,7 +433,7 @@ export default {
         }
       };
     }).catch(err => {
-      console.log(err);
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
     })
   },
   methods: {
@@ -466,10 +466,11 @@ export default {
           fpga_id: this.fpga_id,
         }).then(result => {
           let data = JSON.parse(result.data.gateways_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('gateway_management', data);
         }).catch(err => {
-          console.log(err);
           //Error trying to create subnetwork
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       } 
     }

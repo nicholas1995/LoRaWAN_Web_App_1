@@ -81,6 +81,10 @@ export default {
     get_devices() {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('/devices');
+    }, 
+    get_device(device_eui) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/device/${device_eui}`);
     },
     create_devices(data) {
         data = JSON.stringify(data);
