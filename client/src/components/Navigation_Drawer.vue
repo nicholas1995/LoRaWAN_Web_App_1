@@ -77,7 +77,7 @@ export default {
   methods: {
     login(item){
       if(item=="Account Management"){
-        this.$router.push('accountmanagement'); 
+        this.$router.push('user'); 
       }else if(item=="Network"){
         this.$router.push('network'); 
       }else if(item=="Sub-Network"){

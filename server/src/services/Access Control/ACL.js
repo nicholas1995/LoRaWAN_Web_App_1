@@ -59,11 +59,14 @@ const ACL = {
                 update: 'All',
                 delete: 'All',
                 create: 'All'
-            }, 
+            },
+            networks: {
+                read: 'All'
+            },
             sub_networks: {
                 read: 'All'
             },
-            end_devices: {
+            devices: {
                 read: 'All'
             },
             gateways: {

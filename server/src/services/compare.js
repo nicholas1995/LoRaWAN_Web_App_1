@@ -146,19 +146,9 @@ module.exports = {
                 for (let j = 0; j < db.length; j++) {
                     if (lora[i].device_eui == db[j].device_eui) {
                         if (lora[i].device_name == db[j].device_name) {
-                            if (lora[i].sub_network_id == db[j].sub_network_id) {
                                 accounted_for.push(j);
                                 console.log('Same Information');
                                 break;
-                            } else if (lora[i].sub_network_id != db[j].sub_network_id) {
-                                devices_db.update('sub_network_id', lora[i].sub_network_id, lora[i].device_eui)
-                                .catch(err => {
-                                    throw error.error_message(`update: ID-${lora[i].sub_network_id}`, err.message);
-                                })
-                                accounted_for.push(j);
-                                console.log('Different display name');
-                                break;
-                            }
                         } else if (lora[i].device_name != db[j].device_name) {
                             devices_db.update('device_name', lora[i].device_name, lora[i].device_eui)
                             .catch(err => {

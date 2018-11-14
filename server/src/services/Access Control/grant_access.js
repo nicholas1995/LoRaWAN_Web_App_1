@@ -3,8 +3,8 @@ const verify_access = require('./access_control_function');
 module.exports = function(req, res, next){
     let path = req.route.path;
     if(path.lastIndexOf('/') != 0){ //so that it will only happen when there is a second /
-    let x = path.lastIndexOf('/'); //extract the string before the last /
-    path = path.slice(1,x);
+        let x = path.indexOf('/',1); //extract the string between then first and second /
+        path = path.slice(1,x);
     }else{
         path = path.slice(1); 
     }

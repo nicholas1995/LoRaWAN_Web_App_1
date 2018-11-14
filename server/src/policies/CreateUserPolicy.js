@@ -10,7 +10,7 @@ module.exports = {
             last_name: Joi.string().required().regex(
                 new RegExp('^[a-zA-Z]{2,32}$')
             ),
-            address: Joi.string().min(1).max(40),
+            address: Joi.string().min(1).max(60),
             home_phone: Joi.string().regex(
                 new RegExp('^[0-9]{10,10}$')
             ),

@@ -20,24 +20,33 @@ const gateway_policy = require("./policies/gateway_policy");
 
 
 
-module.exports = ((app) => {
+module.exports = ((app) => { 
     //User Login
-    app.post("/login", user.login);
+    app.post("/login", user.login_new);
 
-    //Users (Create)
-    app.post("/users", authenticate, grant_access, CreateUserPolicy.register, user.add_user);
-
-    //Users (Read)
-    app.get("/users", authenticate, grant_access, user.get_users);
-
-    //Users (Delete)
-    app.delete("/users", authenticate, grant_access, user.delete_user); //should change to a delete method instead of putting delete in the path
-
-    //Users (Update)
-    app.put("/users", authenticate, grant_access, CreateUserPolicy.update_user, user.update_user);
+    //New User Login
+    app.post("/login/new_user", user.login_new_user);
 
     //Get Profile Information
     app.get("/profile", authenticate, user.profile);
+
+    //---------------------Users---------------------
+    //Users (Read) 
+    app.get("/users", authenticate, grant_access, user.get);
+
+    //Users (Create)
+    app.post("/users", authenticate, grant_access,  user.create);
+
+    //Users (Update)
+    app.put("/users", authenticate, grant_access, user.update); 
+
+    //Users (Delete)
+    app.delete("/users/:email", authenticate, grant_access, user.delete); //should change to a delete method instead of putting delete in the path
+
+
+    //Users (Get devices for an individual user)
+    app.get("/users/device/:user_email", authenticate, grant_access, user.get_user_devices);
+
 
     //---------------------Networks---------------------
     //Networks (Read)

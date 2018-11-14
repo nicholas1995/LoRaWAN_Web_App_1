@@ -18,22 +18,44 @@
                   v-model="network_name"
                   :error-messages = "network_nameErrors"
                   label="Network Name*"
-                  @keyup="$v.network_name.$touch()" 
-                ></v-text-field>
+                  @keyup="$v.network_name.$touch()">
+                <v-tooltip
+                  slot="append-outer"
+                  bottom>
+                <v-icon small  slot="activator">info</v-icon>
+                I'm a tooltip
+              </v-tooltip>
+            </v-text-field>
                 </v-flex>
               <!--Display Name-->
                 <v-text-field
                   v-model="display_name"
                   :error-messages = "display_nameErrors"
                   label="Display Name*"
-                  @keyup="$v.display_name.$touch()"
-                ></v-text-field>
+                  @keyup="$v.display_name.$touch()">
+                <v-tooltip
+                  slot="append-outer"
+                  bottom
+                  max-width='400' >
+                  <v-icon small  slot="activator"  >info</v-icon>
+                  uhygas dfug asuydf ausdgf asgdfg \n
+                  asdfiy gsasdfiyuh gasdfhg sdfhja sdfasdfiu gsdf asdfh 
+                  u gasdfh asdfuhygas dfug asuydf ausdgf asgdfg \n
+                  asdfiy gsasdfiyuh gasdfhg sdfhja sdfasdfiu gsdf asdfh 
+                  u gasdfh asdfuhygas dfug asuydf ausdgf asgdfg \n
+                  asdfiy gsasdfiyuh gasdfhg sdfhja sdfasdfiu gsdf asdfh 
+                  u gasdfh asdfuhygas dfug asuydf ausdgf asgdfg \n
+                  asdfiy gsasdfiyuh gasdfhg sdfhja sdfasdfiu gsdf asdfh 
+                  u gasdfh asdf
+                </v-tooltip>
+              </v-text-field>
               <!--Can Have Gateways-->
                 <v-checkbox
                   v-model="can_have_gateways"
                   label="Can Have Gateways"
                   required
-                ></v-checkbox>
+                >
+                </v-checkbox>
               </v-form>
               <div div class="text">
                 {{message}} 
@@ -83,7 +105,7 @@ mixins: [validationMixin],
       },      
       display_name: {
         required,
-        maxLength: maxLength(60),
+        maxLength: maxLength(80),
       }
     },
   data() {
@@ -108,13 +130,12 @@ mixins: [validationMixin],
       !this.$v.network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
       !this.$v.network_name.required && errors.push('Name is required.')
       !this.$v.network_name.u && errors.push('Name must be unique.')
-
       return errors;
     },
       display_nameErrors(){
       const errors=[];
       if (!this.$v.display_name.$error)return errors
-      !this.$v.display_name.maxLength && errors.push('Display Name must be 60 characters or less.')
+      !this.$v.display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
       !this.$v.display_name.required && errors.push('Display Name is required.')
       return errors;
     }

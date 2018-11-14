@@ -66,7 +66,7 @@
               <v-flex >
                 <v-text-field
                   v-model="gateway_accuracy"
-                  label="Gateway Accuracy*"
+                  label="Gateway Location Accuracy*"
                   suffix = "meters"
                   :error-messages = "gateway_accuracy_Errors"
                   @keyup="$v.gateway_accuracy.$touch()" 

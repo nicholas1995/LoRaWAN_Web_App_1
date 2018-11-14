@@ -6,7 +6,7 @@ module.exports = {
         const schema = { 
             network_name: Joi.string().required().max(80).regex(
                 new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
-            display_name: Joi.string().required().max(60), 
+            display_name: Joi.string().required().max(80), 
             can_have_gateways: Joi.boolean().insensitive(true) };
         const {error, value} = Joi.validate(data, schema)
         if (error) {

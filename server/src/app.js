@@ -7,7 +7,7 @@ const app = express();
 
 const mqtt = require('mqtt');
 // to be changed to own local server/service
-const client = mqtt.connect('http://broker.hivemq.com');
+const client = mqtt.connect("mqtt://localhost:1883");
 
 
 //app.use(morgan('combined'));
@@ -26,20 +26,21 @@ require('./routes')(app);
 let i= 0;
 function intervalFunct(){
     console.log('interval: '+ i);
-    i++;
+    i++; 
 } 
 //setInterval(intervalFunct,6000);     
 
 
 
-/*  client.on('connect', () => { 
-    client.subscribe('lora/#',()=> {
+/*    client.on('connect', () => { 
+      client.subscribe('application/#',()=> {
         console.log('subscribed')  
     }); 
 });
 
 client.on('message', function (topic, message) {  
     // message is Buffer
-    console.log('MSG: %s: %s', topic, message);
-  })  */
+    message = JSON.parse(message)
+    console.log(topic, message.object.gpsLocation);
+  })    */
     

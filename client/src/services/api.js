@@ -4,7 +4,7 @@ import axios from 'axios';
 //the problem was that if i inserted the add header line inside of here, it would never update because this is a const. In order to 
 //dynamically set the header we would need to implement Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
 //where ever we want to put the header 
-const instance = axios.create({     
-    baseURL: `http://localhost:3000/`,
+const instance = axios.create({
+  baseURL: `http://localhost:3000/`,
 });
 export default instance;  

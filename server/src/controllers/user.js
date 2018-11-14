@@ -5,6 +5,7 @@ const jwt = require("../services/jwt");
 const bcrypt = require("bcrypt-nodejs");
 const UpdatePasswordPolicy = require("../policies/UpdatePasswordPolicy");
 const user_db = require('../services/database/users_db');
+const devices_db = require("../services/database/devices_db");
 
 //Creates a random password of length 8 using characters 0-9 and
 function randomPasswordGenerator() {
@@ -43,156 +44,238 @@ function compare(data, encrypted) {
       });
     });
   } catch (err) {
-    console.log("Compare password error");
+    throw err;
   }
 } 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 module.exports = {
-  //Add User
-  add_user: async function(req, res, next) {
-    let pw = randomPasswordGenerator();
-    let pw_encrypt = await encrypt(pw);
-    user_db.add_user(req, pw_encrypt).then( (result) => {
-        res.status(200).send({message:"User Created...."});
-        email.transporter.sendMail(email.mailOptions(req.body, pw),(error, info) => {
-            if (error) {
-              console.log('Error sending email');
-              console.log(error);
-            } else {
-              console.log("Email sent: " + info.response);
-            }
-          }
-        ); 
-      }).catch( (err) => {
-        //This needs to be split up into two errors. One if the database is not runing the second if the user already esists
-        //res.status(500).send("Problem occured while trying to connect.");
-        res.status(409).send({error:"Email address already in use by another user account "}); 
-      });
-  },
-    //Get Users
-    get_users: async function(req,res){
-      user_db.get_users().then((result)=>{
-            res.status(200).send({
-              users: result});
-        }).catch((error) => {
-            res.status(500).send({error:"Problem occured while trying to connect."});
+  //Get Users
+  get: async function (req, res) {
+    let users;
+    try {
+      users = await user_db.get_users()
+        .catch((err) => {
+          throw err;
         })
-    }, 
-  //Delete User
-  delete_user: async function (req, res) {
-    user_db.get_single_user(req.body.email).then(result => { //Make sure the user exists
-      if (result == "") { 
-        res.status(404).send({
-          error: "User does not exists" 
-        })
-        console.log('User does not exists');
-      } else {
-        user_db.delete_user(req.body.email).then(result => {
-          res.status(200).send({
-            message: 'User account Deleted'
-          });
-          console.log('User Deleted....');
-        }).catch(error => {
-          console.log('Error');
-        })
-      }
-    }).catch(error => {
-      res.status(500).send({error:"Problem occured while trying to connect."});
-    })
-  }, 
-
-  //Login
-  login: function(req, res) {
-    if(req.body.newuser==0){
-      user_db.get_single_user(req.body.email).then(async (result) => {
-          if (result == "") {
-            //Email does not exists
-            res.status(403).send({error:"Incorrect email or password"});
-          } else {
-                let encryted_data = await compare(req.body.password, result[0].password)
-            if (encryted_data ==1) {
-              //Correct Credentials
-              if (result[0].new_user == "1") {
-                //Prevent someone from logging in without changing the default password
-                res.send({
-                  message:"Need to change default password!",
-                  user: {
-                    email: result[0].email,
-                    new_user: result[0].new_user
-                  }});
-              } else {
-                let userJSON = toJSON(result);
-                res.send({
-                  user: userJSON,
-                  user_class: result[0].user_class,
-                  token: jwt.jwtUserSignin(userJSON),
-                  message: 'Successful Login',
-                  user_name: (result[0].first_name + " " + result[0].last_name)
-                });
-              }
-            }else {
-              //Incorrect Password
-              res.status(403).send({error:"Incorrect  password!"});
-            }
-          }
-        }).catch((err) => {
-          console.log(err)
-          res.status(500).send({error:"Problem occured while trying to connect."});
-        })
-    }else if(req.body.newuser==1){
-      user_db.get_single_user(req.body.email).then(async (result) => {
-        if (result == "") {
-          //Email does not exists
-          res.status(403).send({error:"Incorrect email or password!"});
-        } else {
-          let encryted_data = await compare(req.body.password, result[0].password)
-          if (encryted_data == 1) {
-            //Correct Credentials
-            if (result[0].new_user == "1") {
-              //Prevent someone from logging in without changing the default password
-              var newUserObject = {
-                newpassword: req.body.newpassword
-              }; //Ensure to make sure new user password meets password policy and then update the database with this new password
-              UpdatePasswordPolicy.updateUserPassword(newUserObject,res,async function() {
-                  let encrypted_password = await encrypt(newUserObject.newpassword);
-                  let sql = `UPDATE users SET password = '${encrypted_password}', new_user = 'false' WHERE email = '${req.body.email}';`;
-                  let query = db.query(sql, (err, result) => {
-                    if (err) throw err;
-                    console.log("Password Updated....");
-                  });
-                  var userJSON = toJSON(result);
-                  res.send({ 
-                    user: userJSON,
-                    user_class: result[0].user_class,
-                    token: jwt.jwtUserSignin(userJSON),
-                    message: 'Password Updated!',
-                    user_name: (result[0].first_name + " " + result[0].last_name)
-                  });
-                }
-              );
-            } else {
-              res.status(401).send({error:"Only change password on FIRST Login!"});
-            }
-          } else {
-            //Incorrect Password
-            res.status(403).send({error:"Incorrect password!"});
-          }
-        }
-      }).catch((err) =>{
-        res.status(500).send({error:"Problem occured while trying to connect."});
-      })
+      users = JSON.stringify(users);
+      res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });
+    } catch (err) {
+      res.status(500).send({ message: "Failed to get users", type: 'error' });
     }
+  }, 
+  //Add User
+  create: async function(req, res){
+    let users;
+    try{
+      let data = JSON.parse(req.body.data);
+      let pw = randomPasswordGenerator();
+      let pw_encrypt = await encrypt(pw)
+      .catch(err => {
+        //Error encrypting pw
+        throw err;
+      });
+      await user_db.add_user(data, pw_encrypt)
+        .catch((err) => {
+          throw err;
+        });
+      await email.transporter.sendMail(email.mailOptions(data, pw))
+        .catch(err => {
+          //Error sending email
+          throw err;
+        })
+        console.log('email sent')
+      if (data.user_class == 'Fisher'){
+        for(let i =0; i< data.devices.length; i++){
+          await user_db.add_device_fisher(data.email, data.devices[i])
+            .catch(err => {
+              //Error adding a user device eui to the database
+              throw err;
+            })
+        }
+      };
+      users = await user_db.get_users()
+        .catch((err) => {
+          throw err;
+        })
+      users = JSON.stringify(users);
+      res.status(200).send({ users: users, message: 'User created.', type: 'success' });
+    }catch(err){
+      console.log(err);
+    }  
   },
   //Update User
-  update_user: function(req,res){
-    user_db.update_user(req).then( result => {
-        res.status(200).send({message: 'User details updated.'});
-    }).catch(err => {
-      res.status(500).send({error:"Problem occured while trying to connect."});
-    });
+  update: async function (req, res) {
+    let users;
+    try {
+      let data = JSON.parse(req.body.data);
+      await user_db.update_user(data)
+        .catch(err => {
+          //Error updating user on the database
+          throw err;
+        });
+      await user_db.delete_fisher_devices(data.email) //delete for whoever you are
+        .catch(err => {
+          //Error comparing existing set and updated set of devices
+          throw err;
+        })
+      if (data.user_class == 'Fisher') { //only add if ur a fisher
+        for (let i = 0; i < data.devices.length; i++) {
+          await user_db.add_device_fisher(data.email, data.devices[i])
+            .catch(err => { 
+              //Error adding a user device eui to the database
+              throw err;
+            })
+        }
+      }
+      users = await user_db.get_users()
+        .catch((err) => {
+          throw err;
+        })
+      users = JSON.stringify(users);
+      res.status(200).send({ users: users, message: 'User updated.', type: 'success' });
+    } catch (err) {
+      console.log(err);
+    }
   },
+  //Delete User
+  delete: async function (req, res) {
+    let users;
+    try {
+      await user_db.delete_user(req.params.email)
+        .catch(err => {
+          //Error deleting user
+          throw err;
+        })
+      users = await user_db.get_users()
+        .catch((err) => {
+          throw err;
+        })
+      users = JSON.stringify(users);
+      res.status(200).send({ users: users, message: 'User deleted.', type: 'success' });
+    } catch (err) {
+      console.log(err);
+    }
+  }, 
+    //Get User Devices (devices associated with a fisher)
+    get_user_devices: async function (req, res) {
+      let user_devices;
+      let devices;
+      try {
+        user_devices = await user_db.get_fisher_devices(req.params.user_email)
+          .catch((err) => {
+            throw err;
+          })
+        devices = await devices_db.get()
+          .catch(err => {
+            throw err;
+          });
+        user_devices = JSON.stringify(user_devices);
+        devices = JSON.stringify(devices);
+        res.status(200).send({ user_devices: user_devices, devices: devices,message: 'Users fetched', type: 'success' });
+      } catch (err) {
+        res.status(500).send({ message: "Failed to get user devices", type: 'error' });
+      }
+    }, 
+
+  //Login New
+  login_new: async function(req, res){
+    try{
+      let data = JSON.parse(req.body.data); 
+      let result =await user_db.get_single_user(data.email)
+        .catch(err => {
+          //Error getting user form database using email to find
+          throw err;
+        })
+      if (result == "") {//Email does not exists
+        res.status(403).send({ message: "Incorrect login credentials" });
+      }
+      else{
+        let encryted_data = await compare(data.password, result[0].password)
+          .catch(err => {
+            //Error checking to see if passwords are the same
+            throw err;
+          });
+        if (encryted_data ==1){//Correct login credentials
+          if(result[0].new_user ==1){//New User
+            res.status(409).send({ new_user: 1 });
+          }
+          else{//Existing user
+            let userJSON = toJSON(result);
+            let data = {
+              user: userJSON,
+              user_class: result[0].user_class,
+              token: jwt.jwtUserSignin(userJSON),
+              message: 'Successful Login',
+              user_name: (result[0].first_name + " " + result[0].last_name)
+            }
+            data = JSON.stringify(data);
+            res.status(200).send(data);
+          }
+        }else{
+          //Incorrect PW;
+          res.status(403).send({ message: "Incorrect login credentials" });
+        }
+      }
+    }catch(err){
+      console.log(err);
+    } 
+  },
+  //Login New User
+  login_new_user: async function(req, res){
+    let data;
+    try{
+      data = JSON.parse(req.body.data);
+      let result = await user_db.get_single_user(data.email)
+        .catch(err => {
+          //Error getting user form database using email to find
+          throw err;
+        })
+      if (result == "") {//Email does not exists
+        res.status(403).send({ message: "Incorrect login credentials" });
+      }
+      else {
+        let encryted_data = await compare(data.password, result[0].password)
+          .catch(err => {
+            //Error checking to see if passwords are the same
+            throw err;
+          });
+        if (encryted_data == 1) {//Correct login credentials
+          UpdatePasswordPolicy.updateUserPassword(data.new_password, res, async function (){
+            let encrypted_password = await encrypt(data.new_password)
+              .catch(err => {
+                //Error encrypting pw
+                throw err;
+              });
+            await user_db.update_user_pw(encrypted_password,data.email)
+              .catch(err => {
+                //Error updating user pw
+                throw err;
+              })
+            let userJSON = toJSON(result);
+            data = {
+              user: userJSON,
+              user_class: result[0].user_class,
+              token: jwt.jwtUserSignin(userJSON),
+              message: 'Successful Login',
+              user_name: (result[0].first_name + " " + result[0].last_name)
+            };
+            data = JSON.stringify(data);
+            res.status(200).send(data);
+          }).catch(err => {
+            console.log(err)
+          })
+        }else {
+          //Incorrect PW;
+          res.status(403).send({ message: "Incorrect login credentials" });
+        }
+      }
+    }catch(err){
+
+    }
+  }, 
+
   //Get Profile Information
   profile: function(req,res){
     try{
@@ -207,8 +290,5 @@ module.exports = {
     }catch(err){
       console.log('Error trying to send profile information');
     }
-  },
-  test: function(req,res){
-    console.log(res);
   }
 };

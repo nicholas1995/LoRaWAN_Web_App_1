@@ -12,22 +12,32 @@
               <!--Email-->
               <v-text-field 
                 v-model="email"
-                label="E-mail"
-                required
+                label="E-mail*"
+                :error-messages = "email_errors"
               ></v-text-field>
               <!--Password-->
               <v-text-field 
                 v-model="password"
                 type="password"
-                label="Password"
-                required
+                label="Password*"
+                :error-messages = "password_errors"
               ></v-text-field>
-              <div v-if="(this.newuser)">
+              <!--First time login-->
+              <div v-if="(this.new_user)">
+                <!--New Password-->
                 <v-text-field 
-                  v-model="newpassword"
+                  v-model="new_password"
                   type="password"
-                  label="New Password"
-                  required
+                  label="New Password*"
+                  :error-messages = "new_password_errors"
+                ></v-text-field>
+                <!--Confirm New Password (not putting touch here because we only want to compare when the form is submitted 
+                so someone cant jus put in values until the error is gone-->
+                <v-text-field 
+                  v-model="new_password_confirm"
+                  type="password"
+                  label="Confirm Password*"
+                  :error-messages = "new_password_confirm_errors" 
                 ></v-text-field>
               </div>
               <div class="text">
@@ -47,30 +57,142 @@
 
 <script>
 import AuthenticationService from "../services/AuthenticationService.js";
+import { validationMixin } from 'vuelidate'
+import { required, minLength,maxLength, helpers, email } from 'vuelidate/lib/validators'
+
+const pw_match= function(value){
+  let x = 1; //0 fail, 1 pass
+  if(value != this.new_password){
+    x =0;
+  }
+  return x; 
+}
+
+const valid_pw = helpers.regex('valid_pw', /^[a-zA-Z0-9\@\_\%\&]*$/);
+
 export default {
+  mixins: [validationMixin],
+  validations: {
+      email: {
+        required,
+        email
+      },      
+      password: {
+        required,
+        valid: valid_pw,
+        minLength: minLength(8),
+        maxLength: maxLength(32),
+      },
+      new_password: {
+        required,
+        valid: valid_pw,
+        minLength: minLength(8),
+        maxLength: maxLength(32),
+      },
+      new_password_confirm: {
+        match: pw_match
+      }
+    },
   data() {
     return {
       email: "",
       password: "",
-      newpassword: "",
-      newuser: 0,
+      new_password: "",
+      new_password_confirm: "",
+      new_user: 0,
       message: ""
     };
   },
-  components: {},
+   computed: {
+     email_errors(){
+      const errors=[];
+      if (!this.$v.email.$error)return errors
+      !this.$v.email.required && errors.push('Email is required')
+      !this.$v.email.email && errors.push('Must be a vaild email address.')
+      return errors;
+    },
+    password_errors(){
+      const errors=[];
+      if (!this.$v.password.$error)return errors
+      !this.$v.password.required && errors.push('Password Required.')
+      !this.$v.password.valid && errors.push('Password shall only contain numbers, letters, @, _, %, &')
+      !this.$v.password.minLength && errors.push('Must be greater than 8 characters.')
+      !this.$v.password.maxLength && errors.push('Must be less than 32 characters.')
+      return errors;
+    },
+    new_password_errors(){
+      const errors=[];
+      if (!this.$v.new_password.$error)return errors
+      !this.$v.new_password.required && errors.push('Password Required.')
+      !this.$v.new_password.valid && errors.push('Password shall only contain numbers, letters, @, _, %, &')
+      !this.$v.new_password.minLength && errors.push('Must be greater than 8 characters.')
+      !this.$v.new_password.maxLength && errors.push('Must be less than 32 characters.')
+      return errors;
+    },
+    new_password_confirm_errors(){
+      const errors=[];
+      if (!this.$v.new_password_confirm.$error)return errors
+      !this.$v.new_password_confirm.match && errors.push('New password does not match.')
+      return errors;
+    },
+   },
   methods: {
-
     async login() {
-      var response;
+      this.$v.$touch(); 
+      if(this.new_user ==0){//Existing user... normal login
+        if(this.$v.email.$invalid || this.$v.password.$invalid){
+          this.message ="Error in Form. Please fix and resubmit!"
+        }else{
+          AuthenticationService.login({email: this.email,password: this.password})
+          .then(result => {
+            let data = result.data;
+            this.$store.commit('login',{token: data.token, user_class: data.user_class, user_name: data.user_name, email: data.user.email});
+            this.$router.push('dashboard');
+          }).catch(err => {
+            this.$v.$reset(); 
+            if(err.response.status ==409){//New User
+              this.new_user = err.response.data.new_user
+              this.message = err.response.data.message; 
+            }else if(err.response.status ==403){
+              this.message = err.response.data.message;        
+            }else{
+              console.log(err);
+            }
+          })
+        }
+      }
+      else if(this.new_user ==1){//New user login
+        if(this.$v.email.$invalid || this.$v.password.$invalid 
+          || this.$v.new_password.$invalid || this.$v.new_password_confirm.$invalid){
+            this.message ="Error in Form. Please fix and resubmit!"
+        }else{
+          AuthenticationService.login_new_user({
+            email: this.email,
+            password: this.password,
+            new_password: this.new_password
+          }).then(result => {
+            let data = result.data;
+            this.$store.commit('login',{token: data.token, user_class: data.user_class, user_name: data.user_name, email: data.user.email});
+            this.$router.push('dashboard');
+          }).catch(err => {
+              if(err.response.status ==403){
+                this.message = err.response.data.message;        
+              }else{
+                console.log(err);
+              }
+          })
+        }
+      }
+      /* var response;
       try {
         response =await AuthenticationService.login({
           email: this.email,
           password: this.password,
-          newpassword: this.newpassword,
-          newuser: this.newuser
+          new_password: this.new_password,
+          new_user: this.new_user
         });
         if(response.data.user.new_user==1){
-          this.newuser = response.data.user.new_user;
+          this.new_user = response.data.user.new_user;
         }else{
           this.message = response.data.message;
           this.$store.commit('login',{token: response.data.token, user_class: response.data.user_class, user_name: response.data.user_name, email: response.data.user.email});
@@ -79,7 +201,7 @@ export default {
         this.message = response.data.message;
       } catch (error) {
         this.message = error.response.data.error;
-      }
+      } */
     }
   }
 };

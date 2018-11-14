@@ -174,7 +174,7 @@ export default {
       device_profile_id: '', //this is the device profile id of the selected device profile
       device_profile_names: [], //this is the variable that holds all the names to display on the form for the device profiles name:id
       message: '',
-      devices_same_sub_network: []//this is an array that contains all the sub_networks with the same network id selected
+      devices_same_sub_network: []//this is an array that contains all the devices with the same sub_networks id selected
     };
   },
   props:[
@@ -183,7 +183,7 @@ export default {
   ],
   created: async function () {
     let device;
-    AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
+    await AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
         device = JSON.parse(result.data.device);
         this.device_name = device.device_name;
         this.description = device.description;
@@ -199,7 +199,7 @@ export default {
         this.devices_same_sub_network.push(this.devices_prop[i]);
       }
     }
-    AuthenticationService.get_device_profiles(this.device_update.sub_network_id).then(result => {
+    await AuthenticationService.get_device_profiles(this.device_update.sub_network_id).then(result => {
       let device_profiles = JSON.parse(result.data.device_profiles);
       for(let i = 0; i < device_profiles.length; i++){
         this.device_profile_names.push(device_profiles[i].device_profile_name.concat(":",device_profiles[i].device_profile_id));

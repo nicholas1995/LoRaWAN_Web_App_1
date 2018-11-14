@@ -14,30 +14,48 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.post('users', credentials); 
     },
-    delete_user(credentials){
+    delete_users(email){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.delete('users', {data: credentials});
+        return Api.delete(`/users/${email}`);
     },
     update_user(credentials){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.put('users', credentials);
     },
     login(credentials){
-        return Api.post('login', credentials); 
+        let data = JSON.stringify(credentials);
+        return Api.post('login', {data}); 
     },
-    loginNewUser(credentials){
-        return Api.post('login/newuser', credentials); 
+    login_new_user(credentials){
+        let data = JSON.stringify(credentials);
+        return Api.post("login/new_user", {data}); 
     },
+    //Users
     get_users(){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('users');
+    },
+    create_users(data) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.post('users',{data});
+    },
+    update_users(data) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.put('users', {data});
     },
     get_profile_information(){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('profile', );
     },
+    get_user_devices(user_email) {//we pick the uri this way because its a software admin ability 
+        //and since in the acl they can view all users we will put users first 
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/users/device/${user_email}`);
+    },
 
-    //Networks
+    //Networks 
     get_networks(){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('networks');

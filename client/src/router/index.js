@@ -11,6 +11,8 @@ import Network from '../components/Network/Network.vue'
 import Sub_Network from '../components/Sub_Network/Sub_Network.vue'
 import Device from "../components/Device/Device.vue";
 import Gateway from "../components/Gateway/Gateway.vue";
+import User from "../components/User/User.vue";
+
 
 
 
@@ -73,6 +75,11 @@ export default new Router({
       path: "/gateway",
       name: "gateway",
       component: Gateway
+    },
+    {
+      path: "/user",
+      name: "user",
+      component: User
     }
   ]
 });

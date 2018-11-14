@@ -16,7 +16,14 @@
                 label= 'Network Name*'
                 :error-messages = "network_nameErrors"
                 @keyup="$v.network_name.$touch()" 
-              ></v-text-field>
+              >
+                <v-tooltip
+                  slot="append-outer"
+                  bottom>
+                  <v-icon small  slot="activator">info</v-icon>
+                  I'm a tooltip
+                </v-tooltip>
+              </v-text-field>
               </v-flex>
             <!--Network Display Name-->
               <v-text-field
@@ -24,7 +31,14 @@
                 label= 'Display Name*'
                 :error-messages = "display_nameErrors"
                 @keyup="$v.display_name.$touch()"
-              ></v-text-field>
+              >
+                <v-tooltip
+                  slot="append-outer"
+                  bottom>
+                  <v-icon small  slot="activator">info</v-icon>
+                  I'm a tooltip
+                </v-tooltip>
+              </v-text-field>
             <!--Can Have Gateways-->
               <v-checkbox
                 v-model="can_have_gateways"
@@ -55,7 +69,7 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { maxLength, helpers } from 'vuelidate/lib/validators'
+import { maxLength, helpers, required } from 'vuelidate/lib/validators'
 
 const unique= function(value){
    let i;
@@ -75,12 +89,14 @@ export default {
   mixins: [validationMixin],
   validations: {
       network_name: {
+        required,
         maxLength: maxLength(80),
         alpha_num_dash,
         u: unique,
       },      
       display_name: {
-        maxLength: maxLength(60),
+        required,
+        maxLength: maxLength(80),
       }
     },
   data() {
@@ -106,13 +122,15 @@ export default {
       if (!this.$v.network_name.$error)return errors
       !this.$v.network_name.maxLength && errors.push('Name must be 80 characters or less.')
       !this.$v.network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
+      !this.$v.network_name.required && errors.push('Name is required.')
       !this.$v.network_name.u && errors.push('Name must be unique.')
       return errors;
     },
     display_nameErrors(){
       const errors=[];
       if (!this.$v.display_name.$error)return errors
-      !this.$v.display_name.maxLength && errors.push('Display Name must be 60 characters or less.')
+      !this.$v.display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
+      !this.$v.display_name.required && errors.push('Display Name is required.')
       return errors;
     }
   },

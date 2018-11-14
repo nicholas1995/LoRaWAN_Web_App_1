@@ -68,7 +68,8 @@ function convert_names_devices(devices) {
       device_status_external_power_source: null,
       device_status_margin: null,
       last_seen_at: null,
-      device_name: null
+      device_name: null,
+      deleted: 0 //this is here so when we are editing the users who are fishers we will only be able to assign them to current devices
   };
     for (let i = 0; i < devices.length; i++) {
         device.sub_network_id = devices[i].applicationID;
@@ -96,7 +97,8 @@ function convert_names_devices(devices) {
             device_status_external_power_source: null,
             device_status_margin: null,
             last_seen_at: null,
-            device_name: null
+            device_name: null,
+            deleted: 0
         };
   }
     return devices_return;
