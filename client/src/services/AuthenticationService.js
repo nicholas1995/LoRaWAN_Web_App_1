@@ -9,6 +9,12 @@ var instance = axios.create({
 
 
 export default {
+
+    check_permissions(route, permission){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`check_permission/${route}/${permission}`); 
+    },
+
     //A funtion that hits a post to localhost:3000/register. It passes the credentials to the server
     register(credentials){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;

@@ -8,7 +8,7 @@ module.exports = function(req, res, next){
     }else{
         path = path.slice(1); 
     }
-    let user_class = req.user[0].user_class;
+    let user_class = req.user.user_class;
     let method = req.route.stack[0].method;
     let access = verify_access.check_permission(user_class, path, method);
     if(access == 'all'){
@@ -20,6 +20,8 @@ module.exports = function(req, res, next){
         next();
         //res.status(403).send({error:"Do not have access!"}); //HAVE BUG HERE... NEED TO HAVE A SPECIAL next() FOR IF USER HAS ACCESS TO SELF ALONE
     }else{
-        res.status(403).send({error:"Do not have access!"});
+        let err = new VError(`Forbidden Access : user-${req.user.email} : path-${path} : method-${method}`);
+        console.log(err.message);
+        res.status(403).send({ error: "Forbidden" });
     }
 }

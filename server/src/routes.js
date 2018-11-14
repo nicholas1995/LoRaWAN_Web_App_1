@@ -2,6 +2,7 @@ const CreateUserPolicy = require('./policies/CreateUserPolicy');
 const user = require('./controllers/user');
 const authenticate = require('./policies/isAuthenticated');
 const grant_access = require('./services/Access Control/grant_access');
+const grant_view_access = require("./services/Access Control/grant_view_access");
 const networks = require('./controllers/networks');
 const sub_networks = require('./controllers/sub_networks');
 const devices = require("./controllers/devices");
@@ -21,6 +22,10 @@ const gateway_policy = require("./policies/gateway_policy");
 
 
 module.exports = ((app) => { 
+
+    //Check permission on page render
+    app.get("/check_permission/:route/:method", authenticate, grant_view_access);
+
     //User Login
     app.post("/login", user.login_new);
 

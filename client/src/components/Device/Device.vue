@@ -1,7 +1,6 @@
 <template>
-  <v-content v-if="this.$store.state.user_class == 'IoT Network Admin'">
-    <div v-if="!this.$store.state.loginState"> 
-
+  <v-content v-if="this.access == 1">
+    <div> 
       <div v-show="this.read== 1">
         <device_management v-bind:devices_prop='this.devices' @create_device=" create_device($event)" @update_device="update_device($event)" @message_display="message_display($event)"></device_management>
       </div>
@@ -11,11 +10,6 @@
       <div v-else-if="this.update== 1">
         <update_device v-bind:devices_prop='this.devices' v-bind:device_update='this.device_update' @device_management= read_device($event) @device_management_no_change="cancel()" @message_display="message_display($event)"></update_device>  <!--Dynamically passing prop to child component -->
       </div>
-
-    <div v-else-if="this.$store.state.loginState">
-      <h3>You do not have access to this page. Please go to the login page</h3>
-      <v-btn @click="login">Login</v-btn>
-    </div>
     </div>
     <v-snackbar
       v-model="snackbar"
@@ -52,6 +46,7 @@ export default {
   },
   data(){
     return {
+      access: 0,
       create: 0,
       read: 0,
       update: 0,
@@ -63,12 +58,35 @@ export default {
       message: "blank" 
     }
   },
-  created: function () {
-    if(this.$store.state.user_class =='IoT Network Admin'){
-        this.read = 1;
-    }else{
-      alert('You do not have access to this page');
-        this.$router.push('dashboard');
+  created: async function () {
+      try {
+            if (this.$store.state.loginState == false) {
+              //User logged in
+              await AuthenticationService.check_permissions("devices", "post")
+                .catch(err => {
+                  console.log(err)
+                  throw err;
+                });
+              this.access =1;
+              this.read = 1;
+            }else{
+              alert('Please login.');
+              this.$router.push('login');
+            }
+      }catch (err) {
+        if(err.response.status == "401"){
+          //Unauthorized.... token expired
+          alert('Token expired please login.');
+          this.$store.commit('logout');
+          this.$router.push('login');
+        }else if(err.response.status == "403"){
+          //Do not have access to this resource
+          alert('You do not have access to this page');
+          this.$router.push('dashboard');
+        }else{
+          alert('You do not have access to this page');
+          this.$router.push('dashboard');
+        }
       }
   },
   computed: {

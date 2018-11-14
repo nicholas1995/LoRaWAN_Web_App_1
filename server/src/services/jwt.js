@@ -3,7 +3,7 @@ const config = require('../configeration/config');
 
 function jwtUserSignin(user){
         return jwt.sign(user, config.authentication.jwtSecret, {
-            expiresIn: '24h'
+            expiresIn: '12h'
         });
     }
 
