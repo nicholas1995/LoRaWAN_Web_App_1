@@ -12,10 +12,6 @@ module.exports = {
         FROM users`;
         return db.queryAsync(sql);
     },
-    get_single_user: function(email){
-        let sql = `SELECT * FROM users WHERE email = '${email}'`;
-        return db.queryAsync(sql);
-    },
     get_user_emails: function(){
         let sql = `SELECT 
         email 
@@ -39,6 +35,21 @@ module.exports = {
         SET password = '${encrypted_password}', new_user = 'false' WHERE email = '${email}';`;
         return db.queryAsync(sql);
     },
+
+    //-----------------------------------PROFILES-------------------------------------------
+    get_profile: function (email) {
+        let sql = `SELECT * FROM users WHERE email = '${email}'`;
+        return db.queryAsync(sql);
+    },
+    update_profile: function (data) {
+        let sql = `UPDATE users
+        SET first_name= '${data.first_name}', last_name= '${data.last_name}', address= '${data.address}', 
+        home_phone= '${data.home_phone}', mobile_phone= '${data.mobile_phone}'
+        WHERE email ='${data.email}'`;
+        return db.queryAsync(sql);
+    },
+
+    //------------------------------------------------------------------------------
     //Add a device for a fisher
     add_device_fisher: function(email, device_eui){
         let sql = `INSERT INTO users_devices (email, device_eui)

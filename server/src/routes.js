@@ -16,6 +16,7 @@ const Network_Policy = require('./policies/network_policy');
 const sub_network_policy = require('./policies/sub_network_policy');
 const device_policy = require("./policies/device_policy");
 const gateway_policy = require("./policies/gateway_policy");
+const password_policy = require("./policies/UpdatePasswordPolicy")
 
 
 
@@ -32,8 +33,6 @@ module.exports = ((app) => {
     //New User Login
     app.post("/login/new_user", user.login_new_user);
 
-    //Get Profile Information
-    app.get("/profile", authenticate, user.profile);
 
     //---------------------Users---------------------
     //Users (Read) 
@@ -48,6 +47,15 @@ module.exports = ((app) => {
     //Users (Delete)
     app.delete("/users/:email", authenticate, grant_access, user.delete); //should change to a delete method instead of putting delete in the path
 
+    //---------------------Profile---------------------
+    //Profile (Read)
+    app.get("/profile", authenticate, user.profile_get);
+
+    //Profile (Update)
+    app.put("/profile", authenticate, user.profile_update);
+
+    //Profile (Change Password)
+    app.put("/update_password", authenticate, password_policy.password_policy, user.profile_update_password);
 
     //Users (Get devices for an individual user)
     app.get("/users/device/:user_email", authenticate, grant_access, user.get_user_devices);

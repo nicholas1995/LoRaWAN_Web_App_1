@@ -48,6 +48,9 @@ export default new Vuex.Store({
     update_user(state, user){
       state.update_user = user;
     },
+    update_user_name_navigation_drawer(state, user) {
+      state.user.user_name = user;
+    },
     update_user_destroy(state,name){
       state.update_user = {};
       state.user.user_name = name.full_name;

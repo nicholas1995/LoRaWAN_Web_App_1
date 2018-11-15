@@ -15,9 +15,23 @@
       <v-btn class="grey lighten-2" @click="login" flat v-if="this.$store.state.loginState">
         Login
       </v-btn>
-      <v-icon large @click="edit_account"  v-if="!this.$store.state.loginState" class=" mt-3 mr-3">
-        account_box
-      </v-icon>
+      <v-menu :nudge-width="100">
+        <v-toolbar-title slot="activator">
+            <v-icon large @click="profile"  v-if="!this.$store.state.loginState" class="mr-3">
+              account_box
+            </v-icon>
+        </v-toolbar-title>
+
+        <v-list>
+          <v-list-tile
+            v-for="item in items"
+            :key="item"
+            @click="profile(item)"
+          >
+            <v-list-tile-title v-text="item"></v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
       <v-btn class="grey lighten-2" @click="logout" flat v-if="!this.$store.state.loginState">
         Logout
       </v-btn>
@@ -32,6 +46,7 @@ import AuthenticationService from "../services/AuthenticationService.js";
 export default {
   data() {
     return {
+      items: ["Update Profile", "Update Password"]
 
     };
   },
@@ -40,16 +55,12 @@ export default {
     login(){
       this.$router.push('login');
     },
-    async edit_account() {
-      try{
-        this.$store.commit('update_self', 1);
-        const response = await AuthenticationService.get_profile_information();
-        let user = response.data.user;
-        this.$store.commit('update_user', {user});
-        this.$router.push('updateuser'); 
-      }catch(error){
-        console.log({location: "Toolbar",error})
-      }
+    profile(option) {
+      if(option == 'Update Profile'){
+        this.$router.push('update_profile');
+      }else if(option == 'Update Password'){
+        this.$router.push('update_password');
+      } 
     },
     logout(){
       this.$store.commit('logout');

@@ -16,18 +16,7 @@ export default {
     },
 
     //A funtion that hits a post to localhost:3000/register. It passes the credentials to the server
-    register(credentials){
-        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('users', credentials); 
-    },
-    delete_users(email){
-        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.delete(`/users/${email}`);
-    },
-    update_user(credentials){
-        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.put('users', credentials);
-    },
+
     login(credentials){
         let data = JSON.stringify(credentials);
         return Api.post('login', {data}); 
@@ -51,10 +40,27 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.put('users', {data});
     },
-    get_profile_information(){
+    delete_users(email) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get('profile', );
+        return Api.delete(`/users/${email}`);
     },
+
+    //Profile
+    get_profile(){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get('profile');
+    },
+    update_profile(data) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.put('profile', {data});
+    },
+    update_password(data) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.put("update_password", { data });
+    },
+
     get_user_devices(user_email) {//we pick the uri this way because its a software admin ability 
         //and since in the acl they can view all users we will put users first 
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

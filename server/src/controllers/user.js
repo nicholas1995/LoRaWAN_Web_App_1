@@ -183,7 +183,7 @@ module.exports = {
   login_new: async function(req, res){
     try{
       let data = JSON.parse(req.body.data); 
-      let result =await user_db.get_single_user(data.email)
+      let result = await user_db.get_profile(data.email)
         .catch(err => {
           //Error getting user form database using email to find
           throw err;
@@ -227,7 +227,7 @@ module.exports = {
     let data;
     try{
       data = JSON.parse(req.body.data);
-      let result = await user_db.get_single_user(data.email)
+      let result = await user_db.get_profile(data.email)
         .catch(err => {
           //Error getting user form database using email to find
           throw err;
@@ -277,18 +277,78 @@ module.exports = {
   }, 
 
   //Get Profile Information
-  profile: function(req,res){
+  profile_get: async function(req,res){
+    let user_information;
     try{
-      res.status(200).send({user:{
-        first_name: req.user[0].first_name,
-        last_name: req.user[0].last_name,
-        address: req.user[0].address,
-        home_phone: req.user[0].home_phone,
-        mobile_phone: req.user[0].mobile_phone,
-        email: req.user[0].email
-      }});
+      user_information = await user_db.get_profile(req.user.email)
+        .catch(err => {
+          //Error fetching user profile information from database
+          throw err;
+        })
+      user_information = user_information[0];
+      user_information = {
+        first_name: user_information.first_name,
+        last_name: user_information.last_name,
+        address: user_information.address,
+        home_phone: user_information.home_phone,
+        mobile_phone: user_information.mobile_phone,
+        email: user_information.email
+      }
+      user_information = JSON.stringify(user_information);
+      res.status(200).send({ user_information})
     }catch(err){
+      console.log(err);
       console.log('Error trying to send profile information');
+    }
+  },
+  profile_update: async function(req, res){
+    let user_information;
+    try{
+      user_information = JSON.parse(req.body.data);
+      await user_db.update_profile(user_information)
+        .catch(err => {
+          throw err;
+        });
+      let data = { user_name: (user_information.first_name + " " + user_information.last_name) }
+      data = JSON.stringify(data);
+      res.status(200).send({data});
+
+    }catch(err){
+      console.log(err);
+    }
+  },
+  profile_update_password: async function(req, res){
+    let data;
+    try{
+      data = JSON.parse(req.body.data);
+      let result = await user_db.get_profile(req.user.email)
+        .catch(err => {
+          //Error getting user form database using email to find
+          throw err;
+        })
+      let encryted_data = await compare(data.current_password, result[0].password)
+        .catch(err => {
+          //Error checking to see if passwords are the same
+          throw err;
+        });
+      if (encryted_data == 1) {//Correct login credentials
+          let encrypted_password = await encrypt(data.new_password)
+            .catch(err => {
+              //Error encrypting pw
+              throw err;
+            });
+        await user_db.update_user_pw(encrypted_password, req.user.email)
+            .catch(err => {
+              //Error updating user pw
+              throw err;
+            })
+        res.status(200).send({ message: "Password Updated" });
+      } else {
+        //Incorrect PW;
+        res.status(403).send({ message: "Incorrect password" });
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 };

@@ -1,4 +1,5 @@
 const verify_access = require('./access_control_function');
+const VError = require("verror");
 
 module.exports = function(req, res, next){
     let path = req.route.path;

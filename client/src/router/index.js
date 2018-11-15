@@ -1,18 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Toolbar from '@/components/Toolbar'
-import Register from '@/components/Register'
 import Login from '@/components/Login'
 import Dashboard from './../components/Dashboard/Dashboard.vue'
-import Update_user from '../components/Update_User.vue'
-import Account_Management from '../components/Account_Management.vue'
 import Interactive_Map from '../components/Map.vue'
 import Network from '../components/Network/Network.vue'
 import Sub_Network from '../components/Sub_Network/Sub_Network.vue'
-import Device from "../components/Device/Device.vue";
-import Gateway from "../components/Gateway/Gateway.vue";
-import User from "../components/User/User.vue";
-
+import Device from "../components/Device/Device.vue"
+import Gateway from "../components/Gateway/Gateway.vue"
+import User from "../components/User/User.vue"
+import Update_Profile from "../components/Update_Profile";
+import Update_Password from "../components/Update_Password";
 
 
 
@@ -27,11 +25,6 @@ export default new Router({
       component: Toolbar
     },
     {
-      path: "/register",
-      name: "register",
-      component: Register
-    },
-    {
       path: "/login",
       name: "login",
       component: Login
@@ -40,16 +33,6 @@ export default new Router({
       path: "/dashboard",
       name: "dashboard",
       component: Dashboard
-    },
-    {
-      path: "/updateuser",
-      name: "updateuser",
-      component: Update_user
-    },
-    {
-      path: "/accountmanagement",
-      name: "accountmanagement",
-      component: Account_Management
     },
     {
       path: "/map",
@@ -80,6 +63,16 @@ export default new Router({
       path: "/user",
       name: "user",
       component: User
+    },
+    {
+      path: "/update_profile",
+      name: "update_profile",
+      component: Update_Profile
+    },
+    {
+      path: "/update_password",
+      name: "update_password",
+      component: Update_Password
     }
   ]
 });
