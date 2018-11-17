@@ -1,14 +1,14 @@
 <template>
   <v-content>
     <v-flex xs4 sm12>
-          <v-select
+          <v-combobox
             v-model="value"
             :items="this.items"
-            attach
-            chips
             label="Headings"
             multiple
-          ></v-select>
+            clearable
+            chips
+          ></v-combobox>
         </v-flex>
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
@@ -19,36 +19,19 @@
       ></v-divider>
     </v-toolbar>
       <v-data-table
-            :headers="headers"
+            :headers="display"
             :items="device_data"
             :pagination.sync="pagination"
             :loading="loading"
             :rows-per-page-items= "rows_per_page_items"
             class="elevation-1"
           >
-      <template slot="items" slot-scope="props">
-        <td class="text-xs-left">{{ props.item.id }}</td>
-        <td class="text-xs-left">{{ props.item.application_id }}</td>
-        <td class="text-xs-left">{{ props.item.application_name }}</td>
-        <td class="text-xs-left">{{ props.item.device_name }}</td>
-        <td class="text-xs-left">{{ props.item.device_eui }}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_gateway_id }}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_name }}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_time | return_date}}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_rssi }}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_lora_snr }}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_location_latitude }}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_location_longitude }}</td>
-        <td class="text-xs-left">{{ props.item.rx_info_location_altitude }}</td>
-        <td class="text-xs-left">{{ props.item.tx_info_frequency }}</td>
-        <td class="text-xs-left">{{ props.item.tx_info_dr }}</td>
-        <td class="text-xs-left">{{ props.item.adr }}</td>
-        <td class="text-xs-left">{{ props.item.f_cnt }}</td>
-        <td class="text-xs-left">{{ props.item.f_port }}</td>
-        <td class="text-xs-left">{{ props.item.data }}</td>
-        <td class="text-xs-left">{{ props.item.object_gps_location_latitude }}</td>
-        <td class="text-xs-left">{{ props.item.object_gps_location_longitude }}</td>
-        <td class="text-xs-left">{{ props.item.object_gps_location_altitude }}</td>
+        <template slot="items" slot-scope="myprops">
+        <td v-for="header in display"
+        :key="header.text"
+        :class="['column sortable text-xs-left', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']">
+        {{ myprops.item[header.value] }}
+        </td>
       </template>
     </v-data-table>
   </v-content>
@@ -63,28 +46,28 @@ export default {
   data(){
     return {
       headers: [
-          { text: 'ID', value: 'id', sortable: true },
-          { text: 'Sub-Network ID', value: 'application_id' , sortable: true },
-          { text: 'Sub-Network Name', value: 'application_name' , sortable: true },
-          { text: 'Device Name', value: 'device_name' ,sortable: true},
-          { text: 'Device EUI', value: 'device_eui' , sortable: true },
-          { text: 'Rx Gateway ID', value: 'rx_info_gateway_id', sortable: true },
-          { text: 'Rx Gateway Name', value: 'rx_info_name' , sortable: true },
-          { text: 'Rx Time', value: 'rx_info_time' , sortable: true },
-          { text: 'Rx RSSI', value: 'rx_info_rssi' ,sortable: true},
-          { text: 'Rx LoRa SNR', value: 'rx_info_lora_snr' , sortable: true },
-          { text: 'Rx Gateway Latitude', value: 'rx_info_location_latitude', sortable: true },
-          { text: 'Rx Gateway Longitude', value: 'rx_info_location_longitude' , sortable: true },
-          { text: 'Rx Gateway Altitude', value: 'rx_info_location_altitude' , sortable: true },
-          { text: 'Tx Frequency', value: 'tx_info_frequency' ,sortable: true},
-          { text: 'Tx DR', value: 'tx_info_dr' , sortable: true },
-          { text: 'Adr', value: 'adr', sortable: true },
-          { text: 'FCnt', value: 'f_cnt' , sortable: true },
-          { text: 'FPort', value: 'f_port' , sortable: true },
-          { text: 'Encoded Data', value: 'data' ,sortable: true},
-          { text: 'GPS Sensor Latitude', value: 'object_gps_location_latitude', sortable: true },
-          { text: 'GPS Sensor Longitude', value: 'object_gps_location_longitude' , sortable: true },
-          { text: 'GPS Sensor Altitude', value: 'object_gps_location_altitude' , sortable: true },
+          { text: 'ID', value: 'id'},
+          { text: 'Sub-Network ID', value: 'application_id' },
+          { text: 'Sub-Network Name', value: 'application_name' },
+          { text: 'Device Name', value: 'device_name'},
+          { text: 'Device EUI', value: 'device_eui' },
+          { text: 'Rx Gateway ID', value: 'rx_info_gateway_id' },
+          { text: 'Rx Gateway Name', value: 'rx_info_name'  },
+          { text: 'Rx Time', value: 'rx_info_time' },
+          { text: 'Rx RSSI', value: 'rx_info_rssi' },
+          { text: 'Rx LoRa SNR', value: 'rx_info_lora_snr' },
+          { text: 'Rx Gateway Latitude', value: 'rx_info_location_latitude'},
+          { text: 'Rx Gateway Longitude', value: 'rx_info_location_longitude'},
+          { text: 'Rx Gateway Altitude', value: 'rx_info_location_altitude'  },
+          { text: 'Tx Frequency', value: 'tx_info_frequency'},
+          { text: 'Tx DR', value: 'tx_info_dr' },
+          { text: 'Adr', value: 'adr' },
+          { text: 'FCnt', value: 'f_cnt'  },
+          { text: 'FPort', value: 'f_port' },
+          { text: 'Encoded Data', value: 'data' },
+          { text: 'GPS Sensor Latitude', value: 'object_gps_location_latitude' },
+          { text: 'GPS Sensor Longitude', value: 'object_gps_location_longitude' },
+          { text: 'GPS Sensor Altitude', value: 'object_gps_location_altitude' },
 
         ],
         device_data: [],
@@ -92,7 +75,8 @@ export default {
         pagination: {},
         rows_per_page_items: [ 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
         items: [], //Array holding the headings
-        value: []
+        value: [],
+        display: []
     }
   },
   props: [
@@ -101,7 +85,10 @@ export default {
   created: function(){
       for(let i =0; i< this.headers.length; i++){
         this.items[i] = this.headers[i].text;
+        this.value[i] = this.headers[i].text;
+
       }
+      this.display = this.headers
   },
   watch: {
     devices_prop: function(){
@@ -123,6 +110,18 @@ export default {
       }
 
       
+    },
+    value: function(){
+      this.display = [];
+      //console.log(this.value)
+      for(let i =0; i< this.headers.length; i++){ //This order is done to put back in original order
+        for(let j = 0; j < this.value.length; j++)
+        {
+          if(this.headers[i].text == this.value[j]){
+            this.display.push(this.headers[i])
+          }
+        }
+      }
     }
   },
   mounted: async function () {
@@ -141,9 +140,14 @@ export default {
     }
 
   },
-  destroyed: function(){
-  },
-  methods: {
+  methods:{
+    getComponentByColumnType(header, data) {
+      console.log(data[header])
+      return <td> `data[header]`</td>;
+    },
+    update_network(){
+      this.headers.pop()
+    }
   },
   filters: {
         //This function accepts the date and time in ISO 8601 Date and Time in UTC and return DD-MON-YY HH:MM:SS.
