@@ -3,7 +3,7 @@
     <v-flex xs4 sm12>
           <v-combobox
             v-model="value"
-            :items="items"
+            :items="this.heading_names"
             label="Headings"
             multiple
             clearable
@@ -49,16 +49,18 @@ export default {
         loading: true,
         pagination: {},
         rows_per_page_items: [ 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
-        items: [], //Array holding the headings
+        heading_names: [], //Array holding the headings
         value: [],
         display: [],
-        headers: []
+        headers: [],
+        a: ['a','b', 'c']
     }
   },
   props: [
     'devices_prop'
   ],
   created: async function(){
+    try{
       let result = await AuthenticationService.get_device_data_initial()
         .catch(err => {
           //Error getting the devices from the server
@@ -68,11 +70,14 @@ export default {
       this.device_data = JSON.parse(result.data.device_data);
       this.headers =  JSON.parse(result.data.headers);
       for(let i =0; i< this.headers.length; i++){
-        this.items[i] = this.headers[i].text;
-        this.value[i] = this.headers[i].text;
+        this.heading_names.push(this.headers[i].text);
+        this.value.push(this.headers[i].text);
       }
       this.display = this.headers
       this.loading = false;
+    }catch(err){
+      console.log(err);
+    }
   },
   watch: {
     devices_prop: function(){
