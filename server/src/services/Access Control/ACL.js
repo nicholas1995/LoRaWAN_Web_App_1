@@ -35,7 +35,7 @@ const ACL = {
             gateway: {
                 read: 'All'
             },
-            end_device_data: {
+            device_data: {
                 read: 'All',
                 export: 'All'
             },
@@ -72,7 +72,7 @@ const ACL = {
             gateways: {
                 read: 'All'
             },
-            end_device_data: {
+            device_data: {
                 read: 'All',
                 export: 'All'
             }
@@ -86,13 +86,13 @@ const ACL = {
             sub_networks: {
                 read: 'All'
             },
-            end_devices: {
+            devices: {
                 read: 'All'
             },
             gateways: {
                 read: 'All'
             },
-            end_device_data: {
+            device_data: {
                 read: 'All',
                 export: 'All'
             }
@@ -103,7 +103,7 @@ const ACL = {
                 read: 'Self',
                 update: 'Self',
             }, 
-            end_device_data: {
+            device_data: {
                 read: 'Self'
             }
         }

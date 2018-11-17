@@ -11,7 +11,8 @@ const service_profiles = require('./controllers/service_profiles');
 const device_profiles = require("./controllers/device_profiles");
 const network_servers = require("./controllers/network_servers");
 const gateway_profiles = require("./controllers/gateway_profiles");
-const simulation = require('./simulation_lora'); //This is used to simulate the lora app server
+const device_data = require("./controllers/device_data");
+
 const Network_Policy = require('./policies/network_policy');
 const sub_network_policy = require('./policies/sub_network_policy');
 const device_policy = require("./policies/device_policy");
@@ -132,26 +133,8 @@ module.exports = ((app) => {
     app.get("/gateway_profiles/:network_server_id", authenticate, grant_access, gateway_profiles.get);
 
     //----------------------Simulate Lora API-----------------
-    //simulation routes for the lora
-    app.get("/api/organizations", simulation.read_networks);
+    //Device (Uplink)
+    app.get("/devices/uplink/:sort_by/:descending", authenticate, grant_access, device_data.get);
 
-    //simulation routes for the lora
-    app.post("/api/organizations", simulation.create_networks);
 
-    //simulation routes for the lora
-    app.put("/api/organizations/:id", simulation.update_networks);
-
-    //simulation routes for the lora
-    app.delete("/api/organizations/:id", simulation.delete_networks);
-
-    //simulation routes for the lora
-    app.get("/api/applications", simulation.get_applications);
-
-    app.post("/api/applications", simulation.create_applications);
-
-    app.put("/api/applications/:id", simulation.update_applications);
-
-    app.delete("/api/applications/:id", simulation.delete_applications);
-
-    app.get("/api/service-profiles", simulation.get_service_profiles);
 });     

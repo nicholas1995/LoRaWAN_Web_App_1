@@ -4,6 +4,7 @@ const cors = require('cors'); //find out what it does
 const morgan = require('morgan'); //logs which device etc hit the request
 const config = require('./configeration/config');
 const app = express();
+const DB = require('./services/database/device_uplink_db')
 
 const mqtt = require('mqtt');
 // to be changed to own local server/service
@@ -32,15 +33,23 @@ function intervalFunct(){
 
 
 
-/*    client.on('connect', () => { 
-      client.subscribe('application/#',()=> {
-        console.log('subscribed')  
-    }); 
+   client.on('connect', () => { 
+       client.subscribe("application/#", () => {
+         console.log("subscribed");
+       }); 
 });
 
-client.on('message', function (topic, message) {  
+client.on('message', async function (topic, message) {   
     // message is Buffer
-    message = JSON.parse(message)
-    console.log(topic, message.object.gpsLocation);
-  })    */
-    
+    message = JSON.parse(message);
+    if (message.rxInfo){
+        console.log('trueeee')
+    }else{
+        console.log('falseee')
+    }
+    /* await DB.create(message)
+        .catch(err => {
+            console.log(err);
+        }) */
+  })   
+     

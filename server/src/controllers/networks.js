@@ -2,6 +2,7 @@ const lora_app_server = require('../services/API/lora_app_server');
 const db = require('../services/database/networks_db');
 const compare = require('../services/compare');
 const VError = require('verror');
+const DEVICE_UPLINK_DB = require('../services/database/device_uplink_db')
 
 
 function network_api_request_data(data, type) {

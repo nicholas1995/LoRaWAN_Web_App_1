@@ -3,8 +3,8 @@ import store from '../store/store';
 import Api from './api';
 
 var instance = axios.create({
-    baseURL: 'http://localhost:3000/'
-  }); 
+  baseURL: "http://64638a61.ngrok.io"
+}); 
 
 
 
@@ -179,5 +179,11 @@ export default {
     get_gateway_profiles(network_server_id){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/gateway_profiles/${network_server_id}`);
+    },
+
+    //Device uplink data
+    get_device_data(pagination){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/uplink/${pagination.sortBy}/${pagination.descending}`);
     }
 };  

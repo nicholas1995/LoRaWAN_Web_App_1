@@ -86,6 +86,8 @@ export default {
         this.$router.push('gateway'); 
       }else if(item=="Device"){
         this.$router.push('device'); 
+      }else if(item=="Device Data"){
+        this.$router.push('device_data'); 
       }else if(item=="Map"){
         this.$router.push('map'); 
       }else{

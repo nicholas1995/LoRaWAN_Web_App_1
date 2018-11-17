@@ -11,6 +11,7 @@ import Gateway from "../components/Gateway/Gateway.vue"
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
+import Device_Data from "../components/Device_Data";
 
 
 
@@ -73,6 +74,11 @@ export default new Router({
       path: "/update_password",
       name: "update_password",
       component: Update_Password
+    },
+    {
+      path: "/device_data",
+      name: "device_data",
+      component: Device_Data
     }
   ]
 });
