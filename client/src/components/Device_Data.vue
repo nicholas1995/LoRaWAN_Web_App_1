@@ -3,7 +3,7 @@
     <v-flex xs4 sm12>
           <v-combobox
             v-model="value"
-            :items="this.items"
+            :items="items"
             label="Headings"
             multiple
             clearable
@@ -45,50 +45,34 @@ import date_time from "../services/functions/date_time.js";
 export default {
   data(){
     return {
-      headers: [
-          { text: 'ID', value: 'id'},
-          { text: 'Sub-Network ID', value: 'application_id' },
-          { text: 'Sub-Network Name', value: 'application_name' },
-          { text: 'Device Name', value: 'device_name'},
-          { text: 'Device EUI', value: 'device_eui' },
-          { text: 'Rx Gateway ID', value: 'rx_info_gateway_id' },
-          { text: 'Rx Gateway Name', value: 'rx_info_name'  },
-          { text: 'Rx Time', value: 'rx_info_time' },
-          { text: 'Rx RSSI', value: 'rx_info_rssi' },
-          { text: 'Rx LoRa SNR', value: 'rx_info_lora_snr' },
-          { text: 'Rx Gateway Latitude', value: 'rx_info_location_latitude'},
-          { text: 'Rx Gateway Longitude', value: 'rx_info_location_longitude'},
-          { text: 'Rx Gateway Altitude', value: 'rx_info_location_altitude'  },
-          { text: 'Tx Frequency', value: 'tx_info_frequency'},
-          { text: 'Tx DR', value: 'tx_info_dr' },
-          { text: 'Adr', value: 'adr' },
-          { text: 'FCnt', value: 'f_cnt'  },
-          { text: 'FPort', value: 'f_port' },
-          { text: 'Encoded Data', value: 'data' },
-          { text: 'GPS Sensor Latitude', value: 'object_gps_location_latitude' },
-          { text: 'GPS Sensor Longitude', value: 'object_gps_location_longitude' },
-          { text: 'GPS Sensor Altitude', value: 'object_gps_location_altitude' },
-
-        ],
         device_data: [],
         loading: true,
         pagination: {},
         rows_per_page_items: [ 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
         items: [], //Array holding the headings
         value: [],
-        display: []
+        display: [],
+        headers: []
     }
   },
   props: [
     'devices_prop'
   ],
-  created: function(){
+  created: async function(){
+      let result = await AuthenticationService.get_device_data_initial()
+        .catch(err => {
+          //Error getting the devices from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          throw err;
+          })
+      this.device_data = JSON.parse(result.data.device_data);
+      this.headers =  JSON.parse(result.data.headers);
       for(let i =0; i< this.headers.length; i++){
         this.items[i] = this.headers[i].text;
         this.value[i] = this.headers[i].text;
-
       }
       this.display = this.headers
+      this.loading = false;
   },
   watch: {
     devices_prop: function(){
@@ -96,6 +80,7 @@ export default {
     },
     pagination: async function(){
       try{
+        console.log(this.value)
         this.loading = true;
         let result = await AuthenticationService.get_device_data(this.pagination)
           .catch(err => {
@@ -126,15 +111,7 @@ export default {
   },
   mounted: async function () {
     try{
-      let result = await AuthenticationService.get_device_data(this.pagination)
-        .catch(err => {
-          //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-          throw err;
-          })
-      this.device_data = JSON.parse(result.data.device_data);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
-      this.loading = false;
+
     }catch(err){
       console.log(err);
     }

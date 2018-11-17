@@ -134,6 +134,8 @@ module.exports = ((app) => {
 
     //----------------------Simulate Lora API-----------------
     //Device (Uplink)
+    app.get("/devices/uplink/initial", authenticate, grant_access, device_data.get);
+
     app.get("/devices/uplink/:sort_by/:descending", authenticate, grant_access, device_data.get);
 
 
