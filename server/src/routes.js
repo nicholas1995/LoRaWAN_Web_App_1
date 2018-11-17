@@ -133,8 +133,14 @@ module.exports = ((app) => {
     app.get("/gateway_profiles/:network_server_id", authenticate, grant_access, gateway_profiles.get);
 
     //----------------------Simulate Lora API-----------------
-    //Device (Uplink)
+    //Device (Initial fetch)
+    app.get("/devices/uplink/initial", authenticate, grant_access, device_data.get);
+
+    //Device (Specified pagination)
     app.get("/devices/uplink/:sort_by/:descending", authenticate, grant_access, device_data.get);
+
+    //Device (Specified Headings)
+    app.get("/devices/uplink/headers/:sort_by/:descending/:headers", authenticate, grant_access, device_data.get_specified_headings);
 
 
 });     

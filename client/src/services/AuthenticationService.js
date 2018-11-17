@@ -182,8 +182,16 @@ export default {
     },
 
     //Device uplink data
+    get_device_data_initial(){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/uplink/initial`);
+    },
     get_device_data(pagination){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/${pagination.sortBy}/${pagination.descending}`);
-    }
+    },
+    get_device_data_specific_heading(pagination, headers) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/uplink/headers/${pagination.sortBy}/${pagination.descending}/${headers}`);
+    },
 };  

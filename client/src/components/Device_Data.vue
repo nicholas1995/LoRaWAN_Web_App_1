@@ -3,7 +3,7 @@
     <v-flex xs4 sm12>
           <v-combobox
             v-model="value"
-            :items="this.items"
+            :items="this.header_names"
             label="Headings"
             multiple
             clearable
@@ -45,50 +45,39 @@ import date_time from "../services/functions/date_time.js";
 export default {
   data(){
     return {
-      headers: [
-          { text: 'ID', value: 'id'},
-          { text: 'Sub-Network ID', value: 'application_id' },
-          { text: 'Sub-Network Name', value: 'application_name' },
-          { text: 'Device Name', value: 'device_name'},
-          { text: 'Device EUI', value: 'device_eui' },
-          { text: 'Rx Gateway ID', value: 'rx_info_gateway_id' },
-          { text: 'Rx Gateway Name', value: 'rx_info_name'  },
-          { text: 'Rx Time', value: 'rx_info_time' },
-          { text: 'Rx RSSI', value: 'rx_info_rssi' },
-          { text: 'Rx LoRa SNR', value: 'rx_info_lora_snr' },
-          { text: 'Rx Gateway Latitude', value: 'rx_info_location_latitude'},
-          { text: 'Rx Gateway Longitude', value: 'rx_info_location_longitude'},
-          { text: 'Rx Gateway Altitude', value: 'rx_info_location_altitude'  },
-          { text: 'Tx Frequency', value: 'tx_info_frequency'},
-          { text: 'Tx DR', value: 'tx_info_dr' },
-          { text: 'Adr', value: 'adr' },
-          { text: 'FCnt', value: 'f_cnt'  },
-          { text: 'FPort', value: 'f_port' },
-          { text: 'Encoded Data', value: 'data' },
-          { text: 'GPS Sensor Latitude', value: 'object_gps_location_latitude' },
-          { text: 'GPS Sensor Longitude', value: 'object_gps_location_longitude' },
-          { text: 'GPS Sensor Altitude', value: 'object_gps_location_altitude' },
-
-        ],
         device_data: [],
         loading: true,
         pagination: {},
         rows_per_page_items: [ 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
-        items: [], //Array holding the headings
+        header_names: [], //Array holding the headings
         value: [],
-        display: []
+        display: [],
+        headers: [],
+        a: ['a','b', 'c']
     }
   },
   props: [
     'devices_prop'
   ],
-  created: function(){
+  created: async function(){
+    try{
+      let result = await AuthenticationService.get_device_data_initial()
+        .catch(err => {
+          //Error getting the devices from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          throw err;
+          })
+      this.device_data = JSON.parse(result.data.device_data);
+      this.headers =  JSON.parse(result.data.headers);
       for(let i =0; i< this.headers.length; i++){
-        this.items[i] = this.headers[i].text;
-        this.value[i] = this.headers[i].text;
-
+        this.header_names.push(this.headers[i].text);
+        this.value.push(this.headers[i].text);
       }
       this.display = this.headers
+      this.loading = false;
+    }catch(err){
+      console.log(err);
+    }
   },
   watch: {
     devices_prop: function(){
@@ -108,45 +97,24 @@ export default {
       }catch(err){
         console.log(err);
       }
-
-      
     },
-    value: function(){
-      this.display = [];
-      //console.log(this.value)
-      for(let i =0; i< this.headers.length; i++){ //This order is done to put back in original order
-        for(let j = 0; j < this.value.length; j++)
-        {
-          if(this.headers[i].text == this.value[j]){
-            this.display.push(this.headers[i])
-          }
-        }
+    value: async function(){
+      try{
+        this.loading = true;
+        let result = await AuthenticationService.get_device_data_specific_heading(this.pagination, this.value)
+          .catch(err => {
+            //Error getting the devices from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            })
+        this.device_data = JSON.parse(result.data.device_data);
+        this.headers =  JSON.parse(result.data.headers);
+        this.display = this.headers
+        this.loading = false;
+        console.log(this.device_data)
+      }catch(err){
+        console.log(err);
       }
-    }
-  },
-  mounted: async function () {
-    try{
-      let result = await AuthenticationService.get_device_data(this.pagination)
-        .catch(err => {
-          //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-          throw err;
-          })
-      this.device_data = JSON.parse(result.data.device_data);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
-      this.loading = false;
-    }catch(err){
-      console.log(err);
-    }
-
-  },
-  methods:{
-    getComponentByColumnType(header, data) {
-      console.log(data[header])
-      return <td> `data[header]`</td>;
-    },
-    update_network(){
-      this.headers.pop()
     }
   },
   filters: {
