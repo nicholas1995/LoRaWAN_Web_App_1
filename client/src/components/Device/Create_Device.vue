@@ -16,7 +16,9 @@
                 label="Device Name*"
                 :error-messages = "device_name_Errors"
                 @keyup="$v.device_name.$touch()" 
-              ></v-text-field>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_name"></tool_tips_forms>
+              </v-text-field>
               </v-flex>
             <!--Device EUI -->
             <v-flex >
@@ -25,7 +27,9 @@
                 label="Device EUI*"
                 :error-messages = "device_eui_Errors"
                 @keyup="$v.device_eui.$touch()" 
-              ></v-text-field> 
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_eui"></tool_tips_forms>
+              </v-text-field> 
               </v-flex>
             <!--Description  -->
             <v-flex >
@@ -36,7 +40,9 @@
                 label="Description*"
                 :error-messages = "description_Errors"
                 @keyup="$v.description.$touch()" 
-              ></v-textarea>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_description"></tool_tips_forms>
+              </v-textarea>
               </v-flex>
             <!--Sub-Network Name-->
               <v-select
@@ -45,7 +51,9 @@
                 label="Sub-Network*"
                 :error-messages = "sub_network_name_form_Errors"
                 @blur="$v.sub_network_name_form.$touch()" 
-              ></v-select>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_sub_network"></tool_tips_forms>
+              </v-select>
             <!--Device Profile Name-->
               <v-select
                 v-model="device_profile_name_form"
@@ -53,7 +61,9 @@
                 label="Device Profile*"
                 :error-messages = "device_profile_name_form_Errors"
                 @blur="$v.device_profile_name_form.$touch()" 
-              ></v-select>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_device_profile"></tool_tips_forms>
+              </v-select>
             <!--Reference Altitude-->
               <v-flex >
                 <v-text-field
@@ -62,7 +72,9 @@
                   suffix = "meters"
                   :error-messages = "reference_altitude_Errors"
                   @keyup="$v.reference_altitude.$touch()" 
-                ></v-text-field>
+                >
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_reference_altitude"></tool_tips_forms>
+                </v-text-field>
                 </v-flex>
               <!--Skip Frame Counter-->
                 <v-checkbox
@@ -96,6 +108,9 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, numeric, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
+import {description_device_name, description_device_eui, description_device_description, description_device_sub_network,
+description_device_device_profile, description_device_reference_altitude} from "../../services/functions/form_descriptions_tool_tips.js";
+import tool_tips_forms from "../Tool_Tip_Forms";
 
 
 const unique_device_name= function(value){
@@ -134,6 +149,9 @@ const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 
 export default {
+  components:{
+    tool_tips_forms
+  },
   mixins: [validationMixin],
   validations: {
     device_name: {
@@ -225,7 +243,14 @@ export default {
       sub_network_names: [],
       device_profile_names: [], //this is the variable that holds all the names to display on the form for the device profiles 
       message: '',
-      devices_same_sub_network: []//this is an array that contains all the sub_networks with the same network id selected
+      devices_same_sub_network: [],//this is an array that contains all the sub_networks with the same network id selected
+
+      description_device_name : description_device_name,
+      description_device_eui : description_device_eui,
+      description_device_description : description_device_description,
+      description_device_sub_network : description_device_sub_network,
+      description_device_device_profile : description_device_device_profile,
+      description_device_reference_altitude : description_device_reference_altitude,
     };
   },
   props:[

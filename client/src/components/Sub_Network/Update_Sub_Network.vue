@@ -16,7 +16,9 @@
                 label= 'Sub-Network Name*'
                 :error-messages = "sub_network_name_Errors"
                 @keyup="$v.sub_network_name.$touch() && $v.u.$touch()" 
-              ></v-text-field>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_name"></tool_tips_forms>
+              </v-text-field>
               </v-flex>
             <!--Description  -->
             <v-flex >
@@ -25,7 +27,9 @@
                 label= 'Description*'
                 :error-messages = "description_Errors"
                 @keyup="$v.description.$touch()" 
-              ></v-text-field>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_descripton"></tool_tips_forms>  
+              </v-text-field>
               </v-flex>
             <!-- Message -->
               <div div class="text">
@@ -54,6 +58,8 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
+import {description_sub_network_name, description_sub_network_descripton} from "../../services/functions/form_descriptions_tool_tips.js";
+import tool_tips_forms from "../Tool_Tip_Forms";
 
 
 const unique= function(value){
@@ -71,6 +77,9 @@ const unique= function(value){
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 export default {
+  components:{
+    tool_tips_forms
+  },
   mixins: [validationMixin],
   validations: {
     sub_network_name: {
@@ -106,7 +115,9 @@ export default {
       sub_network_name: "",
       description: "",
       message: "",
-      sub_networks_same_network: []
+      sub_networks_same_network: [],
+      description_sub_network_name : description_sub_network_name,
+      description_sub_network_descripton : description_sub_network_descripton,
     };
   },
   props:[

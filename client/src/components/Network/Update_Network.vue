@@ -17,12 +17,7 @@
                 :error-messages = "network_nameErrors"
                 @keyup="$v.network_name.$touch()" 
               >
-                <v-tooltip
-                  slot="append-outer"
-                  bottom>
-                  <v-icon small  slot="activator">info</v-icon>
-                  I'm a tooltip
-                </v-tooltip>
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
               </v-text-field>
               </v-flex>
             <!--Network Display Name-->
@@ -32,12 +27,7 @@
                 :error-messages = "display_nameErrors"
                 @keyup="$v.display_name.$touch()"
               >
-                <v-tooltip
-                  slot="append-outer"
-                  bottom>
-                  <v-icon small  slot="activator">info</v-icon>
-                  I'm a tooltip
-                </v-tooltip>
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
               </v-text-field>
             <!--Can Have Gateways-->
               <v-checkbox
@@ -70,6 +60,8 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { maxLength, helpers, required } from 'vuelidate/lib/validators'
+import {description_network_name, description_network_display_name} from "../../services/functions/form_descriptions_tool_tips.js";
+import tool_tips_forms from "../Tool_Tip_Forms";
 
 const unique= function(value){
    let i;
@@ -86,6 +78,9 @@ const unique= function(value){
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 export default {
+  components:{
+    tool_tips_forms
+  },
   mixins: [validationMixin],
   validations: {
       network_name: {
@@ -104,6 +99,8 @@ export default {
       network_name: "",
       display_name: "",
       can_have_gateways: "",
+      description_network_name : description_network_name,
+      description_network_display_name : description_network_display_name,
       message: ""
     };
   },
