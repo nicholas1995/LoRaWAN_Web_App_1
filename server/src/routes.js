@@ -142,5 +142,8 @@ module.exports = ((app) => {
     //Device (Specified Headings)
     app.get("/devices/uplink/headers/:sort_by/:descending/:headers", authenticate, grant_access, device_data.get_specified_headings);
 
+    //Device (Specified Date)
+    app.get("/devices/uplink/headers/date/:sort_by/:descending/:headers/:start_date/:end_date", authenticate, grant_access, device_data.get_specified_headings_date);
+
 
 });     

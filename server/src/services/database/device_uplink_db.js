@@ -22,5 +22,11 @@ module.exports = {
         FROM device_uplink
         ORDER BY ${order_by} ${order}`;
         return db.queryAsync(sql);
+    },
+    get_specified_headings_date: function (order_by, order, headings, start_date, end_date){
+        let sql = `SELECT ${headings}
+        FROM device_uplink
+        WHERE rx_info_time BETWEEN '${start_date}' AND '${end_date}'`;
+        return db.queryAsync(sql);
     }
 };

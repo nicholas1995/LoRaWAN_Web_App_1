@@ -10,7 +10,18 @@
             chips
           ></v-combobox>
         </v-flex>
-        <button type="button" v-on:click="downloadCSV(device_data)">Excel download</button>
+        <v-btn v-on:click="downloadCSV(device_data)">Export</v-btn>
+        <v-btn v-on:click="generate_function()">Generate</v-btn>
+        <v-layout row wrap>
+        <!-- Date Picker-->
+        <v-flex xs12 sm6 md4>
+        <date_time_picker v-bind:type_prop = 0 v-bind:generate_prop = this.generate @date= start_date_time_function($event)></date_time_picker>
+        </v-flex>
+        <v-flex xs12 sm6 md4>
+        <date_time_picker v-bind:type_prop = 1 v-bind:generate_prop = this.generate @date= end_date_time_function($event)></date_time_picker>
+        </v-flex>
+        </v-layout>
+
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
       <v-divider
@@ -43,6 +54,8 @@
 import AuthenticationService from "../services/AuthenticationService.js";
 import date_time from "../services/functions/date_time.js";
 import XLSX from 'xlsx';
+import date_time_picker from "./Date_Time_Picker";
+
 
 function convertArrayOfObjectsToCSV(args) {
   var result, ctr, keys, columnDelimiter, lineDelimiter, data;
@@ -69,6 +82,9 @@ function convertArrayOfObjectsToCSV(args) {
   return result;
 }
 export default {
+  components:{
+    date_time_picker,
+  },
   data(){
     return {
         device_data: [],
@@ -79,7 +95,9 @@ export default {
         value: [],
         display: [],
         headers: [],
-        a: ['a','b', 'c']
+        generate: 0, //set this high when the user selects generate
+        start_date_time: "", //This holds the start date and time in the format of the data in the db
+        end_date_time: "" //This holds the end date and time in the format of the data in the db
     }
   },
   props: [
@@ -161,6 +179,29 @@ export default {
       link.setAttribute('href', data);
       link.setAttribute('download', filename);
       link.click();
+    },
+    generate_function: function(){
+      this.generate = 1;
+      
+    },
+    start_date_time_function: function(data){
+      this.start_date_time = data;
+    },
+    end_date_time_function: async function(data){
+      console.log('heree')
+      this.end_date_time = data;
+      this.loading = true;
+        let result = await AuthenticationService.get_device_data_specific_heading_specified_date(this.pagination, this.value, this.start_date_time, this.end_date_time)
+          .catch(err => {
+            //Error getting the devices from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            })
+        this.device_data = JSON.parse(result.data.device_data);
+        this.headers =  JSON.parse(result.data.headers);
+        this.display = this.headers
+        this.generate = 0;
+        this.loading = false;
     }
   }
 }

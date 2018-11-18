@@ -49,7 +49,7 @@ function return_date(date) {
         let month = return_month(date.getMonth()); //returns the month in 3 letters
         let day = add_zero(date.getDate());
         let year = date.getUTCFullYear() - 2000; //converts the full year to 2 digits 
-        let hour = add_zero(date.getHours());
+        let hour = date.getUTCHours(); ;
         let minutes = add_zero(date.getUTCMinutes());
         let seconds = add_zero(date.getUTCSeconds());
         full_date = day + "-" + month + "-" + year + " " + hour + ":" + minutes + ":" + seconds;
@@ -163,6 +163,31 @@ module.exports = {
             headers = JSON.stringify(headers);
             res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
         }catch(err){
+            console.log(err);
+        }
+    },
+    get_specified_headings_date: async function(req, res){
+        try {
+            console.log('heree')
+            let headers, order, device_data
+            headers = convert_from_ui_to_db(req.params.headers);
+            if (req.params.descending == 'false') {
+                order = "ASC";
+            } else {
+                order = "DESC";
+            }
+            console.log(req.params.sort_by, order, headers, req.params.start_date, req.params.end_date);
+            device_data = await DB.get_specified_headings_date(req.params.sort_by, order, headers, req.params.start_date, req.params.end_date)
+                .catch(err => {
+                    //Error fetching specified data headings from db
+                    throw err;
+                })
+            headers = header(device_data[0]);
+            device_data = convert_dates(device_data);
+            device_data = JSON.stringify(device_data);
+            headers = JSON.stringify(headers);
+            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+        } catch (err) {
             console.log(err);
         }
     }
