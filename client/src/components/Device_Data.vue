@@ -10,6 +10,7 @@
             chips
           ></v-combobox>
         </v-flex>
+        <button type="button" v-on:click="downloadCSV(device_data)">Excel download</button>
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
       <v-divider
@@ -41,7 +42,32 @@
 <script>
 import AuthenticationService from "../services/AuthenticationService.js";
 import date_time from "../services/functions/date_time.js";
+import XLSX from 'xlsx';
 
+function convertArrayOfObjectsToCSV(args) {
+  var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+  data = args.data || null;
+  if (data == null || !data.length) {
+    return null;
+  }
+  columnDelimiter = args.columnDelimiter || ',';
+  lineDelimiter = args.lineDelimiter || '\n';
+  keys = Object.keys(data[0]);
+  result = '';
+  result += keys.join(columnDelimiter);
+  result += lineDelimiter;
+  data.forEach(function(item) {
+    ctr = 0;
+    keys.forEach(function(key) {
+    if (ctr > 0) result += columnDelimiter;
+
+    result += item[key];
+    ctr++;
+    });
+    result += lineDelimiter;
+  });
+  return result;
+}
 export default {
   data(){
     return {
@@ -86,13 +112,15 @@ export default {
     pagination: async function(){
       try{
         this.loading = true;
-        let result = await AuthenticationService.get_device_data(this.pagination)
+        let result = await AuthenticationService.get_device_data_specific_heading(this.pagination, this.value)
           .catch(err => {
             //Error getting the devices from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             })
         this.device_data = JSON.parse(result.data.device_data);
+        this.headers =  JSON.parse(result.data.headers);
+        this.display = this.headers
         this.loading = false;
       }catch(err){
         console.log(err);
@@ -111,34 +139,31 @@ export default {
         this.headers =  JSON.parse(result.data.headers);
         this.display = this.headers
         this.loading = false;
-        console.log(this.device_data)
       }catch(err){
         console.log(err);
       }
     }
   },
-  filters: {
-        //This function accepts the date and time in ISO 8601 Date and Time in UTC and return DD-MON-YY HH:MM:SS.
-        //If the date is empty however it will return N/A
-    return_date(date){
-      let full_date;
-      if(date == "" || date == null){
-        full_date = "N/A"
-      }else{
-        date = new Date(date);
-        let month = date_time.return_month(date.getMonth()); //returns the month in 3 letters
-        let day = date_time.add_zero(date.getDate());
-        let year = date.getUTCFullYear() -2000; //converts the full year to 2 digits 
-        let hour = date_time.add_zero(date.getHours());
-        let minutes = date_time.add_zero(date.getUTCMinutes());
-        let seconds = date_time.add_zero(date.getUTCSeconds());
-        full_date = day+"-"+month+"-"+year +" " + hour +":"+ minutes+":"+ seconds;
+  methods: {
+    downloadCSV: function(args) {
+      var data, filename, link;
+      var csv = convertArrayOfObjectsToCSV({
+        data: this.device_data
+      });
+      if (csv == null) return;
+      filename = args.filename || 'export.csv';
+      
+      if (!csv.match(/^data:text\/csv/i)) {
+        csv = 'data:text/csv;charset=utf-8,' + csv;
       }
-      return full_date;
-    } 
+      data = encodeURI(csv);
+      link = document.createElement('a');
+      link.setAttribute('href', data);
+      link.setAttribute('download', filename);
+      link.click();
+    }
   }
 }
-
 </script>
 
 
