@@ -16,7 +16,9 @@
                 label="Gateway Name*"
                 :error-messages = "gateway_name_Errors"
                 @keyup="$v.gateway_name.$touch()" 
-              ></v-text-field>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_name"></tool_tips_forms>
+              </v-text-field>
               </v-flex>
             <!--Description  -->
             <v-flex >
@@ -27,7 +29,9 @@
                 label="Description*"
                 :error-messages = "description_Errors"
                 @keyup="$v.description.$touch()" 
-              ></v-textarea>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_description"></tool_tips_forms>
+              </v-textarea>
               </v-flex>
             <!--Network Server Name-->
               <v-select
@@ -36,7 +40,9 @@
                 label="Network Server*"
                 :error-messages = "network_server_name_form_Errors"
                 @blur="$v.network_server_name_form.$touch()" 
-              ></v-select>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_network_server"></tool_tips_forms>
+              </v-select>
             <!--Gateway Profile Name-->
               <v-select
                 v-model="gateway_profile_name_form"
@@ -44,7 +50,9 @@
                 label="Gateway Profile*"
                 :error-messages = "gateway_profile_name_form_Errors"
                 @blur="$v.gateway_profile_name_form.$touch()" 
-              ></v-select>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_profile"></tool_tips_forms>
+              </v-select>
             <!--Gateway Accuracy-->
               <v-flex >
                 <v-text-field
@@ -53,7 +61,9 @@
                   suffix = "meters"
                   :error-messages = "gateway_accuracy_Errors"
                   @keyup="$v.gateway_accuracy.$touch()" 
-                ></v-text-field>
+                >
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_accuracy"></tool_tips_forms>
+                </v-text-field>
                 </v-flex>
             <!--Gateway Altitude-->
               <v-flex >
@@ -63,7 +73,9 @@
                   suffix = "meters"
                   :error-messages = "gateway_altitude_Errors"
                   @keyup="$v.gateway_altitude.$touch()" 
-                ></v-text-field>
+                >
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_altitude"></tool_tips_forms>
+                </v-text-field>
                 </v-flex>
             <!--Gateway Latitude-->
               <v-flex >
@@ -72,7 +84,9 @@
                   label="Gateway Latitude*"
                   :error-messages = "gateway_latitude_Errors"
                   @keyup="$v.gateway_latitude.$touch()" 
-                ></v-text-field>
+                >
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_latitude"></tool_tips_forms>
+                </v-text-field>
                 </v-flex>
             <!--Gateway Longitude-->
               <v-flex >
@@ -81,7 +95,9 @@
                   label="Gateway Longitude*"
                   :error-messages = "gateway_longitude_Errors"
                   @keyup="$v.gateway_longitude.$touch()" 
-                ></v-text-field>
+                >
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_longitude"></tool_tips_forms>
+                </v-text-field>
                 </v-flex>
             <!--Gateway Location Source-->
               <v-select
@@ -90,7 +106,9 @@
                 label="Source*"
                 :error-messages = "gateway_location_source_form_Errors"
                 @blur="$v.gateway_location_source_form.$touch()" 
-              ></v-select>
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_source"></tool_tips_forms>
+              </v-select>
               <!--Discovery Enabled-->
                 <v-checkbox
                   v-model="discovery_enabled"
@@ -103,7 +121,9 @@
                   label="Fine Time Stamp Key"
                   :error-messages = "fine_time_stamp_key_Errors"
                   @keyup="$v.fine_time_stamp_key.$touch()" 
-                ></v-text-field>
+                >
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_fine_time_stamp_key"></tool_tips_forms>
+                </v-text-field>
                 </v-flex>
             <!--FPGA ID-->
               <v-flex >
@@ -112,7 +132,9 @@
                   label="FPGA ID"
                   :error-messages = "fpga_id_Errors"
                   @keyup="$v.fpga_id.$touch()" 
-                ></v-text-field>
+                >
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_fpga_id"></tool_tips_forms>
+                </v-text-field>
                 </v-flex>
               <!-- Message -->
               <div div class="text">
@@ -141,6 +163,11 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, numeric, helpers, decimal } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
+import {description_gateway_name, description_gateway_id, description_gateway_description, description_gateway_network,
+description_gateway_network_server, description_gateway_profile, description_gateway_location_accuracy, description_gateway_location_altitude,
+description_gateway_location_latitude, description_gateway_location_longitude, description_gateway_location_source, description_fine_time_stamp_key,
+description_gateway_fpga_id} from "../../services/functions/form_descriptions_tool_tips.js";
+import tool_tips_forms from "../Tool_Tip_Forms";
 
 
 const unique_gateway_name= function(value){
@@ -172,6 +199,9 @@ const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 
 export default {
+  components:{
+    tool_tips_forms
+  },
   mixins: [validationMixin],
   validations: {
     gateway_name: {
@@ -333,7 +363,21 @@ export default {
       message: '',
       networks_can_have_gateways: [],//this is an array that contains all the networks that can have gateways
       gateways_same_network: [],
-      created: 1 //This is used to ensure that the name of the gateway profile will only be auto displayed on the creation of the form 
+      created: 1, //This is used to ensure that the name of the gateway profile will only be auto displayed on the creation of the form,
+
+      description_gateway_name : description_gateway_name,
+      description_gateway_id : description_gateway_id,
+      description_gateway_description : description_gateway_description,
+      description_gateway_network : description_gateway_network,
+      description_gateway_network_server : description_gateway_network_server,
+      description_gateway_profile : description_gateway_profile,
+      description_gateway_location_accuracy : description_gateway_location_accuracy,
+      description_gateway_location_altitude : description_gateway_location_altitude,
+      description_gateway_location_latitude : description_gateway_location_latitude,
+      description_gateway_location_longitude : description_gateway_location_longitude,
+      description_gateway_location_source : description_gateway_location_source,
+      description_fine_time_stamp_key : description_fine_time_stamp_key,
+      description_gateway_fpga_id : description_gateway_fpga_id,
     };
   },
   props:[
