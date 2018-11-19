@@ -132,7 +132,7 @@ module.exports = ((app) => {
     //----------------------Gateway Profiles----------------------
     app.get("/gateway_profiles/:network_server_id", authenticate, grant_access, gateway_profiles.get);
 
-    //----------------------Simulate Lora API-----------------
+    //----------------------Device Uplink Data-----------------
     //Device (Initial fetch)
     app.get("/devices/uplink/initial", authenticate, grant_access, device_data.get);
 

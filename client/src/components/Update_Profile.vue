@@ -191,7 +191,7 @@ mixins: [validationMixin],
             last_name: this.last_name,
             address: this.address,
             home_phone: this.home_phone,
-            mobile_phone: this.mobile_phone,
+            mobile_phone: this.mobile_phone, 
             email: this.email
         }).then(result => {
           let name = JSON.parse(result.data.data);

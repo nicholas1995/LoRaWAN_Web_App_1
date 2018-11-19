@@ -32,7 +32,7 @@
     </v-toolbar>
       <v-data-table
             :headers="display"
-            :items="device_data"
+            :items="this.device_data"
             :pagination.sync="pagination"
             :loading="loading"
             :rows-per-page-items= "rows_per_page_items"
@@ -52,8 +52,6 @@
 
 <script>
 import AuthenticationService from "../services/AuthenticationService.js";
-import date_time from "../services/functions/date_time.js";
-import XLSX from 'xlsx';
 import date_time_picker from "./Date_Time_Picker";
 
 

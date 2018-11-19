@@ -137,7 +137,6 @@ export default {
           }).catch(err => {
             this.$v.$reset(); 
             if(err.response.status ==409){//New User
-              this.new_user = err.response.data.new_user
               this.message = err.response.data.message; 
             }else if(err.response.status ==403){
               this.message = err.response.data.message;        
