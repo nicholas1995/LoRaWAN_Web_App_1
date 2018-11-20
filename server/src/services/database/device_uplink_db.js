@@ -26,7 +26,7 @@ module.exports = {
     get_specified_headings_date: function (order_by, order, headings, start_date, end_date){
         let sql = `SELECT ${headings}
         FROM device_uplink
-        WHERE rx_info_time BETWEEN '${start_date}' AND '${end_date}'`;
+        WHERE r_info_time BETWEEN '${start_date}' AND '${end_date}'`;
         return db.queryAsync(sql);
     }
 };

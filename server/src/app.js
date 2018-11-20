@@ -45,8 +45,9 @@ client.on('message', async function (topic, message) {
     if (message.rxInfo){
         console.log('trueeee')
     }else{
-        console.log('falseee')
+        console.log('falseee') 
     }
+    console.log(topic)
     /* await DB.create(message)
         .catch(err => {
             console.log(err);
