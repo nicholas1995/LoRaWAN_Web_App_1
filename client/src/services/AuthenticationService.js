@@ -107,6 +107,26 @@ export default {
         return Api.delete(`/sub_networks/${sub_network_id}`);
     },
 
+    //Vessels
+    get_vessels() {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get('/vessels');
+    },
+    create_vessels(data) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.post("/vessels", { data });
+    },
+    update_vessels(data, vessel_id) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/vessels/${vessel_id}`, { data });
+    },
+    delete_vessels(vessel_id) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/vessels/${vessel_id}`);
+    },
+
     //Devices
     get_devices() {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;

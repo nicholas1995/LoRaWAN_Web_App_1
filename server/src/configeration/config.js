@@ -5,7 +5,7 @@ module.exports = {
         host     : 'localhost',
         user     : 'root',
         password : '',
-        database: 'application'
+        database: 'web_console'
     },
     authentication:{
         jwtSecret: 'project'

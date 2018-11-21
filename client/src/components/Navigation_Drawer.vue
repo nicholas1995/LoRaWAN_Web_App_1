@@ -49,28 +49,29 @@ export default {
     return {
       drawer: null,
             items_all: [
-          { title: 'Network', icon: 'domain'},
-          { title: 'Sub-Network', icon: 'apps'},
-          { title: 'Gateway', icon: 'settings_input_antenna'},
-          { title: 'Gateway Stats', icon: 'settings_input_antenna'},
-          { title: 'Device', icon: 'directions_boat'},
-          { title: 'Device Data', icon: 'view_comfy'},
-          { title: 'Map', icon: 'map'},
-          { title: 'Error Logs', icon: 'error'},
-          { title: 'Account Management', icon: 'people_outlined'}
+          { title: 'Network', icon: 'domain'}, //0
+          { title: 'Sub-Network', icon: 'apps'}, //1
+          { title: 'Vessel', icon: 'directions_boat'}, //2
+          { title: 'Gateway', icon: 'settings_input_antenna'}, //3
+          { title: 'Gateway Stats', icon: 'settings_input_antenna'}, //4
+          { title: 'Device', icon: 'devices'}, //5
+          { title: 'Device Data', icon: 'view_comfy'}, //6
+          { title: 'Map', icon: 'map'}, //7
+          { title: 'Error Logs', icon: 'error'}, //8
+          { title: 'Account Management', icon: 'people_outlined'} //9
         ],
         items:[]
     };
   },
   created: function () {
     if(this.$store.state.user_class =='IoT Network Admin'){
-      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7]];
+      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7],this.items_all[8]];
     }else if(this.$store.state.user_class =='Software Admin'){
-      this.items = [this.items_all[8],this.items_all[7],this.items_all[3],this.items_all[5],this.items_all[6]];
+      this.items = [this.items_all[4],this.items_all[6],this.items_all[7],this.items_all[8],this.items_all[9]];
     }else if(this.$store.state.user_class =='Analyst'){
-      this.items = [this.items_all[5],this.items_all[6]];
+      this.items = [this.items_all[4],this.items_all[6],this.items_all[7]];
     }else if(this.$store.state.user_class =='Fisher'){
-      this.items = [this.items_all[5],this.items_all[6]];
+      this.items = [this.items_all[6],this.items_all[7]];
     }
   },
   components: {},
@@ -82,6 +83,8 @@ export default {
         this.$router.push('network'); 
       }else if(item=="Sub-Network"){
         this.$router.push('subnetwork'); 
+      }else if(item=="Vessel"){
+        this.$router.push('vessel'); 
       }else if(item=="Gateway"){
         this.$router.push('gateway'); 
       }else if(item=="Device"){

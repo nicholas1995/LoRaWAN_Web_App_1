@@ -5,6 +5,7 @@ const grant_access = require('./services/Access Control/grant_access');
 const grant_view_access = require("./services/Access Control/grant_view_access");
 const networks = require('./controllers/networks');
 const sub_networks = require('./controllers/sub_networks');
+const vessels = require("./controllers/vessels");
 const devices = require("./controllers/devices");
 const gateways = require("./controllers/gateways");
 const service_profiles = require('./controllers/service_profiles');
@@ -15,6 +16,7 @@ const device_data = require("./controllers/device_data");
 
 const Network_Policy = require('./policies/network_policy');
 const sub_network_policy = require('./policies/sub_network_policy');
+const vessel_policy = require("./policies/vessel_policy");
 const device_policy = require("./policies/device_policy");
 const gateway_policy = require("./policies/gateway_policy");
 const password_policy = require("./policies/UpdatePasswordPolicy")
@@ -87,6 +89,19 @@ module.exports = ((app) => {
  
     //Sub_Networks (Delete)
     app.delete("/sub_networks/:sub_network_id", authenticate, grant_access, sub_networks.delete);
+
+    //----------------------Vessels-----------------
+    //Vessels (Read)
+    app.get("/vessels", authenticate, grant_access, vessels.get);
+
+    //Vessels (Create)
+    app.post("/vessels", authenticate, grant_access, vessel_policy.create, vessels.create);
+
+    //Vessels (Update)
+    app.put("/vessels/:vessel_id", authenticate, grant_access, vessel_policy.update, vessels.update);
+
+    //Vessels (Delete)
+    app.delete("/vessels/:vessel_id", authenticate, grant_access, vessels.delete);
 
     //----------------------Devices-----------------
     //Devices (Read)

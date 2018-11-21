@@ -6,6 +6,7 @@ import Dashboard from './../components/Dashboard/Dashboard.vue'
 import Interactive_Map from '../components/Map.vue'
 import Network from '../components/Network/Network.vue'
 import Sub_Network from '../components/Sub_Network/Sub_Network.vue'
+import Vessel from "../components/Vessel/Vessel.vue";
 import Device from "../components/Device/Device.vue"
 import Gateway from "../components/Gateway/Gateway.vue"
 import User from "../components/User/User.vue"
@@ -49,6 +50,11 @@ export default new Router({
       path: "/subnetwork",
       name: "subnetwork",
       component: Sub_Network
+    },
+    {
+      path: "/vessel",
+      name: "vessel",
+      component: Vessel
     },
     {
       path: "/device",

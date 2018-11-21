@@ -48,9 +48,9 @@ client.on('message', async function (topic, message) {
         console.log('falseee') 
     }
     console.log(topic)
-    /* await DB.create(message)
+    await DB.create(message)
         .catch(err => {
             console.log(err);
-        }) */
+        }) 
   })   
      

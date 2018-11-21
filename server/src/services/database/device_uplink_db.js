@@ -3,7 +3,7 @@ const db = require("../../db");
 module.exports = {
     create: function (data) {
         let sql = `INSERT INTO device_uplink
-        (sub_network_id, sub_network_name, device_name, device_eui, rx_info_gateway_id, rx_info_name, rx_info_time, rx_info_rssi, rx_info_lora_snr, 
+        (sub_network_id, sub_network_name, device_name, device_eui, rx_info_gateway_id, r_info_name, rx_info_time, rx_info_rssi, rx_info_lora_snr, 
             rx_info_location_latitude, rx_info_location_longitude, rx_info_location_altitude, tx_info_frequency, tx_info_dr, adr, f_cnt, f_port, 
             data, object_gps_location_latitude, object_gps_location_longitude, object_gps_location_altitude)
         VALUES ('${data.applicationID}', '${data.applicationName}', '${data.deviceName}','${data.devEUI}', '${data.rxInfo[0].gatewayID}', '${data.rxInfo[0].name}','${data.rxInfo[0].time}', '${data.rxInfo[0].rssi}', '${data.rxInfo[0].loRaSNR}'
