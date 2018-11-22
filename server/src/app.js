@@ -47,10 +47,10 @@ client.on('message', async function (topic, message) {
     }else{
         console.log('falseee') 
     }
-    console.log(topic)
-    await DB.create(message)
+    console.log(message)
+    /* await DB.create(message)
         .catch(err => {
             console.log(err);
-        }) 
+        })  */
   })   
      

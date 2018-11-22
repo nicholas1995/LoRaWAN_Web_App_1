@@ -92,7 +92,7 @@ module.exports = ((app) => {
 
     //----------------------Vessels-----------------
     //Vessels (Read)
-    app.get("/vessels", authenticate, grant_access, vessels.get);
+    app.get("/vessels/:sub_network_id", authenticate, grant_access, vessels.get);
 
     //Vessels (Create)
     app.post("/vessels", authenticate, grant_access, vessel_policy.create, vessels.create);

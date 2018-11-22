@@ -7,6 +7,12 @@ module.exports ={
         WHERE deleted = 0`;
         return db.queryAsync(sql);
     },
+    get_vessels_not_deleted_filter_sub_network: function (sub_network_id) { //This returns all the vessels that has deleted set to 0 
+        let sql = `SELECT *
+        FROM vessel
+        WHERE deleted = 0 AND sub_network_id = ${sub_network_id}`;
+        return db.queryAsync(sql);
+    },
     create_vessels: function (name, sub_network_id) {
         let sql = `INSERT INTO vessel
         (name, sub_network_id)

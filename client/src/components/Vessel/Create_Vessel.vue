@@ -130,7 +130,7 @@ mixins: [validationMixin],
   watch: { //filter the subnetworks depending on the networks. 
     network_name_form: function(){
       this.sub_network_names =[];
-      this.sub_network_name_form =[];
+      this.sub_network_name_form ='';
       this.network_id=functions.extract_id_id_name(this.network_name_form); //extract id of network
       for(let i = 0; i < this.sub_networks_lora.length; i++){
         if(this.sub_networks_lora[i].network_id == this.network_id){

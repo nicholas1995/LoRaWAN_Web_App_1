@@ -29,7 +29,7 @@
             <v-tooltip bottom>
               <v-icon slot="activator"
                 small
-                class="mr-2 pt-3"
+                class="mr-2 pt-3 xs-left"
                 @click.stop="$emit('update_vessel',{vessel_update:props.item,vessels:vessels})"
               >
                 edit
@@ -49,7 +49,6 @@
           </td>
           <td class="text-xs-left">{{ props.item.id }}</td>
           <td class="text-xs-left">{{ props.item.name }}</td>
-          <td class="text-xs-left">{{ props.item.deleted }}</td>
           <td class="text-xs-left">{{ props.item.sub_network_id }}</td>
       </template>
     </v-data-table>
@@ -68,14 +67,13 @@ export default {
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Vessel ID', value: 'id' ,sortable: true},
           { text: 'Vessel Name', value: 'name' , sortable: false },
-          { text: 'Deleted', value: 'deleted' , sortable: false },
           { text: 'Sub-Network ID', value: 'sub_network_id', sortable: true }
         ],
         vessels: []
     }
   },
   created: function () {
-    AuthenticationService.get_vessels().then(result => {
+    AuthenticationService.get_vessels(null).then(result => {
       this.vessels = JSON.parse(result.data.vessels_db);
       this.$emit('message_display',{message:result.data.message, type:result.data.type})   
     }).catch(err => {
@@ -103,20 +101,6 @@ export default {
         })
       }; 
     }
-  },
-  filters: {
-        //This function accepts the date and time in ISO 8601 Date and Time in UTC and return DD-MON-YY HH:MM:SS
-    return_date(date_created){
-      let date = new Date(date_created);
-      let month = date_time.return_month(date.getMonth()); //returns the month in 3 letters
-      let day = date_time.add_zero(date.getDate());
-      let year = date.getUTCFullYear() -2000; //converts the full year to 2 digits 
-      let hour = date_time.add_zero(date.getHours());
-      let minutes = date_time.add_zero(date.getUTCMinutes());
-      let seconds = date_time.add_zero(date.getUTCSeconds()); 
-      let full_date = day+"-"+month+"-"+year +" " + hour +":"+ minutes+":"+ seconds;
-      return full_date;
-    } 
   }
 }
 

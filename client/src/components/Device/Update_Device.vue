@@ -33,6 +33,14 @@
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_description"></tool_tips_forms>
               </v-textarea>
               </v-flex>
+            <!--Vessel-->
+            <v-select
+              v-model="vessel_name_form"
+              :items="this.vessel_names"
+              label="Vessel"
+              clearable
+            >
+            </v-select>
             <!--Device Profile Name-->
               <v-select
                 v-model="device_profile_name_form"
@@ -180,12 +188,15 @@ export default {
     return {
       device_name: '',
       description: '',
+      vessel_name_form: '', //this is the variable that holds the selected vessel 'id:name'
       device_profile_name_form: '', //this is the variable that holds the selected device profile 'id:name'
       skip_frame_counter: "",
       reference_altitude: '',
 
       device_profile_id: '', //this is the device profile id of the selected device profile
+      vessel_id: '', //this is the variable that holds the id of the selected vessel
       device_profile_names: [], //this is the variable that holds all the names to display on the form for the device profiles name:id
+      vessel_names: [],
       message: '',
       devices_same_sub_network: [],//this is an array that contains all the devices with the same sub_networks id selected
 
@@ -201,6 +212,21 @@ export default {
   ],
   created: async function () {
     let device;
+    //Fetch all the vessels associated with the subnetwork the deivce was assigned to when created
+    //Create the id name pairs for these vessels
+    //Look for the vessel that that device is currently assigned to if any and assign the id name pair to the form
+    AuthenticationService.get_vessels(this.device_update.sub_network_id).then(result =>{
+        let vessels = JSON.parse(result.data.vessels_db);
+        for(let i =0; i< vessels.length; i++){
+          this.vessel_names.push(vessels[i].id +":"+vessels[i].name);
+          if(vessels[i].id == this.device_update.vessel_id){
+            this.vessel_name_form = this.vessel_names[i] ;
+          }
+        }
+      }).catch(err => {
+        //Error getting network to be updated information
+        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+      });
     await AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
         device = JSON.parse(result.data.device);
         this.device_name = device.device_name;
@@ -237,11 +263,14 @@ export default {
         if(this.skip_frame_counter =="")this.skip_frame_counter =false; //needed to set empty radio to false
         this.message = "";
         this.device_profile_id=functions.extract_id_name_id(this.device_profile_name_form);//Extract id of device profile
+        if(this.vessel_name_form)this.vessel_id=functions.extract_id_id_name(this.vessel_name_form);//Extract id of device profile
         AuthenticationService.update_devices({
+          device_id: this.device_update.device_id,
           device_name: this.device_name,
           device_eui: this.device_update.device_eui,
           description: this.description,
           sub_network_id: this.device_update.sub_network_id,
+          vessel_id: this.vessel_id,
           device_profile_id: this.device_profile_id,
           reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,

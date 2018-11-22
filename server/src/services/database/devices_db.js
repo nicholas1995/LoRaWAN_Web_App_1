@@ -7,6 +7,19 @@ module.exports = {
         FROM devices`;
     return db.queryAsync(sql);
   },
+  get_not_deleted: function () {
+    let sql = `SELECT *
+        FROM devices
+        WHERE deleted = 0`;
+    return db.queryAsync(sql);
+  },
+  get_newest: function () { //this returns the most recently added deivce
+    let sql = `SELECT 
+        MAX(id)
+        AS id
+        FROM devices`;
+    return db.queryAsync(sql);
+  },
   update: function(col, value, condition) {
       let sql = `UPDATE devices
         SET ${col} = '${value}'

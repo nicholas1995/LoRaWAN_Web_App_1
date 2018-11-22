@@ -1,6 +1,7 @@
 const network_db = require('./database/networks_db');
 const sub_network_db = require('./database/sub_networks_db');
 const devices_db = require("./database/devices_db");
+const DB_VESSEL_DEVICE = require("./database/vessel_device_db");
 const VError = require("verror");
 const error = require("./errors");
 
@@ -180,7 +181,13 @@ module.exports = {
                         .catch(err => {
                             throw error.error_message(`delete: ID-${db[l].device_eui}`, err.message);
                         })
-                    //console.log('Device Deleted');
+                    await DB_VESSEL_DEVICE.delete(db[l].device_eui)
+                        .catch(err => {
+                            //Error deleting relationship between device and vessel from database
+                            error_location = 3;
+                            throw error.error_message("delete device : delete device vessel relationship: database", err.message);
+                        });
+                    console.log("Device deletd on lora app server. Device EUI: " + db[l].device_eui);
                 }
             }
 

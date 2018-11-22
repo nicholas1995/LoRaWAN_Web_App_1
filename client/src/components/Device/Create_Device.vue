@@ -44,6 +44,15 @@
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_description"></tool_tips_forms>
               </v-textarea>
               </v-flex>
+            <!--Network Name-->
+              <v-select
+                v-model="network_name_form"
+                :items="this.network_names"
+                label="Network*"
+                :error-messages = "network_name_form_Errors"
+                @blur="$v.network_name_form.$touch()" 
+              >
+              </v-select>
             <!--Sub-Network Name-->
               <v-select
                 v-model="sub_network_name_form"
@@ -53,6 +62,13 @@
                 @blur="$v.sub_network_name_form.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_sub_network"></tool_tips_forms>
+              </v-select>
+            <!--Vessel-->
+              <v-select
+                v-model="vessel_name_form"
+                :items="this.vessel_names"
+                label="Vessel"
+              >
               </v-select>
             <!--Device Profile Name-->
               <v-select
@@ -68,7 +84,7 @@
               <v-flex >
                 <v-text-field
                   v-model="reference_altitude"
-                  label="Reference Altitude*"
+                  label="Reference Altitude"
                   suffix = "meters"
                   :error-messages = "reference_altitude_Errors"
                   @keyup="$v.reference_altitude.$touch()" 
@@ -171,6 +187,9 @@ export default {
       required,
       maxLength: maxLength(200),
     },      
+    network_name_form: {
+        required,
+      },  
     sub_network_name_form: {
       required,
     },      
@@ -209,6 +228,12 @@ export default {
       !this.$v.description.required && errors.push('Description is required.')
       return errors;
     },
+    network_name_form_Errors(){
+      const errors=[];
+      if (!this.$v.network_name_form.$error)return errors
+      !this.$v.network_name_form.required && errors.push('Network is required.')
+      return errors;
+    },
     sub_network_name_form_Errors(){
       const errors=[];
       if (!this.$v.sub_network_name_form.$error)return errors
@@ -234,13 +259,20 @@ export default {
       device_name: '',
       device_eui: '',
       description: '',
+      sub_networks_lora : [], //a list of all the subnetworks on the app server
+      network_name_form: '', //this is the variable that holds the selected network 'id-name'
       sub_network_name_form: '', //this is the variable that holds the selected sub_network 'id:name'
+      vessel_name_form: '', //this is the variable that holds the selected vessel 'id:name'
       device_profile_name_form: '', //this is the variable that holds the selected device profile 'id:name'
       reference_altitude: '',
       skip_frame_counter: '',
+      network_id: '', //this is the variable that holds the id of the selected network
       sub_network_id: '', //this is the variable that holds the id of the selected sub_network
+      vessel_id: '', //this is the variable that holds the id of the selected vessel
       device_profile_id: '', //this is the device profile id of the selected device profile
+      network_names: [],
       sub_network_names: [],
+      vessel_names: [],
       device_profile_names: [], //this is the variable that holds all the names to display on the form for the device profiles 
       message: '',
       devices_same_sub_network: [],//this is an array that contains all the sub_networks with the same network id selected
@@ -257,17 +289,31 @@ export default {
    'devices_prop'
   ],
   watch: {
+    network_name_form: function(){
+      this.sub_network_names =[];
+      this.sub_network_name_form ='';
+      this.network_id=functions.extract_id_id_name(this.network_name_form); //extract id of network
+      for(let i = 0; i < this.sub_networks_lora.length; i++){
+        if(this.sub_networks_lora[i].network_id == this.network_id){
+          this.sub_network_names.push(this.sub_networks_lora[i].sub_network_id.concat(":",this.sub_networks_lora[i].sub_network_name));
+        }
+      }
+    },
     sub_network_name_form: function(){
-        this.device_profile_names =[];
-        this.device_profile_name_form =[];
-        this.devices_same_sub_network =[];
+      this.device_profile_names =[];
+      this.vessel_names =[];
+      this.device_profile_name_form ='';
+      this.vessel_name_form ='';
+      this.vessel_id = '';
+      this.devices_same_sub_network =[];
+      if(this.sub_network_name_form){ //to ensure that this only runs when we select a value for the subnetwork and not switch networks
         this.sub_network_id=functions.extract_id_new(this.sub_network_name_form); //extract id of sub_network
         for(let i =0; i<this.devices_prop.length; i++){
           if(this.sub_network_id == this.devices_prop[i].sub_network_id){
             this.devices_same_sub_network.push(this.devices_prop[i]);
           }
         }
-        AuthenticationService.get_device_profiles(this.sub_network_id).then(result => {
+        AuthenticationService.get_device_profiles(this.sub_network_id).then(result => { //Fetch Device Profiles
           let device_profiles = JSON.parse(result.data.device_profiles);
           for(let i =0; i< device_profiles.length; i++){
             this.device_profile_names.push(device_profiles[i].device_profile_name.concat(":",device_profiles[i].device_profile_id));
@@ -276,18 +322,33 @@ export default {
           //Error requesting device profiles from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
+        AuthenticationService.get_vessels(this.sub_network_id).then(result => { //Fetch Vessels
+          let vessels = JSON.parse(result.data.vessels_db); 
+          for(let i =0; i< vessels.length; i++){
+            this.vessel_names.push(vessels[i].id + ":" +vessels[i].name);
+          }
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
       }
+    }
   },
   created: function () {
-    AuthenticationService.get_sub_networks().then(result => {
-      let sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
-      for(let i = 0; i < sub_networks_lora.length; i++){
-        this.sub_network_names.push(sub_networks_lora[i].sub_network_id.concat(":",sub_networks_lora[i].sub_network_name));
+    AuthenticationService.get_networks().then(result => {
+      let networks_lora = JSON.parse(result.data.networks_lora);
+      for(let i = 0; i < networks_lora.length; i++){
+        this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
       }
     }).catch(err => {
-      //Error getting sub-networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+      //Error getting networks from server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
     })
+    AuthenticationService.get_sub_networks().then(result => {
+        this.sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
+      }).catch(err => {
+        //Error getting sub-networks from server
+        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+      })
   },
   methods: {
     create_device(){
@@ -299,11 +360,15 @@ export default {
         if(this.skip_frame_counter =="")this.skip_frame_counter =false; //needed to set empty radio to false
         this.message = "";
         this.device_profile_id=functions.extract_id_name_id(this.device_profile_name_form);//Extract id of device profile
+        if(this.vessel_name_form){
+          this.vessel_id=functions.extract_id_id_name(this.vessel_name_form)
+        }
         AuthenticationService.create_devices({
           device_name: this.device_name,
           device_eui: this.device_eui,
           description: this.description,
           sub_network_id: this.sub_network_id,
+          vessel_id: this.vessel_id,
           device_profile_id: this.device_profile_id,
           reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,
@@ -313,6 +378,7 @@ export default {
           this.$emit('device_management', data);
         }).catch(err => {
           //Error trying to create device
+          this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
       } 

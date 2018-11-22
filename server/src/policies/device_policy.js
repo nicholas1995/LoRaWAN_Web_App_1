@@ -10,8 +10,9 @@ module.exports = {
             device_eui: Joi.string().hex().required().max(16).min(16),
             description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
+            vessel_id: Joi.string().required().allow(''),
             device_profile_id: Joi.string().required(),
-            reference_altitude: Joi.number().greater(-1),
+            reference_altitude: Joi.number().greater(-1).allow(''),
             skip_frame_counter: Joi.boolean().required()
         } 
         const { error, value } = Joi.validate(data, schema)
@@ -32,6 +33,10 @@ module.exports = {
                 case 'sub_network_id':
                     console.log('sub_network_id')
                     res.status(422).send({ error: 'Invalid sub-network ID.' });
+                    break;
+                case 'vessel_id':
+                    console.log('vessel id')
+                    res.status(422).send({ error: 'Invalid vessel ID.' });
                     break;
                 case 'device_profile_id':
                     console.log('device_profile_id')
@@ -55,11 +60,13 @@ module.exports = {
     update(req, res, next) {
         let data = JSON.parse(req.body.data);
         const schema = {
+            device_id: Joi.number(),
             device_name: Joi.string().required().max(80).regex(
                 new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
             device_eui: Joi.string().hex().required().max(16).min(16),
             description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
+            vessel_id: Joi.number().allow(''),
             device_profile_id: Joi.string().required(),
             reference_altitude: Joi.number().greater(-1),
             skip_frame_counter: Joi.boolean().required()
@@ -67,6 +74,10 @@ module.exports = {
         const { error, value } = Joi.validate(data, schema)
         if (error) {
             switch (error.details[0].context.key) {
+                case 'device_id':
+                    console.log("device_id");
+                    res.status(422).send({ error: 'Invalid device id.' });
+                    break;
                 case 'device_name':
                     console.log("device_name");
                     res.status(422).send({ error: 'Invalid device name.' });
@@ -82,6 +93,10 @@ module.exports = {
                 case 'sub_network_id':
                     console.log("sub_network_id");
                     res.status(422).send({ error: 'Invalid sub-network ID.' });
+                    break;
+                case 'vessel_id':
+                    console.log("vessel_id");
+                    res.status(422).send({ error: 'Invalid vessel ID.' });
                     break;
                 case 'device_profile_id':
                     console.log("device_profile_id");

@@ -47,10 +47,12 @@
               <span>Delete {{props.item.device_name}}</span>
             </v-tooltip>
           </td>
+          <td class="text-xs-left">{{ props.item.device_id }}</td>
           <td class="text-xs-left">{{ props.item.device_name }}</td>
           <td class="text-xs-left">{{ props.item.device_eui}}</td>
           <td class="text-xs-left">{{ props.item.description }}</td>
           <td class="text-xs-left">{{ props.item.sub_network_id }}</td>
+          <td class="text-xs-left">{{ props.item.vessel_id }}</td>
           <td class="text-xs-left">{{ props.item.last_seen_at | return_date}}</td>
           <td class="text-xs-left">{{ props.item.device_profile_id}}</td>
           <td class="text-xs-left">{{ props.item.device_profile_name }}</td>
@@ -74,10 +76,12 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
+          { text: 'Device ID', value: 'device_id' , sortable: true },
           { text: 'Device Name', value: 'device_name' , sortable: true },
           { text: 'Device EUI', value: 'device_eui' , sortable: true },
           { text: 'Description', value: 'description' ,sortable: false},
           { text: 'Sub-Network ID', value: 'sub_network_id' , sortable: true },
+          { text: 'Vessel ID', value: 'vessel_id' , sortable: true },
           { text: 'Last Seen', value: 'last_seen_at' , sortable: true },
           { text: 'Device Profile ID', value: 'device_profile_id', sortable: true },
           { text: 'Device Profile Name', value: 'device_profile_name', sortable: false },

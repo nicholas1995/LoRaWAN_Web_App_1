@@ -108,9 +108,9 @@ export default {
     },
 
     //Vessels
-    get_vessels() {
+    get_vessels(sub_network_id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get('/vessels');
+        return Api.get(`/vessels/${sub_network_id}`);
     },
     create_vessels(data) {
         data = JSON.stringify(data);
