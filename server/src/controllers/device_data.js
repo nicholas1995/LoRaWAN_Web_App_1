@@ -1,4 +1,4 @@
-const DB = require("../services/database/device_uplink_db");
+const DB = require("../services/database/device_rx_db");
 const error = require("../services/errors");
 const VError = require("verror");
 
@@ -99,7 +99,7 @@ function add_zero(i) {
     }
 function convert_dates(data){
     for(let i =0; i< data.length; i++){
-        data[i]["rx_info_time"] = return_date(data[i]["rx_info_time"]);
+        data[i]["r_info_time"] = return_date(data[i]["r_info_time"]);
     }
     return data;
 }

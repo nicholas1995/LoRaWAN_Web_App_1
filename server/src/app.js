@@ -4,12 +4,9 @@ const cors = require('cors'); //find out what it does
 const morgan = require('morgan'); //logs which device etc hit the request
 const config = require('./configeration/config');
 const app = express();
-const DB = require('./services/database/device_uplink_db')
+const DB = require('./services/database/device_rx_db')
 
-const mqtt = require('mqtt');
-// to be changed to own local server/service
-const client = mqtt.connect("mqtt://localhost:1883");
-
+require("./services/MQTT");
 
 //app.use(morgan('combined'));
 app.use(bodyParser.json());
@@ -24,33 +21,5 @@ const db = require('./db');
 module.exports = app;
 require('./routes')(app);
 
-let i= 0;
-function intervalFunct(){
-    console.log('interval: '+ i);
-    i++; 
-} 
-//setInterval(intervalFunct,6000);     
 
 
-
-   client.on('connect', () => { 
-       client.subscribe("application/#", () => {
-         console.log("subscribed");
-       }); 
-});
-
-client.on('message', async function (topic, message) {   
-    // message is Buffer
-    message = JSON.parse(message);
-    if (message.rxInfo){
-        console.log('trueeee')
-    }else{
-        console.log('falseee') 
-    }
-    console.log(message)
-    /* await DB.create(message)
-        .catch(err => {
-            console.log(err);
-        })  */
-  })   
-     

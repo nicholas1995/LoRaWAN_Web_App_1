@@ -1,7 +1,7 @@
 const DB = require('../services/database/vessels_db');
 const DB_VESSEL_DEVICE = require("../services/database/vessel_device_db");
 const VError = require('verror');
-const DEVICE_UPLINK_DB = require('../services/database/device_uplink_db')
+const DEVICE_UPLINK_DB = require('../services/database/device_rx_db')
 
 
 function error_message(current_error_message, previous_error){
@@ -54,17 +54,20 @@ module.exports = {
                     error_location = 0;
                     throw error_message("create vessel : database", err.message);
                 });
+            console.log("Vessel created");
             vessels_db = await DB.get_vessels_not_deleted()
                 .catch(err => {
                     //error getting vessel on db
                     error_location = 1;
                     throw error_message("fetch vessel : database", err.message);
                 });
+            console.log("Vessels Fetched");
             vessels_db = JSON.stringify(vessels_db);
             res.status(201).send({ vessels_db: vessels_db, message: 'Vessel created', type: 'success' });
         }catch(err){
             //e_l =0 (problem creating vessel)
             //e_l =1 (vessel created.. failed to fetch vessels)
+            //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
                 networks_lora = JSON.stringify([]);
@@ -82,43 +85,33 @@ module.exports = {
         let networks_lora;
         try{
             let data = JSON.parse(req.body.data);
-            let request_body = network_api_request_data(data, 2);
-            let result = await lora_app_server.update_organizations(request_body, req.params.network_id)
+            await DB.update_vessels_all_parameters(data, req.params.vessel_id)
                 .catch(err => {
-                    //error updating network on lora app server
+                    //error updating vessel on db
                     error_location = 0;
-                    throw error_message("update network : lora app server", err.message);
+                    throw error_message("update vessel : database", err.message);
                 });
-            networks_lora = await get_networks()
+            console.log("Vessel Updated. Vessel ID: " + req.params.vessel_id);
+            vessels_db = await DB.get_vessels_not_deleted()
                 .catch(err => {
-                    //error getting networks from lora app server
+                    //error getting vessel on db
                     error_location = 1;
-                    throw error_message("update network : lora app server", err.message);
+                    throw error_message("fetch vessel : database", err.message);
                 });
-            await db.update_networks_all_parameters(data, req.params.network_id)
-                .catch(err => {
-                    //error updating network on database
-                    error_location = 2;
-                    throw error_message("update network : database", err.message);
-                })
-            networks_lora = JSON.stringify(networks_lora);
-            res.status(200).send({ networks_lora: networks_lora, message: 'Network updated', type: 'success' });
+            console.log("Vessels Fetched");
+            vessels_db = JSON.stringify(vessels_db);
+            res.status(201).send({ vessels_db: vessels_db, message: 'Vessel updated', type: 'success' });
         }catch(err){
-            //e_l =0 (problem updating network)
-            //e_l =1 (network updated.. failed to fetch networks)
-            //e_l =2 (network updated.. networks fetched.. failed to update network on db)
+            //e_l =0 (problem updating vessel)
+            //e_l =1 (vessel updated.. failed to fetch vessels)
             //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to update network", type: 'error' });
+                res.status(500).send({ message: "Failed to update vessel", type: 'error' });
             } else if (error_location == 1) {
                 networks_lora = JSON.stringify([]);
-                res.status(200).send({ networks_lora: networks_lora, message: "Network updated. Failed to fetch networks", type: 'info' })
-            }
-            else if (error_location == 2) {
-                networks_lora = JSON.stringify(networks_lora);
-                res.status(200).send({ networks_lora: networks_lora, message: "Network updated. Error updating network in database", type: 'info' })
-            } else {
+                res.status(200).send({ networks_lora: networks_lora, message: "Vessel updated. Failed to fetch vessels", type: 'info' })
+            }else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
         }

@@ -27,7 +27,24 @@ module.exports = {
         }
     }, 
     update (req, res, next){
-        
+        let data = JSON.parse(req.body.data);
+        const schema = {
+            name: Joi.string().required().max(80),
+        };
+        const { error, value } = Joi.validate(data, schema)
+        if (error) {
+            switch (error.details[0].context.key) {
+                case 'name':
+                    console.log('error in vessel form : name')
+                    res.status(422).send({ error: 'Invalid Vessel Name' });
+                    break;
+                default:
+                    console.log('error in vessel form')
+                    res.status(422).send({ error: 'Invalid Information' });
+            }
+        } else {
+            next();
+        }
     }
     
 }

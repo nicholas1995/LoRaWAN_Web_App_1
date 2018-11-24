@@ -13,27 +13,12 @@
             <v-flex >
               <v-text-field
                 v-model="vessel_name"
-                label= 'vessel Name*'
+                label= 'Vessel Name*'
                 :error-messages = "vessel_nameErrors"
                 @keyup="$v.vessel_name.$touch()" 
               >
               </v-text-field>
               </v-flex>
-            <!--vessel Display Name-->
-              <v-text-field
-                v-model="display_name"
-                label= 'Display Name*'
-                :error-messages = "display_nameErrors"
-                @keyup="$v.display_name.$touch()"
-              >
-              </v-text-field>
-            <!--Can Have Gateways-->
-              <v-checkbox
-                v-model="can_have_gateways"
-                label="Can Have Gateways"
-                required
-              ></v-checkbox>
-
               <div div class="text">
                 {{message}}
               </div>
@@ -78,22 +63,12 @@ export default {
   validations: {
       vessel_name: {
         required,
-        maxLength: maxLength(80),
-        alpha_num_dash,
-        u: unique,
-      },      
-      display_name: {
-        required,
-        maxLength: maxLength(80),
+        maxLength: maxLength(80)
       }
     },
   data() {
     return {
       vessel_name: "",
-      display_name: "",
-      can_have_gateways: "",
-      description_vessel_name : description_vessel_name,
-      description_vessel_display_name : description_vessel_display_name,
       message: ""
     };
   },
@@ -102,41 +77,28 @@ export default {
    'vessel_update'
   ],
   created: function () {
-    this.vessel_name = this.vessel_update.vessel_name;
-    this.display_name = this.vessel_update.display_name;
-    this.can_have_gateways = this.vessel_update.can_have_gateways;
+    this.vessel_name = this.vessel_update.name;
   },
   computed: {
     vessel_nameErrors(){
       const errors=[];
       if (!this.$v.vessel_name.$error)return errors
       !this.$v.vessel_name.maxLength && errors.push('Name must be 80 characters or less.')
-      !this.$v.vessel_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
       !this.$v.vessel_name.required && errors.push('Name is required.')
-      !this.$v.vessel_name.u && errors.push('Name must be unique.')
-      return errors;
-    },
-    display_nameErrors(){
-      const errors=[];
-      if (!this.$v.display_name.$error)return errors
-      !this.$v.display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
-      !this.$v.display_name.required && errors.push('Display Name is required.')
       return errors;
     }
   },
   methods: {
     update_vessel() {
       this.$v.$touch();
-      if(this.$v.vessel_name.$invalid || this.$v.display_name.$invalid){
+      if(this.$v.vessel_name.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
         AuthenticationService.update_vessels({
-          vessel_name: this.vessel_name,
-          display_name: this.display_name,
-          can_have_gateways: this.can_have_gateways
-      }, this.vessel_update.vessel_id).then(result => {
-          let data = JSON.parse(result.data.vessels_lora);
+          name: this.vessel_name
+      }, this.vessel_update.id).then(result => {
+          let data = JSON.parse(result.data.vessels_db);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('vessel_management', {data: data}); //passing the revecived array of vessels to the parent component [vessel]
       }).catch(err => {
