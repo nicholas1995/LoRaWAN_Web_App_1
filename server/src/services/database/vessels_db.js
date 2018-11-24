@@ -16,6 +16,13 @@ module.exports = {
         WHERE deleted = 0 AND sub_network_id = ${sub_network_id}`;
     return db.queryAsync(sql);
   },
+    //This returns all the vessels under the specified sub_network or sub_networks 
+  get_vessels_specified_sub_network: function (sub_networks) {
+      let sql = `SELECT *
+      FROM vessel
+      WHERE sub_network_id IN (${sub_networks})`;
+      return db.queryAsync(sql);
+  },
   //This creates a vessel using the specified information
   create_vessels: function(name, sub_network_id) {
     let sql = `INSERT INTO vessel

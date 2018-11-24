@@ -131,6 +131,21 @@ module.exports = {
             }
         }
     },
+    get_sub_subnetworks_database_specified_networks: async function(req, res){
+        try{
+            let networks = (req.params.networks);
+            let sub_networks = await db.get_sub_networks_specified_network(networks)
+                .catch(err => {
+                    //Error fetching sub_networks under specified network 
+                    throw error.error_message("get sub-networks : database", err.message);
+                })
+            sub_networks = JSON.stringify(sub_networks);
+            res.status(200).send({ sub_networks: sub_networks, message: 'Sub-Networks fetched', type: 'success' });
+        }catch(err){
+            console.log(err);
+            res.status(500).send({ message: "Failed to fetch sub-networks", type: 'error' });
+        }
+    },
     create: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         let sub_networks_lora;

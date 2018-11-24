@@ -42,7 +42,22 @@ module.exports = {
                 res.status(500).send({ message: 'Failed to get vessels : error in get function', type: 'error'})
             }
         }
-    }, 
+    },
+    get_all: async function(req, res){
+        try{
+            let sub_networks = (req.params.sub_networks);
+             let vessels = await DB.get_vessels_specified_sub_network(sub_networks)
+                .catch(err => {
+                    //Error fetching sub_networks under specified network 
+                    throw error.error_message("get vessels : database", err.message);
+                })
+            vessels = JSON.stringify(vessels);
+            res.status(200).send({ vessels: vessels, message: 'Vessels fetched', type: 'success' }); 
+        }catch(err){
+            console.log(err);
+            res.status(500).send({ message: "Failed to fetch vessels", type: 'error' });
+        }
+    },
     create: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         let vessels_db;

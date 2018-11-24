@@ -6,6 +6,14 @@ module.exports ={
         id, name, deleted, network_ID
         FROM sub_networks`;
         return db.queryAsync(sql);
+    }, 
+    //This returns all the subnetworks under the specified network or networks 
+    get_sub_networks_specified_network: function (networks) {
+        let sql = `SELECT 
+        id, name, deleted, network_ID
+        FROM sub_networks
+        WHERE network_ID IN (${networks})`;
+        return db.queryAsync(sql);
     },
     update: function(col, value, condition){
         let sql = `UPDATE sub_networks

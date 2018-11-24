@@ -28,28 +28,28 @@ client.on('message', async function (topic, message) {
             .catch(err => {
                 //Error fetching device information from db
             });
-            if(data[0]){
-                message["vessel_id"] = data[0].vessel_id;
-                message["vessel_device_id"] = data[0].id;
-            }else{
-                message['vessel_id'] = null;
-                message["vessel_device_id"] = null;
-            }
-            if(topic_information.event == 'rx'){
+        if(data[0]){
+            message["vessel_id"] = data[0].vessel_id;
+            message["vessel_device_id"] = data[0].id;
+            if (topic_information.event == 'rx') {
                 if (message.rxInfo) {
                     await DEVICE_RX.create(message)
                         .catch(err => {
+                            //Error adding rx device data to the database
                             console.log(err);
                         })
                 } else {
-                    console.log('falseee')
+                    await DEVICE_RX.create_no_rxInfo(message).catch(
+                      err => {
+                        //Error adding rx device data to the database
+                        console.log(err);
+                      }
+                    );
                 }
             }
+        }else{
+        }
     }
-    /* await DEVICE_RX.create(message)
-        .catch(err => {
-            console.log(err);
-        })  */
 })
 
 function extract_topic_information(topic){

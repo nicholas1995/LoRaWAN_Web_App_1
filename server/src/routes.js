@@ -68,6 +68,9 @@ module.exports = ((app) => {
     //Networks (Read)
     app.get("/networks", authenticate, grant_access, networks.get_networks);
 
+    //Networks (Read networks from the database)
+    app.get("/networks/database", authenticate, grant_access, networks.get_networks_database);
+
     //Networks (Create)
     app.post("/networks", authenticate, grant_access, Network_Policy.create, networks.create_networks);
 
@@ -81,6 +84,9 @@ module.exports = ((app) => {
     //Sub_Networks (Read)
     app.get("/sub_networks", authenticate, grant_access, sub_networks.get);
 
+    //Sub_Networks (Read subnetworks from database under specified network)
+    app.get("/sub_networks/database/:networks", authenticate, grant_access, sub_networks.get_sub_subnetworks_database_specified_networks);
+
     //Sub_Networks (Create)
     app.post("/sub_networks", authenticate, grant_access, sub_network_policy.create, sub_networks.create);
 
@@ -93,6 +99,9 @@ module.exports = ((app) => {
     //----------------------Vessels-----------------
     //Vessels (Read)
     app.get("/vessels/:sub_network_id", authenticate, grant_access, vessels.get);
+
+    //Vessels (Read vessels from the database under specified sub_network. This returns deleted and not deleted vessels)
+    app.get("/vessels/all/:sub_networks", authenticate, grant_access, vessels.get_all);
 
     //Vessels (Create)
     app.post("/vessels", authenticate, grant_access, vessel_policy.create, vessels.create);
@@ -150,6 +159,9 @@ module.exports = ((app) => {
     //----------------------Device Uplink Data-----------------
     //Device (Initial fetch)
     app.get("/devices/uplink/initial", authenticate, grant_access, device_data.get);
+
+    //Device (Filtered) 
+    app.get("/devices/rx/:parameters/:columns", authenticate, grant_access, device_data.get_filtered);
 
     //Device (Specified pagination)
     app.get("/devices/uplink/:sort_by/:descending", authenticate, grant_access, device_data.get);

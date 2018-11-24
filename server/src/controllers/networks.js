@@ -132,6 +132,21 @@ module.exports = {
             }
         }
     }, 
+    get_networks_database: async function(req, res){
+        try{
+            console.log('hereeee')
+            let networks_db = await db.get_networks().catch(err => {
+              //error getting networks from db
+              error_location = 1;
+              throw error_message("get networks : database", err.message);
+            });
+            networks_db = JSON.stringify(networks_db);
+            res.status(200).send({ networks_db: networks_db, message: 'Networks fetched', type: 'success' });
+            console.log('Networks fetched from database')
+        }catch(err){
+            res.status(500).send({ message: "Failed to get networks", type: 'error' });
+        }
+    },
     create_networks: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         let networks_lora;

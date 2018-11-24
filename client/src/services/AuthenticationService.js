@@ -72,6 +72,10 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('networks');
     },
+    get_networks_database() {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get('networks/database');
+    },
     create_networks(data){
         data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
@@ -92,6 +96,10 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('/sub_networks');
     },
+    get_sub_networks_db_given_network(network) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/sub_networks/database/${network}`);
+    },
     create_sub_networks(data){
         data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
@@ -108,9 +116,13 @@ export default {
     },
 
     //Vessels
-    get_vessels(sub_network_id) {
+    get_vessels(sub_network_id) {//This returns vessels that are not deleted
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/vessels/${sub_network_id}`);
+    },
+    get_vessels_db_given_sub_networks(sub_network_id) {//This returns all the vessels in the database
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/vessels/all/${sub_network_id}`);
     },
     create_vessels(data) {
         data = JSON.stringify(data);
@@ -202,6 +214,11 @@ export default {
     },
 
     //Device uplink data
+    device_rx_filtered(parameters , columns){ 
+        parameters = JSON.stringify(parameters); 
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/rx/${parameters}/${columns}`);
+    },
     get_device_data_initial(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/initial`);

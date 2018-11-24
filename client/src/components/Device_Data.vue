@@ -10,17 +10,18 @@
             chips
           ></v-combobox>
         </v-flex>
-        <v-btn v-on:click="downloadCSV(device_data)">Export</v-btn>
-        <v-btn v-on:click="generate_function()">Generate</v-btn>
+        <network_subnetwork_vessel_device_picker></network_subnetwork_vessel_device_picker>
         <v-layout row wrap>
         <!-- Date Picker-->
         <v-flex xs12 sm6 md4>
-        <date_time_picker v-bind:type_prop = 0 v-bind:generate_prop = this.generate @date= start_date_time_function($event)></date_time_picker>
+        <date_time_picker v-bind:type_prop ='0' @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
         </v-flex>
         <v-flex xs12 sm6 md4>
-        <date_time_picker v-bind:type_prop = 1 v-bind:generate_prop = this.generate @date= end_date_time_function($event)></date_time_picker>
+        <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
         </v-flex>
         </v-layout>
+          <v-btn v-on:click="downloadCSV(device_data)">Export</v-btn>
+        <v-btn v-on:click="generate_function()">Generate</v-btn>
 
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
@@ -37,6 +38,7 @@
             :loading="loading"
             :rows-per-page-items= "rows_per_page_items"
             class="elevation-1"
+            style="max-height: 700px; overflow-y: auto"
           >
         <template slot="items" slot-scope="myprops">
         <td v-for="header in display"
@@ -53,6 +55,8 @@
 <script>
 import AuthenticationService from "../services/AuthenticationService.js";
 import date_time_picker from "./Date_Time_Picker";
+import network_subnetwork_vessel_device_picker from "./Network_Subnet_Vessel_Device_Picker";
+
 
 
 function convertArrayOfObjectsToCSV(args) {
@@ -79,9 +83,25 @@ function convertArrayOfObjectsToCSV(args) {
   });
   return result;
 }
+function return_date_time(date, time){
+  let date_time = null;
+  if(date){
+    if(time){
+      date_time = date.concat(" "+ time+ ":00")
+    }else{
+      date_time = date.concat(" "+ "00:00:00")
+    }
+  }else{
+    date_time = null;
+  }
+  return date_time;
+}
+
 export default {
   components:{
     date_time_picker,
+    network_subnetwork_vessel_device_picker 
+
   },
   data(){
     return {
@@ -93,9 +113,13 @@ export default {
         value: [],
         display: [],
         headers: [],
-        generate: 0, //set this high when the user selects generate
-        start_date_time: "", //This holds the start date and time in the format of the data in the db
-        end_date_time: "" //This holds the end date and time in the format of the data in the db
+        start_date: null,
+        start_time: null,
+        end_date: null,
+        end_time: null,
+        start_date_time: null, //This holds the start date and time in the format of the data in the db
+        end_date_time: null, //This holds the end date and time in the format of the data in the db
+        filter_parameters: {}
     }
   },
   props: [
@@ -127,40 +151,36 @@ export default {
     },
     pagination: async function(){
       try{
-        this.loading = true;
-        let result = await AuthenticationService.get_device_data_specific_heading(this.pagination, this.value)
-          .catch(err => {
-            //Error getting the devices from the server
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-            throw err;
-            })
-        this.device_data = JSON.parse(result.data.device_data);
-        this.headers =  JSON.parse(result.data.headers);
-        this.display = this.headers
-        this.loading = false;
+        this.generate_function();
       }catch(err){
         console.log(err);
       }
     },
     value: async function(){
       try{
-        this.loading = true;
-        let result = await AuthenticationService.get_device_data_specific_heading(this.pagination, this.value)
-          .catch(err => {
-            //Error getting the devices from the server
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-            throw err;
-            })
-        this.device_data = JSON.parse(result.data.device_data);
-        this.headers =  JSON.parse(result.data.headers);
-        this.display = this.headers
-        this.loading = false;
+        this.generate_function();
       }catch(err){
         console.log(err);
       }
     }
   },
   methods: {
+    start_date_function(date){
+      this.start_date = date;
+      this.start_date_time = null;
+    },
+    start_time_function(time){
+      this.start_time = time;
+      this.start_date_time = null;
+    },    
+    end_date_function(date){
+      this.end_date = date;
+      this.end_date_time = null;
+    },
+    end_time_function(time){
+      this.end_time = time;
+      this.end_date_time = null;
+    },
     downloadCSV: function(args) {
       var data, filename, link;
       var csv = convertArrayOfObjectsToCSV({
@@ -178,12 +198,33 @@ export default {
       link.setAttribute('download', filename);
       link.click();
     },
-    generate_function: function(){
-      this.generate = 1;
+    generate_function: async function(){
+      this.loading = true;
+      this.start_date_time = return_date_time(this.start_date, this.start_time);
+      this.end_date_time =return_date_time(this.end_date, this.end_time);
+      if(this.start_date_time){
+        this.filter_parameters["start_date"] = this.start_date_time;
+      }
+      if(this.end_date_time){
+        this.filter_parameters["end_date"] = this.end_date_time;
+      }
+      if(this.pagination.sortBy){
+        this.filter_parameters["sort_by"] = this.pagination.sortBy;
+        if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
+        else this.filter_parameters["order"] = 'DESC';
+      }
+      let result = await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value)
+          .catch(err => {
+            //Error getting the devices from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            }) 
+      this.device_data = JSON.parse(result.data.device_data);
+      this.headers =  JSON.parse(result.data.headers);
+      this.display = this.headers
+      this.filter_parameters = {}; 
+      this.loading = false;
       
-    },
-    start_date_time_function: function(data){
-      this.start_date_time = data;
     },
     end_date_time_function: async function(data){
       console.log('heree')

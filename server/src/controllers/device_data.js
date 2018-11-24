@@ -46,12 +46,12 @@ function return_date(date) {
             full_date = "N/A"
         } else {
             date = new Date(date);
-            let month = return_month(date.getUTCMonth()); //returns the month in 3 letters
-            let day = add_zero(date.getUTCDate());
-            let year = date.getUTCFullYear() - 2000; //converts the full year to 2 digits 
-            let hour = date.getUTCHours(); ;
-            let minutes = add_zero(date.getUTCMinutes());
-            let seconds = add_zero(date.getUTCSeconds());
+            let month = return_month(date.getMonth()); //returns the month in 3 letters
+            let day = add_zero(date.getDate());
+            let year = date.getFullYear() - 2000; //converts the full year to 2 digits 
+            let hour = date.getHours(); ;
+            let minutes = add_zero(date.getMinutes());
+            let seconds = add_zero(date.getSeconds());
             full_date = day + "-" + month + "-" + year + " " + hour + ":" + minutes + ":" + seconds;
         }
         return full_date;
@@ -100,6 +100,7 @@ function add_zero(i) {
 function convert_dates(data){
     for(let i =0; i< data.length; i++){
         data[i]["r_info_time"] = return_date(data[i]["r_info_time"]);
+        data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
     }
     return data;
 }
@@ -133,8 +134,57 @@ module.exports = {
             console.log(err);
         }
     },
+    get_filtered: async function(req, res){
+        let sql_where = [];
+        let where = '';
+        let sql_order_by = [];
+        let sql = '';
+
+        try {
+            
+            let parameters = JSON.parse(req.params.parameters); 
+            let columns = req.params.columns
+            if (columns) {
+                columns = convert_from_ui_to_db(columns);
+                sql = `SELECT ${columns} FROM device_rx `;
+            }
+            if(parameters.start_date){
+                sql_where.push(`time_stamp > '${parameters.start_date}'`);
+            }if(parameters.end_date){
+                sql_where.push(`time_stamp < '${parameters.end_date}'`);
+            }
+            if (parameters.start_date || parameters.end_date){
+                for (let i = 0; i < sql_where.length; i++) {
+                    if (i < (sql_where.length - 1)) { //will run every time but the last cause we do not want it ending with AND
+                        where = where + `${sql_where[i]} AND `;
+                    } else {
+                        where = where + `${sql_where[i]}`;
+                    }
+                }
+            }
+            if(where){
+                sql = ` ${sql} WHERE ${where}`
+            }
+            if(parameters.sort_by){ 
+                sql = `${sql} ORDER BY ${parameters.sort_by} ${parameters.order}, time_stamp DESC`;
+            }else{//So that no mater what the data is ordered in descending order based on the timestamp
+                sql = `${sql} ORDER BY time_stamp DESC`;
+            }
+            let device_data = await DB.get_specified_parameters(sql)
+                .catch(err => {
+                    throw err;
+                })
+            headers = header(device_data[0]);
+            device_data = convert_dates(device_data);
+            device_data = JSON.stringify(device_data);
+            headers = JSON.stringify(headers);
+            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+        }catch(err){
+            console.log(err);
+        }
+    },
     get_specified_headings: async function(req, res){
-        try{
+        try{ 
             let headers, order, device_data
             headers = convert_from_ui_to_db(req.params.headers);
             if (req.params.descending == 'false') {
@@ -142,7 +192,6 @@ module.exports = {
             } else {
                 order = "DESC";
             }
-            console.log(req.params.sort_by, order);
             device_data= await DB.get_specified_headings(req.params.sort_by, order, headers)
                 .catch(err => {
                     //Error fetching specified data headings from db
