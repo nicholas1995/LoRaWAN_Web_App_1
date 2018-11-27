@@ -181,7 +181,7 @@ module.exports = {
                         .catch(err => {
                             throw error.error_message(`delete: ID-${db[l].device_eui}`, err.message);
                         })
-                    await DB_VESSEL_DEVICE.delete(db[l].device_eui)
+                    await DB_VESSEL_DEVICE.delete_given_deivce_eui(db[l].device_eui)
                         .catch(err => {
                             //Error deleting relationship between device and vessel from database
                             error_location = 3;
