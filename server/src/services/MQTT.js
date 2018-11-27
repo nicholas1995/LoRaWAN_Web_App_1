@@ -24,13 +24,13 @@ client.on('message', async function (topic, message) {
      */
     let topic_information = extract_topic_information(topic);
     if(topic_information.type == 0){
-        let data = await VESSEL_DEVICE_DB.return_vessel_id_and_vessel_device_id(topic_information.device_eui)
+        let data = await VESSEL_DEVICE_DB.return_vessel_id_device_id(topic_information.device_eui)
             .catch(err => {
                 //Error fetching device information from db
             });
         if(data[0]){
             message["vessel_id"] = data[0].vessel_id;
-            message["vessel_device_id"] = data[0].id;
+            message["device_id"] = data[0].device_id;
             if (topic_information.event == 'rx') {
                 if (message.rxInfo) {
                     await DEVICE_RX.create(message)

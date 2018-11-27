@@ -148,6 +148,10 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/device/${device_eui}`);
     },
+    get_devices_db_given_vessels(vessels) {//This returns ALL the devices associated with the selected vessels from the database
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/device/database/${vessels}`);
+    },
     create_devices(data) {
         data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;

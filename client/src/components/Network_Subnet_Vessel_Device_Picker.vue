@@ -55,6 +55,7 @@
           :items="this.vessel_names"
           label="Vessel"
           clearable
+          multiple
           prepend-icon="directions_boat"
         >
           <template
@@ -78,6 +79,7 @@
           :items="this.device_names"
           label="Device"
           clearable
+          multiple
           prepend-icon="devices"
         >
           <template
@@ -175,8 +177,8 @@ export default {
         for(let i = 0; i < this.sub_networks.length; i++){ //will get the ids of the subnets under the selected network and emit it. If generate is pressed these ids will be used to filter the data
           this.sub_network_id.push(this.sub_networks[i].id);
         }
-        this.$emit('sub_network_id', this.sub_network_id)
       }
+      this.$emit('sub_network_id', this.sub_network_id)
     },
     sub_network_name_form: async function(){
       this.vessels = [];
@@ -204,8 +206,42 @@ export default {
         for(let j = 0; j < this.vessels.length; j++){
           this.vessel_names.push(this.vessels[j].id +":"+this.vessels[j].name);
         }
-        this.$emit('sub_network_id', this.sub_network_id)
       }
+      this.$emit('sub_network_id', this.sub_network_id)
+    },
+    vessel_name_form: async function(){
+      this.devices = [];
+
+      this.device_names = [];
+
+      this.device_name_form = [];
+
+      this.vessel_id = [];
+      this.device_id = [];
+      if(this.vessel_name_form.length > 0){//will only run if we have a selected vessel
+        for(let i = 0; i< this.vessel_name_form.length; i++){
+          this.vessel_id.push(functions.extract_id_id_name(this.vessel_name_form[i]))
+        }
+        this.devices = await AuthenticationService.get_devices_db_given_vessels(this.vessel_id)
+          .catch(err => {
+            //Error fetching devices specified by vessel from server
+            console.log(err)
+          })
+        this.devices = JSON.parse(this.devices.data.devices);
+        for(let j = 0; j < this.devices.length; j++){
+          this.device_names.push(this.devices[j].device_id +":"+this.devices[j].device_name);
+        }
+      }
+      this.$emit('vessel_id', this.vessel_id)
+    },
+    device_name_form: async function(){
+      this.device_id = [];
+      if(this.device_name_form.length > 0){//will only run if we have a selected device
+        for(let i = 0; i< this.device_name_form.length; i++){
+          this.device_id.push(functions.extract_id_id_name(this.device_name_form[i]))
+        }
+      }
+      this.$emit('device_id', this.device_id)
     }
   },
   methods: {

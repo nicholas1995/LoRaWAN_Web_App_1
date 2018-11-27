@@ -8,6 +8,14 @@ module.exports = {
         WHERE deleted = 0`;
     return db.queryAsync(sql);
   },
+  get_all_given_vessels: function (vessels) {
+    //This returns all the devices that were ever associated with the vessels selected
+    let sql = `SELECT vessel_device.device_id, vessel_device.device_eui, vessel_device.vessel_id, vessel_device.deleted, devices.device_name
+        FROM vessel_device
+        RIGHT JOIN devices ON vessel_device.device_id = devices.id
+        WHERE vessel_id IN (${vessels})`;
+    return db.queryAsync(sql);
+  },
   update: function(col, value, condition) {
     let sql = `UPDATE devices
         SET ${col} = '${value}'
@@ -55,8 +63,8 @@ module.exports = {
   record returned has deleted set to 0. Only one record at most is supposed to be
   returned.
   */
-  return_vessel_id_and_vessel_device_id: function(device_eui) {
-    let sql = `SELECT id, vessel_id
+  return_vessel_id_device_id: function(device_eui) {
+    let sql = `SELECT device_id, vessel_id
       FROM vessel_device
       WHERE device_eui = '${device_eui}'
       AND deleted = '0'`;

@@ -10,7 +10,11 @@
             chips
           ></v-combobox>
         </v-flex>
-        <network_subnetwork_vessel_device_picker></network_subnetwork_vessel_device_picker>
+        <network_subnetwork_vessel_device_picker
+          @sub_network_id = sub_network_id_function($event)
+          @vessel_id = vessel_id_function($event)
+          @device_id = device_id_function($event)
+        ></network_subnetwork_vessel_device_picker>
         <v-layout row wrap>
         <!-- Date Picker-->
         <v-flex xs12 sm6 md4>
@@ -119,7 +123,11 @@ export default {
         end_time: null,
         start_date_time: null, //This holds the start date and time in the format of the data in the db
         end_date_time: null, //This holds the end date and time in the format of the data in the db
-        filter_parameters: {}
+        filter_parameters: {},
+
+        sub_network_id: null,
+        vessel_id: null,
+        device_id: null
     }
   },
   props: [
@@ -213,21 +221,30 @@ export default {
         if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
         else this.filter_parameters["order"] = 'DESC';
       }
-      let result = await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value)
+      if(this.device_id){
+        this.filter_parameters["device"] = this.device_id;
+        this.filter_parameters["vessel"] = this.vessel_id;
+        this.filter_parameters["sub_network"] = this.sub_network_id;
+      }else if(this.vessel_id){
+        this.filter_parameters["vessel"] = this.vessel_id;
+        this.filter_parameters["sub_network"] = this.sub_network_id;
+      }else if(this.sub_network_id){
+        this.filter_parameters["sub_network"] = this.sub_network_id;
+      }
+       let result = await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value)
           .catch(err => {
             //Error getting the devices from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             }) 
       this.device_data = JSON.parse(result.data.device_data);
-      this.headers =  JSON.parse(result.data.headers);
+      this.headers =  JSON.parse(result.data.headers); 
       this.display = this.headers
       this.filter_parameters = {}; 
       this.loading = false;
       
     },
     end_date_time_function: async function(data){
-      console.log('heree')
       this.end_date_time = data;
       this.loading = true;
         let result = await AuthenticationService.get_device_data_specific_heading_specified_date(this.pagination, this.value, this.start_date_time, this.end_date_time)
@@ -241,6 +258,21 @@ export default {
         this.display = this.headers
         this.generate = 0;
         this.loading = false;
+    },
+    sub_network_id_function: function(data){
+      //The if else statements were used because in the Picker we always want to emit when the value changes not only when the array is greater than 0.
+      //This is because if we clear the array in the picker it will not emit to clear the id data on the device_data component.
+      //Now since we are always emitting we only want to save to the local variable when it is greater than 0. Any other time we set it to null. 
+      if(data.length > 0 )this.sub_network_id = data
+      else this.sub_network_id = null
+    },
+    vessel_id_function: function(data){
+      if(data.length > 0 )this.vessel_id = data
+      else this.vessel_id = null
+    },
+    device_id_function: function(data){
+      if(data.length > 0 )this.device_id = data
+      else this.device_id = null
     }
   }
 }

@@ -119,6 +119,9 @@ module.exports = ((app) => {
     //Device (Read one)
     app.get("/device/:device_eui", authenticate, grant_access, devices.get_one);
 
+    //Device (Read all under specified vessel from db)
+    app.get("/device/database/:vessels", authenticate, grant_access, devices.get_database);
+
     //Devices (Create)
     app.post("/devices", authenticate, grant_access, device_policy.create, devices.create); //need to add in device validation
 

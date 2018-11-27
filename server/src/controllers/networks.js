@@ -134,7 +134,6 @@ module.exports = {
     }, 
     get_networks_database: async function(req, res){
         try{
-            console.log('hereeee')
             let networks_db = await db.get_networks().catch(err => {
               //error getting networks from db
               error_location = 1;

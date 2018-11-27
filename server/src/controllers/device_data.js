@@ -139,9 +139,7 @@ module.exports = {
         let where = '';
         let sql_order_by = [];
         let sql = '';
-
         try {
-            
             let parameters = JSON.parse(req.params.parameters); 
             let columns = req.params.columns
             if (columns) {
@@ -153,6 +151,15 @@ module.exports = {
             }if(parameters.end_date){
                 sql_where.push(`time_stamp < '${parameters.end_date}'`);
             }
+            if (parameters.device) {
+                sql_where.push(`device_id IN (${parameters.device}) AND vessel_id IN (${parameters.vessel}) AND sub_network_id IN (${parameters.sub_network})`);
+            } else if (parameters.vessel) {
+                sql_where.push(`vessel_id IN (${parameters.vessel}) AND sub_network_id IN (${parameters.sub_network})`);
+            } else if (parameters.sub_network) {
+                sql_where.push(`sub_network_id IN (${parameters.sub_network})`);
+            }
+
+
             if (parameters.start_date || parameters.end_date){
                 for (let i = 0; i < sql_where.length; i++) {
                     if (i < (sql_where.length - 1)) { //will run every time but the last cause we do not want it ending with AND
@@ -170,6 +177,7 @@ module.exports = {
             }else{//So that no mater what the data is ordered in descending order based on the timestamp
                 sql = `${sql} ORDER BY time_stamp DESC`;
             }
+            console.log(sql)
             let device_data = await DB.get_specified_parameters(sql)
                 .catch(err => {
                     throw err;
