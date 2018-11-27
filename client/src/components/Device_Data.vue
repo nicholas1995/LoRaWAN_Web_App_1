@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-flex xs4 sm12>
           <v-combobox
             v-model="value"
@@ -109,6 +109,8 @@ export default {
   },
   data(){
     return {
+        access: 0,
+
         device_data: [],
         loading: true,
         pagination: {},
@@ -135,22 +137,45 @@ export default {
   ],
   created: async function(){
     try{
-      let result = await AuthenticationService.get_device_data_initial()
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("device_data", "get")
+          .catch(err => {
+            throw err;
+          });
+        this.access =1;
+        let result = await AuthenticationService.get_device_data_initial()
         .catch(err => {
           //Error getting the devices from the server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
           throw err;
           })
-      this.device_data = JSON.parse(result.data.device_data);
-      this.headers =  JSON.parse(result.data.headers);
-      for(let i =0; i< this.headers.length; i++){
-        this.header_names.push(this.headers[i].text);
-        this.value.push(this.headers[i].text);
-      }
-      this.display = this.headers
-      this.loading = false;
+        this.device_data = JSON.parse(result.data.device_data);
+        this.headers =  JSON.parse(result.data.headers);
+        for(let i =0; i< this.headers.length; i++){
+          this.header_names.push(this.headers[i].text);
+          this.value.push(this.headers[i].text);
+        }
+        this.display = this.headers
+        this.loading = false;
+        }else{
+          alert('Please login.');
+          this.$router.push('login');
+        }
     }catch(err){
-      console.log(err);
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('dashboard');
+      }
     }
   },
   watch: {

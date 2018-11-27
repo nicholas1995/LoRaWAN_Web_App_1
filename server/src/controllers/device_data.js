@@ -177,7 +177,6 @@ module.exports = {
             }else{//So that no mater what the data is ordered in descending order based on the timestamp
                 sql = `${sql} ORDER BY time_stamp DESC`;
             }
-            console.log(sql)
             let device_data = await DB.get_specified_parameters(sql)
                 .catch(err => {
                     throw err;
