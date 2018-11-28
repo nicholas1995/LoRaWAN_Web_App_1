@@ -173,5 +173,29 @@ module.exports = {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
         }
+    },
+    delete_vessel_given_sub_network_id: async function(sub_network_id){
+        try{
+            let vessels = await DB.get_vessels_not_deleted_filter_sub_network(sub_network_id)
+                .catch(err => {
+                    //Error fetcing vessels belonging to a particular subnetwork
+                    throw error_message("get vessels under specified sub_network : database", err.message);
+                })
+            for(let i = 0; i< vessels.length; i ++){
+                await DB_VESSEL_DEVICE.delete_given_vessel_id(vessels[i].id)
+                    .catch(err => {
+                        //Error deleting vessel device realtionship for a given vessel
+                        throw error_message("delete device vessel relationship: database", err.message);
+                    })
+                await DB.delete_vessel(vessels[i].id)
+                    .catch(err => {
+                        //Error deleting vessel from database
+                        throw error_message("database", err.message);
+                    });
+            }
+        }catch(err){
+            console.log(err)
+            throw err;
+        }
     }
 }

@@ -303,7 +303,13 @@ module.exports = {
                     throw error.error_message("get devices : getting vessel devices relationships :database", err.message);
                 })
             console.log('Vessel deivce realtionships currently implemented fetched');
-            devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora);
+            let devices_db = await db.get_not_deleted()
+                .catch(err => {
+                    //error getting devices from db
+                    error_location = 1;
+                    throw error.error_message("get devices : database", err.message);
+                });
+            devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora, devices_db);
             console.log("Vessel ID parased to device data");
             devices_lora = JSON.stringify(devices_lora);
             res.status(201).send({ devices_lora: devices_lora, message: 'Device created', type: 'success' });

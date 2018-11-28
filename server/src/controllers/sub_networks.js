@@ -1,6 +1,7 @@
 const lora_app_server = require('../services/API/lora_app_server');
 const db = require('../services/database/sub_networks_db');
 const VESSEL_DB = require("../services/database/vessels_db");
+const VESSEL_CONTROLLER = require('./vessels')
 const compare = require('../services/compare');
 const error = require('../services/errors');
 const VError = require("verror");
@@ -260,6 +261,11 @@ module.exports = {
                     //Error deleting subnetwork from the database
                     error_location = 2;
                     throw error.error_message("delete sub-network : database", err.message);
+                });
+            await VESSEL_CONTROLLER.delete_vessel_given_sub_network_id(req.params.sub_network_id)
+                .catch(err => {
+                    //Error deleting vessels under selected subnetwork
+                    throw error.error_message("delete sub-network : delete vessel ", err.message);
                 });
             sub_networks_lora = JSON.stringify(sub_networks_lora);
             res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Network deleted.', type: 'success' });

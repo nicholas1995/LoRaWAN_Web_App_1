@@ -50,5 +50,12 @@ module.exports = {
         SET name = '${data.name}'
         WHERE id = '${id}'`;
     return db.queryAsync(sql);
+  },
+  //Deletes vessel given vessel id
+  delete_vessel: function (vessel_id) {
+    let sql = `UPDATE vessel
+        SET deleted = '1'
+        WHERE id = '${vessel_id}'`;
+    return db.queryAsync(sql);
   }
 };

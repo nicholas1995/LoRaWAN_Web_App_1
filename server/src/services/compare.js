@@ -3,6 +3,8 @@ const sub_network_db = require('./database/sub_networks_db');
 const devices_db = require("./database/devices_db");
 const VESSEL_DB = require("../services/database/vessels_db");
 const DB_VESSEL_DEVICE = require("./database/vessel_device_db");
+const VESSEL_CONTROLLER = require('../controllers/vessels')
+
 const VError = require("verror");
 const error = require("./errors");
 
@@ -129,9 +131,15 @@ module.exports = {
                 let index = accounted_for.indexOf(l);
                 if(index ==-1){
                     await sub_network_db.update('deleted', 1, db[l].id)
-                    .catch(err => {
-                        throw error.error_message(`delete: ID-${db[l].id}`, err.message);
-                    })
+                        .catch(err => {
+                            //Error deleting sub-network
+                            throw error.error_message(`delete: ID-${db[l].id}`, err.message);
+                        })
+                    await VESSEL_CONTROLLER.delete_vessel_given_sub_network_id(db[l].id)
+                        .catch(err => {
+                            //Error deleting vessels under selected subnetwork
+                            throw error.error_message("delete sub-network : delete vessel ", err.message);
+                        });
                     //console.log('Sub-Network Deleted');
                 }
             }

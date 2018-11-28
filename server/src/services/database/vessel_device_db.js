@@ -8,6 +8,13 @@ module.exports = {
         WHERE deleted = 0`;
     return db.queryAsync(sql);
   },
+  get_not_deleted_given_vessel_id: function (vessel_id) {
+    //This returns all the vessel device relationships that are currently implemented for a given vessel_id
+    let sql = `SELECT *
+        FROM vessel_device
+        WHERE deleted = 0 AND vessel_id = '${vessel_id}'`;
+    return db.queryAsync(sql);
+  },
   get_all_given_vessels: function (vessels) {
     //This returns all the devices that were ever associated with the vessels selected
     let sql = `SELECT vessel_device.device_id, vessel_device.device_eui, vessel_device.vessel_id, vessel_device.deleted, devices.device_name
