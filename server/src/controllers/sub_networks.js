@@ -1,5 +1,6 @@
 const lora_app_server = require('../services/API/lora_app_server');
 const db = require('../services/database/sub_networks_db');
+const VESSEL_DB = require("../services/database/vessels_db");
 const compare = require('../services/compare');
 const error = require('../services/errors');
 const VError = require("verror");
@@ -147,7 +148,7 @@ module.exports = {
         }
     },
     create: async function(req, res){
-        let error_location = null; //0=lora, 1=lora 2=db
+        let error_location = null; //0=lora, 1=lora 2=db 3=db
         let sub_networks_lora;
         try{
             let data = JSON.parse(req.body.data);
@@ -170,6 +171,12 @@ module.exports = {
                     error_location = 2;
                     throw error.error_message("create sub-network : database", err.message);
                 });
+            await VESSEL_DB.create_default_vessels(result.data.id)
+                .catch(err => {
+                    //Error creating default vessel in database 
+                    error_location = 3;
+                    throw error.error_message("create default vessel : database", err.message);
+                });
             sub_networks_lora = JSON.stringify(sub_networks_lora);
             res.status(201).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Network created', type: 'success' });
         }catch (err) {
@@ -179,11 +186,13 @@ module.exports = {
             } else if (error_location == 1) {
                 sub_networks_lora = JSON.stringify([]);
                 res.status(201).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network Created. Failed to fetch sub-networks", type: 'info' })
-            }
-            else if (error_location == 2) {
+            } else if (error_location == 2) {
                 sub_networks_lora = JSON.stringify(sub_networks_lora);
                 res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network Created. Error creating sub-network in database", type: 'info' })
-            } else {
+            } else if (error_location == 3) {
+                sub_networks_lora = JSON.stringify(sub_networks_lora);
+                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network Created. Error creating default vessel in database", type: 'info' })
+            }  else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
         }

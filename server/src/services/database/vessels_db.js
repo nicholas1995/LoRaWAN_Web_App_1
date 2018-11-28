@@ -30,6 +30,13 @@ module.exports = {
         VALUES ('${name}', '${sub_network_id}')`;
     return db.queryAsync(sql);
   },
+  //This creates a default vessel for every subnet created using the default information
+  create_default_vessels: function (sub_network_id) {
+    let sql = `INSERT INTO vessel
+        (name, sub_network_id, deleted)
+        VALUES ('default', '${sub_network_id}', '1')`;
+    return db.queryAsync(sql);
+  },
   update_vessels: function(col, value, condition) {
     let sql = `UPDATE vessel
         SET ${col} = '${value}'

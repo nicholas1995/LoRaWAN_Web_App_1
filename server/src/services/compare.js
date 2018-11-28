@@ -1,6 +1,7 @@
 const network_db = require('./database/networks_db');
 const sub_network_db = require('./database/sub_networks_db');
 const devices_db = require("./database/devices_db");
+const VESSEL_DB = require("../services/database/vessels_db");
 const DB_VESSEL_DEVICE = require("./database/vessel_device_db");
 const VError = require("verror");
 const error = require("./errors");
@@ -114,9 +115,13 @@ module.exports = {
             let k;
             for(k =0; k< added_lora.length; k++){
                 await sub_network_db.create_sub_network(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].sub_network_name, lora[added_lora[k]].network_id)
-                .catch(err => {
-                    throw error.error_message(`create: ID-${lora[added_lora[k]].sub_network_id}`, err.message);
-                })
+                    .catch(err => {
+                        throw error.error_message(`create: ID-${lora[added_lora[k]].sub_network_id}`, err.message);
+                    })
+                await VESSEL_DB.create_default_vessels(lora[added_lora[k]].sub_network_id)
+                    .catch(err => {
+                        throw error.error_message(`create: default vessel`, err.message);
+                    });
                 //console.log('Inserted Added Sub-Network');
             }
             let l;
