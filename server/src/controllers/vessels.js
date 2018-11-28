@@ -176,7 +176,7 @@ module.exports = {
     },
     delete_vessel_given_sub_network_id: async function(sub_network_id){
         try{
-            let vessels = await DB.get_vessels_not_deleted_filter_sub_network(sub_network_id)
+            let vessels = await DB.get_vessels_filter_sub_network(sub_network_id)
                 .catch(err => {
                     //Error fetcing vessels belonging to a particular subnetwork
                     throw error_message("get vessels under specified sub_network : database", err.message);

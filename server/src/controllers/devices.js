@@ -1,6 +1,7 @@
 const lora_app_server = require("../services/API/lora_app_server");
 const db = require("../services/database/devices_db");
 const DB_VESSEL_DEVICE = require("../services/database/vessel_device_db");
+const DB_VESSEL = require("../services/database/vessels_db");
 const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
@@ -167,6 +168,23 @@ function parse_vessel_to_device_data(vessel_device, devices_lora, devices_db) {
         throw err;
     }
 }
+async function add_device_to_default_vessel(device_id, device_eui, sub_network_id){
+    try{
+        let default_vessel = await DB_VESSEL.get_default_vessel_specified_sub_network(sub_network_id)
+            .catch(err => {
+                //Error fetching the default vessel for a given sub_network
+                throw error_message("get default vessel for sub-network : database", err.message);
+            });
+        await DB_VESSEL_DEVICE.create(device_id, device_eui, default_vessel[0].id)
+            .catch(err => {
+                //Error creating vessel device relationship 
+                throw error_message("create vessel device relationship : database", err.message);
+            });
+        console.log("Device vessel relationship created. Default vessel");
+    }catch(err){
+        throw err;
+    }
+}
 module.exports = {
     get: async function(req, res){
         let error_location = null; //0=lora, 1=db
@@ -280,14 +298,13 @@ module.exports = {
                     throw error.error_message("create device : database", err.message);
                 }); 
             console.log('Device created in database')
-            if(data.vessel_id){
-                console.log("Device vessel relationship exists");
-                let device_added = await db.get_newest()
-                    .catch(err => {
-                        //Error creating relationship between vessel and device
-                        error_location = 3;
-                        throw error.error_message("create device : vessel device relationship : database", err.message);
-                    });
+            let device_added = await db.get_newest()
+                .catch(err => {
+                    //Error creating relationship between vessel and device
+                    error_location = 3;
+                    throw error.error_message("create device : vessel device relationship : database", err.message);
+                });
+            if(data.vessel_id){ //Device assigned to vessel 
                 await DB_VESSEL_DEVICE.create(device_added[0].id, data.device_eui, data.vessel_id)
                     .catch(err => {
                         //Error creating relationship between vessel and device
@@ -295,6 +312,12 @@ module.exports = {
                         throw error.error_message("create device : vessel device relationship : database", err.message);
                     });
                 console.log("Device vessel relationship created");
+            }else{ //Device not assigned to vessel so it will be assigned to the default vessel
+                await add_device_to_default_vessel(device_added[0].id, data.device_eui, data.sub_network_id)
+                    .catch(err => {
+                        //Error creating vessel device relationship 
+                        throw error_message("create vessel device relationship : database", err.message);
+                    });
             }
             vessel_device_relationships_db = await DB_VESSEL_DEVICE.get_not_deleted()
                 .catch(err => {
@@ -373,6 +396,12 @@ module.exports = {
                         throw error.error_message("create device : vessel device relationship : database", err.message);
                     });
                 console.log("Device vessel relationship created");
+            } else { //Device not assigned to vessel so it will be assigned to the default vessel
+                await add_device_to_default_vessel(data.device_id, data.device_eui, data.sub_network_id)
+                    .catch(err => {
+                        //Error creating vessel device relationship 
+                        throw error_message("create vessel device relationship : database", err.message);
+                    });
             }
             vessel_device_relationships_db = await DB_VESSEL_DEVICE.get_not_deleted()
                 .catch(err => {
