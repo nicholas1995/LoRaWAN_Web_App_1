@@ -160,14 +160,15 @@ module.exports = {
             }
 
 
-            if (parameters.start_date || parameters.end_date){
-                for (let i = 0; i < sql_where.length; i++) {
-                    if (i < (sql_where.length - 1)) { //will run every time but the last cause we do not want it ending with AND
-                        where = where + `${sql_where[i]} AND `;
-                    } else {
-                        where = where + `${sql_where[i]}`;
-                    }
+            if (parameters.start_date || parameters.end_date || parameters.device || parameters.vessel || parameters.sub_network) {
+              for (let i = 0; i < sql_where.length; i++) {
+                if (i < sql_where.length - 1) {
+                  //will run every time but the last cause we do not want it ending with AND
+                  where = where + `${sql_where[i]} AND `;
+                } else {
+                  where = where + `${sql_where[i]}`;
                 }
+              }
             }
             if(where){
                 sql = ` ${sql} WHERE ${where}`
