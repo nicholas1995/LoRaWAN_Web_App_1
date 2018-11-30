@@ -151,6 +151,7 @@ module.exports = {
     devices: async function (lora, db) {
         let accounted_for = [];
         let added_lora = [];
+        let devices_added = [];
         try {
             for (let i = 0; i < lora.length; i++) {
                 if (db.length == 0) {
@@ -185,6 +186,7 @@ module.exports = {
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].device_eui}`, err.message);
                     })
+                devices_added.push(lora[added_lora[k]].device_eui)
                 //console.log('Inserted Added Device');
             }
             for (let l = 0; l < db.length; l++) {
@@ -203,6 +205,7 @@ module.exports = {
                     console.log("Device deletd on lora app server. Device EUI: " + db[l].device_eui);
                 }
             }
+            return devices_added;
 
         } catch (err) {
             throw error.error_message("compare", err.message);

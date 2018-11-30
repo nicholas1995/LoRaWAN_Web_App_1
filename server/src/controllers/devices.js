@@ -175,6 +175,7 @@ async function add_device_to_default_vessel(device_id, device_eui, sub_network_i
                 //Error fetching the default vessel for a given sub_network
                 throw error_message("get default vessel for sub-network : database", err.message);
             });
+        console.log(device_id, device_eui, sub_network_id, default_vessel[0].id);
         await DB_VESSEL_DEVICE.create(device_id, device_eui, default_vessel[0].id)
             .catch(err => {
                 //Error creating vessel device relationship 
@@ -204,12 +205,35 @@ module.exports = {
                     throw error.error_message("get devices : database", err.message);
                 });
             console.log("Devices fetched from the database");
-            await compare.devices(devices_lora, devices_db)
+            let devices_added = await compare.devices(devices_lora, devices_db)
                 .catch(err => {
                     //Error comparing devices
                     error_location = 1;
                     throw error.error_message("get devices : database", err.message);
                 });
+            console.log(devices_added)
+            if(devices_added.length > 0 ){
+                console.log('gooddddddd')
+                devices_db = await db.get_not_deleted()
+                    .catch(err => {
+                        //error getting devices from db
+                        error_location = 1;
+                        throw error.error_message("get devices : database", err.message);
+                    });
+                console.log(devices_db)
+                for(let i = 0; i< devices_added.length; i++){
+                    for(let j = 0; j< devices_db.length; j++){
+                        if(devices_added[i] == devices_db[j].device_eui){
+                            console.log(devices_db[j].id, devices_db[j].device_eui, devices_db[j].sub_network_id);
+                            await add_device_to_default_vessel(`${devices_db[j].id}`, devices_db[j].device_eui, devices_db[j].sub_network_id)
+                                .catch(err => {
+                                    //Error adding devices created on lora app server to default vessel
+                                    throw error.error_message("add device created on lora app server to default vessel", err.message);
+                                });
+                        }
+                    }
+                }
+            }
             console.log("Devices information on lora app sevrer and database compared");
             vessel_device_relationships_db = await DB_VESSEL_DEVICE.get_not_deleted()
                 .catch(err => {
