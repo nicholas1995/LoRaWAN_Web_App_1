@@ -10,9 +10,10 @@ module.exports = {
   },
   get_not_deleted_given_vessel_id: function (vessel_id) {
     //This returns all the vessel device relationships that are currently implemented for a given vessel_id
-    let sql = `SELECT *
-        FROM vessel_device
-        WHERE deleted = 0 AND vessel_id = '${vessel_id}'`;
+    let sql = `SELECT vessel_device.*, vessel.sub_network_id
+    FROM vessel_device
+    INNER JOIN vessel ON vessel_device.vessel_id = vessel.id
+    WHERE vessel_device.deleted = 0 AND vessel_id = '${vessel_id}'`;
     return db.queryAsync(sql);
   },
   get_all_given_vessels: function (vessels) {

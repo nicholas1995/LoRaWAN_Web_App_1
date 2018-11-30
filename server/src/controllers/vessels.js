@@ -9,6 +9,44 @@ function error_message(current_error_message, previous_error){
     return error;
 }
 
+async function add_device_to_default_vessel_when_vessel_deleted(vessel_id){
+    try{
+        let devices = await DB_VESSEL_DEVICE.get_not_deleted_given_vessel_id(vessel_id)
+            .catch(err => {
+                //Error fetching the devices from the vessel to be deleted from the vessel device table
+                throw error_message("get devices : database", err.message);
+            })
+            for(let i = 0; i< devices.length; i++){
+                await add_device_to_default_vessel(devices[i].device_id, devices[i].device_eui, devices[i].sub_network_id)
+                    .catch(err => {
+                        //Error adding device to the default vessel of a given subnetwork
+                        throw error_message("reassing device to vessel", err.message);
+                    });
+            }
+    }catch(err){
+        console.log(err)
+        throw err;
+    }
+}
+
+async function add_device_to_default_vessel(device_id, device_eui, sub_network_id) {
+    try {
+        let default_vessel = await DB.get_default_vessel_specified_sub_network(sub_network_id)
+            .catch(err => {
+                //Error fetching the default vessel for a given sub_network
+                throw error_message("get default vessel for sub-network : database", err.message);
+            });
+        await DB_VESSEL_DEVICE.create(device_id, device_eui, default_vessel[0].id)
+            .catch(err => {
+                //Error creating vessel device relationship 
+                throw error_message("create vessel device relationship : database", err.message);
+            });
+        console.log("Device vessel relationship created. Default vessel");
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = {
     get: async function(req, res) {
         //need to split up into two seperate fetches. One for self and another for all 
@@ -140,6 +178,11 @@ module.exports = {
                     //error updating delete coloum from DB for vessel
                     error_location = 0;
                     throw error_message("delete vessel : database", err.message);
+                });
+            await add_device_to_default_vessel_when_vessel_deleted(req.params.vessel_id)
+                .catch(err => {
+                    //Error adding devices to default vessel
+                    throw error_message("reassign device", err.message);
                 });
             console.log("Vessel deleted parameter set high in database. Vessel ID: " + req.params.vessel_id);
             await DB_VESSEL_DEVICE.delete_given_vessel_id(req.params.vessel_id)
