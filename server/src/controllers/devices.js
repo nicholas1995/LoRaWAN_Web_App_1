@@ -211,20 +211,16 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("get devices : database", err.message);
                 });
-            console.log(devices_added)
             if(devices_added.length > 0 ){
-                console.log('gooddddddd')
                 devices_db = await db.get_not_deleted()
                     .catch(err => {
                         //error getting devices from db
                         error_location = 1;
                         throw error.error_message("get devices : database", err.message);
                     });
-                console.log(devices_db)
                 for(let i = 0; i< devices_added.length; i++){
                     for(let j = 0; j< devices_db.length; j++){
                         if(devices_added[i] == devices_db[j].device_eui){
-                            console.log(devices_db[j].id, devices_db[j].device_eui, devices_db[j].sub_network_id);
                             await add_device_to_default_vessel(`${devices_db[j].id}`, devices_db[j].device_eui, devices_db[j].sub_network_id)
                                 .catch(err => {
                                     //Error adding devices created on lora app server to default vessel
