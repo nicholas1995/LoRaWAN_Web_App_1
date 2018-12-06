@@ -59,6 +59,7 @@ module.exports = {
         .catch((err) => {
           throw err;
         })
+      console.log(users)
       users = JSON.stringify(users);
       res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });
     } catch (err) {

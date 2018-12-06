@@ -49,6 +49,7 @@
               <span>Delete {{props.item.first_name}}</span>
             </v-tooltip>
           </td>
+          <td class="text-xs-left">{{ props.item.id }}</td>
           <td class="text-xs-left">{{ props.item.email }}</td>
           <td class="text-xs-left">{{ props.item.first_name }}</td>
           <td class="text-xs-left">{{ props.item.last_name }}</td>
@@ -72,6 +73,7 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
+          { text: 'ID', value: 'id' ,sortable: true},
           { text: 'Email', value: 'email' ,sortable: true},
           { text: 'First Name', value: 'first_name' , sortable: false },
           { text: 'Last Name', value: 'last_name' , sortable: false },
