@@ -17,9 +17,9 @@ module.exports = {
         FROM users`;
         return db.queryAsync(sql);
     },
-    delete_user: function(email){
+    delete_user: function(id){
         let sql =`DELETE FROM users
-        WHERE email='${email}'`; 
+        WHERE id='${id}'`; 
         return db.queryAsync(sql);
     },
     update_user: function(data){

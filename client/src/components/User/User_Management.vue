@@ -110,7 +110,7 @@ export default {
   methods: {
     delete_user(user){
       if(confirm('Are you sure you want to delete this user?') == true){
-        AuthenticationService.delete_users(user.email).then(result => {
+        AuthenticationService.delete_users(user.id).then(result => {
           this.users = JSON.parse(result.data.users);
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {

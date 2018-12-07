@@ -154,7 +154,7 @@ module.exports = {
   delete: async function (req, res) {
     let users;
     try {
-      await user_db.delete_user(req.params.email)
+      await user_db.delete_user(req.params.id)
         .catch(err => {
           //Error deleting user
           throw err;

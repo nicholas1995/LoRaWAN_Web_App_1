@@ -48,7 +48,7 @@ module.exports = ((app) => {
     app.put("/users", authenticate, grant_access, user.update); 
 
     //Users (Delete)
-    app.delete("/users/:email", authenticate, grant_access, user.delete); //should change to a delete method instead of putting delete in the path
+    app.delete("/users/:id", authenticate, grant_access, user.delete);
 
     //---------------------Profile---------------------
     //Profile (Read)

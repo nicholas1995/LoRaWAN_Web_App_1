@@ -40,9 +40,9 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.put('users', {data});
     },
-    delete_users(email) {
+    delete_users(id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.delete(`/users/${email}`);
+        return Api.delete(`/users/${id}`);
     },
 
     //Profile
