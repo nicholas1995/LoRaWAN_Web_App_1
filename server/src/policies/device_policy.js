@@ -10,7 +10,7 @@ module.exports = {
             device_eui: Joi.string().hex().required().max(16).min(16),
             description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
-            vessel_id: Joi.string().required().allow(''),
+            vessel_id: Joi.number().required().allow(''),
             device_profile_id: Joi.string().required(),
             reference_altitude: Joi.number().greater(-1).allow(''),
             skip_frame_counter: Joi.boolean().required()

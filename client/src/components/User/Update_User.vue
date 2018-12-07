@@ -372,7 +372,6 @@ computed: {
       let accounted_for =[];
       let added = [];
       let deleted = [];
-      console.log(updated)
       try{
         for(let i=0; i<updated.length; i++){
           if(existing.length ==0){

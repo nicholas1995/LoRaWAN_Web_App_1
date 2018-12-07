@@ -47,25 +47,5 @@ module.exports = {
         home_phone= '${data.home_phone}', mobile_phone= '${data.mobile_phone}'
         WHERE email ='${data.email}'`;
         return db.queryAsync(sql);
-    },
-
-    //------------------------------------------------------------------------------
-    //Add a device for a fisher
-    add_device_fisher: function(email, device_eui){
-        let sql = `INSERT INTO users_devices (email, device_eui)
-        VALUES ('${email}', '${device_eui}')`;
-        return db.queryAsync(sql);
-    },
-    //Get devices associated with a fisher
-    get_fisher_devices: function (email) {
-        let sql = `SELECT device_eui
-        FROM users_devices
-        WHERE email='${email}'`;
-        return db.queryAsync(sql);
-    },
-    delete_fisher_devices: function (email){
-        let sql = `DELETE FROM users_devices 
-        WHERE email='${email}'`;
-        return db.queryAsync(sql);
     }
 }

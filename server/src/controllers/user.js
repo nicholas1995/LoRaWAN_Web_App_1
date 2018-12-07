@@ -169,26 +169,6 @@ module.exports = {
       console.log(err);
     }
   }, 
-    //Get User Devices (devices associated with a fisher)
-    get_user_devices: async function (req, res) {
-      let user_devices;
-      let devices;
-      try {
-        user_devices = await user_db.get_fisher_devices(req.params.user_email)
-          .catch((err) => {
-            throw err;
-          })
-        devices = await devices_db.get()
-          .catch(err => {
-            throw err;
-          });
-        user_devices = JSON.stringify(user_devices);
-        devices = JSON.stringify(devices);
-        res.status(200).send({ user_devices: user_devices, devices: devices,message: 'Users fetched', type: 'success' });
-      } catch (err) {
-        res.status(500).send({ message: "Failed to get user devices", type: 'error' });
-      }
-    }, 
 
   //Get User Vessels (devices associated with a fisher)
   get_user_vessels: async function (req, res) {
