@@ -6,6 +6,8 @@ const bcrypt = require("bcrypt-nodejs");
 const UpdatePasswordPolicy = require("../policies/UpdatePasswordPolicy");
 const user_db = require('../services/database/users_db');
 const devices_db = require("../services/database/devices_db");
+const USER_VESSEL_DB = require("../services/database/user_vessel_db");
+
 
 //Creates a random password of length 8 using characters 0-9 and
 function randomPasswordGenerator() {
@@ -59,7 +61,6 @@ module.exports = {
         .catch((err) => {
           throw err;
         })
-      console.log(users)
       users = JSON.stringify(users);
       res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });
     } catch (err) {
@@ -87,9 +88,14 @@ module.exports = {
           throw err;
         })
         console.log('email sent')
-      if (data.user_class == 'Fisher'){
-        for(let i =0; i< data.devices.length; i++){
-          await user_db.add_device_fisher(data.email, data.devices[i])
+      if (data.vessels.length > 0 ){
+        let user = await user_db.get_profile(data.email)
+          .catch(err => {
+            //Error getting profile information for user created
+            throw err;
+          });
+        for(let i =0; i< data.vessels.length; i++){
+          await USER_VESSEL_DB.create_user_vessel_relationship(user[0].id, data.vessels[i])
             .catch(err => {
               //Error adding a user device eui to the database
               throw err;
@@ -116,19 +122,23 @@ module.exports = {
           //Error updating user on the database
           throw err;
         });
-      await user_db.delete_fisher_devices(data.email) //delete for whoever you are
-        .catch(err => {
-          //Error comparing existing set and updated set of devices
-          throw err;
-        })
-      if (data.user_class == 'Fisher') { //only add if ur a fisher
-        for (let i = 0; i < data.devices.length; i++) {
-          await user_db.add_device_fisher(data.email, data.devices[i])
-            .catch(err => { 
-              //Error adding a user device eui to the database
-              throw err;
-            })
+        if(data.vessels.deleted.length > 0){
+          for (let i = 0; i < data.vessels.deleted.length ;i++){
+            await USER_VESSEL_DB.delete_user_vessel_relationship(data.id, data.vessels.deleted[i])
+              .catch(err => {
+                //Error deleting user vessel relationship
+                throw err;
+              });
+          }
         }
+        if (data.vessels.added.length > 0) {
+          for (let i = 0; i < data.vessels.added.length; i++) {
+            await USER_VESSEL_DB.create_user_vessel_relationship(data.id, data.vessels.added[i])
+              .catch(err => {
+                //Error deleting user vessel relationship
+                throw err;
+              });
+          }
       }
       users = await user_db.get_users()
         .catch((err) => {
@@ -179,6 +189,22 @@ module.exports = {
         res.status(500).send({ message: "Failed to get user devices", type: 'error' });
       }
     }, 
+
+  //Get User Vessels (devices associated with a fisher)
+  get_user_vessels: async function (req, res) {
+    let user_vessels;
+    try {
+      user_vessels = await USER_VESSEL_DB.get_user_vessels_not_deleted(req.params.user_id)
+        .catch((err) => {
+          throw err;
+        })
+      user_vessels = JSON.stringify(user_vessels);
+      res.status(200).send({ user_vessels: user_vessels, message: 'User vessels fetched', type: 'success' });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send({ message: "Failed to get user vessels", type: 'error' });
+    }
+  }, 
 
   //Login New
   login_new: async function(req, res){

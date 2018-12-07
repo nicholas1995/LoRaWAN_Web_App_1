@@ -13,8 +13,7 @@ module.exports = {
         return db.queryAsync(sql);
     },
     get_user_emails: function(){
-        let sql = `SELECT 
-        email 
+        let sql = `SELECT email 
         FROM users`;
         return db.queryAsync(sql);
     },
@@ -27,7 +26,7 @@ module.exports = {
         let sql = `UPDATE users
         SET first_name= '${data.first_name}', last_name= '${data.last_name}', address= '${data.address}', 
         home_phone= '${data.home_phone}', mobile_phone= '${data.mobile_phone}', user_class = '${data.user_class}'
-        WHERE email ='${data.email}'`;
+        WHERE id ='${data.id}'`;
         return db.queryAsync(sql);
     },
     update_user_pw: function (encrypted_password, email){
@@ -38,7 +37,8 @@ module.exports = {
 
     //-----------------------------------PROFILES-------------------------------------------
     get_profile: function (email) {
-        let sql = `SELECT * FROM users WHERE email = '${email}'`;
+        let sql = `SELECT * FROM users 
+        WHERE email = '${email}'`;
         return db.queryAsync(sql);
     },
     update_profile: function (data) {

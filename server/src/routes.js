@@ -60,8 +60,11 @@ module.exports = ((app) => {
     //Profile (Change Password)
     app.put("/update_password", authenticate, password_policy.password_policy, user.profile_update_password);
 
-    //Users (Get devices for an individual user)
+    //Users (Get devices for an individual user) --OLD I THINK
     app.get("/users/device/:user_email", authenticate, grant_access, user.get_user_devices);
+
+    //Users (Get vessels for an individual user)
+    app.get("/users/vessels/:user_id", authenticate, grant_access, user.get_user_vessels);
 
 
     //---------------------Networks---------------------

@@ -56,9 +56,7 @@
                 :error-messages = "user_class_selected_errors"
                 @keyup="$v.user_class_selected.$touch()" 
               ></v-select>
-            <!--FISHER-->
               <!--Network-->
-              <div v-if = "this.user_class_selected =='Fisher'">
                 <v-select
                   :items="network_names"
                   v-model="network_name_form"
@@ -70,18 +68,15 @@
                   v-model="sub_network_name_form"
                   label="Sub-Network"
                 ></v-select>
-                <!--Device-->
+                <!--Vessel-->
                 <v-combobox
-                v-model="device_name_form"
-                :items="device_names"
-                label="Device*"
+                v-model="vessel_name_form"
+                :items="vessel_names"
+                label="Vessel"
                 multiple
                 clearable
                 chips
-                :error-messages = "device_name_form_errors"
-                @keyup="$v.device_name_form.$touch()" 
                 ></v-combobox>
-              </div>
               <div div class="text">
                 {{message}}
               </div>
@@ -176,22 +171,22 @@ mixins: [validationMixin],
 
       networks: [], //A list of all the networks on the lora app server
       sub_networks: [], //A list of all the sub-networks on the lora app server
-      devices: [],  //A list of all the devices on the lora app server
+      vessels: [],  //A list of all the vessels not deleted in the database
 
       network_names: [],
       sub_network_names: [],
-      device_names: [],
+      vessel_names: [],
       devices_db: [],
 
       network_name_form: '',
       sub_network_name_form: '',
-      device_name_form: [],
+      vessel_name_form: [],
 
       network_id: '',
       sub_network_id: '',
-      device_euis_selected: [],
+      vessel_ids: [],
 
-      user_devices: [], //Array that holds the devices already associated with the user account to be editied
+      user_vessels: [], //Array that holds the devices already associated with the user account to be editied
 
       message: "",
     };
@@ -207,24 +202,20 @@ mixins: [validationMixin],
     this.mobile_phone = this.user_update.mobile_phone;
     this.user_class_selected = this.user_update.user_class;
     try{
-      await this.fetch_networks_sub_networks_devices();
-      if(this.user_class_selected =='Fisher'){
-        let result =await AuthenticationService.get_user_devices(this.user_update.email)
+      await this.fetch_networks_sub_networks_vessels();
+        this.user_vessels =await AuthenticationService.get_user_vessels(this.user_update.id)
           .catch(err => {
             //Error getting devices associated with user account
             console.log(err);
           });
-          this.user_devices = JSON.parse(result.data.user_devices);
-          this.devices_db = JSON.parse(result.data.devices);
-          for(let i = 0; i< this.user_devices.length; i++){
-          for(let j =0; j< this.devices_db.length; j++){
-            if(this.user_devices[i].device_eui == this.devices_db[j].device_eui){
-              this.device_name_form.push(this.devices_db[j].sub_network_id.concat(":",this.devices_db[j].device_name));
+        this.user_vessels = JSON.parse(this.user_vessels.data.user_vessels);
+        for(let i = 0; i< this.user_vessels.length; i++){ 
+          for(let j =0; j< this.vessels.length; j++){
+            if(this.user_vessels[i].vessel_id == this.vessels[j].id){
+              this.vessel_name_form.push(`${this.vessels[j].id}`.concat(":",this.vessels[j].name));
             }
           }
         }
-        this.devices = this.devices_db;
-      }
     }catch(err){
       console.log(err)
     }
@@ -249,13 +240,11 @@ mixins: [validationMixin],
       }
     },
     sub_network_name_form: function(){
-      this.device_names = [];
+      this.vessel_names = [];
       this.sub_network_id=functions.extract_id_id_name(this.sub_network_name_form);
-      for(let i = 0; i< this.devices.length; i++){
-        if(this.sub_network_id == this.devices[i].sub_network_id){
-          if(this.devices[i].deleted == 0){ //This is to ensure that only current devices will be made available to be assigned
-            this.device_names.push(this.sub_network_id.concat(":",this.devices[i].device_name));
-          }
+      for(let i = 0; i< this.vessels.length; i++){
+        if(this.sub_network_id == this.vessels[i].sub_network_id){
+          this.vessel_names.push(`${this.vessels[i].id}`.concat(":",this.vessels[i].name));
         }
       }
     }
@@ -312,14 +301,14 @@ computed: {
     }
   },
   methods: {
-    update_user() {
+    async update_user() {
       this.$v.$touch();
       if(this.$v.first_name.$invalid || this.$v.last_name.$invalid || this.$v.address.$invalid || this.$v.home_phone.$invalid
-      || this.$v.mobile_phone.$invalid || this.$v.user_class_selected.$invalid || this.$v.device_name_form.$invalid){
+      || this.$v.mobile_phone.$invalid || this.$v.user_class_selected.$invalid ){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
-        if(this.user_class_selected =='Fisher'){
+/*         if(this.user_class_selected =='Fisher'){
           for(let i = 0; i < this.device_name_form.length; i++){
             let sub_network_id_device = functions.extract_id_id_name(this.device_name_form[i]);
             let device_name_device = functions.extract_name_id_name(this.device_name_form[i]);
@@ -331,27 +320,32 @@ computed: {
               }
             }
           }
+        } */
+        for(let i = 0; i < this.vessel_name_form.length; i++){
+          this.vessel_ids.push(functions.extract_id_id_name(this.vessel_name_form[i]));
         }
-          AuthenticationService.update_users({
+        let vessels_updated = this.compare_user_vessels(this.vessel_ids, this.user_vessels);
+        AuthenticationService.update_users({
           first_name: this.first_name,
           last_name: this.last_name,
           address: this.address,
           home_phone: this.home_phone,
           mobile_phone: this.mobile_phone,
+          id: this.user_update.id,
           email: this.user_update.email,
           user_class: this.user_class_selected,
-          devices: this.device_euis_selected,
+          vessels: vessels_updated,
         }).then(result => {
           let data = JSON.parse(result.data.users);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('user_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
+          this.$emit('user_management', {data: data}); //passing the revecived array of networks to the parent component [Network] 
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
-        })
+        })  
         this.device_euis_selected = [];
       }
     },
-    async fetch_networks_sub_networks_devices(){
+    async fetch_networks_sub_networks_vessels(){
         await AuthenticationService.get_networks().then(result => {
           this.networks = JSON.parse(result.data.networks_lora);
           for(let i = 0; i < this.networks.length; i++){
@@ -367,12 +361,45 @@ computed: {
           //Error getting sub-networks from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
-        await AuthenticationService.get_devices().then(result => {
-          this.devices = JSON.parse(result.data.devices_lora);
+        await AuthenticationService.get_vessels(null).then(result => {
+          this.vessels = JSON.parse(result.data.vessels_db);
         }).catch(err => {
-          //Error getting the devices from the server
+          //Error getting the vessels from the server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
+    },
+    compare_user_vessels(updated, existing){ //updated is the ones in the form, existing is what is currently in the database
+      let accounted_for =[];
+      let added = [];
+      let deleted = [];
+      console.log(updated)
+      try{
+        for(let i=0; i<updated.length; i++){
+          if(existing.length ==0){
+            added.push(updated[i]);
+          }
+          for(let j =0; j<existing.length; j++){
+            if(updated[i]==existing[j].vessel_id){
+              accounted_for.push(j);
+              break;
+            } 
+            else if(j ==(existing.length-1)){
+              added.push(updated[i]);
+            }else if(updated[i].sub_network_id!=existing[j].id){
+              //
+            }
+          }
+        }
+        for(let l=0; l<existing.length; l++){
+            let index = accounted_for.indexOf(l);
+            if(index ==-1){
+              deleted.push(existing[l].vessel_id)
+            }
+        }
+        return{added : added, deleted : deleted}
+      } catch (err) {
+          throw error.error_message("compare", err.message);
+      }
     }
   }
 };

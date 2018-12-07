@@ -63,9 +63,7 @@
                 :error-messages = "user_class_selected_errors"
                 @keyup="$v.user_class_selected.$touch()" 
               ></v-select>
-            <!--FISHER-->
               <!--Network-->
-              <div v-if = "this.user_class_selected =='Fisher'">
                 <v-select
                   :items="network_names"
                   v-model="network_name_form"
@@ -77,18 +75,15 @@
                   v-model="sub_network_name_form"
                   label="Sub-Network"
                 ></v-select>
-                <!--Device-->
+                <!--Vessel-->
                 <v-combobox
-                v-model="device_name_form"
-                :items="device_names"
-                label="Device*"
+                v-model="vessel_name_form"
+                :items="vessel_names"
+                label="Vessel"
                 multiple
                 clearable
                 chips
-                :error-messages = "device_name_form_errors"
-                @keyup="$v.device_name_form.$touch()" 
                 ></v-combobox>
-              </div>
               <div div class="text">
                 {{message}}
               </div>
@@ -190,19 +185,19 @@ mixins: [validationMixin],
 
       networks: [], //A list of all the networks on the lora app server
       sub_networks: [], //A list of all the sub-networks on the lora app server
-      devices: [],  //A list of all the devices on the lora app server
+      vessels: [],  //A list of all the vessels on the database that is not deleted
 
       network_names: [],
       sub_network_names: [],
-      device_names: [],
+      vessel_names: [],
 
       network_name_form: '',
       sub_network_name_form: '',
-      device_name_form: [],
+      vessel_name_form: [],
 
       network_id: '',
       sub_network_id: '',
-      device_euis_selected: [],
+      vessel_ids: [],
 
       message: "",
     };
@@ -226,8 +221,8 @@ mixins: [validationMixin],
           //Error getting sub-networks from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
-        AuthenticationService.get_devices().then(result => {
-          this.devices = JSON.parse(result.data.devices_lora);
+        AuthenticationService.get_vessels(null).then(result => {
+          this.vessels = JSON.parse(result.data.vessels_db);
         }).catch(err => {
           //Error getting the devices from the server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
@@ -252,11 +247,11 @@ mixins: [validationMixin],
       }
     },
     sub_network_name_form: function(){
-      this.device_names = [];
+      this.vessel_names = [];
       this.sub_network_id=functions.extract_id_id_name(this.sub_network_name_form);
-      for(let i = 0; i< this.devices.length; i++){
-        if(this.sub_network_id == this.devices[i].sub_network_id){
-          this.device_names.push(this.sub_network_id.concat(":",this.devices[i].device_name));
+      for(let i = 0; i< this.vessels.length; i++){
+        if(this.sub_network_id == this.vessels[i].sub_network_id){
+          this.vessel_names.push(`${this.vessels[i].id}`.concat(":",this.vessels[i].name));
         }
       }
     }
@@ -312,12 +307,6 @@ mixins: [validationMixin],
       if (!this.$v.user_class_selected.$error)return errors
       !this.$v.user_class_selected.required && errors.push('User class required.')
       return errors;
-    },
-      device_name_form_errors(){
-      const errors=[];
-      if (!this.$v.device_name_form.$error)return errors
-      !this.$v.device_name_form.required && errors.push('Device required. One or multiple.')
-      return errors;
     }
   },
   methods: {
@@ -325,22 +314,14 @@ mixins: [validationMixin],
       this.$v.$touch(); //this will ensure that if the form is submitted before any of the 
       //text fields are used it will still show an error
       if(this.$v.first_name.$invalid || this.$v.last_name.$invalid || this.$v.address.$invalid || this.$v.home_phone.$invalid
-      || this.$v.mobile_phone.$invalid || this.$v.email.$invalid || this.$v.user_class_selected.$invalid || this.$v.device_name_form.$invalid){
+      || this.$v.mobile_phone.$invalid || this.$v.email.$invalid || this.$v.user_class_selected.$invalid ){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
-        for(let i = 0; i < this.device_name_form.length; i++){
-          let sub_network_id_device = functions.extract_id_id_name(this.device_name_form[i]);
-          let device_name_device = functions.extract_name_id_name(this.device_name_form[i]);
-          for(let j =0; j< this.devices.length; j++){
-            if(this.devices[j].sub_network_id == sub_network_id_device){
-              if(this.devices[j].device_name == device_name_device){
-                this.device_euis_selected.push(this.devices[j].device_eui)
-              }
-            }
-          }
+        for(let i = 0; i < this.vessel_name_form.length; i++){
+          this.vessel_ids.push(functions.extract_id_id_name(this.vessel_name_form[i]));
         }
-          AuthenticationService.create_users({
+        AuthenticationService.create_users({
           first_name: this.first_name,
           last_name: this.last_name,
           address: this.address,
@@ -348,15 +329,15 @@ mixins: [validationMixin],
           mobile_phone: this.mobile_phone,
           email: this.email,
           user_class: this.user_class_selected,
-          devices: this.device_euis_selected
+          vessels: this.vessel_ids
         }).then(result => {
           let data = JSON.parse(result.data.users);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('user_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
-        })
-        this.device_euis_selected = [];
+        }) 
+        this.vessel_ids = [];
       }
     },
   }

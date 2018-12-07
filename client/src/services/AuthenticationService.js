@@ -61,10 +61,10 @@ export default {
         return Api.put("update_password", { data });
     },
 
-    get_user_devices(user_email) {//we pick the uri this way because its a software admin ability 
+    get_user_vessels(user_id) {//we pick the uri this way because its a software admin ability 
         //and since in the acl they can view all users we will put users first 
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/users/device/${user_email}`);
+        return Api.get(`/users/vessels/${user_id}`);
     },
 
     //Networks 
@@ -116,11 +116,11 @@ export default {
     },
 
     //Vessels
-    get_vessels(sub_network_id) {//This returns vessels that are not deleted
+    get_vessels(sub_network_id) {//This returns vessels that are not deleted.... set seub_net_id to null to leave it open ended
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/vessels/${sub_network_id}`);
     },
-    get_vessels_db_given_sub_networks(sub_network_id) {//This returns all the vessels in the database
+    get_vessels_db_given_sub_networks(sub_network_id) {//This returns deleted and not deleted vessels in the database under the specified subnet
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/vessels/all/${sub_network_id}`);
     },
