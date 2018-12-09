@@ -73,7 +73,7 @@ export default {
     }
   },
   created: function () {
-    AuthenticationService.get_vessels(null).then(result => {
+    AuthenticationService.get_vessels(null, 0).then(result => {
       this.vessels = JSON.parse(result.data.vessels_db);
       this.$emit('message_display',{message:result.data.message, type:result.data.type})   
     }).catch(err => {

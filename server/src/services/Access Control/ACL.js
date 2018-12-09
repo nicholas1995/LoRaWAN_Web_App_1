@@ -114,8 +114,12 @@ const ACL = {
     vessels: {
       read: "Self"
     },
-    device_data: {
+    devices: {
       read: "Self"
+    },
+    device_data: {
+      read: "Self",
+      export: "Self"
     }
   }
 };

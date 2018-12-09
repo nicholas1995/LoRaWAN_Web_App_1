@@ -1,5 +1,6 @@
 const DB = require('../services/database/vessels_db');
 const DB_VESSEL_DEVICE = require("../services/database/vessel_device_db");
+const DB_USER_VESSEL = require("../services/database/user_vessel_db");
 const VError = require('verror');
 const DEVICE_UPLINK_DB = require('../services/database/device_rx_db')
 
@@ -53,22 +54,18 @@ module.exports = {
         let error_location = null; //1=db
         try{ 
             let vessels_db; 
-            if (req.params.sub_network_id == 'null'){ //will run here when we do not specify a sub_network
-                vessels_db = await DB.get_vessels_not_deleted()
+            if (req.access == "all") {
+                vessels_db = await DB.get_vessels(null, null, req.params.deleted, req.params.sub_network_id)
                     .catch(err => {
-                        //error getting vessels from db
-                        error_location = 1;
-                        throw error_message("get vessels : database", err.message);
+                    throw err;
                     });
-                console.log('Vessels Fetched');
-            }else{
-                vessels_db = await DB.get_vessels_not_deleted_filter_sub_network(req.params.sub_network_id)
+            } 
+            else if(req.access == 'self'){
+                vessels_db = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
                     .catch(err => {
-                        //error getting vessels from db
-                        error_location = 1;
-                        throw error_message("get vessels under specified sub_network : database", err.message);
+                        //Error fetching vessels for user
+                        throw err;
                     });
-                console.log("Vessels Fetched for sub-network id: " + req.params.sub_network_id);
             }
             vessels_db = JSON.stringify(vessels_db);
             res.status(200).send({ vessels_db: vessels_db, message: 'Vessels fetched', type: 'success'});
@@ -84,11 +81,13 @@ module.exports = {
     get_all: async function(req, res){
         try{
             let sub_networks = (req.params.sub_networks);
+            console.log('hereeeeee')
              let vessels = await DB.get_vessels_specified_sub_network(sub_networks)
                 .catch(err => {
                     //Error fetching sub_networks under specified network 
                     throw error.error_message("get vessels : database", err.message);
                 })
+                console.log('vessels')
             vessels = JSON.stringify(vessels);
             res.status(200).send({ vessels: vessels, message: 'Vessels fetched', type: 'success' }); 
         }catch(err){

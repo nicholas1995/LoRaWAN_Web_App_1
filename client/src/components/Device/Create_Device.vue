@@ -322,7 +322,7 @@ export default {
           //Error requesting device profiles from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
-        AuthenticationService.get_vessels(this.sub_network_id).then(result => { //Fetch Vessels
+        AuthenticationService.get_vessels(this.sub_network_id, 0).then(result => { //Fetch Vessels
           let vessels = JSON.parse(result.data.vessels_db); 
           for(let i =0; i< vessels.length; i++){
             this.vessel_names.push(vessels[i].id + ":" +vessels[i].name);

@@ -308,19 +308,6 @@ computed: {
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
-/*         if(this.user_class_selected =='Fisher'){
-          for(let i = 0; i < this.device_name_form.length; i++){
-            let sub_network_id_device = functions.extract_id_id_name(this.device_name_form[i]);
-            let device_name_device = functions.extract_name_id_name(this.device_name_form[i]);
-            for(let j =0; j< this.devices.length; j++){
-              if(this.devices[j].sub_network_id == sub_network_id_device){
-                if(this.devices[j].device_name == device_name_device){
-                  this.device_euis_selected.push(this.devices[j].device_eui)
-                }
-              }
-            }
-          }
-        } */
         for(let i = 0; i < this.vessel_name_form.length; i++){
           this.vessel_ids.push(functions.extract_id_id_name(this.vessel_name_form[i]));
         }
@@ -361,7 +348,7 @@ computed: {
           //Error getting sub-networks from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })
-        await AuthenticationService.get_vessels(null).then(result => {
+        await AuthenticationService.get_vessels(null, 0).then(result => {
           this.vessels = JSON.parse(result.data.vessels_db);
         }).catch(err => {
           //Error getting the vessels from the server

@@ -24,6 +24,32 @@ module.exports = {
         WHERE vessel_id IN (${vessels})`;
     return db.queryAsync(sql);
   },
+  get_device_self: function (user_vessel_info){//This returns all the devices assigned to the specified vessel for the period that the vessel was assigned to the user
+    let sql_where = [];
+    let where = '';
+    let sql = "SELECT vessel_device.*, devices.device_name FROM vessel_device RIGHT JOIN devices ON vessel_device.device_id = devices.id";
+    for(let i = 0; i< user_vessel_info.length; i++){
+      where = `vessel_id = '${user_vessel_info[i].vessel_id}' `
+      if (user_vessel_info[i].date_deleted != null){
+        where= where + `AND date_created < '${user_vessel_info[i].date_deleted}'`; //We want to filter out devices that were added AFTER the user was removed from the vessel. 
+        //Hence we check to see if the date the device was added to the boat is after the date the user was removed from the boat. These devices will not be accessable to the fisher
+      }
+      sql_where.push(where);
+      where = '';
+    }
+    if (sql_where.length > 0) {
+      for (let i = 0; i < sql_where.length; i++) {
+        if (i < sql_where.length - 1) {
+          //will run every time but the last cause we do not want it ending with AND
+          where = where + `(${sql_where[i]}) OR `;
+        } else {
+          where = where + `(${sql_where[i]})`;
+        }
+      }
+      sql = ` ${sql} WHERE ${where}`;
+    }
+    return db.queryAsync(sql);
+  },
   update: function(col, value, condition) {
     let sql = `UPDATE devices
         SET ${col} = '${value}'

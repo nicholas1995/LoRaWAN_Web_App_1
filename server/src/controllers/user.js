@@ -19,6 +19,7 @@ function randomPasswordGenerator() {
 function toJSON(user) {
   //this converts the user data returned from the database query to a json object
   return {
+    id: user[0].id,
     email: user[0].email,
     user_class: user[0].user_class
   };

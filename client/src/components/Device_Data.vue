@@ -10,11 +10,19 @@
             chips
           ></v-combobox>
         </v-flex>
+        <div v-if="this.$store.state.user_class !='Fisher'">
         <network_subnetwork_vessel_device_picker
           @sub_network_id = sub_network_id_function($event)
           @vessel_id = vessel_id_function($event)
           @device_id = device_id_function($event)
         ></network_subnetwork_vessel_device_picker>
+        </div>
+        <div v-else-if="this.$store.state.user_class =='Fisher'">
+        <vessel_device_picker
+          @vessel_id = vessel_id_function($event)
+          @device_id = device_id_function($event)
+        ></vessel_device_picker>
+        </div>
         <v-layout row wrap>
         <!-- Date Picker-->
         <v-flex xs12 sm6 md4>
@@ -60,6 +68,7 @@
 import AuthenticationService from "../services/AuthenticationService.js";
 import date_time_picker from "./Date_Time_Picker";
 import network_subnetwork_vessel_device_picker from "./Network_Subnet_Vessel_Device_Picker";
+import vessel_device_picker from "./Vessel_Device_Picker";
 
 
 
@@ -104,7 +113,8 @@ function return_date_time(date, time){
 export default {
   components:{
     date_time_picker,
-    network_subnetwork_vessel_device_picker 
+    network_subnetwork_vessel_device_picker,
+    vessel_device_picker
 
   },
   data(){

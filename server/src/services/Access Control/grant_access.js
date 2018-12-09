@@ -17,7 +17,6 @@ module.exports = function(req, res, next){
         next()
     }else if(access == 'self'){
         req.access = 'self';
-        console.log('here');
         next();
         //res.status(403).send({error:"Do not have access!"}); //HAVE BUG HERE... NEED TO HAVE A SPECIAL next() FOR IF USER HAS ACCESS TO SELF ALONE
     }else{

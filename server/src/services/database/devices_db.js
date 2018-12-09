@@ -7,6 +7,38 @@ module.exports = {
         FROM devices`;
     return db.queryAsync(sql);
   },
+  get_device: function (id, device_eui, device_name, sub_network_id, deleted){
+    let sql_where = [];
+    let where = '';
+    let sql = "SELECT *  FROM devices ";
+    if (id != null && id != 'null') {
+      sql_where.push(`id = '${id}'`);
+    }
+    if (device_eui != null && device_eui != "null") {
+      sql_where.push(`device_eui = '${device_eui}'`);
+    }
+    if (device_name != null && device_name != "null") {
+      sql_where.push(`device_name = '${device_name}'`);
+    } 
+    if (sub_network_id != null && sub_network_id != "null") {
+      sql_where.push(`sub_network_id = '${sub_network_id}'`);
+    }
+    if (deleted != null && deleted != "null") {
+      sql_where.push(`deleted = '${deleted}'`);
+    }
+    if (sql_where.length > 0) {
+      for (let i = 0; i < sql_where.length; i++) {
+        if (i < sql_where.length - 1) {
+          //will run every time but the last cause we do not want it ending with AND
+          where = where + `${sql_where[i]} AND `;
+        } else {
+          where = where + `${sql_where[i]}`;
+        }
+      }
+      sql = ` ${sql} WHERE ${where}`;
+    }
+    return db.queryAsync(sql);
+  },
   get_not_deleted: function () {
     let sql = `SELECT *
         FROM devices

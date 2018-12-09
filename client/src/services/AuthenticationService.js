@@ -116,11 +116,12 @@ export default {
     },
 
     //Vessels
-    get_vessels(sub_network_id) {//This returns vessels that are not deleted.... set seub_net_id to null to leave it open ended
+    get_vessels(sub_network_id, deleted) {//This returns vessels. set sub_net to null to leave open ended.. deleted to null for both.... deleted to 0 for not deleted.. deleted to 1 for deleted
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/vessels/${sub_network_id}`);
+        return Api.get(`/vessels/${sub_network_id}/${deleted}`);
     },
     get_vessels_db_given_sub_networks(sub_network_id) {//This returns deleted and not deleted vessels in the database under the specified subnet
+        //NEED TO REMOVE
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/vessels/all/${sub_network_id}`);
     },
@@ -148,9 +149,14 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/device/${device_eui}`);
     },
+    get_devices_self(vessel_info) { //THis is used for the fishers or for self data to ensure that only ur devices show up in the drop down menu
+        vessel_info = JSON.stringify(vessel_info);
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/self/${vessel_info}`);
+    },
     get_devices_db_given_vessels(vessels) {//This returns ALL the devices associated with the selected vessels from the database
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/device/database/${vessels}`);
+        return Api.get(`/devices/database/${vessels}`);
     },
     create_devices(data) {
         data = JSON.stringify(data);

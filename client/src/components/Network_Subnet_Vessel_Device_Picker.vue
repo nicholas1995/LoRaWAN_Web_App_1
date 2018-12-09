@@ -197,12 +197,12 @@ export default {
         for(let i = 0; i< this.sub_network_name_form.length; i++){
           this.sub_network_id.push(functions.extract_id_id_name(this.sub_network_name_form[i]))
         }
-        this.vessels = await AuthenticationService.get_vessels_db_given_sub_networks(this.sub_network_id)
+        this.vessels = await AuthenticationService.get_vessels(this.sub_network_id, null)
           .catch(err => {
             //Error fetching sub_networks specified by network from server
             console.log(err)
           })
-        this.vessels = JSON.parse(this.vessels.data.vessels);
+        this.vessels = JSON.parse(this.vessels.data.vessels_db);
         for(let j = 0; j < this.vessels.length; j++){
           this.vessel_names.push(this.vessels[j].id +":"+this.vessels[j].name);
         }

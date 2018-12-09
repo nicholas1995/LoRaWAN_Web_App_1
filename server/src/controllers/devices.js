@@ -291,6 +291,22 @@ module.exports = {
             res.status(500).send({ message: "Failed to get device", type: 'error' });
         }
     },
+    get_self: async function (req, res) {
+        try {
+            let user_vessel_info = JSON.parse(req.params.user_vessel_info);
+             let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info)
+                .catch(err => {
+                    //Error getting vessel device relationships currently implemented
+                    error_location = 2; 
+                    throw error.error_message("get devices : getting vessel devices relationships : database", err.message);
+                });
+            devices = JSON.stringify(devices);
+            res.status(200).send({ devices: devices, message: 'Devices fetched', type: 'success' }); 
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ message: "Failed to get device", type: 'error' });
+        }
+    },
     create: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         let devices_lora;

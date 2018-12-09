@@ -98,7 +98,7 @@ module.exports = ((app) => {
 
     //----------------------Vessels-----------------
     //Vessels (Read)
-    app.get("/vessels/:sub_network_id", authenticate, grant_access, vessels.get);
+    app.get("/vessels/:sub_network_id/:deleted", authenticate, grant_access, vessels.get);
 
     //Vessels (Read vessels from the database under specified sub_network. This returns deleted and not deleted vessels)
     app.get("/vessels/all/:sub_networks", authenticate, grant_access, vessels.get_all);
@@ -120,7 +120,10 @@ module.exports = ((app) => {
     app.get("/device/:device_eui", authenticate, grant_access, devices.get_one);
 
     //Device (Read all under specified vessel from db)
-    app.get("/device/database/:vessels", authenticate, grant_access, devices.get_database);
+    app.get("/devices/self/:user_vessel_info", authenticate, grant_access, devices.get_self);
+
+    //Device (Read all under specified vessel from db)
+    app.get("/devices/database/:vessels", authenticate, grant_access, devices.get_database);
 
     //Devices (Create)
     app.post("/devices", authenticate, grant_access, device_policy.create, devices.create); //need to add in device validation
