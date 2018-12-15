@@ -116,7 +116,7 @@ export default {
         for(let j = 0; j < this.devices.length; j++){
           this.device_names.push(this.devices[j].device_id +":"+this.devices[j].device_name);
         }
-      }
+      }console.log(this.vessel_id)
       this.$emit('vessel_id', this.vessel_id)
     },
     device_name_form: async function(){

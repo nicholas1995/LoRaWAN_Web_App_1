@@ -1,4 +1,5 @@
 const DB = require("../services/database/device_rx_db");
+const DB_USER_VESSEL = require ("../services/database/user_vessel_db")
 const error = require("../services/errors");
 const VError = require("verror");
 
@@ -134,6 +135,52 @@ module.exports = {
             console.log(err);
         }
     },
+    get_self: async function (req, res) {
+        let headers;
+        try {
+            let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
+                .catch(err => {
+                    //Error fetching vessels for user
+                    throw err;
+                });
+        let sql_where = [];
+        let where = '';
+            let sql = `SELECT * FROM device_rx `;;
+            for (let i = 0; i < user_vessels.length; i++){
+                if(user_vessels[i].date_deleted == null){
+                    sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                }else{
+                    sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                    sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
+                }
+                sql_where.push(`vessel_id = '${user_vessels[i].vessel_id}'`);
+                where = `${where} (`;
+                for (let j = 0; j < sql_where.length; j++) {
+                    if (j < sql_where.length - 1) {
+                        //will run every time but the last cause we do not want it ending with AND
+                        where = where + `${sql_where[j]} AND `;
+                    } else {
+                        where = where + `${sql_where[j]}`;
+                    }
+                }
+                if ( i != user_vessels.length-1) {where = `${where}) OR`}
+                else { where = `${where})`}
+                sql_where=[];
+            }
+            sql = ` ${sql} WHERE ${where} ORDER BY time_stamp DESC`
+        let device_data = await DB.get_specified_parameters(sql)
+            .catch(err => {
+                throw err;
+            }) 
+            headers = header(device_data[0]);
+            device_data = convert_dates(device_data);
+            device_data = JSON.stringify(device_data);
+            headers = JSON.stringify(headers);
+            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+        } catch (err) {
+            console.log(err);
+        }
+    },
     get_filtered: async function(req, res){
         let sql_where = [];
         let where = '';
@@ -142,6 +189,7 @@ module.exports = {
         try {
             let parameters = JSON.parse(req.params.parameters); 
             let columns = req.params.columns
+            console.log(columns)
             if (columns) {
                 columns = convert_from_ui_to_db(columns);
                 sql = `SELECT ${columns} FROM device_rx `;

@@ -166,6 +166,9 @@ module.exports = ((app) => {
     //Device (Initial fetch)
     app.get("/devices/uplink/initial", authenticate, grant_access, device_data.get);
 
+    //Device (Initial fetch self)
+    app.get("/devices/uplink/initial/self", authenticate, grant_access, device_data.get_self);
+
     //Device (Filtered) 
     app.get("/devices/rx/:parameters/:columns", authenticate, grant_access, device_data.get_filtered);
 

@@ -53,11 +53,13 @@
             style="max-height: 700px; overflow-y: auto"
           >
         <template slot="items" slot-scope="myprops">
+          <tr style="height: 30px;"> 
         <td v-for="header in display"
         :key="header.text"
-        :class="['column sortable text-xs-left', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']">
+        :class="['column sortable text-xs-left ', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']">
         {{ myprops.item[header.value] }}
         </td>
+          </tr>
       </template>
     </v-data-table>
   </v-content>
@@ -139,7 +141,9 @@ export default {
 
         sub_network_id: null,
         vessel_id: null,
-        device_id: null
+        device_id: null,
+
+        self: 0 //This will be set high if the data user class user wants to view vessles assigned to them 
     }
   },
   props: [
@@ -154,12 +158,22 @@ export default {
             throw err;
           });
         this.access =1;
-        let result = await AuthenticationService.get_device_data_initial()
-        .catch(err => {
-          //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-          throw err;
-          })
+        let result;
+        if(this.$store.state.user_class !='Fisher' && this.self ==0){
+          result = await AuthenticationService.get_device_data_initial()
+          .catch(err => {
+            //Error getting the devices from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            })
+        }else{
+          result = await AuthenticationService.get_device_data_initial_self()
+          .catch(err => {
+            //Error getting the devices from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            })
+        }
         this.device_data = JSON.parse(result.data.device_data);
         this.headers =  JSON.parse(result.data.headers);
         for(let i =0; i< this.headers.length; i++){
@@ -242,6 +256,7 @@ export default {
       link.click();
     },
     generate_function: async function(){
+      //console.log(this.vessel_id)
       this.loading = true;
       this.start_date_time = return_date_time(this.start_date, this.start_time);
       this.end_date_time =return_date_time(this.end_date, this.end_time);
@@ -316,5 +331,8 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+table.v-table tbody td, table.v-table tbody th {
+    height: 20px;
+}
 </style>
  

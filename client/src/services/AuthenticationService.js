@@ -233,6 +233,10 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/initial`);
     },
+    get_device_data_initial_self() {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/uplink/initial/self`);
+    },
     get_device_data(pagination){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/${pagination.sortBy}/${pagination.descending}`);

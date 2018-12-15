@@ -142,7 +142,7 @@
               </div>
               <!-- Buttons -->
               <v-btn class="grey lighten-2"
-                @click.stop="create_gateway()">
+                @click.stop="update_gateway()">
                 Update Gateway
               </v-btn>
               <v-btn class="grey lighten-2"
@@ -444,7 +444,7 @@ export default {
     });
   },
   methods: {
-    create_gateway(){
+    update_gateway(){
       this.$v.$touch();
       if(this.$v.gateway_name.$invalid || this.$v.description.$invalid 
       || this.$v.network_server_name_form.$invalid || this.$v.gateway_profile_name_form.$invalid 
