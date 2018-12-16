@@ -137,6 +137,16 @@ module.exports = ((app) => {
     //Devices (Delete)
     app.delete("/devices/:device_eui", authenticate, grant_access, devices.delete);
 
+    //----------------------Device Activation-----------------
+    //Device Activation (Read)
+    app.get("/devices/activation/:device_eui", authenticate, grant_access, devices.get_devices_activation);
+
+    //Device Activation (Create)
+    app.post("/devices/activation/:device_eui", authenticate, grant_access, devices.create_devices_activation);
+
+    //Device Activation (Delete)
+    app.delete("/devices/activation/:device_eui", authenticate, grant_access, devices.delete_devices_activation);
+
     //----------------------Gateways-----------------
     //Gateways (Read)
     app.get("/gateways", authenticate, grant_access, gateways.get);

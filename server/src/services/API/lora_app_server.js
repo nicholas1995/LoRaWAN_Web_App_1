@@ -83,6 +83,25 @@ module.exports = {
     return instance.delete(`/api/devices/${device_eui}`);
   },
 
+  //------------------------Device Activation------------------------
+  //---------Read---------
+  get_devices_activation: function (device_eui) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/devices/${device_eui}/activation`);
+  },
+
+  //---------Create---------
+  create_devices_activation: function (data, device_eui) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.post(`/api/devices/${device_eui}/activate`, data);
+  },
+
+  //---------Delete---------
+  delete_devices_activation: function (device_eui) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.delete(`/api/devices/${device_eui}/activation`);
+  },
+
   //------------------------Gateways------------------------
   //---------Read---------
   get_gateways: function(data) {

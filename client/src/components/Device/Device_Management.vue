@@ -26,25 +26,38 @@
     >
       <template slot="items" slot-scope="props">
           <td class="justify-center layout px-0">
+            <!-- Update Device -->
             <v-tooltip bottom>
               <v-icon slot="activator"
                 small
-                class="mr-2 pt-3"
+                class="mr-3 pt-3"
                 @click.stop="$emit('update_device',{'device_update':props.item,'devices':devices})"
               >
                 edit
               </v-icon>
             <span>Edit {{props.item.device_name}}</span>
             </v-tooltip>
+            <!-- Delete Device -->
             <v-tooltip bottom>
               <v-icon slot="activator"
                 small
-                class="pt-3"
+                class="mr-3 pt-3"
                 @click="delete_device(props.item)"
               >
                 delete
               </v-icon>
               <span>Delete {{props.item.device_name}}</span>
+            </v-tooltip>
+            <!-- Activate Device -->
+            <v-tooltip bottom>
+              <v-icon slot="activator"
+                small
+                class="pt-3"
+                @click.stop="$emit('activate_device',{'device_activate':props.item,'devices':devices})"
+              >
+                power_settings_new
+              </v-icon>
+              <span>Activate {{props.item.device_name}}</span>
             </v-tooltip>
           </td>
           <td class="text-xs-left">{{ props.item.device_id }}</td>

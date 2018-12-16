@@ -52,6 +52,19 @@ function device_api_request_data(data, type) {
                 "skipFCntCheck": data.skip_frame_counter
             }
         }
+    } else if (type == 3) {//Device Activation form 
+        request = {
+            "deviceActivation": {
+                "devEUI": `${data.device_eui}`,
+                "devAddr": `${data.dev_addr}`,
+                "appSKey": `${data.app_s_key}`,
+                "nwkSEncKey": `${data.nwk_s_enc_key}`,
+                "sNwkSIntKey": `${data.nwk_s_enc_key}`,
+                "fNwkSIntKey": `${data.nwk_s_enc_key}`,
+                "fCntUp": data.f_cnt_up,
+                "nFCntDown": data.n_f_cnt_down
+            }
+        }
     }
     return request;
 }
@@ -127,6 +140,21 @@ function convert_name_device_single(result) {
     return device;
 }
 
+function convert_names_device_activation(result) {
+  let device_activation = {
+      device_eui: result.deviceActivation.devEUI,
+      dev_addr: result.deviceActivation.devAddr,
+      app_s_key: result.deviceActivation.appSKey,
+      nwk_s_enc_key: result.deviceActivation.nwkSEncKey,
+      f_cnt_up: result.deviceActivation.fCntUp,
+      n_f_cnt_down: result.deviceActivation.nFCntDown,
+    /*      s_nwk_s_int_key: result.deviceActivation.sNwkSIntKey:,
+            f_nwk_s_int_key: result.deviceActivation.fNwkSIntKey:,
+            a_f_cnt_down: result.deviceActivation.aFCntDown:,     */
+  };
+    return device_activation;
+}
+
 async function get_devices(){
     try{
         let request_params = device_api_request_data(null, 0);
@@ -142,6 +170,21 @@ async function get_devices(){
         throw err;
     }
 }
+async function get_device_activation(device_eui) {
+    try {
+        let device_activation = await lora_app_server.get_devices_activation(device_eui)
+            .catch(err => {
+                //Error getting device activation from lora app server
+                let error = new VError("%s", err.message);
+                throw error;
+            });
+        device_activation = convert_names_device_activation(device_activation.data);
+        return device_activation;
+    } catch (err) {
+        throw err;
+    }
+}
+
 function parse_vessel_to_device_data(vessel_device, devices_lora, devices_db) {
     try {
         for (let i = 0; i < devices_lora.length; i++){
@@ -325,7 +368,7 @@ module.exports = {
                     throw error.error_message("create device : lora app server", err.message);
                 }); 
             console.log("Devices fetched from lora app server");
-            await db.create(data.device_eui, data.device_name, data.sub_network_id)
+            await db.create(data.sub_network_id, data.device_profile_id, data.device_eui, data.device_name, data.device_description)
                 .catch(err => {
                     //Error creating device on database
                     error_location = 2;
@@ -339,7 +382,7 @@ module.exports = {
                     throw error.error_message("create device : vessel device relationship : database", err.message);
                 });
             if(data.vessel_id){ //Device assigned to vessel 
-                await DB_VESSEL_DEVICE.create(device_added[0].id, data.device_eui, data.vessel_id)
+                await DB_VESSEL_DEVICE.create(device_added[0].device_id, data.device_eui, data.vessel_id)
                     .catch(err => {
                         //Error creating relationship between vessel and device
                         error_location = 4;
@@ -347,7 +390,7 @@ module.exports = {
                     });
                 console.log("Device vessel relationship created");
             }else{ //Device not assigned to vessel so it will be assigned to the default vessel
-                await add_device_to_default_vessel(device_added[0].id, data.device_eui, data.sub_network_id)
+                await add_device_to_default_vessel(device_added[0].device_id, data.device_eui, data.sub_network_id)
                     .catch(err => {
                         //Error creating vessel device relationship 
                         throw error_message("create vessel device relationship : database", err.message);
@@ -549,5 +592,38 @@ module.exports = {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
         }
+    },
+    get_devices_activation: async function (req, res){
+        try{
+            let device_activation = await get_device_activation(req.params.device_eui)
+            .catch(
+              err => {
+                //Error getting device activation from lora app server
+                    throw error.error_message("get device activation : lora app server", err.message);
+              });
+            device_activation = JSON.stringify(device_activation);
+            res.status(200).send({ device_activation: device_activation, message: 'Device Activation fetched.', type: 'success' });
+        }catch(err){
+            console.log(err);
+        }
+
+
+    },
+    create_devices_activation: async function (req, res) {
+        try{
+            let data = JSON.parse(req.body.data);
+            let request_data = device_api_request_data(data, 3);
+            await lora_app_server.create_devices_activation(request_data, req.params.device_eui)
+                .catch(err => {
+                    //Error creating device activation on lora app server
+                    throw error.error_message("create device activation : lora app server", err.message);
+                })
+            res.status(200).send({message: 'Device activated.', type: 'success' });
+        }catch(err){
+            res.status(200).send({message: "Device activation failed.", type: 'error' })
+        }
+    },
+    delete_devices_activation: async function (req, res) {
+
     }
 }

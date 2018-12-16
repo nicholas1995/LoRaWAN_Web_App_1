@@ -2,13 +2,16 @@
   <v-content v-if="this.access == 1">
     <div> 
       <div v-show="this.read== 1">
-        <device_management v-bind:devices_prop='this.devices' @create_device=" create_device($event)" @update_device="update_device($event)" @message_display="message_display($event)"></device_management>
+        <device_management v-bind:devices_prop='this.devices' @create_device=" create_device($event)" @update_device="update_device($event)" @activate_device="activate_device($event)" @message_display="message_display($event)"></device_management>
       </div>
       <div v-if="this.create == 1">
         <create_device v-bind:devices_prop='this.devices' @device_management= read_device($event) @device_management_no_change="cancel() " @message_display="message_display($event)"></create_device>
       </div>
       <div v-else-if="this.update== 1">
         <update_device v-bind:devices_prop='this.devices' v-bind:device_update='this.device_update' @device_management= read_device($event) @device_management_no_change="cancel()" @message_display="message_display($event)"></update_device>  <!--Dynamically passing prop to child component -->
+      </div>
+      <div v-else-if="this.activate== 1">
+        <activate_device v-bind:devices_prop='this.devices' v-bind:device_activate='this.device_activate' @device_management= read_device(null) @device_management_no_change="cancel()" @message_display="message_display($event)"></activate_device>  <!--Dynamically passing prop to child component -->
       </div>
     </div>
     <v-snackbar
@@ -37,12 +40,15 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import device_management from './Device_Management'
 import create_device from './Create_Device'
 import update_device from './Update_Device'
+import activate_device from './Activate_Device'
+
 
 export default {
   components:{
     device_management,
     create_device,
-    update_device
+    update_device,
+    activate_device
   },
   data(){
     return {
@@ -50,8 +56,10 @@ export default {
       create: 0,
       read: 0,
       update: 0,
+      activate: 0,
       devices: null,
       device_update: null,
+      device_activate: null,
       snackbar:0,
       timeout: 1500,
       color: "error",
@@ -97,12 +105,14 @@ export default {
       this.create =1;
       this.read =0;
       this.update =0;
+      this.activate =0;
     },
     read_device(data){
-      this.devices = data
+      if(data != null){this.devices = data}
       this.create =0;
       this.read =1;
       this.update =0;
+      this.activate =0;
     },
     update_device(data){
       this.devices = data.devices;
@@ -110,11 +120,21 @@ export default {
       this.create =0;
       this.read =0;
       this.update =1;
+      this.activate =0;
+    },
+    activate_device(data){
+      this.devices = data.devices;
+      this.device_activate = data.device_activate;
+      this.create =0;
+      this.read =0;
+      this.update =0;
+      this.activate =1;
     },
     cancel(){//This was created so the prop is not updated with an empty array
       this.create =0;
       this.read =1;
       this.update =0;
+      this.activate =0;
     },
     login(){
       this.$router.push('dashboard');

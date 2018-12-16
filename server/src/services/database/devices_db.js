@@ -48,8 +48,8 @@ module.exports = {
   get_newest: function() {
     //this returns the most recently added deivce
     let sql = `SELECT 
-        MAX(id)
-        AS id
+        MAX(device_id)
+        AS device_id
         FROM device`;
     return db.queryAsync(sql);
   },
@@ -59,10 +59,10 @@ module.exports = {
         WHERE device_eui = '${condition}'`;
     return db.queryAsync(sql);
   },
-  create: function (sub_network_id, device_profile_id, device_eui, device_name, device_description, device_deleted) {
+  create: function (sub_network_id, device_profile_id, device_eui, device_name, device_description) {
     let sql = `INSERT INTO device
-        (sub_network_id, device_profile_id, device_eui, device_name, device_description, device_deleted)
-        VALUES ('${sub_network_id}', '${device_profile_id}', '${device_eui}', '${device_name}', '${device_description}', '${device_deleted}')`;
+        (sub_network_id, device_profile_id, device_eui, device_name, device_description)
+        VALUES ('${sub_network_id}', '${device_profile_id}', '${device_eui}', '${device_name}', '${device_description}')`;
     return db.queryAsync(sql);
   },
   update_networks_all_parameters: function(data, device_eui) {
