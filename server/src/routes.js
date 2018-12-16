@@ -84,6 +84,9 @@ module.exports = ((app) => {
     //Sub_Networks (Read)
     app.get("/sub_networks", authenticate, grant_access, sub_networks.get);
 
+    //Sub_Networks (Read one)
+    app.get("/sub_networks/one/:sub_network_id", authenticate, grant_access, sub_networks.get_one);
+
     //Sub_Networks (Read subnetworks from database under specified network)
     app.get("/sub_networks/database/:networks", authenticate, grant_access, sub_networks.get_sub_subnetworks_database_specified_networks);
 

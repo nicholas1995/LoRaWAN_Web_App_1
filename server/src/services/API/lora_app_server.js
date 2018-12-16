@@ -7,7 +7,7 @@ const instance = axios.create({
 let token =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJsb3JhLWFwcC1zZXJ2ZXIiLCJleHAiOjE3MTYyMzkwNTAsImlzcyI6ImxvcmEtYXBwLXNlcnZlciIsIm5iZiI6MTU0MTM1ODQ0OCwic3ViIjoidXNlciIsInVzZXJuYW1lIjoiYWRtaW4ifQ.283SFXl8zV4IirYWAYuw5wl8x5iz5ZvGR1H8kz6LkmQ";
 module.exports = {
-  //------------------------Organizations------------------------
+  //------------------------Network------------------------
   //---------Read---------
   get_organizations: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
@@ -29,11 +29,16 @@ module.exports = {
     return instance.delete(`/api/organizations/${id}`);
   },
 
-  //------------------------Applications------------------------
+  //------------------------Sub-Network------------------------
   //---------Read---------
   get_applications: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.get(`/api/applications?limit=${data.limit}`);
+  },
+  //---------Read ONE---------
+  get_application_one: function(sub_network_id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/applications/${sub_network_id}`);
   },
   //--------- Create---------
   create_applications: function(data) {

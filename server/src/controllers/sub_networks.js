@@ -23,7 +23,7 @@ function sub_network_api_request_data(data, type) {
                 "description": `${data.description}`,
                 "name": `${data.sub_network_name}`,
                 "organizationID": `${data.network_id}`,
-                "payloadCodec": "string", //NEED TO GET THE NAME OF THE CODEC
+                "payloadCodec": `${data.payload_codec}`,
                 //"payloadDecoderScript": "string",
                 //"payloadEncoderScript": "string",
                 "serviceProfileID": `${data.service_profile_id}`
@@ -35,7 +35,7 @@ function sub_network_api_request_data(data, type) {
                 "description": `${data.description}`,
                 "name": `${data.sub_network_name}`,
                 "organizationID": `${data.network_id}`,
-                //"payloadCodec": "string", //NEED TO GET THE NAME OF THE CODEC
+                "payloadCodec": `${data.payload_codec}`,
                 //"payloadDecoderScript": "string",
                 //"payloadEncoderScript": "string",
                 "serviceProfileID": `${data.service_profile_id}`
@@ -94,6 +94,20 @@ function convert_names_sub_networks(sub_networks){
     return sub_networks_return;
 }   
 
+function convert_name_sub_network_single(result) {
+    let sub_network = {
+        sub_network_id: result.application.id,
+        description: result.application.description,
+        sub_network_name: result.application.name,
+        network_id: result.application.organizationID,
+        service_profile_id: result.application.serviceProfileID,
+        payload_codec: result.application.payloadCodec,
+    }
+    if (sub_network.payload_codec == 'CAYENNE_LPP') { sub_network.payload_codec = 'Cayenne LPP'}
+    else { sub_network.payload_codec = 'None'}
+    return sub_network;
+}
+
 module.exports = {
     get: async function(req, res){
         let error_location = null; //0=lora, 1=db
@@ -133,6 +147,22 @@ module.exports = {
             }
         }
     },
+    get_one: async function (req, res) {
+        try {
+            let sub_network = await lora_app_server.get_application_one(req.params.sub_network_id)
+                .catch(err => {
+                    //Error getting sub-network from lora app server
+                    throw error.error_message("get sub-network : lora app server", err.message);
+                }
+                );
+            sub_network = convert_name_sub_network_single(sub_network.data);
+            sub_network = JSON.stringify(sub_network);
+            res.status(200).send({ sub_network });
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ message: "Failed to get sub-network", type: 'error' });
+        }
+    },
     get_sub_subnetworks_database_specified_networks: async function(req, res){
         try{
             let networks = (req.params.networks);
@@ -166,7 +196,7 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("create sub-network : lora app server", err.message);
                 })
-            await db.create_sub_network(result.data.id, data.sub_network_name, data.network_id)
+            await db.create_sub_network(result.data.id, data.network_id, data.service_profile_id, data.sub_network_name, data.description)
                 .catch(err => {
                     //Error creating sub network in database 
                     error_location = 2;
@@ -216,7 +246,7 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("update sub-network : lora app server", err.message);
                 });
-            await db.update("name", data.sub_network_name, req.params.sub_network_id)
+            await db.update_sub_networks_all_parameters(data, req.params.sub_network_id)
                 .catch(err => {
                     //Error updating sub network record in the database
                     error_location = 2;
@@ -256,7 +286,7 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("delete sub-network : lora app server", err.message);
                 });
-            await db.update('deleted', 1, req.params.sub_network_id)
+            await db.update('sub_network_deleted', 1, req.params.sub_network_id)
                 .catch(err => {
                     //Error deleting subnetwork from the database
                     error_location = 2;

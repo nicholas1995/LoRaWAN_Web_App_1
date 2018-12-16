@@ -136,7 +136,7 @@ export default {
     AuthenticationService.get_networks_database().then(result => {
       this.networks = JSON.parse(result.data.networks_db);
       for(let i = 0; i < this.networks.length; i++){
-        this.network_names.push(this.networks[i].id.concat(":",this.networks[i].name));
+        this.network_names.push(this.networks[i].network_id.concat(":",this.networks[i].network_name));
       }
     }).catch(err => {
       //Error getting networks from server
@@ -172,7 +172,7 @@ export default {
           })
         this.sub_networks = JSON.parse(this.sub_networks.data.sub_networks);
         for(let i = 0; i < this.sub_networks.length; i++){
-          this.sub_network_names.push(this.sub_networks[i].id.concat(":",this.sub_networks[i].name));
+          this.sub_network_names.push(this.sub_networks[i].sub_network_id.concat(":",this.sub_networks[i].sub_network_name));
         }
         for(let i = 0; i < this.sub_networks.length; i++){ //will get the ids of the subnets under the selected network and emit it. If generate is pressed these ids will be used to filter the data
           this.sub_network_id.push(this.sub_networks[i].id);

@@ -80,42 +80,41 @@ module.exports = {
         }
     }, 
     compare_sub_networks: async function(lora, db){
-        let i;
         let accounted_for =[];
         let added_lora = [];
         try{
-            for(i=0; i<lora.length; i++){
-                let j;
+            for(let i=0; i<lora.length; i++){
                 if(db.length ==0){
                     added_lora.push(i);
                     //console.log('Sub-Network Added');
                 }
-                for(j =0; j<db.length; j++){
-                    if(lora[i].sub_network_id==db[j].id){
-                        if(lora[i].sub_network_name==db[j].name){
-                            accounted_for.push(j);
-                            //console.log('Same Information');
-                            break;
-                        }else if(lora[i].sub_network_name!=db[j].name){
-                            await sub_network_db.update('name', lora[i].sub_network_name, lora[i].sub_network_id)
-                            .catch(err => {
-                                throw error.error_message(`update: ID-${lora[i].sub_network_id}`, err.message);
-                            })
-                            accounted_for.push(j);
+                for(let j =0; j<db.length; j++){
+                    if (lora[i].sub_network_id == db[j].sub_network_id){
+                        if (lora[i].sub_network_name != db[j].sub_network_name) {
+                            await sub_network_db.update('sub_network_name', lora[i].sub_network_name, lora[i].sub_network_id)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].sub_network_id}`, err.message);
+                                })
                             //console.log('Different name');
-                            break;
+                        } if (lora[i].sub_network_description != db[j].sub_network_description) {
+                            await sub_network_db.update('sub_network_description', lora[i].description, lora[i].sub_network_id)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].sub_network_id}`, err.message);
+                                })
+                            //console.log('Different name');
                         }
-                    } 
-                    else if(j ==(db.length-1)){
+                        accounted_for.push(j);
+                        break;
+                    } else if(j ==(db.length-1)){
                         added_lora.push(i);
                         //console.log('Sub-Network Added');
-                    }else if(lora[i].sub_network_id!=db[j].id){
+                    } else if(lora[i].sub_network_id!=db[j].id){
                     }
                 }
-            }
-            let k;
-            for(k =0; k< added_lora.length; k++){
-                await sub_network_db.create_sub_network(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].sub_network_name, lora[added_lora[k]].network_id)
+            } 
+            for(let k =0; k< added_lora.length; k++){
+                await sub_network_db.create_sub_network(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].network_id, lora[added_lora[k]].service_profile_id,
+                    lora[added_lora[k]].sub_network_name, lora[added_lora[k]].description)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].sub_network_id}`, err.message);
                     })
@@ -125,16 +124,15 @@ module.exports = {
                     });
                 //console.log('Inserted Added Sub-Network');
             }
-            let l;
-            for(l=0; l<db.length; l++){
+            for(let l=0; l<db.length; l++){
                 let index = accounted_for.indexOf(l);
                 if(index ==-1){
-                    await sub_network_db.update('deleted', 1, db[l].id)
+                    await sub_network_db.update('sub_network_deleted', 1, db[l].sub_network_id)
                         .catch(err => {
                             //Error deleting sub-network
                             throw error.error_message(`delete: ID-${db[l].id}`, err.message);
                         })
-                    await VESSEL_CONTROLLER.delete_vessel_given_sub_network_id(db[l].id)
+                    await VESSEL_CONTROLLER.delete_vessel_given_sub_network_id(db[l].sub_network_id)
                         .catch(err => {
                             //Error deleting vessels under selected subnetwork
                             throw error.error_message("delete sub-network : delete vessel ", err.message);

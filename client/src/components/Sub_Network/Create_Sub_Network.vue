@@ -53,6 +53,14 @@
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_service_profile"></tool_tips_forms>
               </v-select>
+            <!--Payload Codec-->
+              <v-select
+                v-model="payload_codec_form"
+                :items="this.payload_codec"
+                label="Payload Codec*"
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_payload_codec"></tool_tips_forms>
+              </v-select>
               <!-- Message -->
               <div div class="text">
                 {{message}}
@@ -80,7 +88,7 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
-import {description_sub_network_name, description_sub_network_descripton, description_sub_network_network_name, description_sub_network_service_profile} from "../../services/functions/form_descriptions_tool_tips.js";
+import {description_sub_network_name, description_sub_network_descripton, description_sub_network_network_name, description_sub_network_service_profile, description_sub_network_payload_codec} from "../../services/functions/form_descriptions_tool_tips.js";
 import tool_tips_forms from "../Tool_Tip_Forms";
 
 
@@ -122,6 +130,9 @@ export default {
     },      
     service_profile_form: {
       required,
+    },
+    payload_codec_form: {
+      required,
     }
   },
   computed: {
@@ -158,6 +169,8 @@ export default {
     return {
       sub_network_name: '',
       description: '',
+      payload_codec: ['Cayenne LPP', 'None'],
+      payload_codec_form: 'None',
       network_name_form: '', //this is the variable that holds the selected network 'id-name'
       service_profile_form: '', //this is the variable that holds the selected service profile 'id-name'
       network_id: '', //this is the variable that holds the id of the selected network
@@ -171,6 +184,8 @@ export default {
       description_sub_network_descripton : description_sub_network_descripton,
       description_sub_network_network_name : description_sub_network_network_name,
       description_sub_network_service_profile : description_sub_network_service_profile,
+      description_sub_network_payload_codec : description_sub_network_payload_codec,
+
     };
   },
   props:[
@@ -217,11 +232,15 @@ export default {
       }else{
         this.message = "";
         this.service_profile_id=functions.extract_id_name_id(this.service_profile_form);//Extract id of service profile
+
+        if(this.payload_codec_form == 'Cayenne LPP') {this.payload_codec_form = 'CAYENNE_LPP'}
+        else{this.payload_codec_form = ''}
         AuthenticationService.create_sub_networks({
           sub_network_name: this.sub_network_name,
           description: this.description,
           network_id: this.network_id,
-          service_profile_id: this.service_profile_id
+          service_profile_id: this.service_profile_id,
+          payload_codec: this.payload_codec_form
         }).then(result => {
           let data = JSON.parse(result.data.sub_networks_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  

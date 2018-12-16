@@ -9,6 +9,7 @@ module.exports = {
             description: Joi.string().required().max(200),
             network_id: Joi.number().required(),
             service_profile_id: Joi.string().required(),
+            payload_codec: Joi.string().required().allow(''),
         }
         const { error, value } = Joi.validate(data, schema)
         if (error) {
@@ -29,6 +30,10 @@ module.exports = {
                 console.log('service_profile_id')
                     res.status(422).send({error:'Invalid Service Profile ID'});
                     break;
+                case 'payload_codec':
+                    console.log('payload_codec')
+                    res.status(422).send({ error: 'Invalid Payload Codec' });
+                    break;
                 default:
                 console.log('dfgsdfg')
                     res.status(422).send({error:'Invalid Information'});
@@ -45,6 +50,7 @@ module.exports = {
             description: Joi.string().required().max(200),
             network_id: Joi.number().required(),
             service_profile_id: Joi.string().required(),
+            payload_codec: Joi.string().required().allow(''),
         }
         const { error, value } = Joi.validate(data, schema)
         if (error) {
@@ -64,6 +70,10 @@ module.exports = {
                 case 'service_profile_id':
                     console.log('service_profile_id')
                     res.status(422).send({ error: 'Invalid Service Profile ID' });
+                    break;
+                case 'payload_codec':
+                    console.log('payload_codec')
+                    res.status(422).send({ error: 'Invalid Payload Codec' });
                     break;
                 default:
                     console.log("error")

@@ -96,6 +96,10 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('/sub_networks');
     },
+    get_sub_network_one(sub_network_id){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/sub_networks/one/${sub_network_id}`);
+    },
     get_sub_networks_db_given_network(network) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/sub_networks/database/${network}`);

@@ -7,6 +7,7 @@ const description_sub_network_name = "Name of the sub-network to be created on t
 const description_sub_network_descripton = "Description of the sub-network which holds additional details about the sub-network. Must be less than 200 characters long.";
 const description_sub_network_network_name = "Network under which the sub-network to be created will be assigned. Cannot be changed once sub-network is created.";
 const description_sub_network_service_profile = "Service profile to be assigned to the sub-network to be created. Cannot be changed once sub-network is created. The service profile assigns the capabilites of all the devices under the created sub-network.";
+const description_sub_network_payload_codec = "FILL OUT";
 
 //Gateway Forms
 const description_gateway_name = "hgjkgh world";
@@ -39,6 +40,7 @@ export {
   description_sub_network_descripton,
   description_sub_network_network_name,
   description_sub_network_service_profile,
+  description_sub_network_payload_codec,
   description_gateway_name,
   description_gateway_id,
   description_gateway_description,

@@ -31,6 +31,14 @@
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_descripton"></tool_tips_forms>  
               </v-text-field>
               </v-flex>
+            <!--Payload Codec-->
+              <v-select
+                v-model="payload_codec_form"
+                :items="this.payload_codec"
+                label="Payload Codec*"
+              >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_payload_codec"></tool_tips_forms>
+              </v-select>
             <!-- Message -->
               <div div class="text">
                 {{message}}
@@ -58,7 +66,7 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
-import {description_sub_network_name, description_sub_network_descripton} from "../../services/functions/form_descriptions_tool_tips.js";
+import {description_sub_network_name, description_sub_network_descripton, description_sub_network_payload_codec} from "../../services/functions/form_descriptions_tool_tips.js";
 import tool_tips_forms from "../Tool_Tip_Forms";
 
 
@@ -112,19 +120,33 @@ export default {
   },
   data() {
     return {
+      sub_network: {}, //object that holds the information about the sub-network to be edited
       sub_network_name: "",
       description: "",
+      payload_codec: ['Cayenne LPP', 'None'],
+      payload_codec_form: '',
       message: "",
       sub_networks_same_network: [],
       description_sub_network_name : description_sub_network_name,
       description_sub_network_descripton : description_sub_network_descripton,
+      description_sub_network_payload_codec : description_sub_network_payload_codec,
     };
   },
   props:[
    'sub_network_prop',
    'sub_network_update'
   ],
-  created: function () {
+  created: async function () {
+      this.sub_network= await AuthenticationService.get_sub_network_one(this.sub_network_update.sub_network_id)
+        .catch(err => {
+          //Error getting network to be updated information
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+        });
+        this.sub_network = JSON.parse(this.sub_network.data.sub_network);
+        this.sub_network_name = this.sub_network.sub_network_name;
+        this.description = this.sub_network.description;
+        this.payload_codec_form = this.sub_network.payload_codec;
+
     for(let i =0; i<this.sub_network_prop.length; i++){
       if(this.sub_network_update.network_id == this.sub_network_prop[i].network_id){
         this.sub_networks_same_network.push(this.sub_network_prop[i]);
@@ -140,11 +162,14 @@ export default {
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
+        if(this.payload_codec_form == 'Cayenne LPP') {this.payload_codec_form = 'CAYENNE_LPP'}
+        else{this.payload_codec_form = ''}
         AuthenticationService.update_sub_networks({
           sub_network_name: this.sub_network_name,
           description: this.description,
           network_id: this.sub_network_update.network_id,
           service_profile_id: this.sub_network_update.service_profile_id,
+          payload_codec: this.payload_codec_form
           }, this.sub_network_update.sub_network_id)
           .then(result => {
             let data = JSON.parse(result.data.sub_networks_lora);
