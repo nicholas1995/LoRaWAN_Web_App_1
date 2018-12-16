@@ -18,16 +18,16 @@ module.exports = {
   },
   get_all_given_vessels: function (vessels) {
     //This returns all the devices that were ever associated with the vessels selected
-    let sql = `SELECT vessel_device.device_id, vessel_device.device_eui, vessel_device.vessel_id, vessel_device.deleted, devices.device_name
+    let sql = `SELECT vessel_device.device_id, vessel_device.device_eui, vessel_device.vessel_id, vessel_device.deleted, device.device_name
         FROM vessel_device
-        RIGHT JOIN devices ON vessel_device.device_id = devices.id
+        RIGHT JOIN device ON vessel_device.device_id = device.device_id
         WHERE vessel_id IN (${vessels})`;
     return db.queryAsync(sql);
   },
   get_device_self: function (user_vessel_info){//This returns all the devices assigned to the specified vessel for the period that the vessel was assigned to the user
     let sql_where = [];
     let where = '';
-    let sql = "SELECT vessel_device.*, devices.device_name FROM vessel_device RIGHT JOIN devices ON vessel_device.device_id = devices.id";
+    let sql = "SELECT vessel_device.*, device.device_name FROM vessel_device RIGHT JOIN device ON vessel_device.device_id = device.device_id";
     for(let i = 0; i< user_vessel_info.length; i++){
       where = `vessel_id = '${user_vessel_info[i].vessel_id}' `
       if (user_vessel_info[i].date_deleted != null){

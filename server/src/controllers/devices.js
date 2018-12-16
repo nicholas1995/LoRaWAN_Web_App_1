@@ -335,7 +335,7 @@ module.exports = {
     get_self: async function (req, res) {
         try {
             let user_vessel_info = JSON.parse(req.params.user_vessel_info);
-             let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info)
+             let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info) 
                 .catch(err => {
                     //Error getting vessel device relationships currently implemented
                     error_location = 2; 
@@ -495,7 +495,7 @@ module.exports = {
                 });
             devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora, devices_db);
             console.log("Vessel assigned to device parsed");
-            await db.update_networks_all_parameters(data, req.params.device_eui)
+            await db.update_all_parameters(data, req.params.device_eui)
                 .catch(err => {
                     //Error updating device record in the database
                     error_location = 2;

@@ -65,10 +65,10 @@ module.exports = {
         VALUES ('${sub_network_id}', '${device_profile_id}', '${device_eui}', '${device_name}', '${device_description}')`;
     return db.queryAsync(sql);
   },
-  update_networks_all_parameters: function(data, device_eui) {
+  update_all_parameters: function(data, device_eui) {
     let sql = `UPDATE device
-        SET device_name = '${data.device_name}'
-        WHERE device_eui = '${device_eui}'`;
+        SET device_name = '${data.device_name}', device_profile_id = '${data.device_profile_id}', device_description = '${data.description}'
+        WHERE device_id = '${data.device_id}'`;
     return db.queryAsync(sql);
   }
 };
