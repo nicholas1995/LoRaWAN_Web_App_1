@@ -147,7 +147,7 @@ function parse_vessel_to_device_data(vessel_device, devices_lora, devices_db) {
         for (let i = 0; i < devices_lora.length; i++){
             for(let j = 0; j< devices_db.length; j++){
                 if(devices_lora[i].device_eui == devices_db[j].device_eui){
-                    devices_lora[i]["device_id"] = devices_db[j].id;
+                    devices_lora[i]["device_id"] = devices_db[j].device_id;
                 }
             }
             if (vessel_device.length == 0){
@@ -221,7 +221,7 @@ module.exports = {
                 for(let i = 0; i< devices_added.length; i++){
                     for(let j = 0; j< devices_db.length; j++){
                         if(devices_added[i] == devices_db[j].device_eui){
-                            await add_device_to_default_vessel(`${devices_db[j].id}`, devices_db[j].device_eui, devices_db[j].sub_network_id)
+                            await add_device_to_default_vessel(`${devices_db[j].device_id}`, devices_db[j].device_eui, devices_db[j].sub_network_id)
                                 .catch(err => {
                                     //Error adding devices created on lora app server to default vessel
                                     throw error.error_message("add device created on lora app server to default vessel", err.message);
@@ -239,7 +239,6 @@ module.exports = {
                 })
             console.log('Vessel deivce realtionships currently implemented fetched');
             devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora, devices_db);
-            //console.log(devices_lora);
             console.log("Vessel assigned to device parsed");
             devices_lora = JSON.stringify(devices_lora);
             res.status(200).send({ devices_lora: devices_lora, message: 'Devices fetched', type: 'success' });
@@ -247,8 +246,7 @@ module.exports = {
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to get devices", type: 'error' });
-            }
-            else if (error_location == 1) {
+            } else if (error_location == 1) {
                 devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Error updating devices in database", type: 'info' })
             } else if (error_location == 2) {
@@ -496,7 +494,7 @@ module.exports = {
                     throw error.error_message("delete device : lora app server", err.message);
                 });
             console.log('Devices fetched from lora app server')
-            await db.update('deleted',1,req.params.device_eui)
+            await db.update('device_deleted',1,req.params.device_eui)
                 .catch(err => {
                     //Error deleting device from database
                     error_location = 2;

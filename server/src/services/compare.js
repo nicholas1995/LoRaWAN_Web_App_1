@@ -157,19 +157,27 @@ module.exports = {
                 }
                 for (let j = 0; j < db.length; j++) {
                     if (lora[i].device_eui == db[j].device_eui) {
-                        if (lora[i].device_name == db[j].device_name) {
-                                accounted_for.push(j);
-                                //console.log('Same Information');
-                                break;
-                        } else if (lora[i].device_name != db[j].device_name) {
+                        if (lora[i].device_name != db[j].device_name) {
                             devices_db.update('device_name', lora[i].device_name, lora[i].device_eui)
-                            .catch(err => {
-                                throw error.error_message(`update: ID-${lora[i].device_eui}`, err.message);
-                            })
-                            accounted_for.push(j);
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].device_eui}`, err.message);
+                                })
                             //console.log('Different name');
-                            break;
+                        } if (lora[i].device_profile_id != db[j].device_profile_id) {
+                            devices_db.update('device_profile_id', lora[i].device_profile_id, lora[i].device_eui)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].device_eui}`, err.message);
+                                })
+                            //console.log('Different device profile id');
+                        } if (lora[i].description != db[j].device_description) {
+                            devices_db.update('device_description', lora[i].description, lora[i].device_eui)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].device_eui}`, err.message);
+                                })
+                            //console.log('Different description');
                         }
+                        accounted_for.push(j);
+                        break;
                     }
                     else if (j == (db.length - 1)) {
                         added_lora.push(i);
@@ -179,7 +187,8 @@ module.exports = {
                 }
             }
             for (let k = 0; k < added_lora.length; k++) {
-                await devices_db.create(lora[added_lora[k]].device_eui, lora[added_lora[k]].device_name, lora[added_lora[k]].sub_network_id)
+                await devices_db.create(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].device_profile_id, lora[added_lora[k]].device_eui,
+                    lora[added_lora[k]].device_name, lora[added_lora[k]].description, lora[added_lora[k]].device_deleted)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].device_eui}`, err.message);
                     })
@@ -189,7 +198,7 @@ module.exports = {
             for (let l = 0; l < db.length; l++) {
                 let index = accounted_for.indexOf(l);
                 if (index == -1) {
-                    await devices_db.update('deleted', 1, db[l].device_eui)
+                    await devices_db.update('device_deleted', 1, db[l].device_eui)
                         .catch(err => {
                             throw error.error_message(`delete: ID-${db[l].device_eui}`, err.message);
                         })
