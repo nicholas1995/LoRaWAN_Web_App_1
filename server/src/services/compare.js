@@ -20,59 +20,58 @@ module.exports = {
                     //console.log('Network Added');
                 }
                 for(let j =0; j<db.length; j++){
-                    if(lora[i].network_id==db[j].id){
-                        if(lora[i].network_name==db[j].name){
-                            if(lora[i].display_name==db[j].display_name){
-                                accounted_for.push(j);
-                                //console.log('Same Information');
-                                break;
-                            }else if(lora[i].display_name!=db[j].display_name){
-                                network_db.update_network('display_name', lora[i].display_name, lora[i].network_id)
+                    if(lora[i].network_id==db[j].network_id){
+                        if (lora[i].network_name != db[j].network_name) {
+                            await network_db.update_network('network_name', lora[i].network_name, lora[i].network_id)
+                                .catch(err => {
+                                    let error = new VError("Update Network : name : %s", err.message);
+                                    throw error;
+                                })
+                            //console.log('Different name');
+                        }
+                        if (lora[i].display_name != db[j].display_name) {
+                            await network_db.update_network('display_name', lora[i].display_name, lora[i].network_id)
                                 .catch(err => {
                                     let error = new VError("Update Network: display name : %s", err.message);
                                     throw error;
                                 })
-                                accounted_for.push(j);
-                                //console.log('Different display name');
-                                break;
-                            }
-                        }else if(lora[i].network_name!=db[j].name){
-                            network_db.update_network('name', lora[i].network_name, lora[i].network_id).then(result => {
-                            }).catch(err => {
-                                let error = new VError("Update Network : name : %s", err.message);
-                                throw error;
-                            })
-                            accounted_for.push(j);
-                            //console.log('Different name');
-                            break;
+                            //console.log('Different display name');
                         }
-                    }
-                    else if(j ==(db.length-1)){
+                        if (lora[i].can_have_gateways != db[j].can_have_gateways) {
+                            let value;
+                            if (lora[i].can_have_gateways == true) {value = 1;}
+                            else {value =0;}
+                            await network_db.update_network('can_have_gateways', value, lora[i].network_id)
+                                .catch(err => {
+                                    let error = new VError("Update Network : can_have_gateways : %s", err.message);
+                                    throw error;
+                                })
+                            //console.log('Different name');
+                        }
+                        accounted_for.push(j);
+                        break;
+                    }else if(j ==(db.length-1)){
                         added_lora.push(i);
                         //console.log('Network Added');
-                    }else if(lora[i].network_id!=db[j].id){
+                    }else if(lora[i].network_id!=db[j].network_id){
                     }
                 }  
             }
-            let k;
-            for(k =0; k< added_lora.length; k++){
-                network_db.create_network(lora[added_lora[k]].network_id, lora[added_lora[k]].network_name, lora[added_lora[k]].display_name).then(result => {
-                    //console.log("Inserted Added Network");
-                }).catch(err => {
-                let error = new VError('Insert Network: %s', err.message)
-                    throw error;
-                })
-            }
-            let l;
-            for(l=0; l<db.length; l++){
-                let index = accounted_for.indexOf(l);
-                if(index ==-1){
-                    network_db.update_network('deleted', 1, db[l].id).then(result => {
-                        //console.log('Network Deleted');
-                    }).catch(err => {
-                        let error = new VError("Update Network : deleted : %s", err.message);
+            for(let k =0; k< added_lora.length; k++){
+                network_db.create_network(lora[added_lora[k]].network_id, lora[added_lora[k]].network_name, lora[added_lora[k]].display_name, lora[added_lora[k]].can_have_gateways)
+                    .catch(err => {
+                        let error = new VError('Insert Network: %s', err.message)
                         throw error;
                     })
+            }
+            for(let l=0; l<db.length; l++){
+                let index = accounted_for.indexOf(l);
+                if(index ==-1){
+                    await network_db.update_network('network_deleted', 1, db[l].network_id)
+                        .catch(err => {
+                            let error = new VError("Update Network : deleted : %s", err.message);
+                            throw error;
+                        })
                 }
             }
         }catch(err){

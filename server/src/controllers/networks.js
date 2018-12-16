@@ -105,12 +105,12 @@ module.exports = {
                     error_location =0;
                     throw error_message("get networks : lora app server", err.message);
                 })
-            let networks_db = await db.get_networks()
+            let networks_db = await db.get_networks_not_deleted()
                 .catch(err => {
                     //error getting networks from db
                     error_location = 1;
                     throw error_message("get networks : database", err.message);
-                });
+                }); 
             await compare.compare_networks(networks_lora, networks_db)
                 .catch(err => {
                     //Error comparing networks 
@@ -164,7 +164,7 @@ module.exports = {
                     error_location = 1;
                     throw error_message("create network : lora app server", err.message);
                 });
-            await db.create_network(result.data.id, data.network_name, data.display_name)
+            await db.create_network(result.data.id, data.network_name, data.display_name, data.can_have_gateways)
                 .catch(err => { 
                     //error creating network on db
                     error_location = 2;
@@ -254,7 +254,7 @@ module.exports = {
                     error_location = 1;
                     throw error_message("delete network : lora app server", err.message);
                 });
-            await db.update_network("deleted", 1, req.params.network_id)
+            await db.update_network("network_deleted", 1, req.params.network_id)
                 .catch(err => {
                     //error updating delete coloum from db
                     error_location = 2;
