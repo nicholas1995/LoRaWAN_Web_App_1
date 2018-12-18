@@ -390,19 +390,13 @@ export default {
         this.gateway_profile_names =[];
         this.gateway_profile_name_form =[];
         this.network_server_id=functions.extract_id_id_name(this.network_server_name_form); //extract id of network_server
-        AuthenticationService.get_gateway_profiles(this.network_server_id).then(result => {
-          this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
-          for(let i =0; i< this.gateway_profiles.length; i++){
-            this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id + ":" +this.gateway_profiles[i].gateway_profile_name);
-            if(this.created ==1 && this.gateway_profiles[i].gateway_profile_id_lora ==this.gateway_profile_id){
-              this.gateway_profile_name_form =this.gateway_profile_names[i];
-              this.created =0;
-            }
+        for(let i =0; i< this.gateway_profiles.length; i++){
+          this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id + ":" +this.gateway_profiles[i].gateway_profile_name);
+          if(this.created ==1 && this.gateway_profiles[i].gateway_profile_id_lora ==this.gateway_profile_id){
+            this.gateway_profile_name_form =this.gateway_profile_names[i];
+            this.created =0;
           }
-        }).catch(err=> {
-          //Error requesting service profiles from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-        })
+        }
       } 
   },
   created: async function () {
@@ -443,6 +437,23 @@ export default {
       //Error getting network servers from lora app server
       this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
     });
+    AuthenticationService.get_gateway_profiles().then(result => {
+      this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
+      let j = 0;//fetch all the gateway profiles... filter them based on the currently selected network serve... check to see if the lora_if of the profile is the same as that on the 
+      // ith gateway profile... if yes add that name to the form
+      for(let i =0; i< this.gateway_profiles.length; i++){
+        if(this.gateway_profiles[i].network_server_id == this.network_server_id){ //Create the array for the currently selected network server
+          this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id + ":" +this.gateway_profiles[i].gateway_profile_name);
+          if(this.gateway_profiles[i].gateway_profile_id_lora ==this.gateway_profile_id){
+            this.gateway_profile_name_form =this.gateway_profile_names[j];
+          }
+          j = j+1;
+        }
+      }
+    }).catch(err=> {
+      //Error requesting service profiles from server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+    })
   },
   methods: {
     update_gateway(){

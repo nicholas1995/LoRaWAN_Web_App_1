@@ -455,15 +455,11 @@ export default {
         this.gateway_profile_names =[];
         this.gateway_profile_name_form =[];
         this.network_server_id=functions.extract_id_id_name(this.network_server_name_form); //extract id of network_server
-        AuthenticationService.get_gateway_profiles(this.network_server_id).then(result => {
-          this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
-          for(let i =0; i< this.gateway_profiles.length; i++){
+        for(let i =0; i< this.gateway_profiles.length; i++){
+          if(this.network_server_id == this.gateway_profiles[i].network_server_id){
             this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id +":"+ this.gateway_profiles[i].gateway_profile_name);
           }
-        }).catch(err=> {
-          //Error requesting service profiles from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-        })
+        }
       }
   },
   created: function () {
@@ -483,6 +479,13 @@ export default {
         }
       };
     }).catch(err => {
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+    })
+    AuthenticationService.get_gateway_profiles()
+    .then(result => {
+      this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
+    }).catch(err=> {
+      //Error requesting service profiles from server
       this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
     })
   },

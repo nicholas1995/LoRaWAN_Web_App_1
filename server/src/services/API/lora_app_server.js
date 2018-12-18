@@ -154,12 +154,8 @@ module.exports = {
   },
 
   //------------------------Gateway Profiles------------------------
-  get_gateway_profiles: function(data, network_server_id) {
+  get_gateway_profiles: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
-    return instance.get(
-      `/api/gateway-profiles?limit=${
-        data.limit
-      }&networkServerID=${network_server_id}`
-    );
+    return instance.get(`/api/gateway-profiles?limit=${data.limit}` );
   }
 };  

@@ -86,7 +86,7 @@ async function get_gateway_profiles(req) { //We fetch from the db twice because 
     //in the current version of gateway_profiles_db
     try {
         let request_body = gateway_profiles_request_data(null, 0);
-        let gateway_profiles_lora = await lora_app_server.get_gateway_profiles(request_body, req.params.network_server_id)
+        let gateway_profiles_lora = await lora_app_server.get_gateway_profiles(request_body)
             .catch(err => {
                 //Error getting gateway profiles from lora app server
                 let error = new VError("%s", err.message);

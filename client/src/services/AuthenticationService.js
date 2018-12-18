@@ -235,9 +235,9 @@ export default {
     },
 
     //Gateway profiles
-    get_gateway_profiles(network_server_id){
+    get_gateway_profiles(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/gateway_profiles/${network_server_id}`);
+        return Api.get(`/gateway_profiles`);
     },
 
     //Device uplink data

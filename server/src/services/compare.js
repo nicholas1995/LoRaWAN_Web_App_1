@@ -316,7 +316,7 @@ module.exports = {
                         .catch(err => {
                             throw error.error_message(`delete: ID-${db[l].service_profile_id_lora}`, err.message);
                         })
-                    console.log("Service Profile deletd on lora app server. Service Profile ID Lora: " + db[l].service_profile_id_lora);
+                    //console.log("Service Profile deletd on lora app server. Service Profile ID Lora: " + db[l].service_profile_id_lora);
                 }
             }
         } catch (err) {

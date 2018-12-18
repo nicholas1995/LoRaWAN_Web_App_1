@@ -173,7 +173,7 @@ module.exports = ((app) => {
     app.get("/network_servers", authenticate, grant_access, network_servers.get);
 
     //----------------------Gateway Profiles----------------------
-    app.get("/gateway_profiles/:network_server_id", authenticate, grant_access, gateway_profiles.get);
+    app.get("/gateway_profiles", authenticate, grant_access, gateway_profiles.get);
 
     //----------------------Device Uplink Data-----------------
     //Device (Initial fetch)
