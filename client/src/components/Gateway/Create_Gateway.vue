@@ -23,10 +23,10 @@
             <!--Gateway ID -->
             <v-flex >
               <v-text-field
-                v-model="gateway_id"
+                v-model="gateway_id_lora"
                 label="Gateway ID*"
                 :error-messages = "gateway_id_Errors"
-                @keyup="$v.gateway_id.$touch()" 
+                @keyup="$v.gateway_id_lora.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_id"></tool_tips_forms>
               </v-text-field> 
@@ -207,7 +207,7 @@ const unique_gateway_id= function(value){ //ensures that the id is unique after 
   let x = 1; //0 fail, 1 pass
   if(value.length == 16){
     for(let i=0; i< this.gateways_prop.length; i++){
-        if(value ==this.gateways_prop[i].gateway_id){
+        if(value ==this.gateways_prop[i].gateway_id_lora){
         x= 0;
       }
     }
@@ -241,7 +241,7 @@ export default {
       u: unique_gateway_name,
       maxLength: maxLength(80),
     },         
-    gateway_id: {
+    gateway_id_lora: {
       hex,
       maxLength: maxLength(16),
       minLength: minLength(16),
@@ -305,12 +305,12 @@ export default {
     }, 
     gateway_id_Errors(){
       const errors=[];
-      if (!this.$v.gateway_id.$error)return errors
-      !this.$v.gateway_id.hex && errors.push('Gateway ID must be a valid HEX ')
-      !this.$v.gateway_id.u_id && errors.push('Gateway ID must be unique')
-      !this.$v.gateway_id.maxLength && errors.push('Gateway ID must be 16 characters')
-      !this.$v.gateway_id.minLength && errors.push(`Gateway ID must be 16 characters: ${(16 - this.gateway_id.length)}`)
-      !this.$v.gateway_id.required && errors.push('Gateway ID is required.')
+      if (!this.$v.gateway_id_lora.$error)return errors
+      !this.$v.gateway_id_lora.hex && errors.push('Gateway ID must be a valid HEX ')
+      !this.$v.gateway_id_lora.u_id && errors.push('Gateway ID must be unique')
+      !this.$v.gateway_id_lora.maxLength && errors.push('Gateway ID must be 16 characters')
+      !this.$v.gateway_id_lora.minLength && errors.push(`Gateway ID must be 16 characters: ${(16 - this.gateway_id_lora.length)}`)
+      !this.$v.gateway_id_lora.required && errors.push('Gateway ID is required.')
       return errors;
     },
     description_Errors(){
@@ -394,7 +394,7 @@ export default {
   data() {
     return {
       gateway_name: '',
-      gateway_id: '',
+      gateway_id_lora: '',
       description: '',
       network_name_form: '', //this is the variable that holds the selected network 'id:name'
       network_server_name_form: '', //this is the variable that holds the selected network server 'id:name'
@@ -492,7 +492,7 @@ export default {
   methods: {
     create_gateway(){
       this.$v.$touch();
-      if(this.$v.gateway_name.$invalid || this.$v.gateway_id.$invalid || this.$v.description.$invalid 
+      if(this.$v.gateway_name.$invalid || this.$v.gateway_id_lora.$invalid || this.$v.description.$invalid 
       || this.$v.network_name_form.$invalid || this.$v.network_server_name_form.$invalid || this.$v.gateway_profile_name_form.$invalid 
       || this.$v.gateway_accuracy.$invalid || this.$v.gateway_altitude.$invalid || this.$v.gateway_latitude.$invalid
       || this.$v.gateway_longitude.$invalid || this.$v.gateway_location_source_form.$invalid || this.$v.fine_time_stamp_key.$invalid
@@ -510,8 +510,8 @@ export default {
         }
          AuthenticationService.create_gateways({
           gateway_name: this.gateway_name,
-          gateway_id: this.gateway_id,
-          description: this.description,
+          gateway_id_lora: this.gateway_id_lora,
+          gateway_description: this.description,
           network_id: this.network_id,
           network_server_id: this.network_server_id,
           gateway_profile_id: this.gateway_profile_id,

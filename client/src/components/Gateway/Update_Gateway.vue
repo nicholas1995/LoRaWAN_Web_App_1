@@ -399,10 +399,10 @@ export default {
   },
   created: async function () {
     let gateway;
-      await AuthenticationService.get_gateway(this.gateway_update.gateway_id).then(result => {
+      await AuthenticationService.get_gateway(this.gateway_update.gateway_id_lora).then(result => {
             gateway = JSON.parse(result.data.gateway);
             this.gateway_name = gateway.gateway_name;
-            this.description = gateway.description;
+            this.description = gateway.gateway_description;
             this.network_id = gateway.network_id,
             this.network_Server_id = gateway.network_server_id,
             this.gateway_profile_id =gateway.gateway_profile_id,
@@ -472,10 +472,12 @@ export default {
             break;
           }
         }
+        console.log(this.gateway_update.gateway_id_lora,)
          AuthenticationService.update_gateways({
           gateway_name: this.gateway_name,
           gateway_id: this.gateway_update.gateway_id,
-          description: this.description,
+          gateway_id_lora: this.gateway_update.gateway_id_lora,
+          gateway_description: this.description,
           network_id: this.network_id,
           network_server_id: this.network_server_id,
           gateway_profile_id: this.gateway_profile_id,
@@ -487,7 +489,7 @@ export default {
           discovery_enabled: this.discovery_enabled,
           fine_time_stamp_key: this.fine_time_stamp_key,
           fpga_id: this.fpga_id,
-        }, this.gateway_update.gateway_id).then(result => {
+        }, this.gateway_update.gateway_id_lora).then(result => {
           let data = JSON.parse(result.data.gateways_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('gateway_management', data);

@@ -4,6 +4,7 @@ const devices_db = require("./database/devices_db");
 const VESSEL_DB = require("../services/database/vessels_db");
 const DB_GATEWAY_PROFILE = require("../services/database/gateway_profile_db");
 const service_profile_db = require("../services/database/service_profile_db");
+const gateway_db = require("../services/database/gateway_db");
 const DB_VESSEL_DEVICE = require("./database/vessel_device_db");
 const VESSEL_CONTROLLER = require('../controllers/vessels')
 
@@ -215,6 +216,72 @@ module.exports = {
             }
             return devices_added;
 
+        } catch (err) {
+            throw error.error_message("compare", err.message);
+        }
+    },
+    compare_gateways: async function (lora, db) {
+        let accounted_for = [];
+        let added_lora = [];
+        let gateway_added = [];
+        try {
+            for (let i = 0; i < lora.length; i++) {
+                if (db.length == 0) {
+                    added_lora.push(i);
+                    //console.log('Gateway Added');
+                }
+                for (let j = 0; j < db.length; j++) {
+                    if (lora[i].gateway_id_lora == db[j].gateway_id_lora) {
+                        if (lora[i].gateway_name != db[j].gateway_name) {
+                            gateway_db.update_gateway('gateway_name', lora[i].gateway_name, lora[i].gateway_id_lora)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].gateway_id_lora}`, err.message);
+                                })
+                            //console.log('Different name');
+                        }
+                        if (lora[i].gateway_description != db[j].gateway_description) {
+                            gateway_db.update_gateway('gateway_description', lora[i].gateway_description, lora[i].gateway_id_lora)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].gateway_id_lora}`, err.message);
+                                })
+                            //console.log('Different description');
+                        }
+                        if (lora[i].network_server_id != db[j].network_server_id) {
+                            gateway_db.update_gateway('network_server_id', lora[i].network_server_id, lora[i].gateway_id_lora)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].gateway_id_lora}`, err.message);
+                                })
+                            //console.log('Different network server');
+                        }
+                        accounted_for.push(j);
+                        break;
+                    }
+                    else if (j == (db.length - 1)) {
+                        added_lora.push(i);
+                        //console.log('Gateway Added');
+                    } else if (lora[i].gateway_id_lora != db[j].gateway_id_lora) {
+                    }
+                }
+            }
+            for (let k = 0; k < added_lora.length; k++) {
+                await gateway_db.create_gateway(lora[added_lora[k]].network_id, lora[added_lora[k]].gateway_name, lora[added_lora[k]].gateway_id_lora,
+                    lora[added_lora[k]].gateway_description, lora[added_lora[k]].network_server_id, lora[added_lora[k]].created_at_time_stamp)
+                    .catch(err => {
+                        throw error.error_message(`create: ID-${lora[added_lora[k]].gateway_id_lora}`, err.message);
+                    });
+                gateway_added.push(lora[added_lora[k]].gateway_id_lora);
+                //console.log('Inserted Added Gateway');
+            }
+            for (let l = 0; l < db.length; l++) {
+                let index = accounted_for.indexOf(l);
+                if (index == -1) {
+                    await gateway_db.update_gateway('gateway_deleted', 1, db[l].gateway_id_lora)
+                        .catch(err => {
+                            throw error.error_message(`delete: ID-${db[l].gateway_id_lora}`, err.message);
+                        })
+                    //console.log("Gateway deletd on lora app server. Gateway ID Lora: " + db[l].gateway_id_lora);
+                }
+            }
         } catch (err) {
             throw error.error_message("compare", err.message);
         }

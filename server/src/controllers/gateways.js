@@ -1,4 +1,6 @@
 const lora_app_server = require("../services/API/lora_app_server");
+const db_gateway = require('../services/database/gateway_db');
+const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
 
@@ -16,10 +18,10 @@ function gateway_api_request_data(data, type) {
         try{
         request = {
             "gateway": {
-                "description": `${data.description}`,
+                "description": `${data.gateway_description}`,
                 "discoveryEnabled": data.discovery_enabled,
                 "gatewayProfileID": `${data.gateway_profile_id}`,
-                "id": `${data.gateway_id}`,
+                "id": `${data.gateway_id_lora}`,
                 "location": {
                     "accuracy": data.gateway_accuracy,
                     "altitude": data.gateway_altitude ,
@@ -62,39 +64,39 @@ function convert_names_gateways(gateways) {
     let gateways_return = [];
   let gateway = {
       gateway_name: null,
-      gateway_id: null,
-      description: null,
+      gateway_id_lora: null,
+      gateway_description: null,
       network_id: null,
       network_server_id: null,
-      created_at: null,
-      updated_at: null
+      created_at_time_stamp: null,
+      updated_at_time_stamp: null
   };
     for (let i = 0; i < gateways.length; i++) {
         gateway.gateway_name = gateways[i].name;
-        gateway.gateway_id = gateways[i].id;
-        gateway.description = gateways[i].description;
+        gateway.gateway_id_lora = gateways[i].id;
+        gateway.gateway_description = gateways[i].description;
         gateway.network_id = gateways[i].organizationID;
         gateway.network_server_id = gateways[i].networkServerID;
-        gateway.created_at = gateways[i].createdAt;
-        gateway.updated_at = gateways[i].updatedAt;
+        gateway.created_at_time_stamp = gateways[i].createdAt;
+        gateway.updated_at_time_stamp = gateways[i].updatedAt;
         gateways_return[i] = gateway;
         gateway = {
             gateway_name: null,
-            gateway_id: null,
-            description: null,
+            gateway_id_lora: null,
+            gateway_description: null,
             network_id: null,
             network_server_id: null,
-            created_at: null,
-            updated_at: null
+            created_at_time_stamp: null,
+            updated_at_time_stamp: null
         };
   }
     return gateways_return;
 }
 function convert_name_gateway_single(result){
     let gateway = {
-        gateway_id: result.id,
+        gateway_id_lora: result.id,
         gateway_name: result.name,
-        description: result.description,
+        gateway_description: result.description,
         network_id: result.organizationID,
         network_server_id: result.networkServerID,
         gateway_profile_id: result.gatewayProfileID,
@@ -126,15 +128,49 @@ function convert_name_gateway_single(result){
 async function get_gateways() {
     try {
         let request_params = gateway_api_request_data(null, 0);
-        let gateways = await lora_app_server.get_gateways(request_params)
+        let gateways_lora = await lora_app_server.get_gateways(request_params)
             .catch(err => {
                 let error = new VError("%s", err.message);
                 throw error;
             });
-        gateways = convert_names_gateways(gateways.data.result);
-        return gateways;
+        gateways_lora = convert_names_gateways(gateways_lora.data.result);
+        let gateways_db = await db_gateway.get_gateway()
+            .catch(err => {
+                //Error getting gateways from database
+                let error = new VError("%s", err.message);
+                throw error;
+            });
+        await compare.compare_gateways(gateways_lora, gateways_db)
+            .catch(err => {
+                //Error comparing
+                let error = new VError("%s", err.message);
+                throw error;
+            })
+        gateways_db = await db_gateway.get_gateway()
+            .catch(err => {
+                //Error getting gateways from database
+                let error = new VError("%s", err.message);
+                throw error;
+            });
+        gateways_lora = parse(gateways_lora, gateways_db);
+        return gateways_lora;
     } catch (err) {
         throw err;
+    }
+}
+function parse(gateway_lora, gateways_db) {
+    try {
+        for (let i = 0; i < gateway_lora.length; i++) {
+            for (let j = 0; j < gateways_db.length; j++) {
+                if (gateway_lora[i].gateway_id_lora == gateways_db[j].gateway_id_lora) {
+                    gateway_lora[i]["gateway_id"] = gateways_db[j].gateway_id;
+              }
+            }
+        }
+        return gateway_lora;
+    } catch (err) {
+        let error = new VError("%s", err.message);
+        throw error;
     }
 }
  

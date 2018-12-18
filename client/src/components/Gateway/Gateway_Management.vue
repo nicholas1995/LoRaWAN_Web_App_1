@@ -47,13 +47,14 @@
             <span>Delete {{props.item.gateway_name}}</span>
             </v-tooltip>
           </td>
-          <td class="text-xs-left">{{ props.item.gateway_name }}</td>
           <td class="text-xs-left">{{ props.item.gateway_id}}</td>
-          <td class="text-xs-left">{{ props.item.description }}</td>
+          <td class="text-xs-left">{{ props.item.gateway_id_lora}}</td>
+          <td class="text-xs-left">{{ props.item.gateway_name }}</td>
+          <td class="text-xs-left">{{ props.item.gateway_description }}</td>
           <td class="text-xs-left">{{ props.item.network_id }}</td>
           <td class="text-xs-left">{{ props.item.network_server_id }}</td>
-          <td class="text-xs-left">{{ props.item.created_at | return_date}}</td>
-          <td class="text-xs-left">{{ props.item.updated_at | return_date}}</td>
+          <td class="text-xs-left">{{ props.item.created_at_time_stamp | return_date}}</td>
+          <td class="text-xs-left">{{ props.item.updated_at_time_stamp | return_date}}</td>
       </template>
     </v-data-table>
   </v-content>
@@ -69,13 +70,14 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
-          { text: 'Gateway Name', value: 'gateway_name' , sortable: false },
           { text: 'Gateway ID', value: 'gateway_id' , sortable: true },
-          { text: 'Description', value: 'description' ,sortable: false},
+          { text: 'Gateway ID LoRa', value: 'gateway_id_lora' , sortable: false },
+          { text: 'Gateway Name', value: 'gateway_name' , sortable: false },
+          { text: 'Description', value: 'gateway_description' ,sortable: false},
           { text: 'Network ID', value: 'network_id' , sortable: true },
           { text: 'Network Server ID', value: 'network_server_id' , sortable: true },
-          { text: 'Created At', value: 'created_at', sortable: true },
-          { text: 'Updated At', value: 'updated_at', sortable: true },
+          { text: 'Created At', value: 'created_at_time_stamp', sortable: true },
+          { text: 'Updated At', value: 'updated_at_time_stamp', sortable: true },
         ],
         gateways: []
     }
@@ -100,7 +102,7 @@ export default {
   methods: {
     delete_gateways(gateway){
       if(confirm('Are you sure you want to delete this Gateway?') == true){
-        AuthenticationService.delete_gateways(gateway.gateway_id).then(result => {
+        AuthenticationService.delete_gateways(gateway.gateway_id_lora).then(result => {
           this.gateways  = JSON.parse(result.data.gateways_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {

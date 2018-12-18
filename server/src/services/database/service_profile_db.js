@@ -22,7 +22,7 @@ module.exports = {
   update_service_profile_all_parameters: function (data, service_profile_id) {
     let sql = `UPDATE service_profile
         SET service_profile_name = '${data.service_profile_name}'
-        WHERE service_profile_id = '${service_profile_id}'`;
+        WHERE service_profile_id = '${service_profile_id}' AND service_profile_deleted = 0`;
     return db.queryAsync(sql);
   },
 };
