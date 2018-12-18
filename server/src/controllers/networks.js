@@ -3,6 +3,7 @@ const db = require('../services/database/networks_db');
 const compare = require('../services/compare');
 const VError = require('verror');
 const DEVICE_UPLINK_DB = require('../services/database/device_rx_db')
+const error_handler = require('./error_logs');
 
 
 function network_api_request_data(data, type) {
@@ -120,7 +121,7 @@ module.exports = {
             networks_lora = JSON.stringify(networks_lora);
             res.status(200).send({networks_lora: networks_lora, message: 'Networks fetched', type: 'success'});
         }catch(err){
-            console.log(err);
+            error_handler.error_logger(req, err);
             if(error_location ==0){
                 res.status(500).send({ message: "Failed to get networks" , type: 'error'});
             }
@@ -143,6 +144,7 @@ module.exports = {
             res.status(200).send({ networks_db: networks_db, message: 'Networks fetched', type: 'success' });
             console.log('Networks fetched from database')
         }catch(err){
+            error_handler.error_logger(req, err);
             res.status(500).send({ message: "Failed to get networks", type: 'error' });
         }
     },
@@ -173,6 +175,7 @@ module.exports = {
             networks_lora = JSON.stringify(networks_lora);
             res.status(201).send({ networks_lora: networks_lora, message: 'Network created', type: 'success' });
         }catch(err){
+            error_handler.error_logger(req, err);
             //e_l =0 (problem creating network)
             //e_l =1 (network created.. failed to fetch networks)
             //e_l =2 (network created.. networks fetched.. failed to create network on db)
@@ -219,6 +222,7 @@ module.exports = {
             networks_lora = JSON.stringify(networks_lora);
             res.status(200).send({ networks_lora: networks_lora, message: 'Network updated', type: 'success' });
         }catch(err){
+            error_handler.error_logger(req, err);
             //e_l =0 (problem updating network)
             //e_l =1 (network updated.. failed to fetch networks)
             //e_l =2 (network updated.. networks fetched.. failed to update network on db)
@@ -263,6 +267,7 @@ module.exports = {
             networks_lora = JSON.stringify(networks_lora);
             res.status(200).send({ networks_lora: networks_lora, message: 'Network deleted', type: 'success' });
         }catch(err){
+            error_handler.error_logger(req, err);
             //e_l =0 (problem deleteing network)
             //e_l =1 (network deleted.. failed to fetch networks)
             //e_l =2 (network deleted.. networks fetched.. failed to delete network on db)

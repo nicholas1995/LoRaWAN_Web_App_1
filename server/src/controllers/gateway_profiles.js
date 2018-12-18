@@ -1,4 +1,6 @@
 const lora_app_server = require("../services/API/lora_app_server");
+const db_gateway_profile = require("../services/database/gateway_profile_db");
+const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
 
@@ -37,44 +39,75 @@ function gateway_profiles_request_data(data, type) {
 function convert_names_gateway_profiles(gateway_profiles) {
     let gateway_profiles_return = [];
     let gateway_profile = {
-        created_at: null,
-        gateway_profile_id: null,
+        created_at_time_stamp: null,
+        gateway_profile_id_lora: null,
         gateway_profile_name: null,
         network_server_id: null,
         network_server_name: null,
-        updated_at: null
+        updated_at_time_stamp: null
     };
     for (let i = 0; i < gateway_profiles.length; i++) {
-        gateway_profile.created_at = gateway_profiles[i].createdAt;
-        gateway_profile.gateway_profile_id = gateway_profiles[i].id;
+        gateway_profile.created_at_time_stamp = gateway_profiles[i].createdAt;
+        gateway_profile.gateway_profile_id_lora = gateway_profiles[i].id;
         gateway_profile.gateway_profile_name = gateway_profiles[i].name;
         gateway_profile.network_server_id = gateway_profiles[i].networkServerID;
         gateway_profile.network_server_name = gateway_profiles[i].networkServerName;
-        gateway_profile.updated_at = gateway_profiles[i].updatedAt;
+        gateway_profile.updated_at_time_stamp = gateway_profiles[i].updatedAt;
         gateway_profiles_return[i] = gateway_profile;
         gateway_profile = {
-            created_at: null,
-            gateway_profile_id: null,
+            created_at_time_stamp: null,
+            gateway_profile_id_lora: null,
             gateway_profile_name: null,
             network_server_id: null,
             network_server_name: null,
-            updated_at: null
+            updated_at_time_stamp: null
         };
     }
     return gateway_profiles_return;
 }
 
-async function get_gateway_profiles(req) {
+function parse(gateway_profile_lora, gateway_profile_db) {
+    try {
+        for (let i = 0; i < gateway_profile_lora.length; i++) {
+          for (let j = 0; j < gateway_profile_db.length; j++) {
+              if (gateway_profile_lora[i].gateway_profile_id_lora == gateway_profile_db[j].gateway_profile_id_lora) {
+                gateway_profile_lora[i]["gateway_profile_id"] = gateway_profile_db[j].gateway_profile_id;
+              }
+          }
+        }
+        return gateway_profile_lora;
+    } catch (err) {
+        let error = new VError("%s", err.message);
+        throw error;
+    }
+}
+
+async function get_gateway_profiles(req) { //We fetch from the db twice because if after we compare one is added then we add it to the database and this new record will not be reflected
+    //in the current version of gateway_profiles_db
     try {
         let request_body = gateway_profiles_request_data(null, 0);
-        let gateway_profiles = await lora_app_server.get_gateway_profiles(request_body, req.params.network_server_id)
+        let gateway_profiles_lora = await lora_app_server.get_gateway_profiles(request_body, req.params.network_server_id)
             .catch(err => {
                 //Error getting gateway profiles from lora app server
                 let error = new VError("%s", err.message);
                 throw error;
             });
-        gateway_profiles = convert_names_gateway_profiles(gateway_profiles.data.result);
-        return gateway_profiles;
+        gateway_profiles_lora = convert_names_gateway_profiles(gateway_profiles_lora.data.result);
+        let gateway_profiles_db = await db_gateway_profile.get_gateway_profile()
+            .catch(err => {
+                //Error getting gateway profiles from database
+                let error = new VError("%s", err.message);
+                throw error;
+            })
+        await compare.compare_gateway_profile(gateway_profiles_lora, gateway_profiles_db);
+        gateway_profiles_db = await db_gateway_profile.get_gateway_profile()
+            .catch(err => {
+                //Error getting gateway profiles from database
+                let error = new VError("%s", err.message);
+                throw error;
+            })
+        gateway_profiles_lora = parse(gateway_profiles_lora, gateway_profiles_db)
+        return gateway_profiles_lora;
     } catch (err) {
         throw err;
         //Error getting gateway profiles from lora app server

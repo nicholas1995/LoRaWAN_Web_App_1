@@ -412,6 +412,7 @@ export default {
       network_server_id: '', //this is the network server id of the selected network server
       gateway_profile_id: '', //this is the gateway profile id of the selected gateway profile
 
+      gateway_profiles: '',
 
       network_names: [],
       network_server_names: [],
@@ -455,9 +456,9 @@ export default {
         this.gateway_profile_name_form =[];
         this.network_server_id=functions.extract_id_id_name(this.network_server_name_form); //extract id of network_server
         AuthenticationService.get_gateway_profiles(this.network_server_id).then(result => {
-          let gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
-          for(let i =0; i< gateway_profiles.length; i++){
-            this.gateway_profile_names.push(gateway_profiles[i].gateway_profile_name.concat(":",gateway_profiles[i].gateway_profile_id));
+          this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
+          for(let i =0; i< this.gateway_profiles.length; i++){
+            this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id +":"+ this.gateway_profiles[i].gateway_profile_name);
           }
         }).catch(err=> {
           //Error requesting service profiles from server
@@ -497,8 +498,14 @@ export default {
       }else{
         if(this.discovery_enabled ==null)this.discovery_enabled =false; //needed to set empty radio to false
         this.message = "";
-        this.gateway_profile_id=functions.extract_id_name_id(this.gateway_profile_name_form);//Extract id of gateway profile
-        AuthenticationService.create_gateways({
+        this.gateway_profile_id=functions.extract_id_id_name(this.gateway_profile_name_form);//Extract id of gateway profile
+        for(let i = 0; i < this.gateway_profiles.length; i++){
+          if(this.gateway_profiles[i].gateway_profile_id == this.gateway_profile_id){
+            this.gateway_profile_id = this.gateway_profiles[i].gateway_profile_id_lora;
+            break;
+          }
+        }
+         AuthenticationService.create_gateways({
           gateway_name: this.gateway_name,
           gateway_id: this.gateway_id,
           description: this.description,
@@ -520,7 +527,7 @@ export default {
         }).catch(err => {
           //Error trying to create subnetwork
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-        })
+        }) 
       } 
     }
   }
