@@ -216,9 +216,9 @@ export default {
     },
 
     //Service Profile
-    get_service_profile(network_id){
+    get_service_profile(){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/service_profiles/${network_id}`);
+        return Api.get(`/service_profiles`);
     },
 
 

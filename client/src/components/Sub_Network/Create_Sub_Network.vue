@@ -174,6 +174,8 @@ export default {
       network_name_form: '', //this is the variable that holds the selected network 'id-name'
       service_profile_form: '', //this is the variable that holds the selected service profile 'id-name'
       network_id: '', //this is the variable that holds the id of the selected network
+
+      service_profile: '',
       service_profile_id: '', //this is the service profile id of the selected service profile
       service_profile_names: [], //this is the variable that holds all the names to display on the form for the service profiles 
       message: '',
@@ -193,25 +195,21 @@ export default {
   ],
   watch: {
     network_name_form: function(){
-        this.service_profile_names =[];
-        this.service_profile_form =[];
-        this.sub_networks_same_network =[];
-        this.network_id=functions.extract_id_id_name(this.network_name_form); //extract id of network
-        for(let i =0; i<this.sub_network_prop.length; i++){
-          if(this.network_id == this.sub_network_prop[i].network_id){
-            this.sub_networks_same_network.push(this.sub_network_prop[i]);
+      this.service_profile_names =[];
+      this.service_profile_form =[];
+      this.sub_networks_same_network =[];
+      this.network_id=functions.extract_id_id_name(this.network_name_form); //extract id of network
+      for(let i =0; i<this.sub_network_prop.length; i++){
+        if(this.network_id == this.sub_network_prop[i].network_id){
+          this.sub_networks_same_network.push(this.sub_network_prop[i]);
+        }
+        for(let i =0; i< this.service_profile.length; i++){
+          if(this.service_profile[i].network_id == this.network_id){
+            this.service_profile_names.push(this.service_profile[i].service_profile_id +":" + this.service_profile[i].service_profile_name);
           }
         }
-        AuthenticationService.get_service_profile(this.network_id).then(result => {
-          let service_profiles = JSON.parse(result.data.service_profiles);
-          for(let i =0; i< service_profiles.length; i++){
-            this.service_profile_names.push(service_profiles[i].service_profile_name.concat(":",service_profiles[i].service_profile_id));
-          }
-        }).catch(err=> {
-          //Error requesting service profiles from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-        })
       }
+    }
   },
   created: function () {
     AuthenticationService.get_networks().then(result => {
@@ -223,6 +221,12 @@ export default {
       //Error getting networks from server
       this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
     })
+      AuthenticationService.get_service_profile().then(result => {
+        this.service_profile = JSON.parse(result.data.service_profiles);
+      }).catch(err=> {
+        //Error requesting service profiles from server
+        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+      })
   },
   methods: {
     create_sub_network(){
@@ -231,11 +235,16 @@ export default {
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
-        this.service_profile_id=functions.extract_id_name_id(this.service_profile_form);//Extract id of service profile
-
+        this.service_profile_id=functions.extract_id_id_name(this.service_profile_form);//Extract id of service profile
+        for(let i = 0; i < this.service_profile.length; i++){
+          if(this.service_profile[i].service_profile_id == this.service_profile_id){
+            this.service_profile_id = this.service_profile[i].service_profile_id_lora;
+            break;
+          }
+        }
         if(this.payload_codec_form == 'Cayenne LPP') {this.payload_codec_form = 'CAYENNE_LPP'}
         else{this.payload_codec_form = ''}
-        AuthenticationService.create_sub_networks({
+         AuthenticationService.create_sub_networks({
           sub_network_name: this.sub_network_name,
           description: this.description,
           network_id: this.network_id,
@@ -247,7 +256,7 @@ export default {
           this.$emit('sub_network_management', data);
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-        })
+        }) 
       } 
     }
   }

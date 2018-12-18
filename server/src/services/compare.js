@@ -3,6 +3,7 @@ const sub_network_db = require('./database/sub_networks_db');
 const devices_db = require("./database/devices_db");
 const VESSEL_DB = require("../services/database/vessels_db");
 const DB_GATEWAY_PROFILE = require("../services/database/gateway_profile_db");
+const service_profile_db = require("../services/database/service_profile_db");
 const DB_VESSEL_DEVICE = require("./database/vessel_device_db");
 const VESSEL_CONTROLLER = require('../controllers/vessels')
 
@@ -231,7 +232,6 @@ module.exports = {
                 for (let j = 0; j < db.length; j++) {
                     if (lora[i].gateway_profile_id_lora == db[j].gateway_profile_id_lora) {
                         if (lora[i].gateway_profile_name != db[j].gateway_profile_name) {
-                            console.log('hereee')
                             DB_GATEWAY_PROFILE.update_gateway_profile('gateway_profile_name', lora[i].gateway_profile_name, lora[i].gateway_profile_id_lora)
                                 .catch(err => {
                                     throw error.error_message(`update: ID-${lora[i].gateway_profile_id_lora}`, err.message);
@@ -260,11 +260,63 @@ module.exports = {
             for (let l = 0; l < db.length; l++) {
                 let index = accounted_for.indexOf(l);
                 if (index == -1) {
-                    await devices_db.update('gateway_profile_deleted', 1, db[l].gateway_profile_id_lora)
+                    await DB_GATEWAY_PROFILE.update_gateway_profile('gateway_profile_deleted', 1, db[l].gateway_profile_id_lora)
                         .catch(err => {
                             throw error.error_message(`delete: ID-${db[l].gateway_profile_id_lora}`, err.message);
                         })
-                    console.log("Gateway Profile deletd on lora app server. Gateway Profile ID Lora: " + db[l].gateway_profile_id_lora);
+                    //console.log("Gateway Profile deletd on lora app server. Gateway Profile ID Lora: " + db[l].gateway_profile_id_lora);
+                }
+            }
+        } catch (err) {
+            throw error.error_message("compare", err.message);
+        }
+    },
+    compare_service_profile: async function (lora, db) {
+        let accounted_for = [];
+        let added_lora = [];
+        let service_profile_added = [];
+        try {
+            for (let i = 0; i < lora.length; i++) {
+                if (db.length == 0) {
+                    added_lora.push(i);
+                    //console.log('Service Profile Added');
+                }
+                for (let j = 0; j < db.length; j++) {
+                    if (lora[i].service_profile_id_lora == db[j].service_profile_id_lora) {
+                        if (lora[i].service_profile_name != db[j].service_profile_name) {
+                            service_profile_db.update_service_profile('service_profile_name', lora[i].service_profile_name, lora[i].service_profile_id_lora)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].service_profile_id_lora}`, err.message);
+                                })
+                            //console.log('Different name');
+                        }
+                        accounted_for.push(j);
+                        break;
+                    }
+                    else if (j == (db.length - 1)) {
+                        added_lora.push(i);
+                        //console.log('Service Profile Added');
+                    } else if (lora[i].service_profile_id_lora != db[j].service_profile_id_lora) { 
+                    }
+                }
+            }
+            for (let k = 0; k < added_lora.length; k++) {
+                await service_profile_db.create_service_profile(lora[added_lora[k]].service_profile_id_lora, lora[added_lora[k]].service_profile_name, lora[added_lora[k]].network_server_id,
+                    lora[added_lora[k]].created_at_time_stamp)
+                    .catch(err => {
+                        throw error.error_message(`create: ID-${lora[added_lora[k]].service_profile_id_lora}`, err.message);
+                    });
+                service_profile_added.push(lora[added_lora[k]].service_profile_id_lora);
+                //console.log('Inserted Added Service Profile');
+            }
+            for (let l = 0; l < db.length; l++) {
+                let index = accounted_for.indexOf(l);
+                if (index == -1) {
+                    await service_profile_db.update_service_profile('service_profile_deleted', 1, db[l].service_profile_id_lora)
+                        .catch(err => {
+                            throw error.error_message(`delete: ID-${db[l].service_profile_id_lora}`, err.message);
+                        })
+                    console.log("Service Profile deletd on lora app server. Service Profile ID Lora: " + db[l].service_profile_id_lora);
                 }
             }
         } catch (err) {

@@ -164,7 +164,7 @@ module.exports = ((app) => {
     app.delete("/gateways/:gateway_id", authenticate, grant_access, gateways.delete);
 
     //----------------------Service Profile----------------------
-    app.get("/service_profiles/:network_id", authenticate, grant_access, service_profiles.get);
+    app.get("/service_profiles", authenticate, grant_access, service_profiles.get);
 
     //----------------------Device Profile----------------------
     app.get("/device_profiles/:sub_network_id", authenticate, grant_access, device_profiles.get);

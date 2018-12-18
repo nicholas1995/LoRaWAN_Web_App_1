@@ -14,7 +14,6 @@ module.exports = {
     return db.queryAsync(sql);
   },
   update_gateway_profile: function (col, value, condition) {
-    console.log(col, value, condition);
     let sql = `UPDATE gateway_profile
         SET ${col} = '${value}'
         WHERE gateway_profile_id_lora = '${condition}' AND gateway_profile_deleted = 0`;

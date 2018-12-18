@@ -131,10 +131,10 @@ module.exports = {
 
   //------------------------Service Profile------------------------
   //---------Read---------
-  get_service_profiles: function(data, id) {
+  get_service_profiles: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.get(
-      `/api/service-profiles?limit=${data.limit}&organizationID=${id}`
+      `/api/service-profiles?limit=${data.limit}`
     );
   },
 
