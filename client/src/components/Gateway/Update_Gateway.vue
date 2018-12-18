@@ -364,7 +364,6 @@ export default {
       message: '',
       networks_can_have_gateways: [],//this is an array that contains all the networks that can have gateways
       gateways_same_network: [],
-      created: 1, //This is used to ensure that the name of the gateway profile will only be auto displayed on the creation of the form,
 
       description_gateway_name : description_gateway_name,
       description_gateway_id : description_gateway_id,
@@ -392,9 +391,8 @@ export default {
         this.network_server_id=functions.extract_id_id_name(this.network_server_name_form); //extract id of network_server
         for(let i =0; i< this.gateway_profiles.length; i++){
           this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id + ":" +this.gateway_profiles[i].gateway_profile_name);
-          if(this.created ==1 && this.gateway_profiles[i].gateway_profile_id_lora ==this.gateway_profile_id){
+          if(this.gateway_profiles[i].gateway_profile_id_lora ==this.gateway_profile_id){
             this.gateway_profile_name_form =this.gateway_profile_names[i];
-            this.created =0;
           }
         }
       } 
