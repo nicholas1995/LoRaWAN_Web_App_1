@@ -68,8 +68,8 @@ function convert_names_gateways(gateways) {
       gateway_description: null,
       network_id: null,
       network_server_id: null,
-      created_at_time_stamp: null,
-      updated_at_time_stamp: null
+      gateway_created_at: null,
+      gateway_updated_at: null
   };
     for (let i = 0; i < gateways.length; i++) {
         gateway.gateway_name = gateways[i].name;
@@ -77,8 +77,8 @@ function convert_names_gateways(gateways) {
         gateway.gateway_description = gateways[i].description;
         gateway.network_id = gateways[i].organizationID;
         gateway.network_server_id = gateways[i].networkServerID;
-        gateway.created_at_time_stamp = gateways[i].createdAt;
-        gateway.updated_at_time_stamp = gateways[i].updatedAt;
+        gateway.gateway_created_at = gateways[i].createdAt;
+        gateway.gateway_updated_at = gateways[i].updatedAt;
         gateways_return[i] = gateway;
         gateway = {
             gateway_name: null,
@@ -86,8 +86,8 @@ function convert_names_gateways(gateways) {
             gateway_description: null,
             network_id: null,
             network_server_id: null,
-            created_at_time_stamp: null,
-            updated_at_time_stamp: null
+            gateway_created_at: null,
+            gateway_updated_at: null
         };
   }
     return gateways_return;

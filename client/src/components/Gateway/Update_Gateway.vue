@@ -472,7 +472,6 @@ export default {
             break;
           }
         }
-        console.log(this.gateway_update.gateway_id_lora,)
          AuthenticationService.update_gateways({
           gateway_name: this.gateway_name,
           gateway_id: this.gateway_update.gateway_id,
@@ -495,6 +494,7 @@ export default {
           this.$emit('gateway_management', data);
         }).catch(err => {
           //Error trying to create subnetwork
+          this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         }) 
       } 

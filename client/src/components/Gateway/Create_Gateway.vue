@@ -529,6 +529,7 @@ export default {
           this.$emit('gateway_management', data);
         }).catch(err => {
           //Error trying to create subnetwork
+          this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         }) 
       } 

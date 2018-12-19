@@ -158,7 +158,7 @@ module.exports = ((app) => {
     app.post("/gateways", authenticate, grant_access, gateway_policy.create, gateways.create);
 
     //Gateways (Update)
-    app.put("/gateways/:gateway_id", authenticate, grant_access, gateway_policy.create, gateways.update);
+    app.put("/gateways/:gateway_id", authenticate, grant_access, gateway_policy.update, gateways.update);
 
     //Gateways (Delete)
     app.delete("/gateways/:gateway_id", authenticate, grant_access, gateways.delete);
