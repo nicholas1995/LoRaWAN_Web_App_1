@@ -8,7 +8,7 @@ module.exports = {
             device_name: Joi.string().required().max(80).regex(
                 new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
             device_eui: Joi.string().hex().required().max(16).min(16),
-            description: Joi.string().required().max(200),
+            device_description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
             vessel_id: Joi.number().required().allow(''),
             device_profile_id: Joi.string().required(),
@@ -19,39 +19,39 @@ module.exports = {
         if (error) {
             switch (error.details[0].context.key) {
                 case 'device_name':
-                    console.log('name')
-                    res.status(422).send({ error: 'Invalid device name.' });
+                    console.log("error in device form : name");
+                    res.status(422).send({ error: 'Invalid device name.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_eui':
-                    console.log('eui')
-                    res.status(422).send({ error: 'Invalid device EUI.' });
+                    console.log("error in device form : eui");
+                    res.status(422).send({ error: 'Invalid device EUI.', message: 'Error in form.', type: 'error'});
                     break;
-                case 'description':
-                    console.log('description')
-                    res.status(422).send({ error: 'Invalid device description.' });
+                case 'device_description':
+                    console.log("error in device form : description");
+                    res.status(422).send({ error: 'Invalid device description.', message: 'Error in form.', type: 'error' });
                     break;
                 case 'sub_network_id':
-                    console.log('sub_network_id')
-                    res.status(422).send({ error: 'Invalid sub-network ID.' });
+                    console.log("error in device form : sub_network_id");
+                    res.status(422).send({ error: 'Invalid sub-network ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'vessel_id':
-                    console.log('vessel id')
-                    res.status(422).send({ error: 'Invalid vessel ID.' });
+                    console.log("error in device form : vessel id");
+                    res.status(422).send({ error: 'Invalid vessel ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_profile_id':
-                    console.log('device_profile_id')
-                    res.status(422).send({ error: 'Invalid device profile ID.' });
+                    console.log("error in device form : device_profile_id");
+                    res.status(422).send({ error: 'Invalid device profile ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'reference_altitude':
-                    console.log("reference_altitude");
-                    res.status(422).send({ error: 'Invalid reference altitude.' });
+                    console.log("error in device form : reference_altitude");
+                    res.status(422).send({ error: 'Invalid reference altitude.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'skip_frame_counter':
-                    console.log("skip_frame_counter");
-                    res.status(422).send({ error: 'Invalid value for skip frame counter.' });
+                    console.log("error in device form : skip_frame_counter");
+                    res.status(422).send({ error: 'Invalid value for skip frame counter.', message: 'Error in form.', type: 'error'});
                     break;
                 default:
-                    res.status(422).send({ error: 'Invalid Information.' });
+                    res.status(422).send({ error: 'Invalid Information.', message: 'Error in form.', type: 'error'});
             }
         } else {
             next();
@@ -64,7 +64,7 @@ module.exports = {
             device_name: Joi.string().required().max(80).regex(
                 new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
             device_eui: Joi.string().hex().required().max(16).min(16),
-            description: Joi.string().required().max(200),
+            device_description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
             vessel_id: Joi.number().allow(''),
             device_profile_id: Joi.string().required(),
@@ -75,43 +75,43 @@ module.exports = {
         if (error) {
             switch (error.details[0].context.key) {
                 case 'device_id':
-                    console.log("device_id");
-                    res.status(422).send({ error: 'Invalid device id.' });
+                    console.log("error in device form : device_id");
+                    res.status(422).send({ error: 'Invalid device id.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_name':
-                    console.log("device_name");
-                    res.status(422).send({ error: 'Invalid device name.' });
+                    console.log("error in device form : device_name");
+                    res.status(422).send({ error: 'Invalid device name.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_eui':
-                    console.log("device_eui");
-                    res.status(422).send({ error: 'Invalid device EUI.' });
+                    console.log("error in device form : device_eui");
+                    res.status(422).send({ error: 'Invalid device EUI.', message: 'Error in form.', type: 'error'});
                     break;
-                case 'description':
-                    console.log("description");
-                    res.status(422).send({ error: 'Invalid device description.' });
+                case 'device_description':
+                    console.log("error in device form : description");
+                    res.status(422).send({ error: 'Invalid device description.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'sub_network_id':
-                    console.log("sub_network_id");
-                    res.status(422).send({ error: 'Invalid sub-network ID.' });
+                    console.log("error in device form : sub_network_id");
+                    res.status(422).send({ error: 'Invalid sub-network ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'vessel_id':
-                    console.log("vessel_id");
-                    res.status(422).send({ error: 'Invalid vessel ID.' });
+                    console.log("error in device form : vessel_id");
+                    res.status(422).send({ error: 'Invalid vessel ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_profile_id':
-                    console.log("device_profile_id");
-                    res.status(422).send({ error: 'Invalid device profile ID.' });
+                    console.log("error in device form : device_profile_id");
+                    res.status(422).send({ error: 'Invalid device profile ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'reference_altitude':
-                    console.log("reference_altitude");
-                    res.status(422).send({ error: 'Invalid reference altitude.' });
+                    console.log("error in device form : reference_altitude");
+                    res.status(422).send({ error: 'Invalid reference altitude.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'skip_frame_counter':
-                    console.log("skip_frame_counter");
-                    res.status(422).send({ error: 'Invalid value for skip frame counter.' });
+                    console.log("error in device form : skip_frame_counter");
+                    res.status(422).send({ error: 'Invalid value for skip frame counter.', message: 'Error in form.', type: 'error'});
                     break;
                 default:
-                    res.status(422).send({ error: 'Invalid Information.' });
+                    res.status(422).send({ error: 'Invalid Information.', message: 'Error in form.', type: 'error'});
             }
         } else {
             next();

@@ -36,10 +36,10 @@
               <v-textarea
                 auto-grow
                 rows="1"
-                v-model="description"
+                v-model="device_description"
                 label="Description*"
-                :error-messages = "description_Errors"
-                @keyup="$v.description.$touch()" 
+                :error-messages = "device_description_Errors"
+                @keyup="$v.device_description.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_description"></tool_tips_forms>
               </v-textarea>
@@ -183,7 +183,7 @@ export default {
       required,
       u:unique_device_eui
     },
-    description: {
+    device_description: {
       required,
       maxLength: maxLength(200),
     },      
@@ -221,11 +221,11 @@ export default {
       !this.$v.device_eui.required && errors.push('Device EUI is required.')
       return errors;
     },
-    description_Errors(){
+    device_description_Errors(){
       const errors=[];
-      if (!this.$v.description.$error)return errors
-      !this.$v.description.maxLength && errors.push('Description must be 200 characters or less')
-      !this.$v.description.required && errors.push('Description is required.')
+      if (!this.$v.device_description.$error)return errors
+      !this.$v.device_description.maxLength && errors.push('Description must be 200 characters or less')
+      !this.$v.device_description.required && errors.push('Description is required.')
       return errors;
     },
     network_name_form_Errors(){
@@ -258,7 +258,7 @@ export default {
     return {
       device_name: '',
       device_eui: '',
-      description: '',
+      device_description: '',
       sub_networks_lora : [], //a list of all the subnetworks on the app server
       network_name_form: '', //this is the variable that holds the selected network 'id-name'
       sub_network_name_form: '', //this is the variable that holds the selected sub_network 'id:name'
@@ -325,7 +325,7 @@ export default {
         AuthenticationService.get_vessels(this.sub_network_id, 0).then(result => { //Fetch Vessels
           let vessels = JSON.parse(result.data.vessels_db); 
           for(let i =0; i< vessels.length; i++){
-            this.vessel_names.push(vessels[i].id + ":" +vessels[i].name);
+            this.vessel_names.push(vessels[i].vessel_id + ":" +vessels[i].vessel_name);
           }
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
@@ -353,7 +353,7 @@ export default {
   methods: {
     create_device(){
       this.$v.$touch();
-      if(this.$v.device_name.$invalid || this.$v.device_eui.$invalid || this.$v.description.$invalid 
+      if(this.$v.device_name.$invalid || this.$v.device_eui.$invalid || this.$v.device_description.$invalid 
       || this.$v.sub_network_name_form.$invalid || this.$v.device_profile_name_form.$invalid || this.$v.reference_altitude.$invalid ){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
@@ -366,7 +366,7 @@ export default {
         AuthenticationService.create_devices({
           device_name: this.device_name,
           device_eui: this.device_eui,
-          description: this.description,
+          device_description: this.device_description,
           sub_network_id: this.sub_network_id,
           vessel_id: this.vessel_id,
           device_profile_id: this.device_profile_id,

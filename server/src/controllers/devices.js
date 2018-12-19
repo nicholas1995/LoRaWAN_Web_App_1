@@ -21,7 +21,7 @@ function device_api_request_data(data, type) {
                 device: {
                     "name": `${data.device_name}`,
                     "devEUI": `${data.device_eui}`,
-                    "description": `${data.description}`,
+                    "description": `${data.device_description}`,
                     "applicationID": `${data.sub_network_id}`,
                     "deviceProfileID": `${data.device_profile_id}`,
                     "skipFCntCheck": data.skip_frame_counter
@@ -32,7 +32,7 @@ function device_api_request_data(data, type) {
                 "device": {
                     "name": `${data.device_name}`,
                     "devEUI": `${data.device_eui}`,
-                    "description": `${data.description}`,
+                    "description": `${data.device_description}`,
                     "applicationID": `${data.sub_network_id }`,
                     "deviceProfileID": `${data.device_profile_id}`,
                     "referenceAltitude": data.reference_altitude,
@@ -45,7 +45,7 @@ function device_api_request_data(data, type) {
             "device": {
                 "name": `${data.device_name}`,
                 "devEUI": `${data.device_eui}`,
-                "description": `${data.description}`,
+                "description": `${data.device_description}`,
                 "applicationID": `${data.sub_network_id}`,
                 "deviceProfileID": `${data.device_profile_id}`,
                 "referenceAltitude": data.reference_altitude,
@@ -73,7 +73,7 @@ function convert_names_devices(devices) {
   let devices_return = [];
   let device = {
       sub_network_id: null,
-      description: null,
+      device_description: null,
       device_eui: null,
       device_profile_id: null,
       device_profile_name: null,
@@ -88,7 +88,7 @@ function convert_names_devices(devices) {
   };
     for (let i = 0; i < devices.length; i++) {
         device.sub_network_id = devices[i].applicationID;
-        device.description = devices[i].description;
+        device.device_description = devices[i].description;
         device.device_eui = devices[i].devEUI;
         device.device_profile_id = devices[i].deviceProfileID;
         device.device_profile_name = devices[i].deviceProfileName;
@@ -102,7 +102,7 @@ function convert_names_devices(devices) {
         devices_return[i] = device;
         device = {
             sub_network_id: null,
-            description: null,
+            device_description: null,
             device_eui: null,
             device_profile_id: null,
             device_profile_name: null,
@@ -122,7 +122,7 @@ function convert_names_devices(devices) {
 function convert_name_device_single(result) {
     let device = {
         sub_network_id: result.device.applicationID,
-        description: result.device.description,
+        device_description: result.device.description,
         device_eui: result.device.devEUI,
         device_profile_id: result.device.deviceProfileID,
         device_name: result.device.name,
@@ -218,8 +218,7 @@ async function add_device_to_default_vessel(device_id, device_eui, sub_network_i
                 //Error fetching the default vessel for a given sub_network
                 throw error_message("get default vessel for sub-network : database", err.message);
             });
-        console.log(device_id, device_eui, sub_network_id, default_vessel[0].id);
-        await DB_VESSEL_DEVICE.create(device_id, device_eui, default_vessel[0].id)
+        await DB_VESSEL_DEVICE.create(device_id, device_eui, default_vessel[0].vessel_id)
             .catch(err => {
                 //Error creating vessel device relationship 
                 throw error_message("create vessel device relationship : database", err.message);
@@ -514,7 +513,7 @@ module.exports = {
             else if (error_location == 2) {
                 devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Device updated. Error updating device in database", type: 'info' })
-            } else {
+            } else { 
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
         }

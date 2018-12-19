@@ -3,7 +3,7 @@ const db = require("../../db");
 module.exports = {
   get: function() {
     let sql = `SELECT 
-        device_eui, device_name, sub_network_id, deleted
+        device_eui, device_name, sub_network_id, device_deleted
         FROM device`;
     return db.queryAsync(sql);
   },
@@ -67,7 +67,7 @@ module.exports = {
   },
   update_all_parameters: function(data, device_eui) {
     let sql = `UPDATE device
-        SET device_name = '${data.device_name}', device_profile_id = '${data.device_profile_id}', device_description = '${data.description}'
+        SET device_name = '${data.device_name}', device_profile_id = '${data.device_profile_id}', device_description = '${data.device_description}'
         WHERE device_id = '${data.device_id}'`;
     return db.queryAsync(sql);
   }

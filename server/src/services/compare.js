@@ -172,8 +172,8 @@ module.exports = {
                                     throw error.error_message(`update: ID-${lora[i].device_eui}`, err.message);
                                 })
                             //console.log('Different device profile id');
-                        } if (lora[i].description != db[j].device_description) {
-                            devices_db.update('device_description', lora[i].description, lora[i].device_eui)
+                        } if (lora[i].device_description != db[j].device_description) {
+                            devices_db.update('device_description', lora[i].device_description, lora[i].device_eui)
                                 .catch(err => {
                                     throw error.error_message(`update: ID-${lora[i].device_eui}`, err.message);
                                 })
@@ -191,7 +191,7 @@ module.exports = {
             }
             for (let k = 0; k < added_lora.length; k++) {
                 await devices_db.create(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].device_profile_id, lora[added_lora[k]].device_eui,
-                    lora[added_lora[k]].device_name, lora[added_lora[k]].description, lora[added_lora[k]].device_deleted)
+                    lora[added_lora[k]].device_name, lora[added_lora[k]].device_description, lora[added_lora[k]].device_deleted)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].device_eui}`, err.message);
                     })

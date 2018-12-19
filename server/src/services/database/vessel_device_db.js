@@ -57,6 +57,7 @@ module.exports = {
     return db.queryAsync(sql);
   },
   create: function(device_id, device_eui, vessel_id) {
+    console.log(device_id, device_eui, vessel_id);
     //Creates a relationship between a device and a vessel
     let sql = `INSERT INTO vessel_device
         (device_id, device_eui, vessel_id)

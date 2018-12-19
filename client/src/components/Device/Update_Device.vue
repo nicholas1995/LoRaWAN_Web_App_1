@@ -25,10 +25,10 @@
               <v-textarea
                 auto-grow
                 rows="1"
-                v-model="description"
+                v-model="device_description"
                 label="Description*"
-                :error-messages = "description_Errors"
-                @keyup="$v.description.$touch()" 
+                :error-messages = "device_description_Errors"
+                @keyup="$v.device_description.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_description"></tool_tips_forms>
               </v-textarea>
@@ -141,7 +141,7 @@ export default {
       u: unique_device_name,
       maxLength: maxLength(80),
     },         
-    description: {
+    device_description: {
       required,
       maxLength: maxLength(200),
     },         
@@ -163,11 +163,11 @@ export default {
       !this.$v.device_name.required && errors.push('Device name is required.')
       return errors;
     }, 
-    description_Errors(){
+    device_description_Errors(){
       const errors=[];
-      if (!this.$v.description.$error)return errors
-      !this.$v.description.maxLength && errors.push('Description must be 200 characters or less')
-      !this.$v.description.required && errors.push('Description is required.')
+      if (!this.$v.device_description.$error)return errors
+      !this.$v.device_description.maxLength && errors.push('Description must be 200 characters or less')
+      !this.$v.device_description.required && errors.push('Description is required.')
       return errors;
     },
     device_profile_name_form_Errors(){
@@ -187,7 +187,7 @@ export default {
   data() {
     return {
       device_name: '',
-      description: '',
+      device_description: '',
       vessel_name_form: '', //this is the variable that holds the selected vessel 'id:name'
       device_profile_name_form: '', //this is the variable that holds the selected device profile 'id:name'
       skip_frame_counter: "",
@@ -218,8 +218,8 @@ export default {
     AuthenticationService.get_vessels(this.device_update.sub_network_id, 0).then(result =>{
         let vessels = JSON.parse(result.data.vessels_db);
         for(let i =0; i< vessels.length; i++){
-          this.vessel_names.push(vessels[i].id +":"+vessels[i].name);
-          if(vessels[i].id == this.device_update.vessel_id){
+          this.vessel_names.push(vessels[i].vessel_id +":"+vessels[i].vessel_name);
+          if(vessels[i].vessel_id == this.device_update.vessel_id){
             this.vessel_name_form = this.vessel_names[i] ;
           }
         }
@@ -230,7 +230,7 @@ export default {
     await AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
         device = JSON.parse(result.data.device);
         this.device_name = device.device_name;
-        this.description = device.description;
+        this.device_description = device.device_description;
         this.reference_altitude = device.reference_altitude;
         this.skip_frame_counter = device.skip_frame_counter
       }).catch(err => {
@@ -256,19 +256,19 @@ export default {
   methods: {
     update_device(){
       this.$v.$touch();
-      if(this.$v.device_name.$invalid || this.$v.description.$invalid 
+      if(this.$v.device_name.$invalid || this.$v.device_description.$invalid 
       || this.$v.device_profile_name_form.$invalid || this.$v.reference_altitude.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         if(this.skip_frame_counter =="")this.skip_frame_counter =false; //needed to set empty radio to false
         this.message = "";
         this.device_profile_id=functions.extract_id_name_id(this.device_profile_name_form);//Extract id of device profile
-        if(this.vessel_name_form)this.vessel_id=functions.extract_id_id_name(this.vessel_name_form);//Extract id of device profile
+        if(this.vessel_name_form)this.vessel_id=functions.extract_id_id_name(this.vessel_name_form);//Extract id of the selected vessel
         AuthenticationService.update_devices({
           device_id: this.device_update.device_id,
           device_name: this.device_name,
           device_eui: this.device_update.device_eui,
-          description: this.description,
+          device_description: this.device_description,
           sub_network_id: this.device_update.sub_network_id,
           vessel_id: this.vessel_id,
           device_profile_id: this.device_profile_id,
@@ -280,6 +280,7 @@ export default {
           this.$emit('device_management', data);
         }).catch(err => {
           //Error trying to update device
+          this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
       } 
