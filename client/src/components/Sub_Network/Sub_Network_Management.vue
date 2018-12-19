@@ -49,7 +49,7 @@
           </td>
           <td class="text-xs-left">{{ props.item.sub_network_id }}</td>
           <td class="text-xs-left">{{ props.item.sub_network_name}}</td>
-          <td class="text-xs-left">{{ props.item.description }}</td>
+          <td class="text-xs-left">{{ props.item.sub_network_description }}</td>
           <td class="text-xs-left">{{ props.item.network_id }}</td>
           <td class="text-xs-left">{{ props.item.service_profile_id }}</td>
           <td class="text-xs-left">{{ props.item.service_profile_name}}</td>
@@ -70,7 +70,7 @@ export default {
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Sub-Network ID', value: 'sub_network_id' , sortable: true },
           { text: 'Sub-Network Name', value: 'sub_network_name' , sortable: true },
-          { text: 'Description', value: 'description' ,sortable: false},
+          { text: 'Description', value: 'sub_network_description' ,sortable: false},
           { text: 'Network ID', value: 'network_id' , sortable: true },
           { text: 'Service Profile ID', value: 'service_profile_id', sortable: true },
           { text: 'Service Profile Name', value: 'service_profile_name', sortable: false },

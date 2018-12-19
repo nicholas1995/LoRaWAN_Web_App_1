@@ -147,6 +147,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('network_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
       }).catch(err => {
+          this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
       })
       }

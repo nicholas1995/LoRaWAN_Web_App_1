@@ -25,10 +25,10 @@
               <v-textarea
                 auto-grow
                 rows="1"
-                v-model="description"
+                v-model="sub_network_description"
                 label="Description*"
-                :error-messages = "description_Errors"
-                @keyup="$v.description.$touch()" 
+                :error-messages = "sub_network_description_Errors"
+                @keyup="$v.sub_network_description.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_descripton"></tool_tips_forms>
               </v-textarea>
@@ -58,6 +58,8 @@
                 v-model="payload_codec_form"
                 :items="this.payload_codec"
                 label="Payload Codec*"
+                :error-messages = "payload_codec_form_Errors"
+                @blur="$v.payload_codec_form.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_payload_codec"></tool_tips_forms>
               </v-select>
@@ -121,7 +123,7 @@ export default {
       u: unique,
       maxLength: maxLength(80),
     },      
-    description: {
+    sub_network_description: {
       required,
       maxLength: maxLength(200),
     },      
@@ -145,11 +147,11 @@ export default {
       !this.$v.sub_network_name.required && errors.push('Sub-Network name is required.')
       return errors;
     },
-    description_Errors(){
+    sub_network_description_Errors(){
       const errors=[];
-      if (!this.$v.description.$error)return errors
-      !this.$v.description.maxLength && errors.push('Description must be 200 characters or longer')
-      !this.$v.description.required && errors.push('Description is required.')
+      if (!this.$v.sub_network_description.$error)return errors
+      !this.$v.sub_network_description.maxLength && errors.push('Description must be 200 characters or longer')
+      !this.$v.sub_network_description.required && errors.push('Description is required.')
       return errors;
     },
     network_name_form_Errors(){
@@ -163,12 +165,18 @@ export default {
       if (!this.$v.service_profile_form.$error)return errors
       !this.$v.service_profile_form.required && errors.push('Service Profile is required.')
       return errors;
+    },
+    payload_codec_form_Errors(){
+      const errors=[];
+      if (!this.$v.payload_codec_form.$error)return errors
+      !this.$v.payload_codec_form.required && errors.push('Payload Codec is required.')
+      return errors;
     }
   },
   data() {
     return {
       sub_network_name: '',
-      description: '',
+      sub_network_description: '',
       payload_codec: ['Cayenne LPP', 'None'],
       payload_codec_form: 'None',
       network_name_form: '', //this is the variable that holds the selected network 'id-name'
@@ -231,7 +239,7 @@ export default {
   methods: {
     create_sub_network(){
       this.$v.$touch();
-      if(this.$v.sub_network_name.$invalid || this.$v.description.$invalid || this.$v.network_name_form.$invalid || this.$v.service_profile_form.$invalid ){
+      if(this.$v.sub_network_name.$invalid || this.$v.sub_network_description.$invalid || this.$v.network_name_form.$invalid || this.$v.service_profile_form.$invalid ){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
@@ -246,7 +254,7 @@ export default {
         else{this.payload_codec_form = ''}
          AuthenticationService.create_sub_networks({
           sub_network_name: this.sub_network_name,
-          description: this.description,
+          sub_network_description: this.sub_network_description,
           network_id: this.network_id,
           service_profile_id: this.service_profile_id,
           payload_codec: this.payload_codec_form
@@ -255,6 +263,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('sub_network_management', data);
         }).catch(err => {
+          this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         }) 
       } 

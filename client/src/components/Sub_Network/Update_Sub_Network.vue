@@ -23,10 +23,10 @@
             <!--Description  -->
             <v-flex >
               <v-text-field
-                v-model="description"
+                v-model="sub_network_description"
                 label= 'Description*'
-                :error-messages = "description_Errors"
-                @keyup="$v.description.$touch()" 
+                :error-messages = "sub_network_description_Errors"
+                @keyup="$v.sub_network_description.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_descripton"></tool_tips_forms>  
               </v-text-field>
@@ -96,7 +96,7 @@ export default {
       u: unique,
       maxLength: maxLength(80),
     },      
-    description: {
+    sub_network_description: {
       required,
       maxLength: maxLength(200),
     }
@@ -111,10 +111,10 @@ export default {
       !this.$v.sub_network_name.required && errors.push('Sub-Network name is required.')
       return errors;
     },
-    description_Errors(){
+    sub_network_description_Errors(){
       const errors=[];
-      if (!this.$v.description.$error)return errors
-      !this.$v.description.maxLength && errors.push('Description must be 60 characters or longer')
+      if (!this.$v.sub_network_description.$error)return errors
+      !this.$v.sub_network_description.maxLength && errors.push('Description must be 60 characters or longer')
       return errors;
     }
   },
@@ -122,7 +122,7 @@ export default {
     return {
       sub_network: {}, //object that holds the information about the sub-network to be edited
       sub_network_name: "",
-      description: "",
+      sub_network_description: "",
       payload_codec: ['Cayenne LPP', 'None'],
       payload_codec_form: '',
       message: "",
@@ -144,7 +144,7 @@ export default {
         });
         this.sub_network = JSON.parse(this.sub_network.data.sub_network);
         this.sub_network_name = this.sub_network.sub_network_name;
-        this.description = this.sub_network.description;
+        this.sub_network_description = this.sub_network.sub_network_description;
         this.payload_codec_form = this.sub_network.payload_codec;
 
     for(let i =0; i<this.sub_network_prop.length; i++){
@@ -153,12 +153,12 @@ export default {
       }
     }
     this.sub_network_name = this.sub_network_update.sub_network_name;
-    this.description = this.sub_network_update.description;
+    this.sub_network_description = this.sub_network_update.sub_network_description;
   },
   methods: {
     update_sub_network() {
       this.$v.$touch();
-      if(this.$v.sub_network_name.$invalid || this.$v.description.$invalid ){
+      if(this.$v.sub_network_name.$invalid || this.$v.sub_network_description.$invalid ){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
@@ -166,7 +166,7 @@ export default {
         else{this.payload_codec_form = ''}
         AuthenticationService.update_sub_networks({
           sub_network_name: this.sub_network_name,
-          description: this.description,
+          sub_network_description: this.sub_network_description,
           network_id: this.sub_network_update.network_id,
           service_profile_id: this.sub_network_update.service_profile_id,
           payload_codec: this.payload_codec_form
@@ -176,6 +176,7 @@ export default {
             this.$emit('message_display',{message:result.data.message, type:result.data.type})  
             this.$emit('sub_network_management', data);
           }).catch(err => {
+            this.message = err.response.data.error;
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
           })
       }

@@ -38,7 +38,7 @@ module.exports = {
                                     let error = new VError("Update Network: display name : %s", err.message);
                                     throw error;
                                 })
-                            console.log('Different display name');
+                            //console.log('Different display name');
                         }
                         if (lora[i].network_can_have_gateways != db[j].network_can_have_gateways) {
                             let value;
@@ -100,7 +100,7 @@ module.exports = {
                                 })
                             //console.log('Different name');
                         } if (lora[i].sub_network_description != db[j].sub_network_description) {
-                            await sub_network_db.update('sub_network_description', lora[i].description, lora[i].sub_network_id)
+                            await sub_network_db.update('sub_network_description', lora[i].sub_network_description, lora[i].sub_network_id)
                                 .catch(err => {
                                     throw error.error_message(`update: ID-${lora[i].sub_network_id}`, err.message);
                                 })
@@ -117,7 +117,7 @@ module.exports = {
             } 
             for(let k =0; k< added_lora.length; k++){
                 await sub_network_db.create_sub_network(lora[added_lora[k]].sub_network_id, lora[added_lora[k]].network_id, lora[added_lora[k]].service_profile_id,
-                    lora[added_lora[k]].sub_network_name, lora[added_lora[k]].description)
+                    lora[added_lora[k]].sub_network_name, lora[added_lora[k]].sub_network_description)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].sub_network_id}`, err.message);
                     })

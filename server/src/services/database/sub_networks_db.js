@@ -21,7 +21,7 @@ module.exports = {
     },
     update_sub_networks_all_parameters: function (data, id) {
         let sql = `UPDATE sub_network
-        SET sub_network_name = '${data.sub_network_name}', sub_network_description= '${data.description}'
+        SET sub_network_name = '${data.sub_network_name}', sub_network_description= '${data.sub_network_description}'
         WHERE sub_network_id = '${id}'`;
         return db.queryAsync(sql);
     },

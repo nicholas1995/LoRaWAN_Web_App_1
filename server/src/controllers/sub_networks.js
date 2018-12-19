@@ -20,7 +20,7 @@ function sub_network_api_request_data(data, type) {
     else if (type == 1) {//create form
         request = {
             "application":{
-                "description": `${data.description}`,
+                "description": `${data.sub_network_description}`,
                 "name": `${data.sub_network_name}`,
                 "organizationID": `${data.network_id}`,
                 "payloadCodec": `${data.payload_codec}`,
@@ -32,7 +32,7 @@ function sub_network_api_request_data(data, type) {
     } else if (type == 2) {//Update form
         request = {
             "application": {
-                "description": `${data.description}`,
+                "description": `${data.sub_network_description}`,
                 "name": `${data.sub_network_name}`,
                 "organizationID": `${data.network_id}`,
                 "payloadCodec": `${data.payload_codec}`,
@@ -67,7 +67,7 @@ async function get_sub_networks(){
 function convert_names_sub_networks(sub_networks){
     let sub_networks_return = [];
     let sub_network = { 
-        description: null, 
+        sub_network_description: null, 
         sub_network_id:null,
         sub_network_name: null,
         network_id: null,
@@ -75,7 +75,7 @@ function convert_names_sub_networks(sub_networks){
         service_profile_name: null,
      };
     for(let i=0; i< sub_networks.length; i++){
-        sub_network.description = sub_networks[i].description;
+        sub_network.sub_network_description = sub_networks[i].description;
         sub_network.sub_network_id = sub_networks[i].id;
         sub_network.sub_network_name = sub_networks[i].name;
         sub_network.network_id = sub_networks[i].organizationID;
@@ -83,7 +83,7 @@ function convert_names_sub_networks(sub_networks){
         sub_network.service_profile_name = sub_networks[i].serviceProfileName;
         sub_networks_return[i] = sub_network;
         sub_network = {
-            description: null,
+            sub_network_description: null,
             sub_network_id: null,
             sub_network_name: null,
             network_id: null,
@@ -97,7 +97,7 @@ function convert_names_sub_networks(sub_networks){
 function convert_name_sub_network_single(result) {
     let sub_network = {
         sub_network_id: result.application.id,
-        description: result.application.description,
+        sub_network_description: result.application.sub_network_description,
         sub_network_name: result.application.name,
         network_id: result.application.organizationID,
         service_profile_id: result.application.serviceProfileID,
@@ -196,7 +196,7 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("create sub-network : lora app server", err.message);
                 })
-            await db.create_sub_network(result.data.id, data.network_id, data.service_profile_id, data.sub_network_name, data.description)
+            await db.create_sub_network(result.data.id, data.network_id, data.service_profile_id, data.sub_network_name, data.sub_network_description)
                 .catch(err => {
                     //Error creating sub network in database 
                     error_location = 2;
