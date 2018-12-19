@@ -269,9 +269,12 @@ export default {
       network_id: '', //this is the variable that holds the id of the selected network
       sub_network_id: '', //this is the variable that holds the id of the selected sub_network
       vessel_id: '', //this is the variable that holds the id of the selected vessel
+
+      device_profiles: '',
       device_profile_id: '', //this is the device profile id of the selected device profile
       network_names: [],
       sub_network_names: [],
+      vessels: '',
       vessel_names: [],
       device_profile_names: [], //this is the variable that holds all the names to display on the form for the device profiles 
       message: '',
@@ -313,23 +316,16 @@ export default {
             this.devices_same_sub_network.push(this.devices_prop[i]);
           }
         }
-        AuthenticationService.get_device_profiles(this.sub_network_id).then(result => { //Fetch Device Profiles
-          let device_profiles = JSON.parse(result.data.device_profiles);
-          for(let i =0; i< device_profiles.length; i++){
-            this.device_profile_names.push(device_profiles[i].device_profile_name.concat(":",device_profiles[i].device_profile_id));
+        for(let i =0; i< this.device_profiles.length; i++){ //Filter the device profile based on the selected sub network
+          if(this.network_id == this.device_profiles[i].network_id){
+            this.device_profile_names.push(this.device_profiles[i].device_profile_id +":"+ this.device_profiles[i].device_profile_name);
           }
-        }).catch(err=> {
-          //Error requesting device profiles from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-        })
-        AuthenticationService.get_vessels(this.sub_network_id, 0).then(result => { //Fetch Vessels
-          let vessels = JSON.parse(result.data.vessels_db); 
-          for(let i =0; i< vessels.length; i++){
-            this.vessel_names.push(vessels[i].vessel_id + ":" +vessels[i].vessel_name);
+        }
+        for(let i =0; i< this.vessels.length; i++){ //Filter the device profile based on the selected sub network
+          if(this.sub_network_id == this.vessels[i].sub_network_id){
+            this.vessel_names.push(this.vessels[i].vessel_id +":"+ this.vessels[i].vessel_name);
           }
-        }).catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
-        })
+        }
       }
     }
   },
@@ -344,11 +340,22 @@ export default {
       this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
     })
     AuthenticationService.get_sub_networks().then(result => {
-        this.sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
-      }).catch(err => {
-        //Error getting sub-networks from server
-        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-      })
+      this.sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
+    }).catch(err => {
+      //Error getting sub-networks from server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+    })
+    AuthenticationService.get_device_profiles().then(result => { //Fetch Device Profiles
+      this.device_profiles = JSON.parse(result.data.device_profiles_lora);
+    }).catch(err=> {
+      //Error requesting device profiles from server
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+    })
+    AuthenticationService.get_vessels(null, 0).then(result => { //Fetch Vessels
+      this.vessels = JSON.parse(result.data.vessels_db); 
+    }).catch(err => {
+      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+    })
   },
   methods: {
     create_device(){
@@ -363,13 +370,20 @@ export default {
         if(this.vessel_name_form){
           this.vessel_id=functions.extract_id_id_name(this.vessel_name_form)
         }
+        this.device_profile_id=functions.extract_id_id_name(this.device_profile_name_form);//Extract id of device profile
+        for(let i = 0; i < this.device_profiles.length; i++){
+          if(this.device_profiles[i].device_profile_id == this.device_profile_id){
+            this.device_profile_id = this.device_profiles[i].device_profile_id_lora;
+            break;
+          }
+        }
         AuthenticationService.create_devices({
           device_name: this.device_name,
           device_eui: this.device_eui,
           device_description: this.device_description,
           sub_network_id: this.sub_network_id,
           vessel_id: this.vessel_id,
-          device_profile_id: this.device_profile_id,
+          device_profile_id_lora: this.device_profile_id,
           reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,
         }).then(result => {

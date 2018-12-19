@@ -11,7 +11,7 @@ module.exports = {
             device_description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
             vessel_id: Joi.number().required().allow(''),
-            device_profile_id: Joi.string().required(),
+            device_profile_id_lora: Joi.string().required(),
             reference_altitude: Joi.number().greater(-1).allow(''),
             skip_frame_counter: Joi.boolean().required()
         } 
@@ -38,7 +38,7 @@ module.exports = {
                     console.log("error in device form : vessel id");
                     res.status(422).send({ error: 'Invalid vessel ID.', message: 'Error in form.', type: 'error'});
                     break;
-                case 'device_profile_id':
+                case 'device_profile_id_lora':
                     console.log("error in device form : device_profile_id");
                     res.status(422).send({ error: 'Invalid device profile ID.', message: 'Error in form.', type: 'error'});
                     break;
@@ -67,7 +67,7 @@ module.exports = {
             device_description: Joi.string().required().max(200),
             sub_network_id: Joi.string().required(),
             vessel_id: Joi.number().allow(''),
-            device_profile_id: Joi.string().required(),
+            device_profile_id_lora: Joi.string().required(),
             reference_altitude: Joi.number().greater(-1),
             skip_frame_counter: Joi.boolean().required()
         }
@@ -98,7 +98,7 @@ module.exports = {
                     console.log("error in device form : vessel_id");
                     res.status(422).send({ error: 'Invalid vessel ID.', message: 'Error in form.', type: 'error'});
                     break;
-                case 'device_profile_id':
+                case 'device_profile_id_lora':
                     console.log("error in device form : device_profile_id");
                     res.status(422).send({ error: 'Invalid device profile ID.', message: 'Error in form.', type: 'error'});
                     break;

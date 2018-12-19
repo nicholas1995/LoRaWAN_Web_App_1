@@ -167,7 +167,11 @@ module.exports = ((app) => {
     app.get("/service_profiles", authenticate, grant_access, service_profiles.get);
 
     //----------------------Device Profile----------------------
-    app.get("/device_profiles/:sub_network_id", authenticate, grant_access, device_profiles.get);
+    //Gateways (Read Specific Sub-Network)
+    app.get("/device_profiles/:sub_network_id", authenticate, grant_access, device_profiles.get_specified_sub_network);
+
+    //Gateways (Read)
+    app.get("/device_profiles", authenticate, grant_access, device_profiles.get);
 
     //----------------------Network servers----------------------
     app.get("/network_servers", authenticate, grant_access, network_servers.get);

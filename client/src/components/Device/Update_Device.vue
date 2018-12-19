@@ -193,6 +193,7 @@ export default {
       skip_frame_counter: "",
       reference_altitude: '',
 
+      device_profiles: '',
       device_profile_id: '', //this is the device profile id of the selected device profile
       vessel_id: '', //this is the variable that holds the id of the selected vessel
       device_profile_names: [], //this is the variable that holds all the names to display on the form for the device profiles name:id
@@ -243,10 +244,15 @@ export default {
         this.devices_same_sub_network.push(this.devices_prop[i]);
       }
     }
-    await AuthenticationService.get_device_profiles(this.device_update.sub_network_id).then(result => {
-      let device_profiles = JSON.parse(result.data.device_profiles);
-      for(let i = 0; i < device_profiles.length; i++){
-        this.device_profile_names.push(device_profiles[i].device_profile_name.concat(":",device_profiles[i].device_profile_id));
+    await AuthenticationService.get_device_profiles_specified_sub_network(this.device_update.sub_network_id).then(result => {
+      this.device_profiles = JSON.parse(result.data.device_profiles_lora);
+      let j = 0;
+      for(let i = 0; i < this.device_profiles.length; i++){
+        this.device_profile_names.push(this.device_profiles[i].device_profile_id + ":" + this.device_profiles[i].device_profile_name);
+        if(this.device_update.device_profile_id_lora == this.device_profiles[i].device_profile_id_lora){
+          this.device_profile_name_form = this.device_profile_names[j];
+        }
+        j = j + 1;
       }
     }).catch(err => {
       //Error getting networks from server
@@ -262,7 +268,15 @@ export default {
       }else{
         if(this.skip_frame_counter =="")this.skip_frame_counter =false; //needed to set empty radio to false
         this.message = "";
-        this.device_profile_id=functions.extract_id_name_id(this.device_profile_name_form);//Extract id of device profile
+
+        this.device_profile_id=functions.extract_id_id_name(this.device_profile_name_form);//Extract id of device profile
+        for(let i = 0; i < this.device_profiles.length; i++){
+          if(this.device_profiles[i].device_profile_id == this.device_profile_id){
+            this.device_profile_id = this.device_profiles[i].device_profile_id_lora;
+            break;
+          }
+        }
+
         if(this.vessel_name_form)this.vessel_id=functions.extract_id_id_name(this.vessel_name_form);//Extract id of the selected vessel
         AuthenticationService.update_devices({
           device_id: this.device_update.device_id,
@@ -271,7 +285,7 @@ export default {
           device_description: this.device_description,
           sub_network_id: this.device_update.sub_network_id,
           vessel_id: this.vessel_id,
-          device_profile_id: this.device_profile_id,
+          device_profile_id_lora: this.device_profile_id,
           reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,
         }, this.device_update.device_eui).then(result => {

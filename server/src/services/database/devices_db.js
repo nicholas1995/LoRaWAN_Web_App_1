@@ -7,12 +7,12 @@ module.exports = {
         FROM device`;
     return db.queryAsync(sql);
   },
-  get_device: function(id, device_eui, device_name, sub_network_id, deleted) {
+  get_device: function(device_id, device_eui, device_name, sub_network_id, deleted) {
     let sql_where = [];
     let where = "";
     let sql = "SELECT *  FROM device ";
-    if (id != null && id != "null") {
-      sql_where.push(`id = '${id}'`);
+    if (device_id != null && device_id != "null") {
+      sql_where.push(`id = '${device_id}'`);
     }
     if (device_eui != null && device_eui != "null") {
       sql_where.push(`device_eui = '${device_eui}'`);
@@ -59,15 +59,15 @@ module.exports = {
         WHERE device_eui = '${condition}'`;
     return db.queryAsync(sql);
   },
-  create: function (sub_network_id, device_profile_id, device_eui, device_name, device_description) {
+  create: function (sub_network_id, device_profile_id_lora, device_eui, device_name, device_description) {
     let sql = `INSERT INTO device
-        (sub_network_id, device_profile_id, device_eui, device_name, device_description)
-        VALUES ('${sub_network_id}', '${device_profile_id}', '${device_eui}', '${device_name}', '${device_description}')`;
+        (sub_network_id, device_profile_id_lora, device_eui, device_name, device_description)
+        VALUES ('${sub_network_id}', '${device_profile_id_lora}', '${device_eui}', '${device_name}', '${device_description}')`;
     return db.queryAsync(sql);
   },
   update_all_parameters: function(data, device_eui) {
     let sql = `UPDATE device
-        SET device_name = '${data.device_name}', device_profile_id = '${data.device_profile_id}', device_description = '${data.device_description}'
+        SET device_name = '${data.device_name}', device_profile_id_lora = '${data.device_profile_id_lora}', device_description = '${data.device_description}'
         WHERE device_id = '${data.device_id}'`;
     return db.queryAsync(sql);
   }

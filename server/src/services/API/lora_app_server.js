@@ -85,19 +85,19 @@ module.exports = {
 
   //------------------------Device Activation------------------------
   //---------Read---------
-  get_devices_activation: function (device_eui) {
+  get_devices_activation: function(device_eui) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.get(`/api/devices/${device_eui}/activation`);
   },
 
   //---------Create---------
-  create_devices_activation: function (data, device_eui) {
+  create_devices_activation: function(data, device_eui) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.post(`/api/devices/${device_eui}/activate`, data);
   },
 
   //---------Delete---------
-  delete_devices_activation: function (device_eui) {
+  delete_devices_activation: function(device_eui) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.delete(`/api/devices/${device_eui}/activation`);
   },
@@ -133,18 +133,20 @@ module.exports = {
   //---------Read---------
   get_service_profiles: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
-    return instance.get(
-      `/api/service-profiles?limit=${data.limit}`
-    );
+    return instance.get(`/api/service-profiles?limit=${data.limit}`);
   },
 
   //------------------------Device Profile------------------------
   //---------Read---------
-  get_device_profiles: function(data, id) {
+  get_device_profiles: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
-    return instance.get(
-      `/api/device-profiles?limit=${data.limit}&applicationID=${id}`
-    );
+    return instance.get(`/api/device-profiles?limit=${data.limit}`);
+  },
+
+  //---------Read for a specified Sub-Network---------
+  get_device_profiles_specified_sub_network: function(data, sub_network_id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/device-profiles?limit=${data.limit}&applicationID=${sub_network_id}`);
   },
 
   //------------------------Network Servers------------------------
@@ -156,6 +158,6 @@ module.exports = {
   //------------------------Gateway Profiles------------------------
   get_gateway_profiles: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
-    return instance.get(`/api/gateway-profiles?limit=${data.limit}` );
+    return instance.get(`/api/gateway-profiles?limit=${data.limit}`);
   }
 };  

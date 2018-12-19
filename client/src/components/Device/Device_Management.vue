@@ -67,7 +67,7 @@
           <td class="text-xs-left">{{ props.item.sub_network_id }}</td>
           <td class="text-xs-left">{{ props.item.vessel_id }}</td>
           <td class="text-xs-left">{{ props.item.last_seen_at | return_date}}</td>
-          <td class="text-xs-left">{{ props.item.device_profile_id}}</td>
+          <td class="text-xs-left">{{ props.item.device_profile_id_lora}}</td>
           <td class="text-xs-left">{{ props.item.device_profile_name }}</td>
           <td class="text-xs-left">{{ props.item.device_status_battery}}</td>
           <td class="text-xs-left">{{ props.item.device_status_battery_level }}</td>
@@ -96,7 +96,7 @@ export default {
           { text: 'Sub-Network ID', value: 'sub_network_id' , sortable: true },
           { text: 'Vessel ID', value: 'vessel_id' , sortable: true },
           { text: 'Last Seen', value: 'last_seen_at' , sortable: true },
-          { text: 'Device Profile ID', value: 'device_profile_id', sortable: true },
+          { text: 'Device Profile ID', value: 'device_profile_id_lora', sortable: true },
           { text: 'Device Profile Name', value: 'device_profile_name', sortable: false },
           { text: 'Battery Status', value: 'device_status_battery' ,sortable: false},
           { text: 'Battery Level', value: 'device_status_battery_level' , sortable: true },

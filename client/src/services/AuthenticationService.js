@@ -223,9 +223,14 @@ export default {
 
 
     //Device Profile
-    get_device_profiles(sub_network_id) {
+    get_device_profiles_specified_sub_network(sub_network_id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/device_profiles/${sub_network_id}`);
+    },
+
+    get_device_profiles() {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/device_profiles`);
     },
 
     //Network servers

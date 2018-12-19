@@ -23,7 +23,7 @@ function device_api_request_data(data, type) {
                     "devEUI": `${data.device_eui}`,
                     "description": `${data.device_description}`,
                     "applicationID": `${data.sub_network_id}`,
-                    "deviceProfileID": `${data.device_profile_id}`,
+                    "deviceProfileID": `${data.device_profile_id_lora}`,
                     "skipFCntCheck": data.skip_frame_counter
                 }
             }
@@ -34,7 +34,7 @@ function device_api_request_data(data, type) {
                     "devEUI": `${data.device_eui}`,
                     "description": `${data.device_description}`,
                     "applicationID": `${data.sub_network_id }`,
-                    "deviceProfileID": `${data.device_profile_id}`,
+                    "deviceProfileID": `${data.device_profile_id_lora}`,
                     "referenceAltitude": data.reference_altitude,
                     "skipFCntCheck": data.skip_frame_counter
                 }
@@ -47,7 +47,7 @@ function device_api_request_data(data, type) {
                 "devEUI": `${data.device_eui}`,
                 "description": `${data.device_description}`,
                 "applicationID": `${data.sub_network_id}`,
-                "deviceProfileID": `${data.device_profile_id}`,
+                "deviceProfileID": `${data.device_profile_id_lora}`,
                 "referenceAltitude": data.reference_altitude,
                 "skipFCntCheck": data.skip_frame_counter
             }
@@ -75,7 +75,7 @@ function convert_names_devices(devices) {
       sub_network_id: null,
       device_description: null,
       device_eui: null,
-      device_profile_id: null,
+      device_profile_id_lora: null,
       device_profile_name: null,
       device_status_battery: null,
       device_status_battery_level: null,
@@ -90,7 +90,7 @@ function convert_names_devices(devices) {
         device.sub_network_id = devices[i].applicationID;
         device.device_description = devices[i].description;
         device.device_eui = devices[i].devEUI;
-        device.device_profile_id = devices[i].deviceProfileID;
+        device.device_profile_id_lora = devices[i].deviceProfileID;
         device.device_profile_name = devices[i].deviceProfileName;
         device.device_status_battery = devices[i].deviceStatusBattery;
         device.device_status_battery_level = devices[i].deviceStatusBatteryLevel;
@@ -104,7 +104,7 @@ function convert_names_devices(devices) {
             sub_network_id: null,
             device_description: null,
             device_eui: null,
-            device_profile_id: null,
+            device_profile_id_lora: null,
             device_profile_name: null,
             device_status_battery: null,
             device_status_battery_level: null,
@@ -124,7 +124,7 @@ function convert_name_device_single(result) {
         sub_network_id: result.device.applicationID,
         device_description: result.device.description,
         device_eui: result.device.devEUI,
-        device_profile_id: result.device.deviceProfileID,
+        device_profile_id_lora: result.device.deviceProfileID,
         device_name: result.device.name,
         reference_altitude: result.device.referenceAltitude,
         skip_frame_counter: result.device.skipFCntCheck,
@@ -367,7 +367,7 @@ module.exports = {
                     throw error.error_message("create device : lora app server", err.message);
                 }); 
             console.log("Devices fetched from lora app server");
-            await db.create(data.sub_network_id, data.device_profile_id, data.device_eui, data.device_name, data.device_description)
+            await db.create(data.sub_network_id, data.device_profile_id_lora, data.device_eui, data.device_name, data.device_description)
                 .catch(err => {
                     //Error creating device on database
                     error_location = 2;
