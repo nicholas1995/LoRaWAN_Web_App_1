@@ -77,7 +77,7 @@ export default {
    'vessel_update'
   ],
   created: function () {
-    this.vessel_name = this.vessel_update.name;
+    this.vessel_name = this.vessel_update.vessel_name;
   },
   computed: {
     vessel_nameErrors(){
@@ -96,12 +96,13 @@ export default {
       }else{
         this.message = "";
         AuthenticationService.update_vessels({
-          name: this.vessel_name
-      }, this.vessel_update.id).then(result => {
+          vessel_name: this.vessel_name
+      }, this.vessel_update.vessel_id).then(result => {
           let data = JSON.parse(result.data.vessels_db);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('vessel_management', {data: data}); //passing the revecived array of vessels to the parent component [vessel]
       }).catch(err => {
+          this.message = err.response.data.error; 
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
       })
       }

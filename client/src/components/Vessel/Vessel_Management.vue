@@ -34,7 +34,7 @@
               >
                 edit
               </v-icon>
-            <span>Edit {{props.item.name}}</span>
+            <span>Edit {{props.item.vessel_name}}</span>
             </v-tooltip>
             <v-tooltip bottom>
               <v-icon slot="activator"
@@ -44,11 +44,14 @@
               >
                 delete
               </v-icon>
-            <span>Delete {{props.item.name}}</span>
+            <span>Delete {{props.item.vessel_name}}</span>
             </v-tooltip>
           </td>
-          <td class="text-xs-left">{{ props.item.id }}</td>
-          <td class="text-xs-left">{{ props.item.name }}</td>
+          <td class="text-xs-left">{{ props.item.vessel_id }}</td>
+          <td class="text-xs-left">{{ props.item.vessel_name }}</td>
+          <td class="text-xs-left">{{ props.item.vessel_unique_vessel_identifier }}</td>
+          <td class="text-xs-left">{{ props.item.vessel_international_radio_call_sign }}</td>
+          <td class="text-xs-left">{{ props.item.vessel_type }}</td>
           <td class="text-xs-left">{{ props.item.sub_network_id }}</td>
       </template>
     </v-data-table>
@@ -65,8 +68,11 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
-          { text: 'Vessel ID', value: 'id' ,sortable: true},
-          { text: 'Vessel Name', value: 'name' , sortable: false },
+          { text: 'Vessel ID', value: 'vessel_id' ,sortable: true},
+          { text: 'Vessel Name', value: 'vessel_name' , sortable: false },
+          { text: 'Unique Vessel Identifier', value: 'vessel_unique_vessel_identifier' ,sortable: true},
+          { text: 'International Radio Call Sign', value: 'vessel_international_radio_call_sign' , sortable: false },
+          { text: 'Vessel Type', value: 'vessel_type' , sortable: false },
           { text: 'Sub-Network ID', value: 'sub_network_id', sortable: true }
         ],
         vessels: []
@@ -92,7 +98,7 @@ export default {
   methods: {
     delete_vessel(vessel){
       if(confirm('Are you sure you want to delete this vessel?') == true){
-        AuthenticationService.delete_vessels(vessel.id).then(result => {
+        AuthenticationService.delete_vessels(vessel.vessel_id).then(result => {
           this.vessels = JSON.parse(result.data.vessels_db);
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {

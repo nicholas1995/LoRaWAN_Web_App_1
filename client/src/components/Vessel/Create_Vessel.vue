@@ -15,12 +15,39 @@
             <!--vessel Name -->
               <v-flex >
                 <v-text-field
-                  v-model="name"
-                  :error-messages = "name_errors"
+                  v-model="vessel_name"
+                  :error-messages = "vessel_name_errors"
                   label="Vessel Name*"
-                  @keyup="$v.name.$touch()">
+                  @keyup="$v.vessel_name.$touch()">
+                </v-text-field>
+              </v-flex>       
+            <!--Unique Vessel Identifier --> 
+              <v-flex >
+                <v-text-field
+                  v-model="vessel_unique_vessel_identifier"
+                  :error-messages = "vessel_unique_vessel_identifier_errors"
+                  label="Unique Vessel Identifier*"
+                  @keyup="$v.vessel_unique_vessel_identifier.$touch()">
                 </v-text-field>
               </v-flex>
+            <!--International radio call sign --> 
+              <v-flex >
+                <v-text-field
+                  v-model="vessel_international_radio_call_sign"
+                  :error-messages = "vessel_international_radio_call_sign_errors"
+                  label="International Radio Call Sign*"
+                  @keyup="$v.vessel_international_radio_call_sign.$touch()">
+                </v-text-field>
+              </v-flex>
+            <!--Vessel Type-->
+              <v-select
+                v-model="vessel_type_form"
+                :items="this.vessel_type"
+                label="Vessel Type*"
+                :error-messages = "vessel_type_form_errors"
+                @blur="$v.vessel_type_form.$touch()" 
+              >
+              </v-select>
             <!--Network Name-->
               <v-select
                 v-model="network_name_form"
@@ -67,11 +94,33 @@ import { validationMixin } from 'vuelidate'
 import { required, maxLength, helpers } from 'vuelidate/lib/validators'
 
 
-const unique= function(value){
+const unique_vessel_name= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
   for(i=0; i< this.vessels_prop.length; i++){
-    if(value ==this.vessels_prop[i].name){
+    if(value ==this.vessels_prop[i].vessel_name){
+      return 0;
+    }
+  } 
+  return x; 
+}
+
+const unique_vessel_unique_vessel_identifier= function(value){
+   let i;
+  let x = 1; //0 fail, 1 pass
+  for(i=0; i< this.vessels_prop.length; i++){
+    if(value ==this.vessels_prop[i].vessel_unique_vessel_identifier){
+      return 0;
+    }
+  } 
+  return x; 
+}
+
+const unique_vessel_international_radio_call_sign= function(value){
+   let i;
+  let x = 1; //0 fail, 1 pass
+  for(i=0; i< this.vessels_prop.length; i++){
+    if(value ==this.vessels_prop[i].vessel_international_radio_call_sign){
       return 0;
     }
   } 
@@ -82,11 +131,24 @@ const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 export default {
 mixins: [validationMixin],
   validations: {
-      name: {
+      vessel_name: {
         required,
         maxLength: maxLength(80),
-        u: unique,
-      },      
+        u: unique_vessel_name,
+      },    
+      vessel_unique_vessel_identifier: {
+        required,
+        maxLength: maxLength(80),
+        u: unique_vessel_unique_vessel_identifier,
+      },
+      vessel_international_radio_call_sign: {
+        required,
+        maxLength: maxLength(80),
+        u: unique_vessel_international_radio_call_sign,
+      },        
+      vessel_type_form: {
+        required,
+      },    
       network_name_form: {
         required,
       },   
@@ -96,7 +158,11 @@ mixins: [validationMixin],
     },
   data() {
     return {
-      name: '',
+      vessel_name: '',
+      vessel_unique_vessel_identifier: '',
+      vessel_international_radio_call_sign: '',
+      vessel_type: ['Fishing', 'Commercial', 'Rental', 'Coast Guard'],
+      vessel_type_form: '',
       sub_networks_lora : [], //a list of all the subnetworks on the app server
       network_names: [],
       sub_network_names: [],
@@ -140,12 +206,33 @@ mixins: [validationMixin],
     }
   },
   computed: {
-    name_errors(){
+    vessel_name_errors(){
       const errors=[];
-      if (!this.$v.name.$error)return errors
-      !this.$v.name.maxLength && errors.push('Name must be 80 characters or less.')
-      !this.$v.name.required && errors.push('Name is required.')
-      !this.$v.name.u && errors.push('Name must be unique.')
+      if (!this.$v.vessel_name.$error)return errors
+      !this.$v.vessel_name.maxLength && errors.push('Name must be 80 characters or less.')
+      !this.$v.vessel_name.required && errors.push('Name is required.')
+      !this.$v.vessel_name.u && errors.push('Name must be unique.')
+      return errors;
+    },
+      vessel_unique_vessel_identifier_errors(){
+      const errors=[];
+      if (!this.$v.vessel_unique_vessel_identifier.$error)return errors
+      !this.$v.vessel_unique_vessel_identifier.required && errors.push('Vessel Unique Vessel Identifier is required.')
+      !this.$v.vessel_unique_vessel_identifier.u && errors.push('Vessel Unique Vessel Identifier must be unique.')
+      return errors;
+    },
+      vessel_international_radio_call_sign_errors(){
+      const errors=[];
+      if (!this.$v.vessel_international_radio_call_sign.$error)return errors
+      !this.$v.vessel_international_radio_call_sign.required && errors.push('Vessel International Radio Call Sign is required.')
+      !this.$v.vessel_international_radio_call_sign.u && errors.push('Vessel International Radio Call Sign must be unique.')
+      return errors;
+    },
+      vessel_type_form_errors(){
+      const errors=[];
+      if (!this.$v.vessel_type_form.$error)return errors
+      !this.$v.vessel_type_form.required && errors.push('Vessel Type is required.')
+      !this.$v.vessel_type_form.u && errors.push('Vessel Type must be unique.')
       return errors;
     },
     network_name_form_Errors(){
@@ -165,13 +252,17 @@ mixins: [validationMixin],
     create_vessel(){
       this.$v.$touch(); //this will ensure that if the form is submitted before any of the 
       //text fields are used it will still show an error
-      if(this.$v.name.$invalid || this.$v.sub_network_name_form.$invalid){
+      if(this.$v.vessel_name.$invalid || this.$v.vessel_unique_vessel_identifier.$invalid || this.$v.vessel_international_radio_call_sign.$invalid 
+      || this.$v.vessel_type_form.$invalid || this.$v.network_name_form.$invalid || this.$v.sub_network_name_form.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
         this.sub_network_id=functions.extract_id_new(this.sub_network_name_form); //extract id of sub_network
         AuthenticationService.create_vessels({
-          name: this.name,
+          vessel_name: this.vessel_name,
+          vessel_unique_vessel_identifier: this.vessel_unique_vessel_identifier,
+          vessel_international_radio_call_sign: this.vessel_international_radio_call_sign,
+          vessel_type: this.vessel_type_form,
           sub_network_id: this.sub_network_id,
         }).then(result => {
           let data = JSON.parse(result.data.vessels_db);

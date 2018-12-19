@@ -100,12 +100,12 @@ module.exports = {
         let vessels_db;
         try{
             let data = JSON.parse(req.body.data);
-            await DB.create_vessels(data.name, data.sub_network_id)
-                .catch(err => { 
-                    //error creating vessel on db
-                    error_location = 0;
-                    throw error_message("create vessel : database", err.message);
-                });
+            await DB.create_vessels(data.vessel_name, data.vessel_unique_vessel_identifier, data.vessel_international_radio_call_sign, data.vessel_type, data.sub_network_id)
+            .catch(err => {
+                //error creating vessel on db
+                error_location = 0;
+                throw error_message("create vessel : database",err.message);
+            });
             console.log("Vessel created");
             vessels_db = await DB.get_vessels_not_deleted()
                 .catch(err => {
