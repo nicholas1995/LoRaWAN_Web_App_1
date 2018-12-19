@@ -18,16 +18,16 @@ function network_api_request_data(data, type) {
     else if (type == 1) {//create form
         request ={
             "organization":{
-            "canHaveGateways": data.can_have_gateways,
-            "displayName": `${data.display_name}`,
+            "canHaveGateways": data.network_can_have_gateways,
+            "displayName": `${data.network_display_name}`,
             "name": `${data.network_name}` 
             }
         }
     } else if (type == 2) {//Update form
         request = {
             "organization": {
-                "canHaveGateways": data.can_have_gateways,
-                "displayName": `${data.display_name}`,
+                "canHaveGateways": data.network_can_have_gateways,
+                "displayName": `${data.network_display_name}`,
                 "name": `${data.network_name}`
             }
         }
@@ -39,28 +39,28 @@ function convert_names_networks(networks) {
     //console.log(sub_networks);
     let networks_return = [];
     let network = {
-        can_have_gateways: null,
-        created_at: null,
-        display_name: null,
+        network_can_have_gateways: null,
+        network_created_at: null,
+        network_display_name: null,
         network_id: null,
         network_name: null,
-        updated_at: null
+        network_updated_at: null
     };
     for (let i = 0; i < networks.length; i++) {
-        network.can_have_gateways = networks[i].canHaveGateways;
-        network.created_at = networks[i].createdAt;
-        network.display_name = networks[i].displayName;
+        network.network_can_have_gateways = networks[i].canHaveGateways;
+        network.network_created_at = networks[i].createdAt;
+        network.network_display_name = networks[i].displayName;
         network.network_id = networks[i].id;
         network.network_name = networks[i].name;
-        network.updated_at = networks[i].updatedAt;
+        network.network_updated_at = networks[i].updatedAt;
         networks_return[i] = network;
         network = {
-            can_have_gateways: null,
-            created_at: null,
-            display_name: null,
+            network_can_have_gateways: null,
+            network_created_at: null,
+            network_display_name: null,
             network_id: null,
             network_name: null,
-            updated_at: null
+            network_updated_at: null
         };
 
     }
@@ -166,7 +166,7 @@ module.exports = {
                     error_location = 1;
                     throw error_message("create network : lora app server", err.message);
                 });
-            await db.create_network(result.data.id, data.network_name, data.display_name, data.can_have_gateways)
+            await db.create_network(result.data.id, data.network_name, data.network_display_name, data.network_can_have_gateways)
                 .catch(err => { 
                     //error creating network on db
                     error_location = 2;

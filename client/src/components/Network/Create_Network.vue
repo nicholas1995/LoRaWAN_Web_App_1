@@ -24,15 +24,15 @@
                 </v-flex>
               <!--Display Name-->
                 <v-text-field
-                  v-model="display_name"
-                  :error-messages = "display_nameErrors"
+                  v-model="network_display_name"
+                  :error-messages = "network_display_nameErrors"
                   label="Display Name*"
-                  @keyup="$v.display_name.$touch()">
+                  @keyup="$v.network_display_name.$touch()">
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
               </v-text-field>
               <!--Can Have Gateways-->
                 <v-checkbox
-                  v-model="can_have_gateways"
+                  v-model="network_can_have_gateways"
                   label="Can Have Gateways"
                   required
                 >
@@ -90,7 +90,7 @@ mixins: [validationMixin],
         alpha_num_dash,
         u: unique,
       },      
-      display_name: {
+      network_display_name: {
         required,
         maxLength: maxLength(80),
       }
@@ -98,8 +98,8 @@ mixins: [validationMixin],
   data() {
     return {
       network_name: '',
-      display_name: "",
-      can_have_gateways: "",
+      network_display_name: "",
+      network_can_have_gateways: "",
       description_network_name : description_network_name,
       description_network_display_name : description_network_display_name,
       message: ""
@@ -121,11 +121,11 @@ mixins: [validationMixin],
       !this.$v.network_name.u && errors.push('Name must be unique.')
       return errors;
     },
-      display_nameErrors(){
+      network_display_nameErrors(){
       const errors=[];
-      if (!this.$v.display_name.$error)return errors
-      !this.$v.display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
-      !this.$v.display_name.required && errors.push('Display Name is required.')
+      if (!this.$v.network_display_name.$error)return errors
+      !this.$v.network_display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
+      !this.$v.network_display_name.required && errors.push('Display Name is required.')
       return errors;
     }
   },
@@ -133,20 +133,21 @@ mixins: [validationMixin],
     create_network(){
       this.$v.$touch(); //this will ensure that if the form is submitted before any of the 
       //text fields are used it will still show an error
-      if(this.$v.network_name.$invalid || this.$v.display_name.$invalid){
+      if(this.$v.network_name.$invalid || this.$v.network_display_name.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
-        if(this.can_have_gateways =="")this.can_have_gateways =false; //needed to set empty radio to false
+        if(this.network_can_have_gateways =="")this.network_can_have_gateways =false; //needed to set empty radio to false
         this.message = "";
         AuthenticationService.create_networks({
           network_name: this.network_name,
-          display_name: this.display_name,
-          can_have_gateways: this.can_have_gateways
+          network_display_name: this.network_display_name,
+          network_can_have_gateways: this.network_can_have_gateways
         }).then(result => {
           let data = JSON.parse(result.data.networks_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$emit('network_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
         }).catch(err => {
+          this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
         })
       }

@@ -474,7 +474,7 @@ export default {
     AuthenticationService.get_networks().then(result => {
       let networks = JSON.parse(result.data.networks_lora);
       for(let i = 0; i < networks.length; i++){
-        if(networks[i].can_have_gateways ==1){
+        if(networks[i].network_can_have_gateways ==1){
           this.networks_can_have_gateways.push(networks[i].network_id.concat(":",networks[i].network_name));
         }
       };

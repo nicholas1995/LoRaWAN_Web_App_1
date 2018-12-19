@@ -22,16 +22,16 @@
               </v-flex>
             <!--Network Display Name-->
               <v-text-field
-                v-model="display_name"
+                v-model="network_display_name"
                 label= 'Display Name*'
-                :error-messages = "display_nameErrors"
-                @keyup="$v.display_name.$touch()"
+                :error-messages = "network_display_nameErrors"
+                @keyup="$v.network_display_name.$touch()"
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
               </v-text-field>
             <!--Can Have Gateways-->
               <v-checkbox
-                v-model="can_have_gateways"
+                v-model="network_can_have_gateways"
                 label="Can Have Gateways"
                 required
               ></v-checkbox>
@@ -89,7 +89,7 @@ export default {
         alpha_num_dash,
         u: unique,
       },      
-      display_name: {
+      network_display_name: {
         required,
         maxLength: maxLength(80),
       }
@@ -97,8 +97,8 @@ export default {
   data() {
     return {
       network_name: "",
-      display_name: "",
-      can_have_gateways: "",
+      network_display_name: "",
+      network_can_have_gateways: "",
       description_network_name : description_network_name,
       description_network_display_name : description_network_display_name,
       message: ""
@@ -110,8 +110,8 @@ export default {
   ],
   created: function () {
     this.network_name = this.network_update.network_name;
-    this.display_name = this.network_update.display_name;
-    this.can_have_gateways = this.network_update.can_have_gateways;
+    this.network_display_name = this.network_update.network_display_name;
+    this.network_can_have_gateways = this.network_update.network_can_have_gateways;
   },
   computed: {
     network_nameErrors(){
@@ -123,25 +123,25 @@ export default {
       !this.$v.network_name.u && errors.push('Name must be unique.')
       return errors;
     },
-    display_nameErrors(){
+    network_display_nameErrors(){
       const errors=[];
-      if (!this.$v.display_name.$error)return errors
-      !this.$v.display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
-      !this.$v.display_name.required && errors.push('Display Name is required.')
+      if (!this.$v.network_display_name.$error)return errors
+      !this.$v.network_display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
+      !this.$v.network_display_name.required && errors.push('Display Name is required.')
       return errors;
     }
   },
   methods: {
     update_network() {
       this.$v.$touch();
-      if(this.$v.network_name.$invalid || this.$v.display_name.$invalid){
+      if(this.$v.network_name.$invalid || this.$v.network_display_name.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
         AuthenticationService.update_networks({
           network_name: this.network_name,
-          display_name: this.display_name,
-          can_have_gateways: this.can_have_gateways
+          network_display_name: this.network_display_name,
+          network_can_have_gateways: this.network_can_have_gateways
       }, this.network_update.network_id).then(result => {
           let data = JSON.parse(result.data.networks_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  

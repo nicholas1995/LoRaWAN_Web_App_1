@@ -32,19 +32,19 @@ module.exports = {
                                 })
                             //console.log('Different name');
                         }
-                        if (lora[i].display_name != db[j].display_name) {
-                            await network_db.update_network('display_name', lora[i].display_name, lora[i].network_id)
+                        if (lora[i].network_display_name != db[j].network_display_name) {
+                            await network_db.update_network('network_display_name', lora[i].network_display_name, lora[i].network_id)
                                 .catch(err => {
                                     let error = new VError("Update Network: display name : %s", err.message);
                                     throw error;
                                 })
-                            //console.log('Different display name');
+                            console.log('Different display name');
                         }
-                        if (lora[i].can_have_gateways != db[j].can_have_gateways) {
+                        if (lora[i].network_can_have_gateways != db[j].network_can_have_gateways) {
                             let value;
-                            if (lora[i].can_have_gateways == true) {value = 1;}
+                            if (lora[i].network_can_have_gateways == true) {value = 1;}
                             else {value =0;}
-                            await network_db.update_network('can_have_gateways', value, lora[i].network_id)
+                            await network_db.update_network('network_can_have_gateways', value, lora[i].network_id)
                                 .catch(err => {
                                     let error = new VError("Update Network : can_have_gateways : %s", err.message);
                                     throw error;
@@ -61,7 +61,7 @@ module.exports = {
                 }  
             }
             for(let k =0; k< added_lora.length; k++){
-                network_db.create_network(lora[added_lora[k]].network_id, lora[added_lora[k]].network_name, lora[added_lora[k]].display_name, lora[added_lora[k]].can_have_gateways)
+                network_db.create_network(lora[added_lora[k]].network_id, lora[added_lora[k]].network_name, lora[added_lora[k]].network_display_name, lora[added_lora[k]].network_can_have_gateways)
                     .catch(err => {
                         let error = new VError('Insert Network: %s', err.message)
                         throw error;

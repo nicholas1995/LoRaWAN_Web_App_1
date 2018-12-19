@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
         <v-tooltip bottom>
           <v-icon large slot="activator"
-                class="mr-1 mt-3" @click.stop="$emit('create_network', networks)" >
+            class="mr-1 mt-3" @click.stop="$emit('create_network', networks)" >
             add_box
           </v-icon>
           <span>Create Network</span>
@@ -49,10 +49,10 @@
           </td>
           <td class="text-xs-left">{{ props.item.network_id }}</td>
           <td class="text-xs-left">{{ props.item.network_name }}</td>
-          <td class="text-xs-left">{{ props.item.display_name }}</td>
-          <td class="text-xs-left">{{ props.item.can_have_gateways }}</td>
-          <td class="text-xs-left">{{ props.item.created_at | return_date}}</td>
-          <td class="text-xs-left">{{ props.item.updated_at | return_date}}</td>
+          <td class="text-xs-left">{{ props.item.network_display_name }}</td>
+          <td class="text-xs-left">{{ props.item.network_can_have_gateways }}</td>
+          <td class="text-xs-left">{{ props.item.network_created_at | return_date}}</td>
+          <td class="text-xs-left">{{ props.item.network_updated_at | return_date}}</td>
       </template>
     </v-data-table>
   </v-content>
@@ -70,10 +70,10 @@ export default {
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Network ID', value: 'network_id' ,sortable: true},
           { text: 'Network Name', value: 'network_name' , sortable: false },
-          { text: 'Display Name', value: 'display_name' , sortable: false },
-          { text: 'Can Have Gateways', value: 'can_have_gateways', sortable: false },
-          { text: 'Created At', value: 'created_at', sortable: true },
-          { text: 'Updated At', value: 'updated_at', sortable: true },
+          { text: 'Display Name', value: 'network_display_name' , sortable: false },
+          { text: 'Can Have Gateways', value: 'network_can_have_gateways', sortable: false },
+          { text: 'Created At', value: 'network_created_at', sortable: true },
+          { text: 'Updated At', value: 'network_updated_at', sortable: true },
         ],
         networks: []
     }
