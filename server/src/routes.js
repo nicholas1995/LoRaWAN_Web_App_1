@@ -13,6 +13,8 @@ const device_profiles = require("./controllers/device_profiles");
 const network_servers = require("./controllers/network_servers");
 const gateway_profiles = require("./controllers/gateway_profiles");
 const device_data = require("./controllers/device_data");
+const error_logs = require("./controllers/error_logs");
+
 
 const Network_Policy = require('./policies/network_policy');
 const sub_network_policy = require('./policies/sub_network_policy');
@@ -198,5 +200,7 @@ module.exports = ((app) => {
     //Device (Specified Date)
     app.get("/devices/uplink/headers/date/:sort_by/:descending/:headers/:start_date/:end_date", authenticate, grant_access, device_data.get_specified_headings_date);
 
-
+    //----------------------Error Logs-----------------
+    //Error Logs (Get)
+    app.get(`/error_logs`, authenticate, grant_access, error_logs.get);
 });     

@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const error_logger = require("../controllers/error_logs");
 
 module.exports = {
     create(req, res, next) {
@@ -20,37 +21,46 @@ module.exports = {
             switch (error.details[0].context.key) {
                 case 'device_name':
                     console.log("error in device form : name");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device name.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_eui':
                     console.log("error in device form : eui");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device EUI.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_description':
                     console.log("error in device form : description");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device description.', message: 'Error in form.', type: 'error' });
                     break;
                 case 'sub_network_id':
                     console.log("error in device form : sub_network_id");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid sub-network ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'vessel_id':
                     console.log("error in device form : vessel id");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid vessel ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_profile_id_lora':
                     console.log("error in device form : device_profile_id");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device profile ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'reference_altitude':
                     console.log("error in device form : reference_altitude");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid reference altitude.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'skip_frame_counter':
                     console.log("error in device form : skip_frame_counter");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid value for skip frame counter.', message: 'Error in form.', type: 'error'});
                     break;
                 default:
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid Information.', message: 'Error in form.', type: 'error'});
             }
         } else {
@@ -76,41 +86,51 @@ module.exports = {
             switch (error.details[0].context.key) {
                 case 'device_id':
                     console.log("error in device form : device_id");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device id.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_name':
                     console.log("error in device form : device_name");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device name.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_eui':
                     console.log("error in device form : device_eui");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device EUI.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_description':
                     console.log("error in device form : description");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device description.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'sub_network_id':
                     console.log("error in device form : sub_network_id");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid sub-network ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'vessel_id':
                     console.log("error in device form : vessel_id");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid vessel ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_profile_id_lora':
                     console.log("error in device form : device_profile_id");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid device profile ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'reference_altitude':
                     console.log("error in device form : reference_altitude");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid reference altitude.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'skip_frame_counter':
                     console.log("error in device form : skip_frame_counter");
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid value for skip frame counter.', message: 'Error in form.', type: 'error'});
                     break;
                 default:
+                    error_logger.error_logger(req, error);
                     res.status(422).send({ error: 'Invalid Information.', message: 'Error in form.', type: 'error'});
             }
         } else {

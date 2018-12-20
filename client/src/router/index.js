@@ -13,6 +13,7 @@ import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
 import Device_Data from "../components/Device_Data";
+import Error_Logs from "../components/Error Logs/Error_Logs.vue";
 
 
 
@@ -85,6 +86,11 @@ export default new Router({
       path: "/device_data",
       name: "device_data",
       component: Device_Data
+    },
+    {
+      path: "/error_logs",
+      name: "error_logs",
+      component: Error_Logs
     }
   ]
 });

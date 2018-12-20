@@ -55,6 +55,9 @@ const ACL = {
     },
     gateway_profiles: {
       read: "All"
+    },
+    error_logs:{
+      read: "All"
     }
   },
   Software_Admin: {
@@ -82,6 +85,9 @@ const ACL = {
     device_data: {
       read: "All",
       export: "All"
+    },
+    error_logs: {
+      read: "All"
     }
   },
   Analyst: {

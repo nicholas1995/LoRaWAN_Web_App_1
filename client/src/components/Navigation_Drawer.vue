@@ -93,6 +93,8 @@ export default {
         this.$router.push('device_data'); 
       }else if(item=="Map"){
         this.$router.push('map'); 
+      }else if(item=="Error Logs"){
+        this.$router.push('error_logs'); 
       }else{
         this.$router.push('dashboard'); 
       }

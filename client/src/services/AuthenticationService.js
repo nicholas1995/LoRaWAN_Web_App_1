@@ -271,4 +271,10 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/headers/date/${pagination.sortBy}/${pagination.descending}/${headers}/${start_date}/${end_date}`);
     },
+
+    //Error Logs
+    get_error_logs(){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/error_logs`);
+    }
 };  
