@@ -78,25 +78,25 @@ export default {
   methods: {
     login(item){
       if(item=="Account Management"){
-        this.$router.push('user'); 
+        this.$router.push('/user'); 
       }else if(item=="Network"){
-        this.$router.push('network'); 
+        this.$router.push('/network'); 
       }else if(item=="Sub-Network"){
-        this.$router.push('subnetwork'); 
+        this.$router.push('/subnetwork'); 
       }else if(item=="Vessel"){
-        this.$router.push('vessel'); 
+        this.$router.push('/vessel'); 
       }else if(item=="Gateway"){
-        this.$router.push('gateway'); 
+        this.$router.push('/gateway'); 
       }else if(item=="Device"){
-        this.$router.push('device'); 
+        this.$router.push('/device'); 
       }else if(item=="Device Data"){
-        this.$router.push('device_data'); 
+        this.$router.push('/device_data'); 
       }else if(item=="Map"){
-        this.$router.push('map'); 
+        this.$router.push('/map'); 
       }else if(item=="Error Logs"){
-        this.$router.push('error_logs'); 
+        this.$router.push('/error_logs'); 
       }else{
-        this.$router.push('dashboard'); 
+        this.$router.push('/dashboard'); 
       }
     }
 }
