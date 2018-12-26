@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -49,7 +49,7 @@
                 Update Sub-Network
               </v-btn>
              <v-btn class="grey lighten-2"
-                @click.stop="$emit('sub_network_management_no_change')">
+                @click.stop="$router.push(`/subnetwork`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -74,7 +74,7 @@ const unique= function(value){
   let x = 1; //0 fail, 1 pass
     for(let i=0; i< this.sub_networks_same_network.length; i++){
         if(value ==this.sub_networks_same_network[i].sub_network_name){
-          if(value == this.sub_network_update.sub_network_name){
+          if(value == this.sub_network.sub_network_name){
           }else{
             x= 0;
           }
@@ -120,6 +120,9 @@ export default {
   },
   data() {
     return {
+      access: 0,
+
+      sub_networks: '',
       sub_network: {}, //object that holds the information about the sub-network to be edited
       sub_network_name: "",
       sub_network_description: "",
@@ -133,27 +136,66 @@ export default {
     };
   },
   props:[
-   'sub_network_prop',
-   'sub_network_update'
+
   ],
   created: async function () {
-      this.sub_network= await AuthenticationService.get_sub_network_one(this.sub_network_update.sub_network_id)
-        .catch(err => {
-          //Error getting network to be updated information
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-        });
-        this.sub_network = JSON.parse(this.sub_network.data.sub_network);
-        this.sub_network_name = this.sub_network.sub_network_name;
-        this.sub_network_description = this.sub_network.sub_network_description;
-        this.payload_codec_form = this.sub_network.payload_codec;
+              try {
+            if (this.$store.state.loginState == false) {
+              //User logged in
+              await AuthenticationService.check_permissions("sub_networks", "post")
+                .catch(err => {
+                  console.log(err)
+                  throw err;
+                });
+              this.access =1;
+              //------------------------Start------------------------
+              //Get Subnetworks
+              await AuthenticationService.get_sub_networks().then(result => {
+                  this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+                  this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+                }).catch(err => {
+                  //Error requesting the subnetworks from the server
+                  this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+                })
+                //Get Subnetwork to update
+              this.sub_network = AuthenticationService.get_sub_network_one(this.$route.params.sub_network_id).then(result => {
+                this.sub_network = JSON.parse(result.data.sub_network);
+                this.sub_network_name = this.sub_network.sub_network_name;
+                this.sub_network_description = this.sub_network.sub_network_description;
+                this.payload_codec_form = this.sub_network.payload_codec;
+                for(let i =0; i<this.sub_networks.length; i++){
+                  if(this.sub_network.network_id == this.sub_networks[i].network_id){
+                    this.sub_networks_same_network.push(this.sub_networks[i]);
+                  }
+                }
+                this.sub_network_name = this.sub_network.sub_network_name;
+                this.sub_network_description = this.sub_network.sub_network_description;
+              })
+                  .catch(err => {
+                    //Error getting network to be updated information
+                    this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+                  });
 
-    for(let i =0; i<this.sub_network_prop.length; i++){
-      if(this.sub_network_update.network_id == this.sub_network_prop[i].network_id){
-        this.sub_networks_same_network.push(this.sub_network_prop[i]);
+            }else{
+              alert('Please login.');
+              this.$router.push('/login');
+            }
+      }catch (err) {
+        if(err.response.status == "401"){
+          //Unauthorized.... token expired
+          alert('Token expired please login.');
+          this.$store.commit('logout');
+          this.$router.push('/login');
+        }else if(err.response.status == "403"){
+          //Do not have access to this resource
+          alert('You do not have access to this page');
+          this.$router.push('/dashboard');
+        }else{
+          alert('You do not have access to this page');
+          this.$router.push('/dashboard');
+        }
       }
-    }
-    this.sub_network_name = this.sub_network_update.sub_network_name;
-    this.sub_network_description = this.sub_network_update.sub_network_description;
+
   },
   methods: {
     update_sub_network() {
@@ -167,14 +209,13 @@ export default {
         AuthenticationService.update_sub_networks({
           sub_network_name: this.sub_network_name,
           sub_network_description: this.sub_network_description,
-          network_id: this.sub_network_update.network_id,
-          service_profile_id: this.sub_network_update.service_profile_id,
+          network_id: this.sub_network.network_id,
+          service_profile_id: this.sub_network.service_profile_id,
           payload_codec: this.payload_codec_form
-          }, this.sub_network_update.sub_network_id)
+          }, this.$route.params.sub_network_id)
           .then(result => {
-            let data = JSON.parse(result.data.sub_networks_lora);
             this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-            this.$emit('sub_network_management', data);
+            this.$router.push(`/subnetwork`)
           }).catch(err => {
             this.message = err.response.data.error;
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   

@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>SUB-NETWORKS</v-toolbar-title>
       <v-divider
@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
         <v-tooltip bottom>
           <v-icon large slot="activator"
-                class="mr-1 mt-3" @click.stop="$emit('create_sub_network', sub_networks)" >
+                class="mr-1 mt-3" @click.stop="$router.push(`/subnetwork/create`)" >
             add_box
           </v-icon>
           <span>Create Sub-Network</span>
@@ -30,7 +30,7 @@
               <v-icon slot="activator"
                 small
                 class="mr-2 pt-3"
-                @click.stop="$emit('update_sub_network',{'sub_network_update':props.item,'sub_networks':sub_networks})"
+                @click.stop="$router.push(`/subnetwork/update/${props.item.sub_network_id}`)"
               >
                 edit
               </v-icon>
@@ -75,7 +75,8 @@ export default {
           { text: 'Service Profile ID', value: 'service_profile_id', sortable: true },
           { text: 'Service Profile Name', value: 'service_profile_name', sortable: false },
         ],
-        sub_networks: []
+        sub_networks: [],
+        access: 0,
     }
   },
   props: [
@@ -86,14 +87,44 @@ export default {
       this.sub_networks = this.sub_network_prop;
     }
   },
-  created: function () {
-    AuthenticationService.get_sub_networks().then(result => {
-      this.sub_networks = JSON.parse(result.data.sub_networks_lora);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-    }).catch(err => {
-      //Error requesting the subnetworks from the server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-    })
+  created: async function () {
+              try {
+            if (this.$store.state.loginState == false) {
+              //User logged in
+              await AuthenticationService.check_permissions("sub_networks", "post")
+                .catch(err => {
+                  console.log(err)
+                  throw err;
+                });
+              this.access =1;
+              //----------------------------Start-----------------------
+              AuthenticationService.get_sub_networks().then(result => {
+                this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+                this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+              }).catch(err => {
+                //Error requesting the subnetworks from the server
+                this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+              })
+            }else{
+              alert('Please login.');
+              this.$router.push('/login');
+            }
+      }catch (err) {
+        if(err.response.status == "401"){
+          //Unauthorized.... token expired
+          alert('Token expired please login.');
+          this.$store.commit('logout');
+          this.$router.push('/login');
+        }else if(err.response.status == "403"){
+          //Do not have access to this resource
+          alert('You do not have access to this page');
+          this.$router.push('/dashboard');
+        }else{
+          alert('You do not have access to this page');
+          this.$router.push('/dashboard');
+        }
+      }
+
   },
   destroyed: function(){
   },

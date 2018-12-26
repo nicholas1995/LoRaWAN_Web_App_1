@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1"> 
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -73,7 +73,7 @@
                 Create Sub-Network
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('sub_network_management_no_change')">
+                @click.stop="$router.push(`/subnetwork`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -175,6 +175,9 @@ export default {
   },
   data() {
     return {
+      access: 0,
+
+      sub_networks: '',
       sub_network_name: '',
       sub_network_description: '',
       payload_codec: ['Cayenne LPP', 'None'],
@@ -199,7 +202,7 @@ export default {
     };
   },
   props:[
-   'sub_network_prop'
+
   ],
   watch: {
     network_name_form: function(){
@@ -207,9 +210,9 @@ export default {
       this.service_profile_form =[];
       this.sub_networks_same_network =[];
       this.network_id=functions.extract_id_id_name(this.network_name_form); //extract id of network
-      for(let i =0; i<this.sub_network_prop.length; i++){
-        if(this.network_id == this.sub_network_prop[i].network_id){
-          this.sub_networks_same_network.push(this.sub_network_prop[i]);
+      for(let i =0; i<this.sub_networks.length; i++){
+        if(this.network_id == this.sub_networks[i].network_id){
+          this.sub_networks_same_network.push(this.sub_networks[i]);
         }
         for(let i =0; i< this.service_profile.length; i++){
           if(this.service_profile[i].network_id == this.network_id){
@@ -219,22 +222,61 @@ export default {
       }
     }
   },
-  created: function () {
-    AuthenticationService.get_networks().then(result => {
-      let networks_lora = JSON.parse(result.data.networks_lora);
-      for(let i = 0; i < networks_lora.length; i++){
-        this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("sub_networks", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //--------------------Start-------------------
+        //Get Networks
+          AuthenticationService.get_networks().then(result => {
+          let networks_lora = JSON.parse(result.data.networks_lora);
+          for(let i = 0; i < networks_lora.length; i++){
+            this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+          }
+            }).catch(err => {
+              //Error getting networks from server
+              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+            })
+        //Get Subnetworks
+          AuthenticationService.get_sub_networks().then(result => {
+          this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+            }).catch(err => {
+              //Error requesting the subnetworks from the server
+              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+            })
+        //Get Service Profiles
+          AuthenticationService.get_service_profile().then(result => {
+            this.service_profile = JSON.parse(result.data.service_profiles);
+              }).catch(err=> {
+                //Error requesting service profiles from server
+                this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+              })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
       }
-    }).catch(err => {
-      //Error getting networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
-    })
-      AuthenticationService.get_service_profile().then(result => {
-        this.service_profile = JSON.parse(result.data.service_profiles);
-      }).catch(err=> {
-        //Error requesting service profiles from server
-        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-      })
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   methods: {
     create_sub_network(){
@@ -259,9 +301,8 @@ export default {
           service_profile_id: this.service_profile_id,
           payload_codec: this.payload_codec_form
         }).then(result => {
-          let data = JSON.parse(result.data.sub_networks_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('sub_network_management', data);
+          this.$router.push(`/subnetwork`)
         }).catch(err => {
           this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  

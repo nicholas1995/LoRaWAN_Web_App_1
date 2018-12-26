@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
         <v-tooltip bottom>
           <v-icon large slot="activator"
-            class="mr-1 mt-3" @click.stop=" $router.push(`/network/create`)" >
+            class="mr-1 mt-3" @click.stop="$router.push(`/network/create`)" >
             add_box
           </v-icon>
           <span>Create Network</span>

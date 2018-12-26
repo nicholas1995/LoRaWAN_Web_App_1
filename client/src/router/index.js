@@ -4,10 +4,15 @@ import Toolbar from '@/components/Toolbar'
 import Login from '@/components/Login'
 import Dashboard from './../components/Dashboard/Dashboard.vue'
 import Interactive_Map from '../components/Map.vue'
+
 import Network from '../components/Network/Network_Management.vue'
 import Create_Network from "../components/Network/Create_Network.vue";
 import Update_Network from "../components/Network/Update_Network.vue";
-import Sub_Network from '../components/Sub_Network/Sub_Network.vue'
+
+import Sub_Network from '../components/Sub_Network/Sub_Network_Management.vue'
+import Create_Sub_Network from "../components/Sub_Network/Create_Sub_Network.vue";
+import Update_Sub_Network from "../components/Sub_Network/Update_Sub_Network.vue";
+
 import Vessel from "../components/Vessel/Vessel.vue";
 import Device from "../components/Device/Device.vue"
 import Gateway from "../components/Gateway/Gateway.vue"
@@ -44,6 +49,7 @@ export default new Router({
       name: "map",
       component: Interactive_Map
     },
+    //-------------------------Network-------------------------
     {
       path: "/network",
       name: "network",
@@ -59,10 +65,21 @@ export default new Router({
       name: "network_update",
       component: Update_Network
     },
+    //-------------------------Sub-Network-------------------------
     {
       path: "/subnetwork",
       name: "subnetwork",
       component: Sub_Network
+    },
+    {
+      path: "/subnetwork/create",
+      name: "subnetwork_create",
+      component: Create_Sub_Network
+    },
+    {
+      path: "/subnetwork/update/:sub_network_id",
+      name: "subnetwork_update",
+      component: Update_Sub_Network
     },
     {
       path: "/vessel",

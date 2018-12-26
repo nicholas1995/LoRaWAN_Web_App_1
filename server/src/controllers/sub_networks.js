@@ -97,7 +97,7 @@ function convert_names_sub_networks(sub_networks){
 function convert_name_sub_network_single(result) {
     let sub_network = {
         sub_network_id: result.application.id,
-        sub_network_description: result.application.sub_network_description,
+        sub_network_description: result.application.description,
         sub_network_name: result.application.name,
         network_id: result.application.organizationID,
         service_profile_id: result.application.serviceProfileID,
@@ -180,7 +180,6 @@ module.exports = {
     },
     create: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db 3=db
-        let sub_networks_lora;
         try{
             let data = JSON.parse(req.body.data);
             let request_body = sub_network_api_request_data(data, 1);
@@ -190,39 +189,27 @@ module.exports = {
                     error_location = 0;
                     throw error.error_message("create sub-network : lora app server", err.message);
                 });
-            sub_networks_lora = await get_sub_networks()
-                .catch(err => {
-                    //Error getting sub networks from lora app server
-                    error_location = 1;
-                    throw error.error_message("create sub-network : lora app server", err.message);
-                })
             await db.create_sub_network(result.data.id, data.network_id, data.service_profile_id, data.sub_network_name, data.sub_network_description)
                 .catch(err => {
                     //Error creating sub network in database 
-                    error_location = 2;
+                    error_location = 1;
                     throw error.error_message("create sub-network : database", err.message);
                 });
             await VESSEL_DB.create_default_vessels(result.data.id)
                 .catch(err => {
                     //Error creating default vessel in database 
-                    error_location = 3;
+                    error_location = 2;
                     throw error.error_message("create default vessel : database", err.message);
                 });
-            sub_networks_lora = JSON.stringify(sub_networks_lora);
-            res.status(201).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Network created', type: 'success' });
+            res.status(201).send({ message: 'Sub-Network created', type: 'success' });
         }catch (err) {
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create sub-network", type: 'error' });
             } else if (error_location == 1) {
-                sub_networks_lora = JSON.stringify([]);
-                res.status(201).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network Created. Failed to fetch sub-networks", type: 'info' })
+                res.status(200).send({ message: "Sub-Network Created. Error creating sub-network in database", type: 'info' })
             } else if (error_location == 2) {
-                sub_networks_lora = JSON.stringify(sub_networks_lora);
-                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network Created. Error creating sub-network in database", type: 'info' })
-            } else if (error_location == 3) {
-                sub_networks_lora = JSON.stringify(sub_networks_lora);
-                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network Created. Error creating default vessel in database", type: 'info' })
+                res.status(200).send({ message: "Sub-Network Created. Error creating default vessel in database", type: 'info' })
             }  else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -240,31 +227,19 @@ module.exports = {
                     error_location = 0;
                     throw error.error_message("update sub-network : lora app server", err.message);
                 });
-            sub_networks_lora = await get_sub_networks()
-                .catch(err => {
-                    //Error getting the sub networks from the lora app server
-                    error_location = 1;
-                    throw error.error_message("update sub-network : lora app server", err.message);
-                });
             await db.update_sub_networks_all_parameters(data, req.params.sub_network_id)
                 .catch(err => {
                     //Error updating sub network record in the database
-                    error_location = 2;
+                    error_location = 1;
                     throw error.error_message("update sub-network : database", err.message);                
                 });
-            sub_networks_lora = JSON.stringify(sub_networks_lora);
-            res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Network updated.', type: 'success' });
+            res.status(200).send({ message: 'Sub-Network updated.', type: 'success' });
         }catch(err){
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update sub-network", type: 'error' });
             } else if (error_location == 1) {
-                sub_networks_lora = JSON.stringify([]);
-                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network updated. Failed to fetch sub-networks", type: 'info' })
-            }
-            else if (error_location == 2) {
-                sub_networks_lora = JSON.stringify(sub_networks_lora);
-                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network updated. Error updating sub-network in database", type: 'info' })
+                res.status(200).send({ message: "Sub-Network updated. Error updating sub-network in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
