@@ -1,4 +1,5 @@
 <template>
+  <v-content>
   <v-toolbar fixed color ="grey lighten-2" >
       <!--This is the menu icon -->
       <v-toolbar-side-icon  flat v-if="!this.$store.state.loginState"
@@ -37,6 +38,24 @@
       </v-btn>
     </v-toolbar-items>
   </v-toolbar>
+  <v-snackbar
+  v-model="snackbar"
+  bottom="bottom"
+  left="left"
+  multi-line="multi-line"
+  right="right"
+  :timeout="this.timeout"
+  auto-height="auto-height"
+  :color ="this.color"
+>
+  {{ this.message }}
+  <v-btn
+    flat
+    @click="snackbar = 0"
+  >        Close
+  </v-btn>
+</v-snackbar>
+  </v-content>
 </template>
 
   
@@ -46,25 +65,28 @@ import AuthenticationService from "../services/AuthenticationService.js";
 export default {
   data() {
     return {
-      items: ["Update Profile", "Update Password"]
-
+      items: ["Update Profile", "Update Password"],
+      snackbar:0,
+      timeout: 1500,
+      color: "error",
+      message: "blank"
     };
   },
   components: {},
   methods: {
     login(){
-      this.$router.push('login');
+      this.$router.push('/login');
     },
     profile(option) {
       if(option == 'Update Profile'){
-        this.$router.push('update_profile');
+        this.$router.push('/update_profile');
       }else if(option == 'Update Password'){
-        this.$router.push('update_password');
+        this.$router.push('/update_password');
       } 
     },
     logout(){
       this.$store.commit('logout');
-      this.$router.push('login');
+      this.$router.push('/login');
     }
 }
 }

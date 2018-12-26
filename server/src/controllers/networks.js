@@ -160,20 +160,13 @@ module.exports = {
                     error_location =0;
                     throw error_message("create network : lora app server", err.message) ;
                 });
-            networks_lora = await get_networks()
-                .catch(err => {
-                    //error getting networks from lora app server
-                    error_location = 1;
-                    throw error_message("create network : lora app server", err.message);
-                });
             await db.create_network(result.data.id, data.network_name, data.network_display_name, data.network_can_have_gateways)
                 .catch(err => { 
                     //error creating network on db
-                    error_location = 2;
+                    error_location = 1;
                     throw error_message("create network : database", err.message);
                 });
-            networks_lora = JSON.stringify(networks_lora);
-            res.status(201).send({ networks_lora: networks_lora, message: 'Network created', type: 'success' });
+            res.status(201).send({ message: 'Network created', type: 'success' });
         }catch(err){
             error_handler.error_logger(req, err);
             //e_l =0 (problem creating network)
@@ -184,10 +177,6 @@ module.exports = {
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create network", type: 'error' });
             } else if (error_location == 1) {
-                networks_lora = JSON.stringify([]);
-                res.status(201).send({ networks_lora: networks_lora, message: "Network Created. Failed to fetch networks", type: 'info' })
-            }
-            else if (error_location == 2) {
                 networks_lora = JSON.stringify(networks_lora);
                 res.status(200).send({ networks_lora: networks_lora, message: "Network Created. Error creating network in database", type: 'info' })
             } else {
@@ -207,20 +196,13 @@ module.exports = {
                     error_location = 0;
                     throw error_message("update network : lora app server", err.message);
                 });
-            networks_lora = await get_networks()
-                .catch(err => {
-                    //error getting networks from lora app server
-                    error_location = 1;
-                    throw error_message("update network : lora app server", err.message);
-                });
             await db.update_networks_all_parameters(data, req.params.network_id)
                 .catch(err => {
                     //error updating network on database
-                    error_location = 2;
+                    error_location = 1;
                     throw error_message("update network : database", err.message);
                 })
-            networks_lora = JSON.stringify(networks_lora);
-            res.status(200).send({ networks_lora: networks_lora, message: 'Network updated', type: 'success' });
+            res.status(200).send({ message: 'Network updated', type: 'success' });
         }catch(err){
             error_handler.error_logger(req, err);
             //e_l =0 (problem updating network)
@@ -231,10 +213,6 @@ module.exports = {
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update network", type: 'error' });
             } else if (error_location == 1) {
-                networks_lora = JSON.stringify([]);
-                res.status(200).send({ networks_lora: networks_lora, message: "Network updated. Failed to fetch networks", type: 'info' })
-            }
-            else if (error_location == 2) {
                 networks_lora = JSON.stringify(networks_lora);
                 res.status(200).send({ networks_lora: networks_lora, message: "Network updated. Error updating network in database", type: 'info' })
             } else {

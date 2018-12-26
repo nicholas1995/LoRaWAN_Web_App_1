@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -46,7 +46,7 @@
                 Create Network
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('network_management_no_change')">
+                @click.stop="$router.push(`/network`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -69,8 +69,8 @@ import tool_tips_forms from "../Tool_Tip_Forms";
 const unique= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
-  for(i=0; i< this.networks_prop.length; i++){
-    if(value ==this.networks_prop[i].network_name){
+  for(i=0; i< this.networks.length; i++){
+    if(value ==this.networks[i].network_name){
       return 0;
     }
   } 
@@ -97,6 +97,8 @@ mixins: [validationMixin],
     },
   data() {
     return {
+      access: 0,
+      networks: '', //a list of all the networks
       network_name: '',
       network_display_name: "",
       network_can_have_gateways: "",
@@ -106,10 +108,44 @@ mixins: [validationMixin],
     };
   },
   props:[
-   'networks_prop'
-  ],
-  beforeCreate: function () {
 
+  ],
+ created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("networks", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //--------------Start-------------------
+        this.networks = await AuthenticationService.get_networks()
+        .catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+        this.networks = JSON.parse(this.networks.data.networks_lora);
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      console.log(err)
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   computed: {
     network_nameErrors(){
@@ -143,9 +179,8 @@ mixins: [validationMixin],
           network_display_name: this.network_display_name,
           network_can_have_gateways: this.network_can_have_gateways
         }).then(result => {
-          let data = JSON.parse(result.data.networks_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('network_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
+          this.$router.push(`/network`)
         }).catch(err => {
           this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    

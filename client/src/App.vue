@@ -5,7 +5,7 @@
       <v-app>
         <v-content>
           <v-container>
-            <toolbar @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer"></toolbar>
+            <toolbar @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer" @message_display="message_display($event)"></toolbar>
             <v-layout>
               <v-flex >
                 <navigation_drawer ref="drawer" flat v-if="!this.$store.state.loginState"></navigation_drawer>
@@ -30,6 +30,13 @@ export default {
   components:{
     toolbar,
     navigation_drawer
+  },
+    methods: {
+    message_display(data){
+      this.snackbar=1;
+      this.color =data.type;
+      this.message = data.message;
+    }
   }
 }
 </script>

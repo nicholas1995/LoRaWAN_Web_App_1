@@ -4,7 +4,9 @@ import Toolbar from '@/components/Toolbar'
 import Login from '@/components/Login'
 import Dashboard from './../components/Dashboard/Dashboard.vue'
 import Interactive_Map from '../components/Map.vue'
-import Network from '../components/Network/Network.vue'
+import Network from '../components/Network/Network_Management.vue'
+import Create_Network from "../components/Network/Create_Network.vue";
+import Update_Network from "../components/Network/Update_Network.vue";
 import Sub_Network from '../components/Sub_Network/Sub_Network.vue'
 import Vessel from "../components/Vessel/Vessel.vue";
 import Device from "../components/Device/Device.vue"
@@ -46,6 +48,16 @@ export default new Router({
       path: "/network",
       name: "network",
       component: Network
+    },
+    {
+      path: "/network/create",
+      name: "network_create",
+      component: Create_Network
+    },
+    {
+      path: "/network/update/:network_id",
+      name: "network_update",
+      component: Update_Network
     },
     {
       path: "/subnetwork",

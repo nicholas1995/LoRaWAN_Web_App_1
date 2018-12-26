@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>NETWORKS</v-toolbar-title>
       <v-divider
@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
         <v-tooltip bottom>
           <v-icon large slot="activator"
-            class="mr-1 mt-3" @click.stop="$emit('create_network', networks)" >
+            class="mr-1 mt-3" @click.stop=" $router.push(`/network/create`)" >
             add_box
           </v-icon>
           <span>Create Network</span>
@@ -30,7 +30,7 @@
               <v-icon slot="activator"
                 small
                 class="mr-2 pt-3"
-                @click.stop="$emit('update_network',{network_update:props.item,networks:networks})"
+                @click.stop="$router.push(`/network/update/${props.item.network_id}`)"
               >
                 edit
               </v-icon>
@@ -75,24 +75,46 @@ export default {
           { text: 'Created At', value: 'network_created_at', sortable: true },
           { text: 'Updated At', value: 'network_updated_at', sortable: true },
         ],
-        networks: []
+        networks: [],
+        access: 0
     }
   },
-  created: function () {
-    AuthenticationService.get_networks().then(result => {
-      this.networks = JSON.parse(result.data.networks_lora);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type})   
-    }).catch(err => {
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
-    })
-  },
-  props:[
-   'network'
-  ],
-  watch: {
-    network: function(){   
-      this.networks = this.network;
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("networks", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //--------------Start-------------------
+        this.networks = await AuthenticationService.get_networks()
+        .catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+        this.networks = JSON.parse(this.networks.data.networks_lora);
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
       }
+    }catch (err) {
+      console.log(err)
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   
   methods: {
