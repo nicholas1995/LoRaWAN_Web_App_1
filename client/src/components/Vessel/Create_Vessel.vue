@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -75,7 +75,7 @@
                 Create vessel
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('vessel_management_no_change')">
+                @click.stop="$router.push(`/vessel`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -97,8 +97,8 @@ import { required, maxLength, helpers } from 'vuelidate/lib/validators'
 const unique_vessel_name= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
-  for(i=0; i< this.vessels_prop.length; i++){
-    if(value ==this.vessels_prop[i].vessel_name){
+  for(i=0; i< this.vessels.length; i++){
+    if(value ==this.vessels[i].vessel_name){
       return 0;
     }
   } 
@@ -108,8 +108,8 @@ const unique_vessel_name= function(value){
 const unique_vessel_unique_vessel_identifier= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
-  for(i=0; i< this.vessels_prop.length; i++){
-    if(value ==this.vessels_prop[i].vessel_unique_vessel_identifier){
+  for(i=0; i< this.vessels.length; i++){
+    if(value ==this.vessels[i].vessel_unique_vessel_identifier){
       return 0;
     }
   } 
@@ -119,8 +119,8 @@ const unique_vessel_unique_vessel_identifier= function(value){
 const unique_vessel_international_radio_call_sign= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
-  for(i=0; i< this.vessels_prop.length; i++){
-    if(value ==this.vessels_prop[i].vessel_international_radio_call_sign){
+  for(i=0; i< this.vessels.length; i++){
+    if(value ==this.vessels[i].vessel_international_radio_call_sign){
       return 0;
     }
   } 
@@ -158,6 +158,9 @@ mixins: [validationMixin],
     },
   data() {
     return {
+      access: 0,
+
+      vessels: '',
       vessel_name: '',
       vessel_unique_vessel_identifier: '',
       vessel_international_radio_call_sign: '',
@@ -173,25 +176,60 @@ mixins: [validationMixin],
       message: ""
     };
   },
-  props:[
-   'vessels_prop'
-  ],
-  created: function () { //get all the networks and sub-networks on creation of the component. This is done so we do not need to keep fetching data from the lora app server
-    AuthenticationService.get_networks().then(result => {
-      let networks_lora = JSON.parse(result.data.networks_lora);
-      for(let i = 0; i < networks_lora.length; i++){
-        this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+  created: async function () { //get all the networks and sub-networks on creation of the component. This is done so we do not need to keep fetching data from the lora app server
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("vessels", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //---------------------------Start------------------------
+        //Get Vessels
+        AuthenticationService.get_vessels(null, 0).then(result => {
+          this.vessels = JSON.parse(result.data.vessels_db);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+        //Get Networks
+        AuthenticationService.get_networks().then(result => {
+          let networks_lora = JSON.parse(result.data.networks_lora);
+          for(let i = 0; i < networks_lora.length; i++){
+            this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+          }
+        }).catch(err => {
+          //Error getting networks from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+        })
+        //Get Subnetworks
+        AuthenticationService.get_sub_networks().then(result => {
+            this.sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
+          }).catch(err => {
+            //Error getting sub-networks from server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
       }
-    }).catch(err => {
-      //Error getting networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
-    })
-    AuthenticationService.get_sub_networks().then(result => {
-        this.sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
-      }).catch(err => {
-        //Error getting sub-networks from server
-        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-      })
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }   
   },
   watch: { //filter the subnetworks depending on the networks. 
     network_name_form: function(){
@@ -265,9 +303,8 @@ mixins: [validationMixin],
           vessel_type: this.vessel_type_form,
           sub_network_id: this.sub_network_id,
         }).then(result => {
-          let data = JSON.parse(result.data.vessels_db);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('vessel_management', {data: data}); //passing the revecived array of vessels to the parent component [vessel]
+          this.$router.push(`/vessel`)
         }).catch(err => {
           this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    

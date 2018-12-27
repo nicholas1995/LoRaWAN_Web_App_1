@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>VESSELS</v-toolbar-title>
       <v-divider
@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
         <v-tooltip bottom>
           <v-icon large slot="activator"
-                class="mr-1 mt-3" @click.stop="$emit('create_vessel', vessels)" >
+                class="mr-1 mt-3" @click.stop="$router.push(`/vessel/create`)" >
             add_box
           </v-icon>
           <span>Create Vessel</span>
@@ -30,7 +30,7 @@
               <v-icon slot="activator"
                 small
                 class="mr-2 pt-3 xs-left"
-                @click.stop="$emit('update_vessel',{vessel_update:props.item,vessels:vessels})"
+                @click.stop="$router.push(`/vessel/update/${props.item.vessel_id}`)"
               >
                 edit
               </v-icon>
@@ -75,16 +75,46 @@ export default {
           { text: 'Vessel Type', value: 'vessel_type' , sortable: false },
           { text: 'Sub-Network ID', value: 'sub_network_id', sortable: true }
         ],
-        vessels: []
+        vessels: [],
+        access: 0,
     }
   },
-  created: function () {
-    AuthenticationService.get_vessels(null, 0).then(result => {
-      this.vessels = JSON.parse(result.data.vessels_db);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type})   
-    }).catch(err => {
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
-    })
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("vessels", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //---------------------------Start------------------------
+        AuthenticationService.get_vessels(null, 0).then(result => {
+          this.vessels = JSON.parse(result.data.vessels_db);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   props:[
    'vessels_prop'

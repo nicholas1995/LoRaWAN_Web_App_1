@@ -37,7 +37,7 @@ async function add_device_to_default_vessel(device_id, device_eui, sub_network_i
                 //Error fetching the default vessel for a given sub_network
                 throw error_message("get default vessel for sub-network : database", err.message);
             });
-        await DB_VESSEL_DEVICE.create(device_id, device_eui, default_vessel[0].id)
+        await DB_VESSEL_DEVICE.create(device_id, device_eui, default_vessel[0].vessel_id)
             .catch(err => {
                 //Error creating vessel device relationship 
                 throw error_message("create vessel device relationship : database", err.message);
@@ -96,8 +96,7 @@ module.exports = {
         }
     },
     create: async function(req, res){
-        let error_location = null; //0=lora, 1=lora 2=db
-        let vessels_db;
+        let error_location = null; 
         try{
             let data = JSON.parse(req.body.data);
             await DB.create_vessels(data.vessel_name, data.vessel_unique_vessel_identifier, data.vessel_international_radio_call_sign, data.vessel_type, data.sub_network_id)
@@ -107,34 +106,20 @@ module.exports = {
                 throw error_message("create vessel : database",err.message);
             });
             console.log("Vessel created");
-            vessels_db = await DB.get_vessels_not_deleted()
-                .catch(err => {
-                    //error getting vessel on db
-                    error_location = 1;
-                    throw error_message("fetch vessel : database", err.message);
-                });
-            console.log("Vessels Fetched");
-            vessels_db = JSON.stringify(vessels_db);
-            res.status(201).send({ vessels_db: vessels_db, message: 'Vessel created', type: 'success' });
+            res.status(201).send({ message: 'Vessel created', type: 'success' });
         }catch(err){
             //e_l =0 (problem creating vessel)
-            //e_l =1 (vessel created.. failed to fetch vessels)
             //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
-                networks_lora = JSON.stringify([]);
-                res.status(201).send({ vessels_db: vessels_db, message: "Error creating vessel.", type: 'info' })
-            }
-            else if (error_location == 1) {
-                res.status(200).send({ message: "Vessel Created. Failed to fetch vessels", type: 'info' })
-            } else {
+                res.status(201).send({ message: "Error creating vessel.", type: 'info' })
+            }else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
         }
     },
     update: async function(req, res){
-        let error_location = null; //0=lora, 1=lora 2=db
-        let networks_lora;
+        let error_location = null; 
         try{
             let data = JSON.parse(req.body.data);
             await DB.update_vessels_all_parameters(data, req.params.vessel_id)
@@ -144,26 +129,14 @@ module.exports = {
                     throw error_message("update vessel : database", err.message);
                 });
             console.log("Vessel Updated. Vessel ID: " + req.params.vessel_id);
-            vessels_db = await DB.get_vessels_not_deleted()
-                .catch(err => {
-                    //error getting vessel on db
-                    error_location = 1;
-                    throw error_message("fetch vessel : database", err.message);
-                });
-            console.log("Vessels Fetched");
-            vessels_db = JSON.stringify(vessels_db);
-            res.status(201).send({ vessels_db: vessels_db, message: 'Vessel updated', type: 'success' });
+            res.status(201).send({ message: 'Vessel updated', type: 'success' });
         }catch(err){
             //e_l =0 (problem updating vessel)
-            //e_l =1 (vessel updated.. failed to fetch vessels)
             //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update vessel", type: 'error' });
-            } else if (error_location == 1) {
-                networks_lora = JSON.stringify([]);
-                res.status(200).send({ networks_lora: networks_lora, message: "Vessel updated. Failed to fetch vessels", type: 'info' })
-            }else {
+            } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
         }
@@ -172,7 +145,7 @@ module.exports = {
         let error_location = null; //0=lora, 1=lora 2=db
         let vessels_db;
         try{
-            await DB.update_vessels("deleted", 1, req.params.vessel_id)
+            await DB.update_vessels("vessel_deleted", 1, req.params.vessel_id)
                 .catch(err => {
                     //error updating delete coloum from DB for vessel
                     error_location = 0;

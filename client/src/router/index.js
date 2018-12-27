@@ -13,7 +13,10 @@ import Sub_Network from '../components/Sub_Network/Sub_Network_Management.vue'
 import Create_Sub_Network from "../components/Sub_Network/Create_Sub_Network.vue";
 import Update_Sub_Network from "../components/Sub_Network/Update_Sub_Network.vue";
 
-import Vessel from "../components/Vessel/Vessel.vue";
+import Vessel from "../components/Vessel/Vessel_Management.vue";
+import Create_Vessel from "../components/Vessel/Create_Vessel.vue";
+import Update_Vessel from "../components/Vessel/Update_Vessel.vue";
+
 import Device from "../components/Device/Device.vue"
 import Gateway from "../components/Gateway/Gateway.vue"
 import User from "../components/User/User.vue"
@@ -81,10 +84,21 @@ export default new Router({
       name: "subnetwork_update",
       component: Update_Sub_Network
     },
+    //-------------------------Vessel-------------------------
     {
       path: "/vessel",
       name: "vessel",
       component: Vessel
+    },
+    {
+      path: "/vessel/create",
+      name: "vessel_create",
+      component: Create_Vessel
+    },
+    {
+      path: "/vessel/update/:vessel_id",
+      name: "vessel_update",
+      component: Update_Vessel
     },
     {
       path: "/device",

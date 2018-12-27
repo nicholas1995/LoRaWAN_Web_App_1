@@ -85,7 +85,7 @@ module.exports = {
   update_vessels: function(col, value, condition) {
     let sql = `UPDATE vessel
         SET ${col} = '${value}'
-        WHERE id = '${condition}'`;
+        WHERE vessel_id = '${condition}'`;
     return db.queryAsync(sql);
   },
   //This updates all the parameters of a sinlge vessel instance

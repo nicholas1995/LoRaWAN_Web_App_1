@@ -5,20 +5,20 @@ module.exports = {
     //This returns all the vessel device relationships that are currently implemented
     let sql = `SELECT *
         FROM vessel_device
-        WHERE deleted = 0`;
+        WHERE vessel_device_deleted = 0`;
     return db.queryAsync(sql);
   },
   get_not_deleted_given_vessel_id: function (vessel_id) {
     //This returns all the vessel device relationships that are currently implemented for a given vessel_id
     let sql = `SELECT vessel_device.*, vessel.sub_network_id
     FROM vessel_device
-    INNER JOIN vessel ON vessel_device.vessel_id = vessel.id
-    WHERE vessel_device.deleted = 0 AND vessel_id = '${vessel_id}'`;
+    INNER JOIN vessel ON vessel_device.vessel_id = vessel.vessel_id
+    WHERE vessel_device.vessel_device_deleted = 0 AND vessel_device.vessel_id = '${vessel_id}'`;
     return db.queryAsync(sql);
   },
   get_all_given_vessels: function (vessels) {
     //This returns all the devices that were ever associated with the vessels selected
-    let sql = `SELECT vessel_device.device_id, vessel_device.device_eui, vessel_device.vessel_id, vessel_device.deleted, device.device_name
+    let sql = `SELECT vessel_device.device_id, vessel_device.device_eui, vessel_device.vessel_id, vessel_device.vessel_device_deleted, device.device_name
         FROM vessel_device
         RIGHT JOIN device ON vessel_device.device_id = device.device_id
         WHERE vessel_id IN (${vessels})`;
@@ -31,7 +31,7 @@ module.exports = {
     for(let i = 0; i< user_vessel_info.length; i++){
       where = `vessel_id = '${user_vessel_info[i].vessel_id}' `
       if (user_vessel_info[i].date_deleted != null){
-        where= where + `AND date_created < '${user_vessel_info[i].date_deleted}'`; //We want to filter out devices that were added AFTER the user was removed from the vessel. 
+        where= where + `AND vessel_device_created_at < '${user_vessel_info[i].date_deleted}'`; //We want to filter out devices that were added AFTER the user was removed from the vessel. 
         //Hence we check to see if the date the device was added to the boat is after the date the user was removed from the boat. These devices will not be accessable to the fisher
       }
       sql_where.push(where);
@@ -50,7 +50,7 @@ module.exports = {
     }
     return db.queryAsync(sql);
   },
-  update: function(col, value, condition) {
+  update: function(col, value, condition) { //--------------------------------
     let sql = `UPDATE devices
         SET ${col} = '${value}'
         WHERE device_eui = '${condition}'`;
@@ -71,7 +71,7 @@ module.exports = {
   */
   delete_given_deivce_eui: function(device_eui) {
     let sql = `UPDATE vessel_device
-          SET deleted = 1
+          SET vessel_device_deleted = 1
           WHERE device_eui = '${device_eui}'`;
     return db.queryAsync(sql);
   },
@@ -82,7 +82,7 @@ module.exports = {
   */
   delete_given_vessel_id: function(vessel_id) {
     let sql = `UPDATE vessel_device
-          SET deleted = 1
+          SET vessel_device_deleted = 1
           WHERE vessel_id = '${vessel_id}'`;
     return db.queryAsync(sql);
   },
@@ -102,7 +102,7 @@ module.exports = {
     let sql = `SELECT device_id, vessel_id
       FROM vessel_device
       WHERE device_eui = '${device_eui}'
-      AND deleted = '0'`;
+      AND vessel_device_deleted = '0'`;
     return db.queryAsync(sql);
   }
 };
