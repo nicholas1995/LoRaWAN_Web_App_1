@@ -118,11 +118,11 @@ module.exports = ((app) => {
     app.delete("/vessels/:vessel_id", authenticate, grant_access, vessels.delete);
 
     //----------------------Devices-----------------
+    //Device (Read one)
+    app.get("/devices/:device_eui", authenticate, grant_access, devices.get_one);
+
     //Devices (Read)
     app.get("/devices", authenticate, grant_access, devices.get);
-
-    //Device (Read one)
-    app.get("/device/:device_eui", authenticate, grant_access, devices.get_one);
 
     //Device (Read all under specified vessel from db)
     app.get("/devices/self/:user_vessel_info", authenticate, grant_access, devices.get_self);

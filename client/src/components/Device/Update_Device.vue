@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -78,7 +78,7 @@
                 Update Device
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('device_management_no_change')">
+                @click.stop="$router.push(`/device`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -186,6 +186,10 @@ export default {
   },
   data() {
     return {
+      access: 0,
+
+      devices: '',
+      device_update: '',
       device_name: '',
       device_description: '',
       vessel_name_form: '', //this is the variable that holds the selected vessel 'id:name'
@@ -207,57 +211,97 @@ export default {
       description_device_reference_altitude : description_device_reference_altitude,
     };
   },
-  props:[
-   'devices_prop',
-   'device_update'
-  ],
+
   created: async function () {
-    let device;
-    //Fetch all the vessels associated with the subnetwork the deivce was assigned to when created
-    //Create the id name pairs for these vessels
-    //Look for the vessel that that device is currently assigned to if any and assign the id name pair to the form
-    AuthenticationService.get_vessels(this.device_update.sub_network_id, 0).then(result =>{
-        let vessels = JSON.parse(result.data.vessels_db);
-        for(let i =0; i< vessels.length; i++){
-          this.vessel_names.push(vessels[i].vessel_id +":"+vessels[i].vessel_name);
-          if(vessels[i].vessel_id == this.device_update.vessel_id){
-            this.vessel_name_form = this.vessel_names[i] ;
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("devices", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //----------------------Start------------------
+        //Get Devices
+        await AuthenticationService.get_devices().then(result => {
+          this.devices = JSON.parse(result.data.devices_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+        }).catch(err => {
+          //Error getting the devices from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+        })
+        for(let i = 0; i < this.devices.length; i++){
+          if(this.devices[i].device_id == this.$route.params.device_id){
+            this.device_update = this.devices[i];
+            break;
           }
         }
-      }).catch(err => {
-        //Error getting network to be updated information
-        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-      });
-    await AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
-        device = JSON.parse(result.data.device);
-        this.device_name = device.device_name;
-        this.device_description = device.device_description;
-        this.reference_altitude = device.reference_altitude;
-        this.skip_frame_counter = device.skip_frame_counter
-      }).catch(err => {
-        //Error getting network to be updated information
-        this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-      });
-    this.device_profile_name_form = this.device_update.device_profile_name.concat(":",this.device_update.device_profile_id);
-    for(let i =0; i<this.devices_prop.length; i++){ //get the devices under the same sub_network
-      if(this.device_update.sub_network_id == this.devices_prop[i].sub_network_id){
-        this.devices_same_sub_network.push(this.devices_prop[i]);
+        let device;
+        //Fetch all the vessels associated with the subnetwork the deivce was assigned to when created
+        //Create the id name pairs for these vessels
+        //Look for the vessel that that device is currently assigned to if any and assign the id name pair to the form
+        await AuthenticationService.get_vessels(this.device_update.sub_network_id, 0).then(result =>{
+            let vessels = JSON.parse(result.data.vessels_db);
+            for(let i =0; i< vessels.length; i++){
+              this.vessel_names.push(vessels[i].vessel_id +":"+vessels[i].vessel_name);
+              if(vessels[i].vessel_id == this.device_update.vessel_id){
+                this.vessel_name_form = this.vessel_names[i] ;
+              }
+            }
+          }).catch(err => {
+            //Error getting network to be updated information
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          });
+        await AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
+            device = JSON.parse(result.data.device);
+            this.device_name = device.device_name;
+            this.device_description = device.device_description;
+            this.reference_altitude = device.reference_altitude;
+            this.skip_frame_counter = device.skip_frame_counter
+          }).catch(err => {
+            //Error getting network to be updated information
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          });
+        this.device_profile_name_form = this.device_update.device_profile_name.concat(":",this.device_update.device_profile_id);
+        for(let i =0; i<this.devices.length; i++){ //get the devices under the same sub_network
+          if(this.device_update.sub_network_id == this.devices[i].sub_network_id){
+            this.devices_same_sub_network.push(this.devices[i]);
+          }
+        }
+        await AuthenticationService.get_device_profiles_specified_sub_network(this.device_update.sub_network_id).then(result => {
+          this.device_profiles = JSON.parse(result.data.device_profiles_lora);
+          let j = 0;
+          for(let i = 0; i < this.device_profiles.length; i++){
+            this.device_profile_names.push(this.device_profiles[i].device_profile_id + ":" + this.device_profiles[i].device_profile_name);
+            if(this.device_update.device_profile_id_lora == this.device_profiles[i].device_profile_id_lora){
+              this.device_profile_name_form = this.device_profile_names[j];
+            }
+            j = j + 1;
+          }
+        }).catch(err => {
+          //Error getting networks from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
       }
     }
-    await AuthenticationService.get_device_profiles_specified_sub_network(this.device_update.sub_network_id).then(result => {
-      this.device_profiles = JSON.parse(result.data.device_profiles_lora);
-      let j = 0;
-      for(let i = 0; i < this.device_profiles.length; i++){
-        this.device_profile_names.push(this.device_profiles[i].device_profile_id + ":" + this.device_profiles[i].device_profile_name);
-        if(this.device_update.device_profile_id_lora == this.device_profiles[i].device_profile_id_lora){
-          this.device_profile_name_form = this.device_profile_names[j];
-        }
-        j = j + 1;
-      }
-    }).catch(err => {
-      //Error getting networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-    })
   },
   methods: {
     update_device(){
@@ -289,9 +333,8 @@ export default {
           reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,
         }, this.device_update.device_eui).then(result => {
-          let data = JSON.parse(result.data.devices_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
-          this.$emit('device_management', data);
+          this.$router.push(`/device`)
         }).catch(err => {
           //Error trying to update device
           this.message = err.response.data.error;

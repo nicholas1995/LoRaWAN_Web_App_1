@@ -17,7 +17,11 @@ import Vessel from "../components/Vessel/Vessel_Management.vue";
 import Create_Vessel from "../components/Vessel/Create_Vessel.vue";
 import Update_Vessel from "../components/Vessel/Update_Vessel.vue";
 
-import Device from "../components/Device/Device.vue"
+import Device from "../components/Device/Device_Management.vue"
+import Create_Device from "../components/Device/Create_Device.vue";
+import Update_Device from "../components/Device/Update_Device.vue";
+import Activate_Device from "../components/Device/Activate_Device.vue";
+
 import Gateway from "../components/Gateway/Gateway.vue"
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
@@ -100,10 +104,26 @@ export default new Router({
       name: "vessel_update",
       component: Update_Vessel
     },
+    //-------------------------Device-------------------------
     {
       path: "/device",
       name: "device",
       component: Device
+    },
+    {
+      path: "/device/create",
+      name: "device_create",
+      component: Create_Device
+    },
+    {
+      path: "/device/update/:device_id",
+      name: "device_update",
+      component: Update_Device
+    },
+    {
+      path: "/device/activate/:device_id",
+      name: "device_activate",
+      component: Activate_Device
     },
     {
       path: "/gateway",

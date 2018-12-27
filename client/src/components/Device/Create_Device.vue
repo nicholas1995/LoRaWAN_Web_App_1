@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -107,7 +107,7 @@
                 Create Device
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('device_management_no_change')">
+                @click.stop="$router.push(`/device`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -143,8 +143,8 @@ const unique_device_name= function(value){
 }
 const unique_device_eui= function(value){
   let x = 1; //0 fail, 1 pass
-    for(let i=0; i< this.devices_prop.length; i++){
-      if(value ==this.devices_prop[i].device_eui){      
+    for(let i=0; i< this.devices.length; i++){
+      if(value ==this.devices[i].device_eui){      
       x= 0;
     }
   }
@@ -256,6 +256,9 @@ export default {
   },
   data() {
     return {
+      access: 0, 
+
+      devices: '',
       device_name: '',
       device_eui: '',
       device_description: '',
@@ -288,9 +291,6 @@ export default {
       description_device_reference_altitude : description_device_reference_altitude,
     };
   },
-  props:[
-   'devices_prop'
-  ],
   watch: {
     network_name_form: function(){
       this.sub_network_names =[];
@@ -311,9 +311,9 @@ export default {
       this.devices_same_sub_network =[];
       if(this.sub_network_name_form){ //to ensure that this only runs when we select a value for the subnetwork and not switch networks
         this.sub_network_id=functions.extract_id_new(this.sub_network_name_form); //extract id of sub_network
-        for(let i =0; i<this.devices_prop.length; i++){
-          if(this.sub_network_id == this.devices_prop[i].sub_network_id){
-            this.devices_same_sub_network.push(this.devices_prop[i]);
+        for(let i =0; i<this.devices.length; i++){
+          if(this.sub_network_id == this.devices[i].sub_network_id){
+            this.devices_same_sub_network.push(this.devices[i]);
           }
         }
         for(let i =0; i< this.device_profiles.length; i++){ //Filter the device profile based on the selected sub network
@@ -329,33 +329,74 @@ export default {
       }
     }
   },
-  created: function () {
-    AuthenticationService.get_networks().then(result => {
-      let networks_lora = JSON.parse(result.data.networks_lora);
-      for(let i = 0; i < networks_lora.length; i++){
-        this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("devices", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //----------------------Start------------------
+        //Get Devices
+        AuthenticationService.get_devices().then(result => {
+          this.devices = JSON.parse(result.data.devices_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+        }).catch(err => {
+          //Error getting the devices from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+        })
+        //Get Networks
+        AuthenticationService.get_networks().then(result => {
+          let networks_lora = JSON.parse(result.data.networks_lora);
+          for(let i = 0; i < networks_lora.length; i++){
+            this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+          }
+        }).catch(err => {
+          //Error getting networks from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+        })
+        //Get Subnetworks
+        AuthenticationService.get_sub_networks().then(result => {
+          this.sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
+        }).catch(err => {
+          //Error getting sub-networks from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+        })
+        //Get Device Profiles
+        AuthenticationService.get_device_profiles().then(result => { //Fetch Device Profiles
+          this.device_profiles = JSON.parse(result.data.device_profiles_lora);
+        }).catch(err=> {
+          //Error requesting device profiles from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+        })
+        //Get Vessels
+        AuthenticationService.get_vessels(null, 0).then(result => { //Fetch Vessels
+          this.vessels = JSON.parse(result.data.vessels_db); 
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
       }
-    }).catch(err => {
-      //Error getting networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
-    })
-    AuthenticationService.get_sub_networks().then(result => {
-      this.sub_networks_lora = JSON.parse(result.data.sub_networks_lora);
-    }).catch(err => {
-      //Error getting sub-networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-    })
-    AuthenticationService.get_device_profiles().then(result => { //Fetch Device Profiles
-      this.device_profiles = JSON.parse(result.data.device_profiles_lora);
-    }).catch(err=> {
-      //Error requesting device profiles from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-    })
-    AuthenticationService.get_vessels(null, 0).then(result => { //Fetch Vessels
-      this.vessels = JSON.parse(result.data.vessels_db); 
-    }).catch(err => {
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
-    })
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   methods: {
     create_device(){
@@ -387,9 +428,8 @@ export default {
           reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,
         }).then(result => {
-          let data = JSON.parse(result.data.devices_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
-          this.$emit('device_management', data);
+          this.$router.push(`/device`);
         }).catch(err => {
           //Error trying to create device
           this.message = err.response.data.error;

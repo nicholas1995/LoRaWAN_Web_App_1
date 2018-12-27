@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Devices</v-toolbar-title>
       <v-divider
@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
         <v-tooltip bottom>
           <v-icon large slot="activator"
-                class="mr-1 mt-3" @click.stop="$emit('create_device', devices)" >
+                class="mr-1 mt-3" @click.stop="$router.push(`/device/create`)" >
             add_box
           </v-icon>
           <span>Create Device</span>
@@ -31,7 +31,7 @@
               <v-icon slot="activator"
                 small
                 class="mr-3 pt-3"
-                @click.stop="$emit('update_device',{'device_update':props.item,'devices':devices})"
+                @click.stop="$router.push(`/device/update/${props.item.device_id}`)"
               >
                 edit
               </v-icon>
@@ -53,7 +53,7 @@
               <v-icon slot="activator"
                 small
                 class="pt-3"
-                @click.stop="$emit('activate_device',{'device_activate':props.item,'devices':devices})"
+                @click.stop="$router.push(`/device/activate/${props.item.device_id}`)"
               >
                 power_settings_new
               </v-icon>
@@ -104,7 +104,8 @@ export default {
           { text: 'External Power Source', value: 'device_status_external_power_source', sortable: false },
           { text: 'Margin Status', value: 'device_status_margin', sortable: true },
         ],
-        devices: []
+        devices: [],
+        access: 0,
     }
   },
   props: [
@@ -115,16 +116,43 @@ export default {
       this.devices = this.devices_prop;
     }
   },
-  created: function () {
-    AuthenticationService.get_devices().then(result => {
-      this.devices = JSON.parse(result.data.devices_lora);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
-    }).catch(err => {
-      //Error getting the devices from the server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-    })
-  },
-  destroyed: function(){
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("devices", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //----------------------Start------------------
+        AuthenticationService.get_devices().then(result => {
+          this.devices = JSON.parse(result.data.devices_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+        }).catch(err => {
+          //Error getting the devices from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   methods: {
     delete_device(device){

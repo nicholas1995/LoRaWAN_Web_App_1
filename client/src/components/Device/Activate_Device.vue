@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -69,7 +69,7 @@
                 </div>
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('device_management_no_change')">
+                @click.stop="$router.push(`/device`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -128,6 +128,10 @@ mixins: [validationMixin],
     },
   data() {
     return {
+      access: 0,
+      device: '',
+      device_activate: '',
+
       device_activation: null,
       dev_addr: '',
       nwk_s_enc_key: "",
@@ -139,21 +143,61 @@ mixins: [validationMixin],
       message: ""
     };
   },
-  props:[
-   'device_activate'
-  ],
   created: async function () {
-    this.device_activation = await AuthenticationService.get_devices_activation(this.device_activate.device_eui)
-      .catch(err => {
-          //Error getting network to be updated information
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("devices", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //----------------------Start------------------
+        //Get Devices
+        await AuthenticationService.get_devices().then(result => {
+          this.devices = JSON.parse(result.data.devices_lora);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+        }).catch(err => {
+          //Error getting the devices from the server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-        });
-    this.device_activation = JSON.parse(this.device_activation.data.device_activation);
-    this.dev_addr = this.device_activation.dev_addr;
-    this.nwk_s_enc_key = this.device_activation.nwk_s_enc_key;
-    this.app_s_key = this.device_activation.app_s_key;
-    this.f_cnt_up = this.device_activation.f_cnt_up;
-    this.n_f_cnt_down = this.device_activation.n_f_cnt_down;
+        })
+        for(let i = 0; i < this.devices.length; i++){
+          if(this.devices[i].device_id == this.$route.params.device_id){
+            this.device_activate = this.devices[i];
+            break;
+          }
+        }
+        this.device_activation = await AuthenticationService.get_devices_activation(this.device_activate.device_eui)
+          .catch(err => {
+              //Error getting network to be updated information
+              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            });
+        this.device_activation = JSON.parse(this.device_activation.data.device_activation);
+        this.dev_addr = this.device_activation.dev_addr;
+        this.nwk_s_enc_key = this.device_activation.nwk_s_enc_key;
+        this.app_s_key = this.device_activation.app_s_key;
+        this.f_cnt_up = this.device_activation.f_cnt_up;
+        this.n_f_cnt_down = this.device_activation.n_f_cnt_down;
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   computed: {
     dev_addr_Errors(){
@@ -219,7 +263,7 @@ mixins: [validationMixin],
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
           })
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('device_management'); //passing the revecived array of networks to the parent component [Network]
+          this.$router.push(`/device`)
       }
     },
   }

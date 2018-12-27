@@ -150,8 +150,9 @@ export default {
         return Api.get('/devices');
     }, 
     get_device(device_eui) {
+        console.log('here')
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/device/${device_eui}`);
+        return Api.get(`/devices/${device_eui}`);
     },
     get_devices_self(vessel_info) { //THis is used for the fishers or for self data to ensure that only ur devices show up in the drop down menu
         vessel_info = JSON.stringify(vessel_info);
