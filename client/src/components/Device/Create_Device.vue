@@ -321,7 +321,7 @@ export default {
             this.device_profile_names.push(this.device_profiles[i].device_profile_id +":"+ this.device_profiles[i].device_profile_name);
           }
         }
-        for(let i =0; i< this.vessels.length; i++){ //Filter the device profile based on the selected sub network
+        for(let i =0; i< this.vessels.length; i++){ //Filter the vessels based on the selected sub network
           if(this.sub_network_id == this.vessels[i].sub_network_id){
             this.vessel_names.push(this.vessels[i].vessel_id +":"+ this.vessels[i].vessel_name);
           }

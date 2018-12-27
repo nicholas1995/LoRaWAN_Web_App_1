@@ -389,13 +389,6 @@ module.exports = {
                         throw error_message("create vessel device relationship : database", err.message);
                     });
             }
-            vessel_device_relationships_db = await DB_VESSEL_DEVICE.get_not_deleted()
-                .catch(err => {
-                    //Error getting vessel device relationships currently implemented
-                    error_location = 5;
-                    throw error.error_message("get devices : getting vessel devices relationships :database", err.message);
-                })
-            console.log('Vessel deivce realtionships currently implemented fetched');
             res.status(201).send({ message: 'Device created', type: 'success' });
         }catch(err){
             console.log(err); 
