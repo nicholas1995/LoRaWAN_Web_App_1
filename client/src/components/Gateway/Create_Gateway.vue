@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -167,7 +167,7 @@
                 Create Gateway
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('gateway_management_no_change')">
+                @click.stop="$router.push(`/gateway`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -206,8 +206,8 @@ const unique_gateway_name= function(value){
 const unique_gateway_id= function(value){ //ensures that the id is unique after 16 digits is entered
   let x = 1; //0 fail, 1 pass
   if(value.length == 16){
-    for(let i=0; i< this.gateways_prop.length; i++){
-        if(value ==this.gateways_prop[i].gateway_id_lora){
+    for(let i=0; i< this.gateways.length; i++){
+        if(value ==this.gateways[i].gateway_id_lora){
         x= 0;
       }
     }
@@ -393,6 +393,9 @@ export default {
   },
   data() {
     return {
+      access: 0,
+
+      gateways: '',
       gateway_name: '',
       gateway_id_lora: '',
       description: '',
@@ -438,16 +441,13 @@ export default {
 
     };
   },
-  props:[
-   'gateways_prop'
-  ],
   watch: {
     network_name_form: function(){
       this.gateways_same_network = [];
       this.network_id = functions.extract_id_id_name(this.network_name_form);
-      for(let i = 0; i< this.gateways_prop.length; i++){
-        if(this.gateways_prop[i].network_id == this.network_id){
-          this.gateways_same_network.push(this.gateways_prop[i]);
+      for(let i = 0; i< this.gateways.length; i++){
+        if(this.gateways[i].network_id == this.network_id){
+          this.gateways_same_network.push(this.gateways[i]);
         }
       }
     },
@@ -462,32 +462,72 @@ export default {
         }
       }
   },
-  created: function () {
-    AuthenticationService.get_network_servers().then(result => {
-      let network_servers = JSON.parse(result.data.network_servers_lora);
-      for(let i = 0; i < network_servers.length; i++){
-        this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("gateways", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //-------------------------Start----------------------
+        //Get Gateways
+        AuthenticationService.get_gateways().then(result => {
+          this.gateways = JSON.parse(result.data.gateways_lora); 
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          //Error requesting the gateways from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+        })
+        //Get Network Servers
+        AuthenticationService.get_network_servers().then(result => {
+          let network_servers = JSON.parse(result.data.network_servers_lora);
+          for(let i = 0; i < network_servers.length; i++){
+            this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
+          }
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+        });
+        //Get Networks
+        AuthenticationService.get_networks().then(result => {
+          let networks = JSON.parse(result.data.networks_lora);
+          for(let i = 0; i < networks.length; i++){
+            if(networks[i].network_can_have_gateways ==1){
+              this.networks_can_have_gateways.push(networks[i].network_id.concat(":",networks[i].network_name));
+            }
+          };
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+        })
+        //Get Gateway Profiles
+        AuthenticationService.get_gateway_profiles()
+        .then(result => {
+          this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
+        }).catch(err=> {
+          //Error requesting service profiles from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
       }
-    }).catch(err => {
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-    });
-    AuthenticationService.get_networks().then(result => {
-      let networks = JSON.parse(result.data.networks_lora);
-      for(let i = 0; i < networks.length; i++){
-        if(networks[i].network_can_have_gateways ==1){
-          this.networks_can_have_gateways.push(networks[i].network_id.concat(":",networks[i].network_name));
-        }
-      };
-    }).catch(err => {
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-    })
-    AuthenticationService.get_gateway_profiles()
-    .then(result => {
-      this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
-    }).catch(err=> {
-      //Error requesting service profiles from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
-    })
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   methods: {
     create_gateway(){
@@ -524,9 +564,8 @@ export default {
           fine_time_stamp_key: this.fine_time_stamp_key,
           fpga_id: this.fpga_id,
         }).then(result => {
-          let data = JSON.parse(result.data.gateways_lora);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('gateway_management', data);
+          this.$router.push('/gateway');
         }).catch(err => {
           //Error trying to create subnetwork
           this.message = err.response.data.error;

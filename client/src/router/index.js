@@ -22,7 +22,10 @@ import Create_Device from "../components/Device/Create_Device.vue";
 import Update_Device from "../components/Device/Update_Device.vue";
 import Activate_Device from "../components/Device/Activate_Device.vue";
 
-import Gateway from "../components/Gateway/Gateway.vue"
+import Gateway from "../components/Gateway/Gateway_Management.vue"
+import Create_Gateway from "../components/Gateway/Create_Gateway.vue";
+import Update_Gateway from "../components/Gateway/Update_Gateway.vue";
+
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
@@ -125,10 +128,21 @@ export default new Router({
       name: "device_activate",
       component: Activate_Device
     },
+    //-------------------------Gateway-------------------------
     {
       path: "/gateway",
       name: "gateway",
       component: Gateway
+    },
+    {
+      path: "/gateway/create",
+      name: "gateway_create",
+      component: Create_Gateway
+    },
+    {
+      path: "/gateway/update/:gateway_id",
+      name: "gateway_update",
+      component: Update_Gateway
     },
     {
       path: "/user",

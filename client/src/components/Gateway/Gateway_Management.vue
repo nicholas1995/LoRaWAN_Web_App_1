@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Gateways</v-toolbar-title>
       <v-divider
@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
       <v-tooltip bottom>
         <v-icon large slot="activator"
-              class="mr-1 mt-3" @click.stop="$emit('create_gateway', gateways)" >
+              class="mr-1 mt-3" @click.stop="$router.push(`/gateway/create`)" >
           add_box
         </v-icon>
         <span>Create Gateway</span>
@@ -30,7 +30,7 @@
               <v-icon slot="activator"
                 small
                 class="mr-2 pt-3"
-                @click.stop="$emit('update_gateway',{'gateway_update':props.item,'gateways':gateways})"
+                @click.stop="$router.push(`/gateway/update/${props.item.gateway_id}`)"
               >
                 edit
               </v-icon>
@@ -53,8 +53,8 @@
           <td class="text-xs-left">{{ props.item.gateway_description }}</td>
           <td class="text-xs-left">{{ props.item.network_id }}</td>
           <td class="text-xs-left">{{ props.item.network_server_id }}</td>
-          <td class="text-xs-left">{{ props.item.created_at_time_stamp | return_date}}</td>
-          <td class="text-xs-left">{{ props.item.updated_at_time_stamp | return_date}}</td>
+          <td class="text-xs-left">{{ props.item.gateway_created_at | return_date}}</td>
+          <td class="text-xs-left">{{ props.item.gateway_updated_at | return_date}}</td>
       </template>
     </v-data-table>
   </v-content>
@@ -79,25 +79,47 @@ export default {
           { text: 'Created At', value: 'created_at_time_stamp', sortable: true },
           { text: 'Updated At', value: 'updated_at_time_stamp', sortable: true },
         ],
-        gateways: []
+        gateways: [],
+        access: 0,
     }
   },
-  props: [
-    'gateways_prop'
-  ],
-  watch: {
-    gateways_prop: function(){
-      this.gateways = this.gateways_prop;
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("gateways", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //-------------------------Start----------------------
+        AuthenticationService.get_gateways().then(result => {
+          this.gateways = JSON.parse(result.data.gateways_lora); 
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          //Error requesting the gateways from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
     }
-  },
-  created: function () {
-    AuthenticationService.get_gateways().then(result => {
-      this.gateways = JSON.parse(result.data.gateways_lora); 
-      this.$emit('message_display',{message:result.data.message, type:result.data.type})   
-    }).catch(err => {
-      //Error requesting the gateways from the server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
-    })
   },
   methods: {
     delete_gateways(gateway){

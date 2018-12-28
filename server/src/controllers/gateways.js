@@ -240,7 +240,6 @@ module.exports = {
     },
     create: async function(req, res){
         let error_location = null; //0=lora 1=lora
-        let gateways_lora;
         try{
             let data = JSON.parse(req.body.data);
             let request_body = gateway_api_request_data(data, 1);
@@ -250,21 +249,19 @@ module.exports = {
                 error_location = 0;
                 throw error.error_message("create gateways : lora app server", err.message);
             });
-            gateways_lora = await get_gateways()
-            .catch(err => {
-                //Error getting gateways from lora app server
-                error_location = 1;
-                throw error.error_message("create gateways : lora app server", err.message);
-            });
-            gateways_lora = JSON.stringify(gateways_lora);
-            res.status(201).send({ gateways_lora: gateways_lora, message: 'Gateway created', type: 'success' });
+            await db_gateway.create_gateway(data.network_id, data.gateway_name, data.gateway_id_lora, data.gateway_description, data.network_server_id)
+                .catch(err => {
+                    //Error creating gateway record in database
+                    error_location = 1;
+                    throw error.error_message("create gateways : database", err.message);
+                })
+            res.status(201).send({ message: 'Gateway created', type: 'success' });
         }catch(err){
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create gateway", type: 'error' });
             } else if (error_location == 1) {
-                gateways_lora = JSON.stringify([]);
-                res.status(201).send({ gateways_lora: gateways_lora, message: "Gateway Created. Failed to fetch gateways", type: 'info' })
+                res.status(201).send({ message: "Gateway to create gateway record in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -272,31 +269,28 @@ module.exports = {
     },
     update: async function(req, res){
         let error_location = null; //0=lora 1=lora
-        let gateways_lora;
         try{
             let data = JSON.parse(req.body.data);
             let request_body = gateway_api_request_data(data, 1);
-            await lora_app_server.update_gateways(request_body, req.params.gateway_id)
+            await lora_app_server.update_gateways(request_body, data.gateway_id_lora)
                 .catch(err => {
                     //Error updating gateway
                     error_location = 0;
                     throw error.error_message("update gateways : lora app server", err.message);
                 });
-            gateways_lora = await get_gateways()
+            await db_gateway.update_gateway_all_parameters(data, req.params.gateway_id)
                 .catch(err => {
-                    //Error getting gateways from lora app server
+                    //Error Updating gateway in database
                     error_location = 1;
-                    throw error.error_message("update gateways : lora app server", err.message);
-                });
-            gateways_lora = JSON.stringify(gateways_lora);
-            res.status(201).send({ gateways_lora: gateways_lora, message: 'Gateway updated', type: 'success' });
+                    throw error.error_message("update gateways : database", err.message);
+                })
+            res.status(201).send({ message: 'Gateway updated', type: 'success' });
         }catch(err){
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update gateway", type: 'error' });
             } else if (error_location == 1) {
-                gateways_lora = JSON.stringify([]);
-                res.status(201).send({ gateways_lora: gateways_lora, message: "Gateway updated. Failed to fetch gateways", type: 'info' })
+                res.status(201).send({message: "Failed to update gateway record in database.", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }

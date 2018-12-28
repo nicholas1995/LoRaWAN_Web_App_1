@@ -266,7 +266,7 @@ module.exports = {
             }
             for (let k = 0; k < added_lora.length; k++) {
                 await gateway_db.create_gateway(lora[added_lora[k]].network_id, lora[added_lora[k]].gateway_name, lora[added_lora[k]].gateway_id_lora,
-                    lora[added_lora[k]].gateway_description, lora[added_lora[k]].network_server_id, lora[added_lora[k]].gateway_created_at)
+                    lora[added_lora[k]].gateway_description, lora[added_lora[k]].network_server_id)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].gateway_id_lora}`, err.message);
                     });

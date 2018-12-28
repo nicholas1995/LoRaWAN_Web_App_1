@@ -103,7 +103,6 @@ module.exports = {
             next();
         }
     }, update(req, res, next) {
-        console.log('here')
         let data = JSON.parse(req.body.data);
         const schema = {
             gateway_name: Joi.string().required().max(80).regex(

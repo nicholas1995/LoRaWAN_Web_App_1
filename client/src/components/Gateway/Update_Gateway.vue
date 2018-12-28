@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -146,7 +146,7 @@
                 Update Gateway
               </v-btn>
               <v-btn class="grey lighten-2"
-                @click.stop="$emit('gateway_management_no_change')">
+                @click.stop="$router.push(`/gateway`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -339,6 +339,10 @@ export default {
   },
   data() {
     return {
+      access: 0,
+      
+      gateways: '', //List of all the arrays on the lora app server
+      gateway_update: '',
       gateway_name: '',
       description: '',
       network_server_name_form: '', //this is the variable that holds the selected network server 'id:name'
@@ -380,10 +384,6 @@ export default {
       description_gateway_fpga_id : description_gateway_fpga_id,
     };
   },
-  props:[
-   'gateways_prop',
-   'gateway_update'
-  ],
   watch: {
     network_server_name_form: function(){
         this.gateway_profile_names =[];
@@ -398,60 +398,103 @@ export default {
       } 
   },
   created: async function () {
-    let gateway;
-      await AuthenticationService.get_gateway(this.gateway_update.gateway_id_lora).then(result => {
-            gateway = JSON.parse(result.data.gateway);
-            this.gateway_name = gateway.gateway_name;
-            this.description = gateway.gateway_description;
-            this.network_id = gateway.network_id,
-            this.network_Server_id = gateway.network_server_id,
-            this.gateway_profile_id =gateway.gateway_profile_id,
-            this.gateway_accuracy = gateway.gateway_accuracy;
-            this.gateway_altitude = gateway.gateway_altitude;
-            this.gateway_latitude = gateway.gateway_latitude;
-            this.gateway_longitude = gateway.gateway_longitude;
-            this.gateway_location_source_form = gateway.gateway_location_source_form;
-            this.discovery_enabled = gateway.discovery_enabled;
-            this.fine_time_stamp_key = gateway.fine_time_stamp_key; 
-            this.fpga_id = gateway.fpga_id;
-          }).catch(err => {
-            //Error getting gateway to be updated information
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("gateways", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
           });
-    for(let i = 0; i< this.gateways_prop.length; i++){
-      if(this.gateways_prop[i].network_id == this.network_id){
-        this.gateways_same_network.push(this.gateways_prop[i]);
-        }
-      }
-    AuthenticationService.get_network_servers().then(result => {
-      let network_servers = JSON.parse(result.data.network_servers_lora);
-      for(let i = 0; i < network_servers.length; i++){
-        this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
-        if(network_servers[i].network_server_id == gateway.network_server_id){
-          this.network_server_name_form =this.network_server_names[i];
-        }
-      }
-    }).catch(err => {
-      //Error getting network servers from lora app server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-    });
-    AuthenticationService.get_gateway_profiles().then(result => {
-      this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
-      let j = 0;//fetch all the gateway profiles... filter them based on the currently selected network serve... check to see if the lora_if of the profile is the same as that on the 
-      // ith gateway profile... if yes add that name to the form
-      for(let i =0; i< this.gateway_profiles.length; i++){
-        if(this.gateway_profiles[i].network_server_id == this.network_server_id){ //Create the array for the currently selected network server
-          this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id + ":" +this.gateway_profiles[i].gateway_profile_name);
-          if(this.gateway_profiles[i].gateway_profile_id_lora ==this.gateway_profile_id){
-            this.gateway_profile_name_form =this.gateway_profile_names[j];
+        this.access =1;
+        //-------------------------Start----------------------
+        //Get Gateways
+        await AuthenticationService.get_gateways().then(result => {
+          this.gateways = JSON.parse(result.data.gateways_lora); 
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          //Error requesting the gateways from the server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+        })
+        for(let i = 0; i< this.gateways.length; i++){
+          if(this.$route.params.gateway_id == this.gateways[i].gateway_id){
+            this.gateway_update = this.gateways[i];
+            break;
           }
-          j = j+1;
         }
+        let gateway;
+        await AuthenticationService.get_gateway(this.gateway_update.gateway_id_lora).then(result => {
+              gateway = JSON.parse(result.data.gateway);
+              this.gateway_name = gateway.gateway_name;
+              this.description = gateway.gateway_description;
+              this.network_id = gateway.network_id,
+              this.network_Server_id = gateway.network_server_id,
+              this.gateway_profile_id =gateway.gateway_profile_id,
+              this.gateway_accuracy = gateway.gateway_accuracy;
+              this.gateway_altitude = gateway.gateway_altitude;
+              this.gateway_latitude = gateway.gateway_latitude;
+              this.gateway_longitude = gateway.gateway_longitude;
+              this.gateway_location_source_form = gateway.gateway_location_source_form;
+              this.discovery_enabled = gateway.discovery_enabled;
+              this.fine_time_stamp_key = gateway.fine_time_stamp_key; 
+              this.fpga_id = gateway.fpga_id;
+            }).catch(err => {
+              //Error getting gateway to be updated information
+              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            });
+        for(let i = 0; i< this.gateways.length; i++){
+          if(this.gateways[i].network_id == this.network_id){
+            this.gateways_same_network.push(this.gateways[i]);
+            }
+          }
+        AuthenticationService.get_network_servers().then(result => {
+          let network_servers = JSON.parse(result.data.network_servers_lora);
+          for(let i = 0; i < network_servers.length; i++){
+            this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
+            if(network_servers[i].network_server_id == gateway.network_server_id){
+              this.network_server_name_form =this.network_server_names[i];
+            }
+          }
+        }).catch(err => {
+          //Error getting network servers from lora app server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+        });
+        AuthenticationService.get_gateway_profiles().then(result => {
+          this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
+          let j = 0;//fetch all the gateway profiles... filter them based on the currently selected network server... check to see if the lora_if of the profile is the same as that on the 
+          // ith gateway profile... if yes add that name to the form
+          for(let i =0; i< this.gateway_profiles.length; i++){
+            if(this.gateway_profiles[i].network_server_id == this.network_server_id){ //Create the array for the currently selected network server
+              this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id + ":" +this.gateway_profiles[i].gateway_profile_name);
+              if(this.gateway_profiles[i].gateway_profile_id_lora ==this.gateway_profile_id){
+                this.gateway_profile_name_form =this.gateway_profile_names[j];
+              }
+              j = j+1;
+            }
+          }
+        }).catch(err=> {
+          //Error requesting service profiles from server
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
       }
-    }).catch(err=> {
-      //Error requesting service profiles from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-    })
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   methods: {
     update_gateway(){
@@ -488,10 +531,9 @@ export default {
           discovery_enabled: this.discovery_enabled,
           fine_time_stamp_key: this.fine_time_stamp_key,
           fpga_id: this.fpga_id,
-        }, this.gateway_update.gateway_id_lora).then(result => {
-          let data = JSON.parse(result.data.gateways_lora);
+        }, this.gateway_update.gateway_id).then(result => {
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('gateway_management', data);
+          this.$router.push(`/gateway`)
         }).catch(err => {
           //Error trying to create subnetwork
           this.message = err.response.data.error;
