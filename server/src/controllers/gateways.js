@@ -300,18 +300,25 @@ module.exports = {
         let error_location = null; //0=lora 1=lora
         let gateways_lora;
         try{
-            await lora_app_server.delete_gateways(req.params.gateway_id)
+            await lora_app_server.delete_gateways(req.params.gateway_id_lora)
                 .catch(err => {
                     //Error delete gateway form lora app server
                     error_location = 0;
                     throw error.error_message("delete gateway : lora app server", err.message);
                 });
-            gateways_lora = await get_gateways()
+            let request_params = gateway_api_request_data(null, 0);
+            gateways_lora = await lora_app_server.get_gateways(request_params)
                 .catch(err => {
-                    //Error getting gateways from lora app server
-                    error_location = 1;
-                    throw error.error_message("delete gateways : lora app server", err.message);
+                    let error = new VError("%s", err.message);
+                    throw error;
                 });
+            gateways_lora = convert_names_gateways(gateways_lora.data.result);
+            
+            await db_gateway.update_gateway('gateway_deleted', 1, req.params.gateway_id_lora)
+                .catch(err => {
+                    //Error deleting gateway from database
+                    throw error.error_message("delete gateways : database", err.message);
+                })
             gateways_lora = JSON.stringify(gateways_lora); 
             res.status(200).send({ gateways_lora: gateways_lora, message: 'Gateway deleted', type: 'success' });
         }catch(err){

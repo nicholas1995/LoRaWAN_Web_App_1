@@ -166,7 +166,7 @@ module.exports = ((app) => {
     app.put("/gateways/:gateway_id", authenticate, grant_access, gateway_policy.update, gateways.update);
 
     //Gateways (Delete)
-    app.delete("/gateways/:gateway_id", authenticate, grant_access, gateways.delete);
+    app.delete("/gateways/:gateway_id_lora", authenticate, grant_access, gateways.delete);
 
     //----------------------Service Profile----------------------
     app.get("/service_profiles", authenticate, grant_access, service_profiles.get);
