@@ -198,7 +198,7 @@ module.exports = {
     },
     get_one: async function (req, res) {
         try {
-            let gateway = await lora_app_server.get_gateway_one(req.params.gateway_id)
+            let gateway = await lora_app_server.get_gateway_one(req.params.gateway_id) //check to see if its the id or id_lora
                 .catch(err => {
                     //Error getting gateways from lora app server
                     throw error.error_message("get gateway : lora app server", err.message);
@@ -210,6 +210,32 @@ module.exports = {
         } catch (err) {
             console.log(err);
             res.status(500).send({ message: "Failed to get gateway", type: 'error' });
+        }
+    },
+    get_map: async function (req, res){
+        try{
+            let gateways = []; //This is an array that holds all the information returns for individual gateway calls
+            let gateways_lora = await get_gateways()
+                .catch(err => {
+                    //Error getting gateways from lora app server
+                    error_location = 0;
+                    throw error.error_message("get gateways : lora app server", err.message);
+                });
+                let gateway ;
+            for(let i = 0; i < gateways_lora.length; i++){
+                gateway = await lora_app_server.get_gateway_one(gateways_lora[i].gateway_id_lora)
+                    .catch(err => {
+                        //Error getting gateways from lora app server
+                        throw error.error_message("get gateway : lora app server", err.message);
+                    });
+                gateway = gateway.data.gateway;
+                gateway = convert_name_gateway_single(gateway);
+                gateways[i] = gateway;
+            }
+            gateways = JSON.stringify(gateways);
+            res.status(200).send({ gateways : gateways });
+        }catch(err){
+            console.log(err);
         }
     },
     create: async function(req, res){

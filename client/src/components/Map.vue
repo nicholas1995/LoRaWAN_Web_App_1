@@ -4,6 +4,8 @@
   
 
 <script>
+import AuthenticationService from "../services/AuthenticationService.js";
+
 export default {
   name: 'google-map',
   props: ['name'],
@@ -24,36 +26,61 @@ export default {
       bounds: null,
       markers: [],
       flightPath: null,
-      markerCluster: null
+      markerCluster: null,
+      coordinates: [],
+      contentString: [],
+      gateways: '',
       
     }
   },
-  mounted: function () {
+  mounted: async function () {
+    this.gateways = await AuthenticationService.get_gateways_map()
+      .catch(err => {
+        //Error getting gateway information from server
+        console.log(err);
+      })
+    this.gateways = JSON.parse(this.gateways.data.gateways);
+
     this.bounds = new google.maps.LatLngBounds();
     const element = document.getElementById(this.mapName)
-    const mapCentre = this.markerCoordinates[0]
+    const mapCentre = this.gateways[0]
     const options = {
-      center: new google.maps.LatLng(mapCentre.lat, mapCentre.lng)
-    }
+      center: new google.maps.LatLng(mapCentre.gateway_latitude, mapCentre.gateway_longitude),
+      zoom: 2
+    } 
     this.map = new google.maps.Map(element, options);
-    this.markerCoordinates.forEach((coord) => {
-      const position = new google.maps.LatLng(coord.lat, coord.lng);
+    for(let i = 0; i< this.gateways.length; i++){
+      const position = new google.maps.LatLng(this.gateways[i].gateway_latitude, this.gateways[i].gateway_longitude);
       const marker = new google.maps.Marker({ 
         position,
         map: this.map
       });
-    this.markers.push(marker)
+      this.markers.push(marker)
       this.map.fitBounds(this.bounds.extend(position))
-    });
-    this.flightPath = new google.maps.Polyline({
-          path: this.markerCoordinates,
+      var content = `<b>Gateway Name:</b> ${this.gateways[i].gateway_name} <br>
+      <b>Gateway ID:</b> ${this.gateways[i].gateway_id_lora} <br>
+      <b>Gateway Description:</b> ${this.gateways[i].gateway_description} <br>
+      <b>Network ID:</b> ${this.gateways[i].network_id}<br>
+      <b>Gateway Latitude:</b> ${this.gateways[i].gateway_latitude}<br>
+      <b>Gateway Longitude:</b> ${this.gateways[i].gateway_longitude}<br>
+      <b>Gateway Altitude:</b> ${this.gateways[i].gateway_altitude}<br>`;
+      var infowindow = new google.maps.InfoWindow();
+      google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+          return function() {
+              infowindow.setContent(content);
+              infowindow.open(this.map,marker);
+          };
+      })(marker,content,infowindow));
+    }
+/*     this.flightPath = new google.maps.Polyline({
+          path: this.coordinates,
           geodesic: true,
           strokeColor: '#FF0088',
           strokeOpacity: 1.0,
           strokeWeight: 2,
           map: this.map
-        });
-    
+        }); */
+        
   }
 };
 </script>

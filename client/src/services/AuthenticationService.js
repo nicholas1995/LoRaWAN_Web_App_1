@@ -201,6 +201,10 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/gateway/${gateway_id}`);
     },
+    get_gateways_map(){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/gateways/map`);
+    },
     create_gateways(data){
         data = JSON.stringify(data);
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

@@ -150,6 +150,9 @@ module.exports = ((app) => {
     app.delete("/devices/activation/:device_eui", authenticate, grant_access, devices.delete_devices_activation);
 
     //----------------------Gateways-----------------
+    //Gateway (Read for Map)
+    app.get("/gateways/map", authenticate, grant_access, gateways.get_map);
+    
     //Gateways (Read)
     app.get("/gateways", authenticate, grant_access, gateways.get);
 
