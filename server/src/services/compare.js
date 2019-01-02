@@ -358,6 +358,15 @@ module.exports = {
                                 })
                             //console.log('Different name');
                         }
+                        if (lora[i].service_profile_created_at != db[j].service_profile_created_at) {
+                            //This is here because when i create a service profile i do not have the date returned by the lora app server that it was created at
+                            //hence i create it with dummy data then route to /servie_profile and there the data will be fetched and comared and the date created will be updated
+                            service_profile_db.update_service_profile('service_profile_created_at', lora[i].service_profile_created_at, lora[i].service_profile_id_lora)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].service_profile_id_lora}`, err.message);
+                                })
+                            //console.log('Update date after it is created because when ');
+                        }
                         accounted_for.push(j);
                         break;
                     }
@@ -370,7 +379,7 @@ module.exports = {
             }
             for (let k = 0; k < added_lora.length; k++) {
                 await service_profile_db.create_service_profile(lora[added_lora[k]].service_profile_id_lora, lora[added_lora[k]].service_profile_name, lora[added_lora[k]].network_server_id,
-                    lora[added_lora[k]].created_at_time_stamp)
+                    lora[added_lora[k]].service_profile_created_at)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].service_profile_id_lora}`, err.message);
                     });

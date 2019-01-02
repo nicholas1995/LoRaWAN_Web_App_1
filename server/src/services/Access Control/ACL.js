@@ -45,7 +45,10 @@ const ACL = {
       export: "All"
     },
     service_profiles: {
-      read: "All"
+      read: "All",
+      update: "All",
+      delete: "All",
+      create: "All"
     },
     device_profiles: {
       read: "All"

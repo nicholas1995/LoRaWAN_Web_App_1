@@ -21,6 +21,7 @@ const sub_network_policy = require('./policies/sub_network_policy');
 const vessel_policy = require("./policies/vessel_policy");
 const device_policy = require("./policies/device_policy");
 const gateway_policy = require("./policies/gateway_policy");
+const service_profile_policy = require("./policies/service_profile_policy");
 const password_policy = require("./policies/UpdatePasswordPolicy")
 
 
@@ -169,13 +170,20 @@ module.exports = ((app) => {
     app.delete("/gateways/:gateway_id_lora", authenticate, grant_access, gateways.delete);
 
     //----------------------Service Profile----------------------
+    //Service Profile (Read)
     app.get("/service_profiles", authenticate, grant_access, service_profiles.get);
 
+    //Service Profile (Create)
+    app.post("/service_profiles", authenticate, grant_access, service_profile_policy.create, service_profiles.create_service_profile);
+
+    //Service Profile (Delete)
+    app.delete("/service_profiles/:service_profile_id_lora", authenticate, grant_access, service_profiles.delete_service_profile);
+
     //----------------------Device Profile----------------------
-    //Gateways (Read Specific Sub-Network)
+    //Device Profile (Read Specific Sub-Network)
     app.get("/device_profiles/:sub_network_id", authenticate, grant_access, device_profiles.get_specified_sub_network);
 
-    //Gateways (Read)
+    //Device Profile (Read)
     app.get("/device_profiles", authenticate, grant_access, device_profiles.get);
 
     //----------------------Network servers----------------------

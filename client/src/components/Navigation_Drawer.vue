@@ -51,27 +51,28 @@ export default {
             items_all: [
           { title: 'Network', icon: 'domain'}, //0
           { title: 'Sub-Network', icon: 'apps'}, //1
-          { title: 'Vessel', icon: 'directions_boat'}, //2
-          { title: 'Gateway', icon: 'settings_input_antenna'}, //3
-          { title: 'Gateway Stats', icon: 'settings_input_antenna'}, //4
-          { title: 'Device', icon: 'devices'}, //5
-          { title: 'Device Data', icon: 'view_comfy'}, //6
-          { title: 'Map', icon: 'map'}, //7
-          { title: 'Error Logs', icon: 'error'}, //8
-          { title: 'Account Management', icon: 'people_outlined'} //9
+          { title: 'Service Profile', icon: 'error'}, //2
+          { title: 'Vessel', icon: 'directions_boat'}, //3
+          { title: 'Gateway', icon: 'settings_input_antenna'}, //4
+          { title: 'Gateway Stats', icon: 'settings_input_antenna'}, //5
+          { title: 'Device', icon: 'devices'}, //6
+          { title: 'Device Data', icon: 'view_comfy'}, //7
+          { title: 'Map', icon: 'map'}, //8
+          { title: 'Error Logs', icon: 'error'}, //9
+          { title: 'Account Management', icon: 'people_outlined'}, //10
         ],
         items:[]
     };
   },
   created: function () {
     if(this.$store.state.user_class =='IoT Network Admin'){
-      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7],this.items_all[8]];
+      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7],this.items_all[8],this.items_all[9]];
     }else if(this.$store.state.user_class =='Software Admin'){
-      this.items = [this.items_all[4],this.items_all[6],this.items_all[7],this.items_all[8],this.items_all[9]];
+      this.items = [this.items_all[5],this.items_all[7],this.items_all[8],this.items_all[9],this.items_all[10]];
     }else if(this.$store.state.user_class =='Analyst'){
-      this.items = [this.items_all[4],this.items_all[6],this.items_all[7]];
+      this.items = [this.items_all[5],this.items_all[7],this.items_all[8]];
     }else if(this.$store.state.user_class =='Fisher'){
-      this.items = [this.items_all[6],this.items_all[7]];
+      this.items = [this.items_all[7],this.items_all[8]];
     }
   },
   components: {},
@@ -83,6 +84,8 @@ export default {
         this.$router.push('/network'); 
       }else if(item=="Sub-Network"){
         this.$router.push('/subnetwork'); 
+      }else if(item=="Service Profile"){
+        this.$router.push('/service_profile'); 
       }else if(item=="Vessel"){
         this.$router.push('/vessel'); 
       }else if(item=="Gateway"){

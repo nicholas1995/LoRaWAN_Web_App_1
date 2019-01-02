@@ -225,6 +225,15 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/service_profiles`);
     },
+    create_service_profile(data) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.post("/service_profiles", { data });
+    }, 
+    delete_service_profile(service_profile_id_lora) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/service_profiles/${service_profile_id_lora}`);
+    },
 
 
     //Device Profile

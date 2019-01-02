@@ -26,6 +26,10 @@ import Gateway from "../components/Gateway/Gateway_Management.vue"
 import Create_Gateway from "../components/Gateway/Create_Gateway.vue";
 import Update_Gateway from "../components/Gateway/Update_Gateway.vue";
 
+import Service_Profile from "../components/Service Profile/Service_Profile_Management.vue";
+import Create_Service_Profile from "../components/Service Profile/Create_Service_Profile.vue";
+import Update_Service_Profile from "../components/Service Profile/Update_Service_Profile.vue";
+
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
@@ -144,6 +148,23 @@ export default new Router({
       name: "gateway_update",
       component: Update_Gateway
     },
+    //-------------------------Service_Profile-------------------------
+    {
+      path: "/service_profile",
+      name: "service_profile",
+      component: Service_Profile
+    },
+    {
+      path: "/service_profile/create",
+      name: "service_profile_create",
+      component: Create_Service_Profile
+    },
+    {
+      path: "/service_profile/update/:service_profile_id",
+      name: "service_profile_update",
+      component: Update_Service_Profile
+    },
+
     {
       path: "/user",
       name: "user",
