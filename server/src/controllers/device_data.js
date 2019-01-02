@@ -112,7 +112,7 @@ module.exports = {
         try { 
             if (req.params.descending){  //this is to add in parameters for the first call so we dont need to make a new function :)
             }else{
-                req.params.sort_by = 'id';
+                req.params.sort_by = 'device_uplink_id';
                 req.params.descending = 'false'
             }
             let order;
@@ -180,7 +180,7 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
-    },
+    }, 
     get_filtered: async function(req, res){
         let sql_where = [];
         let where = '';
@@ -192,7 +192,7 @@ module.exports = {
             console.log(columns)
             if (columns) {
                 columns = convert_from_ui_to_db(columns);
-                sql = `SELECT ${columns} FROM device_rx `;
+                sql = `SELECT ${columns} FROM device_uplink `;
             }
             if(parameters.start_date){
                 sql_where.push(`time_stamp > '${parameters.start_date}'`);

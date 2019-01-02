@@ -263,19 +263,7 @@ export default {
     get_device_data_initial_self() {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/initial/self`);
-    },
-    get_device_data(pagination){
-        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/devices/uplink/${pagination.sortBy}/${pagination.descending}`);
-    },
-    get_device_data_specific_heading(pagination, headers) {
-        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/devices/uplink/headers/${pagination.sortBy}/${pagination.descending}/${headers}`);
-    },
-    get_device_data_specific_heading_specified_date(pagination, headers, start_date, end_date) {
-        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/devices/uplink/headers/date/${pagination.sortBy}/${pagination.descending}/${headers}/${start_date}/${end_date}`);
-    },
+    }, 
 
     //Error Logs
     get_error_logs(){

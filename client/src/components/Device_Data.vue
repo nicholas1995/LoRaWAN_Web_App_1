@@ -158,6 +158,7 @@ export default {
             throw err;
           });
         this.access =1;
+        //-------------------------Start-------------------------
         let result;
         if(this.$store.state.user_class !='Fisher' && this.self ==0){
           result = await AuthenticationService.get_device_data_initial()
@@ -184,21 +185,21 @@ export default {
         this.loading = false;
         }else{
           alert('Please login.');
-          this.$router.push('login');
+          this.$router.push('/login');
         }
     }catch(err){
       if(err.response.status == "401"){
         //Unauthorized.... token expired
         alert('Token expired please login.');
         this.$store.commit('logout');
-        this.$router.push('login');
+        this.$router.push('/login');
       }else if(err.response.status == "403"){
         //Do not have access to this resource
         alert('You do not have access to this page');
-        this.$router.push('dashboard');
+        this.$router.push('/dashboard');
       }else{
         alert('You do not have access to this page');
-        this.$router.push('dashboard');
+        this.$router.push('/dashboard');
       }
     }
   },
@@ -256,7 +257,6 @@ export default {
       link.click();
     },
     generate_function: async function(){
-      //console.log(this.vessel_id)
       this.loading = true;
       this.start_date_time = return_date_time(this.start_date, this.start_time);
       this.end_date_time =return_date_time(this.end_date, this.end_time);
