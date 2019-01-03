@@ -30,7 +30,7 @@
               <v-icon slot="activator"
                 small
                 class="mr-2 pt-3"
-                @click.stop="$router.push(`/service_profile/update/${props.item.service_profile_id}`)"
+                @click.stop="$router.push(`/service_profile/update/${props.item.service_profile_id_lora}`)"
               >
                 edit
               </v-icon>
@@ -93,7 +93,7 @@ export default {
         this.access =1;
         //--------------Start-------------------
         //Get service profiles
-        this.service_profiles = await AuthenticationService.get_service_profile()
+        this.service_profiles = await AuthenticationService.get_service_profiles()
         .catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })
@@ -123,7 +123,7 @@ export default {
   methods: {
     delete_service_profile(service_profile){
       if(confirm('Are you sure you want to delete this service profile?') == true){
-        AuthenticationService.delete_service_profile(service_profile.service_profile_id_lora).then(result => {
+        AuthenticationService.delete_service_profiles(service_profile.service_profile_id_lora).then(result => {
           this.service_profiles = JSON.parse(result.data.service_profiles);
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {

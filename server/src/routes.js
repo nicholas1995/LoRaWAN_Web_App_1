@@ -170,11 +170,17 @@ module.exports = ((app) => {
     app.delete("/gateways/:gateway_id_lora", authenticate, grant_access, gateways.delete);
 
     //----------------------Service Profile----------------------
+    //Service Profile (Read One)
+    app.get("/service_profiles/:service_profile_id_lora", authenticate, grant_access, service_profiles.get_one_service_profile);
+
     //Service Profile (Read)
     app.get("/service_profiles", authenticate, grant_access, service_profiles.get);
 
     //Service Profile (Create)
     app.post("/service_profiles", authenticate, grant_access, service_profile_policy.create, service_profiles.create_service_profile);
+
+    //Service Profile (Update)
+    app.put("/service_profiles/:service_profile_id_lora", authenticate, grant_access, service_profile_policy.update, service_profiles.update_service_profile);
 
     //Service Profile (Delete)
     app.delete("/service_profiles/:service_profile_id_lora", authenticate, grant_access, service_profiles.delete_service_profile);

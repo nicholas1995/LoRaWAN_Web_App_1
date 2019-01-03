@@ -5,48 +5,94 @@
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="grey lighten-2 ">
-              <v-toolbar-title>Update Network</v-toolbar-title>
+              <v-toolbar-title>Update Service Profile</v-toolbar-title>
             </v-toolbar>
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
-            <!--Network Name -->
-            <v-flex >
-              <v-text-field
-                v-model="network_name"
-                label= 'Network Name*'
-                :error-messages = "network_nameErrors"
-                @keyup="$v.network_name.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
-              </v-text-field>
-              </v-flex>
-            <!--Network Display Name-->
-              <v-text-field
-                v-model="network_display_name"
-                label= 'Display Name*'
-                :error-messages = "network_display_nameErrors"
-                @keyup="$v.network_display_name.$touch()"
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
-              </v-text-field>
-            <!--Can Have Gateways-->
+            <v-form>
+              <!--$touch is used to manually set dirty when the event occurs
+              and dirty is used to validate the data field--> 
+              <!--Service Profile Name -->
+                <v-flex >
+                  <v-text-field
+                    v-model="service_profile_name"
+                    :error-messages = "service_profile_name_Errors"
+                    label="Service Profile Name*"
+                    @blur="$v.service_profile_name.$touch()">
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
+                  </v-text-field>
+                </v-flex>
+              <!--Add Gateway Metadata-->
+                <v-checkbox
+                  v-model="add_gw_metadata"
+                  label="Add Gateway Metadata"
+                  required
+                >
+                </v-checkbox>
+              <!--Report Device Status Battery-->
+                <v-checkbox
+                  v-model="report_device_status_battery"
+                  label="Report Device Status Battery"
+                  required
+                >
+                </v-checkbox>
+              <!--Report Device Status Margin-->
+                <v-checkbox
+                  v-model="report_device_status_margin"
+                  label="Report Device Status Margin"
+                  required
+                >
+                </v-checkbox>
+             <!--Network Geolocation-->
               <v-checkbox
-                v-model="network_can_have_gateways"
-                label="Can Have Gateways"
+                v-model="network_geo_location"
+                label="Network Geolocation"
                 required
-              ></v-checkbox>
-
-              <div div class="text">
-                {{message}}
-              </div>
-              <v-btn class="grey lighten-2"
-                @click.stop="update_network()">
-                Update Network
-              </v-btn>
-              <v-btn class="grey lighten-2"
-                @click.stop="$router.push(`/network`)">
-                Cancel
-              </v-btn>
+              >
+              </v-checkbox>
+            <!--Device Status Request Frequency-->
+              <v-flex >
+                <v-text-field
+                  v-model="device_status_req_frequency"
+                  label="Device Status Request Frequency*"
+                  suffix = "hz"
+                  :error-messages = "device_status_req_frequency_Errors"
+                  @blur="$v.device_status_req_frequency.$touch()" 
+                >
+                </v-text-field>
+              </v-flex>
+            <!--Data Rate Min-->
+              <v-flex >
+                <v-text-field
+                  v-model="dr_min"
+                  label="Minimum Data Rate*"
+                  :error-messages = "dr_min_Errors"
+                  @blur="$v.dr_min.$touch()" 
+                >
+                </v-text-field>
+              </v-flex>
+            <!--Data Rate Max-->
+              <v-flex >
+                <v-text-field
+                  v-model="dr_max"
+                  label="Maximum Data Rate*"
+                  :error-messages = "dr_max_Errors"
+                  @blur="$v.dr_max.$touch()" 
+                >
+                </v-text-field>
+              </v-flex>
+            </v-form>
+            <div div class="text">
+              {{message}} 
+            </div>
+            <v-btn class="grey lighten-2"
+              @click.stop="update_service_profile()">
+              Update Service Profile
+            </v-btn>
+            <v-btn class="grey lighten-2"
+              @click.stop="$router.push(`/service_profile`)">
+              Cancel
+            </v-btn>
           </v-card>
         </v-flex>
       </v-layout>
@@ -59,93 +105,97 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
-import { required, maxLength, helpers } from 'vuelidate/lib/validators'
+import { required, maxLength, numeric, helpers } from 'vuelidate/lib/validators'
 import {description_network_name, description_network_display_name} from "../../services/functions/form_descriptions_tool_tips.js";
 import tool_tips_forms from "../Tool_Tip_Forms";
+import functions from "../../services/functions/forms_functions.js"
 
-const unique= function(value){
-   let i;
-  let x = 1; //0 fail, 1 pass
-  for(i=0; i< this.networks.length; i++){
-    if(value ==this.networks[i].network_name){
-      if(value == this.network_update.network_name){
-        return x;
-      }else return 0;
-    }
-  } 
-  return x; 
-}
-const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 export default {
   components:{
     tool_tips_forms
   },
-  mixins: [validationMixin],
+mixins: [validationMixin],
   validations: {
-      network_name: {
+      service_profile_name: {
         required,
         maxLength: maxLength(80),
-        alpha_num_dash,
-        u: unique,
       },      
-      network_display_name: {
+      device_status_req_frequency: {
         required,
-        maxLength: maxLength(80),
+        numeric
+      },      
+      dr_min: {
+        required,
+        numeric
+      },      
+      dr_max: {
+        required,
+        numeric
       }
     },
   data() {
     return {
       access: 0,
-      networks: '',
-      network_update: '',
-      network_name: "",
-      network_display_name: "",
-      network_can_have_gateways: "",
+      service_profile_update: '', //service profile to be updated
+      service_profile_name: '',
+      network_id: '',
+      network_server_id: '',
+      add_gw_metadata: '',
+      report_device_status_battery: '',
+      report_device_status_margin: '',
+      network_geo_location: '',
+      device_status_req_frequency: 0,
+      dr_min: '',
+      dr_max: '',
+
       description_network_name : description_network_name,
       description_network_display_name : description_network_display_name,
       message: ""
     };
   },
-  props:[
-
-  ],
-  created: async function () {  
+  watch: {
+    device_status_req_frequency: function(){
+      if(this.device_status_req_frequency == ''){ 
+      this.device_status_req_frequency = '0';
+      }
+    }
+  },
+ created: async function () {
     try {
       if (this.$store.state.loginState == false) {
         //User logged in
-        await AuthenticationService.check_permissions("networks", "post")
+        await AuthenticationService.check_permissions("service_profiles", "post")
           .catch(err => {
             console.log(err)
             throw err;
           });
         this.access =1;
-        //-------------------------START-------------------------
-        this.networks = await AuthenticationService.get_networks()
-          .catch(err => {
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
-          })
-        this.networks = JSON.parse(this.networks.data.networks_lora);
-        for(let i = 0; i< this.networks.length; i++){
-          if(this.networks[i].network_id == this.$route.params.network_id){
-            this.network_update = this.networks[i];
-            break;
-          }if(i == (this.networks.length -1)){
-            console.log('here')
-            if(confirm('Invalid Network ID') == true){
-              this.$router.push(`/network`)
-            }
-          }
-        }
-        this.network_name = this.network_update.network_name;
-        this.network_display_name = this.network_update.network_display_name;
-        this.network_can_have_gateways = this.network_update.network_can_have_gateways;
-      this.$emit('message_display',{message:'Created', type:'error'}) 
+        //--------------Start-------------------
+        //Get Service Profiles
+        this.service_profile_update = await AuthenticationService.get_service_profile(this.$route.params.service_profile_id_lora)
+        .catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+        this.service_profile_update = JSON.parse(this.service_profile_update.data.service_profiles);
+
+        this.service_profile_name = this.service_profile_update.service_profile_name
+        this.network_id = this.service_profile_update.network_id
+        this.network_server_id = this.service_profile_update.network_server_id
+        this.add_gw_metadata = this.service_profile_update.add_gw_metadata
+        this.report_device_status_battery = this.service_profile_update.report_device_status_battery
+        this.report_device_status_margin = this.service_profile_update.report_device_status_margin
+        this.network_geo_location = this.service_profile_update.network_geo_location
+        this.device_status_req_frequency = this.service_profile_update.device_status_req_frequency
+        this.dr_min = this.service_profile_update.dr_min
+        this.dr_max = this.service_profile_update.dr_max
+
       }else{
         alert('Please login.');
         this.$router.push('/login');
       }
     }catch (err) {
+      console.log(err)
       if(err.response.status == "401"){
         //Unauthorized.... token expired
         alert('Token expired please login.');
@@ -162,44 +212,77 @@ export default {
     }
   },
   computed: {
-    network_nameErrors(){
+    service_profile_name_Errors(){
       const errors=[];
-      if (!this.$v.network_name.$error)return errors
-      !this.$v.network_name.maxLength && errors.push('Name must be 80 characters or less.')
-      !this.$v.network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
-      !this.$v.network_name.required && errors.push('Name is required.')
-      !this.$v.network_name.u && errors.push('Name must be unique.')
+      if (!this.$v.service_profile_name.$error)return errors
+      !this.$v.service_profile_name.maxLength && errors.push('Name must be 80 characters or less.')
+      !this.$v.service_profile_name.required && errors.push('Name is required.')
       return errors;
     },
-    network_display_nameErrors(){
+      device_status_req_frequency_Errors(){
       const errors=[];
-      if (!this.$v.network_display_name.$error)return errors
-      !this.$v.network_display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
-      !this.$v.network_display_name.required && errors.push('Display Name is required.')
+      if (!this.$v.device_status_req_frequency.$error)return errors
+      !this.$v.device_status_req_frequency.numeric && errors.push('Device Status Request Frequency must be an integer.')
+      !this.$v.device_status_req_frequency.required && errors.push('Device Status Request Frequency is required.')
+      return errors;
+    },
+      dr_min_Errors(){
+      const errors=[];
+      if (!this.$v.dr_min.$error)return errors
+      !this.$v.dr_min.numeric && errors.push('Min data rate must be an integer.')
+      !this.$v.dr_min.required && errors.push('Min data rate is required.')
+      return errors;
+    },
+      dr_max_Errors(){
+      const errors=[];
+      if (!this.$v.dr_max.$error)return errors
+      !this.$v.dr_max.numeric && errors.push('Max data rate must be an integer.')
+      !this.$v.dr_max.required && errors.push('Max data rate is required')
       return errors;
     }
   },
   methods: {
-    update_network() {
-      this.$v.$touch();
-      if(this.$v.network_name.$invalid || this.$v.network_display_name.$invalid){
+    update_service_profile(){
+      this.$v.$touch(); //this will ensure that if the form is submitted before any of the 
+      //text fields are used it will still show an error
+      if(this.$v.service_profile_name.$invalid || this.$v.device_status_req_frequency.$invalid || this.$v.dr_min.$invalid || this.$v.dr_max.$invalid){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
+        if(this.network_can_have_gateways =="")this.network_can_have_gateways =false; //needed to set empty radio to false
         this.message = "";
-        AuthenticationService.update_networks({
-          network_name: this.network_name,
-          network_display_name: this.network_display_name,
-          network_can_have_gateways: this.network_can_have_gateways
-      }, this.$route.params.network_id).then(result => {
+        if(this.add_gw_metadata ==""){this.add_gw_metadata =false;} //needed to set empty radio to false
+        if(this.report_device_status_battery ==""){this.report_device_status_battery =false;} //needed to set empty radio to false
+        if(this.report_device_status_margin ==""){this.report_device_status_margin =false;} //needed to set empty radio to false
+        if(this.network_geo_location ==""){this.network_geo_location =false;} //needed to set empty radio to false
+        this.device_status_req_frequency = this.check_for_0_start(this.device_status_req_frequency);
+        this.dr_min = this.check_for_0_start(this.dr_min);
+        this.dr_max = this.check_for_0_start(this.dr_max);
+        AuthenticationService.update_service_profiles({
+          service_profile_name: this.service_profile_name,
+          add_gw_metadata: this.add_gw_metadata,
+          report_device_status_battery: this.report_device_status_battery,
+          report_device_status_margin: this.report_device_status_margin,
+          network_geo_location: this.network_geo_location,
+          device_status_req_frequency: this.device_status_req_frequency,
+          dr_min: this.dr_min,
+          dr_max: this.dr_max,
+        }, this.service_profile_update.service_profile_id_lora).then(result => {
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$router.push(`/network`) 
-      }).catch(err => {
-                console.log(err)
+          this.$router.push(`/service_profile`)
+        }).catch(err => {
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
-      })
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+        })
       }
-    } 
+    },
+    check_for_0_start(value){ //checks to see if the first digit is 0 and if it is removes the 0 from the start of the number because the lora app server does not process it
+      if(value.length > 1){
+        if(value.indexOf('0') == 0){
+          return value.slice(1);
+        }
+      }
+      return value;
+    }
   }
 };
 </script>

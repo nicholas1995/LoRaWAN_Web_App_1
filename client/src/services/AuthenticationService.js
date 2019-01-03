@@ -221,16 +221,25 @@ export default {
     },
 
     //Service Profile
-    get_service_profile(){
+    get_service_profiles(){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/service_profiles`);
     },
-    create_service_profile(data) {
+    get_service_profile(service_profile_id_lora) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/service_profiles/${service_profile_id_lora}`);
+    },
+    create_service_profiles(data) {
         data = JSON.stringify(data);
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.post("/service_profiles", { data });
     }, 
-    delete_service_profile(service_profile_id_lora) {
+    update_service_profiles(data, service_profile_id_lora) {
+        data = JSON.stringify(data);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/service_profiles/${service_profile_id_lora}`, { data });
+    },
+    delete_service_profiles(service_profile_id_lora) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.delete(`/service_profiles/${service_profile_id_lora}`);
     },

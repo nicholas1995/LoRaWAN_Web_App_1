@@ -135,10 +135,20 @@ module.exports = {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.get(`/api/service-profiles?limit=${data.limit}`);
   },
+  //---------Read One---------
+  get_service_profile_one: function(service_profile_id_lora) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/service-profiles/${service_profile_id_lora}`);
+  },
   //--------- Create---------
   create_service_profiles: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.post("/api/service-profiles", data);
+  },
+  //---------Update---------
+  update_service_profiles: function(data, service_profile_id_lora) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.put(`/api/service-profiles/${service_profile_id_lora}`, data);
   },
   //---------Delete---------
   delete_service_profiles: function(service_profile_id_lora) {

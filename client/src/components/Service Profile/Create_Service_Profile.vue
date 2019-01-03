@@ -18,7 +18,7 @@
                     v-model="service_profile_name"
                     :error-messages = "service_profile_name_Errors"
                     label="Service Profile Name*"
-                    @keyup="$v.service_profile_name.$touch()">
+                    @blur="$v.service_profile_name.$touch()">
                     <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
                   </v-text-field>
                 </v-flex>
@@ -77,7 +77,7 @@
                   label="Device Status Request Frequency*"
                   suffix = "hz"
                   :error-messages = "device_status_req_frequency_Errors"
-                  @keyup="$v.device_status_req_frequency.$touch()" 
+                  @blur="$v.device_status_req_frequency.$touch()" 
                 >
                 </v-text-field>
               </v-flex>
@@ -88,7 +88,7 @@
                   label="Minimum Data Rate*"
                   suffix = "??"
                   :error-messages = "dr_min_Errors"
-                  @keyup="$v.dr_min.$touch()" 
+                  @blur="$v.dr_min.$touch()" 
                 >
                 </v-text-field>
               </v-flex>
@@ -99,7 +99,7 @@
                   label="Maximum Data Rate*"
                   suffix = "??"
                   :error-messages = "dr_max_Errors"
-                  @keyup="$v.dr_max.$touch()" 
+                  @blur="$v.dr_max.$touch()" 
                 >
                 </v-text-field>
               </v-flex>
@@ -179,7 +179,7 @@ mixins: [validationMixin],
       report_device_status_battery: '',
       report_device_status_margin: '',
       network_geo_location: '',
-      device_status_req_frequency: '',
+      device_status_req_frequency: 0,
       dr_min: '',
       dr_max: '',
 
@@ -188,9 +188,13 @@ mixins: [validationMixin],
       message: ""
     };
   },
-  props:[
-
-  ],
+  watch: {
+    device_status_req_frequency: function(){
+      if(this.device_status_req_frequency == ''){ 
+      this.device_status_req_frequency = '0';
+      }
+    }
+  },
  created: async function () {
     try {
       if (this.$store.state.loginState == false) {
@@ -203,7 +207,7 @@ mixins: [validationMixin],
         this.access =1;
         //--------------Start-------------------
         //Get Service Profiles
-        this.service_profiles = await AuthenticationService.get_service_profile()
+        this.service_profiles = await AuthenticationService.get_service_profiles()
         .catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })
@@ -306,7 +310,10 @@ mixins: [validationMixin],
         if(this.network_geo_location ==""){this.network_geo_location =false;} //needed to set empty radio to false
         this.network_id=functions.extract_id_id_name(this.network_name_form);//Extract network id
         this.network_server_id=functions.extract_id_id_name(this.network_server_name_form);//Extract network server id
-        AuthenticationService.create_service_profile({
+        this.device_status_req_frequency = this.check_for_0_start(this.device_status_req_frequency);
+        this.dr_min = this.check_for_0_start(this.dr_min);
+        this.dr_max = this.check_for_0_start(this.dr_max);
+        AuthenticationService.create_service_profiles({
           service_profile_name: this.service_profile_name,
           network_id: this.network_id,
           network_server_id: this.network_server_id,
@@ -326,6 +333,14 @@ mixins: [validationMixin],
         })
       }
     },
+    check_for_0_start(value){ //checks to see if the first digit is 0 and if it is removes the 0 from the start of the number because the lora app server does not process it
+      if(value.length > 1){
+        if(value.indexOf('0') == 0){
+          return value.slice(1);
+        }
+      }
+      return value;
+    }
   }
 };
 </script>

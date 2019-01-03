@@ -160,7 +160,7 @@ export default new Router({
       component: Create_Service_Profile
     },
     {
-      path: "/service_profile/update/:service_profile_id",
+      path: "/service_profile/update/:service_profile_id_lora", //reasons sending the lora instead of the database is because we do not need to fetch all the profiles from the server for this form this there are no requriements to the name
       name: "service_profile_update",
       component: Update_Service_Profile
     },

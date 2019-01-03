@@ -31,10 +31,17 @@ function service_profile_api_request_data(data, type) {
         }
     } else if (type == 2) {//Update form
         request = {
-            "organization": {
-                "canHaveGateways": data.can_have_gateways,
-                "displayName": `${data.display_name}`,
-                "name": `${data.name}`
+            "serviceProfile": {
+                "name": data.service_profile_name,
+                //"organizationID": `${data.network_id}`,
+                //"networkServerID": `${data.network_server_id}`,
+                "addGWMetaData": data.add_gw_metadata,
+                "reportDevStatusBattery": data.report_device_status_battery,
+                "reportDevStatusMargin": data.report_device_status_margin,
+                "nwkGeoLoc": data.network_geo_location,
+                "devStatusReqFreq": data.device_status_req_frequency,
+                "drMin": data.dr_min,
+                "drMax": data.dr_max
             }
         }
     }
@@ -42,34 +49,50 @@ function service_profile_api_request_data(data, type) {
 }
 
 function convert_names_service_profiles(service_profiles) {
-    let service_profiles_return = [];
-    let service_profile = {
-            service_profile_created_at: null,
-            service_profile_id_lora: null,
-            service_profile_name: null,
-            network_server_id: null,
-            network_id: null,
-            service_profile_updated_at: null,
-         };
-    for (let i = 0; i < service_profiles.length; i++) {
-        service_profile.service_profile_created_at = service_profiles[i].createdAt;
-        service_profile.service_profile_id_lora = service_profiles[i].id;
-        service_profile.service_profile_name = service_profiles[i].name;
-        service_profile.network_server_id = service_profiles[i].networkServerID;
-        service_profile.network_id = service_profiles[i].organizationID;
-        service_profile.service_profile_updated_at = service_profiles[i].updatedAt;
-        service_profiles_return[i] = service_profile;
-        service_profile = {
-            service_profile_created_at: null,
-            service_profile_id_lora: null,
-            service_profile_name: null,
-            network_server_id: null,
-            network_id: null,
-            service_profile_updated_at: null,
-        };
+  let service_profiles_return = [];
+  let service_profile = {
+    service_profile_created_at: null,
+    service_profile_id_lora: null,
+    service_profile_name: null,
+    network_server_id: null,
+    network_id: null,
+    service_profile_updated_at: null
+  };
+  for (let i = 0; i < service_profiles.length; i++) {
+    service_profile.service_profile_created_at = service_profiles[i].createdAt;
+    service_profile.service_profile_id_lora = service_profiles[i].id;
+    service_profile.service_profile_name = service_profiles[i].name;
+    service_profile.network_server_id = service_profiles[i].networkServerID;
+    service_profile.network_id = service_profiles[i].organizationID;
+    service_profile.service_profile_updated_at = service_profiles[i].updatedAt;
+    service_profiles_return[i] = service_profile;
+    service_profile = {
+      service_profile_created_at: null,
+      service_profile_id_lora: null,
+      service_profile_name: null,
+      network_server_id: null,
+      network_id: null,
+      service_profile_updated_at: null
+    };
+  }
+  return service_profiles_return;
+}  
 
-    }
-    return service_profiles_return;
+function convert_names_service_profiles_single(service_profiles) {
+  let service_profile = {
+    service_profile_name: service_profiles.name,
+    service_profile_id_lora: service_profiles.id,
+    network_id: service_profiles.organizationID,
+    network_server_id: service_profiles.networkServerID,
+    add_gw_metadata: service_profiles.addGWMetaData,
+    report_device_status_battery: service_profiles.reportDevStatusBattery,
+    report_device_status_margin: service_profiles.reportDevStatusMargin,
+    network_geo_location: service_profiles.nwkGeoLoc,
+    device_status_req_frequency: service_profiles.devStatusReqFreq,
+    dr_min: service_profiles.drMin,
+    dr_max: service_profiles.drMax
+  };
+  return service_profile;
 }  
 
 function parse(service_profile_lora, service_profile_db) {
@@ -141,6 +164,23 @@ module.exports = {
             res.status(500).send({ message: "Failed to get service profiles", type: 'error' });
         }
     },
+    get_one_service_profile: async function (req, res) {
+        try {
+            let service_profiles = await lora_app_server.get_service_profile_one(req.params.service_profile_id_lora)
+                .catch(err => {
+                    //Error getting service profile from lora app server
+                    let error = new VError("%s", err.message);
+                    throw error;
+                });
+            service_profiles = convert_names_service_profiles_single(service_profiles.data.serviceProfile);
+            service_profiles = JSON.stringify(service_profiles);
+            res.status(200).send({ service_profiles: service_profiles, message: 'Service Profile fetched', type: 'success' });
+        } catch (err) {
+            console.log(err);
+            //Error trying to request service profile from lora app server
+            res.status(500).send({ message: "Failed to get service profile", type: 'error' });
+        }
+    },
     create_service_profile: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         try {
@@ -160,7 +200,7 @@ module.exports = {
                 });
             res.status(201).send({ message: 'Service Profile created', type: 'success' });
         } catch (err) {
-            error_handler.error_logger(req, err);
+            //error_handler.error_logger(req, err);
             //e_l =0 (problem creating service profile on lora app server)
             //e_l =1 (problem creating service profile in database)
             //other = (unknown error/exception)
@@ -174,6 +214,39 @@ module.exports = {
             }
         }
     },
+    update_service_profile: async function(req, res){
+        let error_location = null; //0=lora, 1=lora 2=db
+        try {
+            let data = JSON.parse(req.body.data);
+            let request_body = service_profile_api_request_data(data, 2);
+            let result = await lora_app_server.update_service_profiles(request_body, req.params.service_profile_id_lora)
+                .catch(err => {
+                    //error updating service profile on lora app server
+                    error_location = 0;
+                    throw error_message("update service profile : lora app server", err.message);
+                });
+            await db_service_profile.update_service_profile_all_parameters(data, req.params.service_profile_id_lora)
+                .catch(err => {
+                    //error updating service profile in database
+                    error_location = 1;
+                    throw error_message("update service profile : database", err.message);
+                })
+            res.status(200).send({ message: 'Service Profile updated', type: 'success' });
+        } catch (err) {
+            //error_handler.error_logger(req, err);
+            //e_l =0 (problem updating service profile on lora app server)
+            //e_l =2 (problem updating service profile on db)
+            //other = (unknown error/exception)
+            console.log(err);
+            if (error_location == 0) {
+                res.status(500).send({ message: "Failed to update service profile", type: 'error' });
+            } else if (error_location == 1) {
+                res.status(200).send({message: "Failed to update service profile in database", type: 'info' })
+            } else {
+                res.status(500).send({ message: 'Error', type: 'error' })
+            }
+        }
+    },
     delete_service_profile: async function (req, res) {
         let error_location = null; //0=lora, 1=lora 2=db
         let service_profiles;
@@ -182,22 +255,32 @@ module.exports = {
                 .catch(err => {
                     //error deleting service_profile from lora app server
                     error_location = 0;
+                    if (err.message == 'Request failed with status code 412'){
+                        error_location = 1;
+                    }
                     throw error_message("delete service profile : lora app server", err.message);
                 });
             let request_body = service_profile_api_request_data(null, 0);
             service_profiles = await lora_app_server.get_service_profiles(request_body)
                 .catch(err => {
                     //Error getting service profiles from lora app server
-                    error_location = 1;
+                    error_location = 2;
                     throw error_message("get service profile : lora app server", err.message);
                 });
             service_profiles = convert_names_service_profiles(service_profiles.data.result);
             await db_service_profile.update_service_profile("service_profile_deleted", 1, req.params.service_profile_id_lora)
                 .catch(err => {
                     //error updating deleted coloum from db
-                    error_location = 2;
+                    error_location = 3;
                     throw error_message("delete network : lora app server", err.message);
                 });
+            let service_profiles_db = await db_service_profile.get_service_profile()
+                .catch(err => {
+                    //Error getting service profiles from database
+                    let error = new VError("%s", err.message);
+                    throw error;
+                });
+            service_profiles = parse(service_profiles, service_profiles_db);
             service_profiles = JSON.stringify(service_profiles);
             res.status(200).send({ service_profiles: service_profiles, message: 'Service Profile deleted', type: 'success' });
         }catch(err){
@@ -209,10 +292,12 @@ module.exports = {
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete service profile", type: 'error' });
             } else if (error_location == 1) {
+                res.status(412).send({ message: "Delete Sub-Network that uses Service Profile to be deleted", type: 'info' })
+            }else if (error_location == 2) {
                 service_profiles = JSON.stringify([]);
                 res.status(200).send({ service_profiles: service_profiles, message: "Service Profile deleted. Failed to fetch service_profiles", type: 'info' })
             }
-            else if (error_location == 2) {
+            else if (error_location == 3) {
                 service_profiles = JSON.stringify(service_profiles);
                 res.status(200).send({ service_profiles: service_profiles, message: "Service Profile deleted. Error updating service_profiles in database", type: 'info' })
             } else {
