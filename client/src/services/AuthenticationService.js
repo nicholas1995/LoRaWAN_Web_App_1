@@ -219,6 +219,11 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.delete(`/gateways/${gateway_id}`);
     },
+    //Gateway Staisatics
+    get_gateway_statistics_headers(){ //returns all the headers of the gateway statistics database table
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/gateway_statistics/headers`);
+    },
 
     //Service Profile
     get_service_profiles(){

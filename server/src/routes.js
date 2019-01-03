@@ -8,6 +8,7 @@ const sub_networks = require('./controllers/sub_networks');
 const vessels = require("./controllers/vessels");
 const devices = require("./controllers/devices");
 const gateways = require("./controllers/gateways");
+const gateway_statistics = require("./controllers/gateway_statistics")
 const service_profiles = require('./controllers/service_profiles');
 const device_profiles = require("./controllers/device_profiles");
 const network_servers = require("./controllers/network_servers");
@@ -168,6 +169,10 @@ module.exports = ((app) => {
 
     //Gateways (Delete)
     app.delete("/gateways/:gateway_id_lora", authenticate, grant_access, gateways.delete);
+
+    //----------------------Gateway Statistics----------------------
+    //Gateway Statistics (Get Headers)
+    app.get("/gateway_statistics/headers", authenticate, grant_access, gateway_statistics.get_gateway_statistics_headers);
 
     //----------------------Service Profile----------------------
     //Service Profile (Read One)

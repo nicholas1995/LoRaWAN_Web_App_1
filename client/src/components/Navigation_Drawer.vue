@@ -54,7 +54,7 @@ export default {
           { title: 'Service Profile', icon: 'error'}, //2
           { title: 'Vessel', icon: 'directions_boat'}, //3
           { title: 'Gateway', icon: 'settings_input_antenna'}, //4
-          { title: 'Gateway Stats', icon: 'settings_input_antenna'}, //5
+          { title: 'Gateway Statistics', icon: 'settings_input_antenna'}, //5
           { title: 'Device', icon: 'devices'}, //6
           { title: 'Device Data', icon: 'view_comfy'}, //7
           { title: 'Map', icon: 'map'}, //8
@@ -90,6 +90,8 @@ export default {
         this.$router.push('/vessel'); 
       }else if(item=="Gateway"){
         this.$router.push('/gateway'); 
+      }else if(item=="Gateway Statistics"){
+        this.$router.push('/gateway_statistics'); 
       }else if(item=="Device"){
         this.$router.push('/device'); 
       }else if(item=="Device Data"){

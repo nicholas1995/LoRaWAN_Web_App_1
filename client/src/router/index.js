@@ -25,6 +25,7 @@ import Activate_Device from "../components/Device/Activate_Device.vue";
 import Gateway from "../components/Gateway/Gateway_Management.vue"
 import Create_Gateway from "../components/Gateway/Create_Gateway.vue";
 import Update_Gateway from "../components/Gateway/Update_Gateway.vue";
+import Gateway_Statistics from "../components/Gateway Statistics/Gateway_Statistics.vue";
 
 import Service_Profile from "../components/Service Profile/Service_Profile_Management.vue";
 import Create_Service_Profile from "../components/Service Profile/Create_Service_Profile.vue";
@@ -147,6 +148,11 @@ export default new Router({
       path: "/gateway/update/:gateway_id",
       name: "gateway_update",
       component: Update_Gateway
+    },
+    {
+      path: "/gateway_statistics",
+      name: "gateway_statistics",
+      component: Gateway_Statistics
     },
     //-------------------------Service_Profile-------------------------
     {

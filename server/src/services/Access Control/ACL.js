@@ -40,6 +40,9 @@ const ACL = {
     gateway: {
       read: "All"
     },
+    gateway_statistics: {
+      read: "All"
+    },
     device_data: {
       read: "All",
       export: "All"
@@ -59,7 +62,7 @@ const ACL = {
     gateway_profiles: {
       read: "All"
     },
-    error_logs:{
+    error_logs: {
       read: "All"
     }
   },
@@ -89,6 +92,9 @@ const ACL = {
       read: "All",
       export: "All"
     },
+    gateway_statistics: {
+      read: "All"
+    },
     error_logs: {
       read: "All"
     }
@@ -113,6 +119,9 @@ const ACL = {
     device_data: {
       read: "All",
       export: "All"
+    },
+    gateway_statistics: {
+      read: "All"
     }
   },
   Fisher: {
