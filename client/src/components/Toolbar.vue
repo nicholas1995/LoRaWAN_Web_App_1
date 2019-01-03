@@ -3,7 +3,7 @@
   <v-toolbar fixed color ="grey lighten-2" >
       <!--This is the menu icon -->
       <v-toolbar-side-icon  flat v-if="!this.$store.state.loginState"
-               class=" mt-2" @click.stop="$emit('toggle-drawer')" >
+        class=" mt-2" @click.stop="$emit('toggle-drawer')" >
       </v-toolbar-side-icon>
     <v-toolbar-title>Private Marine IoT Network Console </v-toolbar-title>
       <v-divider
@@ -12,7 +12,7 @@
         vertical
       ></v-divider>
     <v-spacer></v-spacer>
-    <v-toolbar-items class="hidden-sm-and-down ">
+    <v-toolbar-items>
       <v-btn class="grey lighten-2" @click="login" flat v-if="this.$store.state.loginState">
         Login
       </v-btn>
