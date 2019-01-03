@@ -214,7 +214,7 @@ module.exports = ((app) => {
     app.get("/devices/rx/:parameters/:columns", authenticate, grant_access, device_data.get_filtered);
 
     //Device (Specified pagination)
-    app.get("/devices/uplink/:sort_by/:descending", authenticate, grant_access, device_data.get);
+    app.get("/devices/uplink/:sort_by/:descending", authenticate, grant_access, device_data.get); 
 
     //Device (Specified Headings)
     app.get("/devices/uplink/headers/:sort_by/:descending/:headers", authenticate, grant_access, device_data.get_specified_headings);

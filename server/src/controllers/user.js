@@ -58,11 +58,27 @@ module.exports = {
   get: async function (req, res) {
     let users;
     try {
-      users = await user_db.get_users()
-        .catch((err) => {
+      if(req.access == 'self'){
+        users = await user_db.get_profile(req.user.email).catch(err => {
+          //Error fetching user profile information from database
           throw err;
-        })
-      users = JSON.stringify(users);
+        });
+        users = users[0];
+        users = {
+          first_name: users.first_name,
+          last_name: users.last_name,
+          address: users.address,
+          home_phone: users.home_phone,
+          mobile_phone: users.mobile_phone,
+          email: users.email
+        }
+      }else if(req.access == 'all'){
+        users = await user_db.get_users()
+          .catch((err) => {
+            throw err;
+          })
+      }
+      //users = JSON.stringify(users);
       res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });
     } catch (err) {
       res.status(500).send({ message: "Failed to get users", type: 'error' });
