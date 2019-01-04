@@ -104,6 +104,9 @@ const ACL = {
       read: "Self",
       update: "Self"
     },
+    networks: {
+      read: "All"
+    },
     sub_networks: {
       read: "All"
     },

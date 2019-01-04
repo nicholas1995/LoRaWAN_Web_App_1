@@ -236,6 +236,22 @@ module.exports = {
             res.status(200).send({ gateways : gateways });
         }catch(err){
             console.log(err);
+            res.status(500).send({ message: "Failed to get gateway", type: 'error' });
+        }
+    },
+    get_gateways_database: async function (req, res) {
+        try {
+            let gateways = await db_gateway.get_gateway_all()
+                .catch(err => {
+                    //Error getting gateways from database
+                    let error = new VError("%s", err.message);
+                    throw error;
+                });
+            gateways = JSON.stringify(gateways);
+            res.status(200).send({ gateways: gateways });
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ message: "Failed to get gateway", type: 'error' });
         }
     },
     create: async function(req, res){

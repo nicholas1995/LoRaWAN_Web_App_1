@@ -154,6 +154,9 @@ module.exports = ((app) => {
     //----------------------Gateways-----------------
     //Gateway (Read for Map)
     app.get("/gateways/map", authenticate, grant_access, gateways.get_map);
+
+    //Gateway (Read from database)
+    app.get("/gateways/database", authenticate, grant_access, gateways.get_gateways_database);
     
     //Gateways (Read)
     app.get("/gateways", authenticate, grant_access, gateways.get);
@@ -171,8 +174,11 @@ module.exports = ((app) => {
     app.delete("/gateways/:gateway_id_lora", authenticate, grant_access, gateways.delete);
 
     //----------------------Gateway Statistics----------------------
-    //Gateway Statistics (Get Headers)
-    app.get("/gateway_statistics/headers", authenticate, grant_access, gateway_statistics.get_gateway_statistics_headers);
+    //Gateway Statistics (Get Initial)
+    app.get("/gateway_statistics/initial", authenticate, grant_access, gateway_statistics.get_gateway_statistics_initial);
+
+    //Gateway Statistics (Filtered)
+    app.get("/gateway_statistics/:parameters/:columns", authenticate, grant_access, gateway_statistics.get_gateway_statistics_filtered);
 
     //----------------------Service Profile----------------------
     //Service Profile (Read One)

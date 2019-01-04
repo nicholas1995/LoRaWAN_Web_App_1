@@ -7,6 +7,11 @@ module.exports = {
         WHERE gateway_deleted ='0'`;
         return db.queryAsync(sql);
     },
+    get_gateway_all: function () {
+        let sql = `SELECT *
+        FROM gateway`;
+        return db.queryAsync(sql);
+    },
     update_gateway: function (col, value, condition) {
         let sql = `UPDATE gateway
         SET ${col} = '${value}'

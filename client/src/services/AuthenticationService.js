@@ -201,6 +201,10 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/gateway/${gateway_id}`);
     },
+    get_gateways_database() {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/gateways/database`);
+    },
     get_gateways_map(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/gateways/map`);
@@ -220,9 +224,15 @@ export default {
         return Api.delete(`/gateways/${gateway_id}`);
     },
     //Gateway Staisatics
-    get_gateway_statistics_headers(){ //returns all the headers of the gateway statistics database table
+    get_gateway_statistics_initial() { //returns all the gateway stats
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/gateway_statistics/headers`);
+        return Api.get(`/gateway_statistics/initial`);
+    },
+
+    gateway_statistics_filtered(parameters, columns){
+        parameters = JSON.stringify(parameters);
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/gateway_statistics/${parameters}/${columns}`);
     },
 
     //Service Profile

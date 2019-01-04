@@ -177,6 +177,7 @@ export default {
         }
         this.device_data = JSON.parse(result.data.device_data);
         this.headers =  JSON.parse(result.data.headers);
+        console.log(this.headers)
         for(let i =0; i< this.headers.length; i++){
           this.header_names.push(this.headers[i].text);
           this.value.push(this.headers[i].text);

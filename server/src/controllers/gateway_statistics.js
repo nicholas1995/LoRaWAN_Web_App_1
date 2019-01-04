@@ -13,6 +13,9 @@ function gateway_statistics_headers_database_to_table_LUT(gateway_statistics_tab
       case "gateway_statistics_id":
         return "Gateway Statistics ID";
         break;
+        case "gateway_id":
+        return "Gateway ID";
+        break;
       case "gateway_id_lora":
         return "Gateway ID LoRa";
         break;
@@ -58,6 +61,9 @@ function gateway_statistics_headers_table_to_database_LUT(gateway_statistics_tab
         case "Gateway Statistics ID":
             return "gateway_statistics_id";
         break;
+        case "Gateway ID":
+            return "gateway_id";
+        break;
         case "Gateway ID LoRa":
             return "gateway_id_lora";
         break;
@@ -98,26 +104,68 @@ function gateway_statistics_headers_table_to_database_LUT(gateway_statistics_tab
         return "Null"
     }
 }
+//Takes as the input an array of lenght 1 of the gateway stats data and returns the headers in the form {text: "Table form", value: "database form"};
+function convert_gateway_statistics_headers_database_to_table(gateway_statistics){ 
+    let headers_database = Object.keys(gateway_statistics);
+    let headers_table = [];
+    let place_holder = {}; //object which will store the text and value data
+    for (let i = 0; i < headers_database.length; i++){
+        place_holder["text"] = gateway_statistics_headers_database_to_table_LUT(headers_database[i]);
+        place_holder["value"] = headers_database[i];
+        headers_table[i] = place_holder;
+        place_holder = {};
+    }
+    return headers_table;
+}
+
+//Takes as the input an array of lenght 1 of the gateway stats data and returns the headers in the form {text: "Table form", value: "database form"};
+function convert_gateway_statistics_headers_table_to_database(columns) {
+    try{
+        let headers_table = columns.split(",");
+        let headers_database = []
+        for (let i = 0; i < headers_table.length; i++) {
+            headers_database[i] = gateway_statistics_headers_table_to_database_LUT(headers_table[i]);
+        }
+        return headers_database;
+
+    }catch(err){
+        console.log(err)
+    }
+}
 module.exports = {
-    get_gateway_statistics_headers: async function (req, res) {
-        try {
-            let gateway_statistics_table_schema = await db_gateway_statistics.get_gateway_statistics_headers()
+    get_gateway_statistics_initial: async function(req, res){
+        try{
+            let gateway_statistics = await db_gateway_statistics.get_gateway_statistics()
                 .catch(err => {
-                    //Error getting headers for the gateway statistics
+                    //Error getting gateway stats from the database
                     throw err;
                 })
-            //console.log(get_gateway_statistics_headers)
-            let gateway_statistics_table_headers_database = [];
-            for(let i = 0; i<gateway_statistics_table_schema.length; i++){
-                gateway_statistics_table_headers_database[i] = gateway_statistics_table_schema[i].COLUMN_NAME;
+            let headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
+            headers = JSON.stringify(headers);
+            gateway_statistics = JSON.stringify(gateway_statistics);
+            res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
+        }catch(err){
+            console.log(err)
+        }
+    },
+    get_gateway_statistics_filtered: async function(req, res){
+        try{
+            let parameters = JSON.parse(req.params.parameters);
+            let columns = req.params.columns;
+            columns = convert_gateway_statistics_headers_table_to_database(columns);
+            let gateway_statistics = await db_gateway_statistics.get_gateway_statistics_filtered(parameters, columns)
+                .catch(err =>{
+                    //Error getting the filtered gateway stats from the database
+                    throw err;
+                })
+                let headers;
+            if(gateway_statistics.length > 0){
+                headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
             }
-            let gateway_statistics_table_headers_table = [];
-            for(let i = 0; i< gateway_statistics_table_headers_database.length; i++){
-                gateway_statistics_table_headers_table[i] = gateway_statistics_headers_database_to_table_LUT(gateway_statistics_table_headers_database[i]);
-            }
-            gateway_statistics_table_headers_table = JSON.stringify(gateway_statistics_table_headers_table);
-            res.status(200).send({ headers: gateway_statistics_table_headers_table, message: 'Gateway Statistics Headers Fetched fetched', type: 'success' });
-        } catch (err) {
+            headers = JSON.stringify(headers);
+            gateway_statistics = JSON.stringify(gateway_statistics);
+            res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
+        }catch(err){
             console.log(err)
         }
     }

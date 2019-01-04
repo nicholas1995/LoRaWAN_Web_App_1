@@ -10,18 +10,10 @@
             chips
           ></v-combobox>
         </v-flex>
-        <div v-if="this.$store.state.user_class !='Fisher'">
-        <network_subnetwork_vessel_device_picker
-          @sub_network_id = sub_network_id_function($event)
-          @vessel_id = vessel_id_function($event)
-          @device_id = device_id_function($event)
-        ></network_subnetwork_vessel_device_picker>
-        </div>
-        <div v-else-if="this.$store.state.user_class =='Fisher'">
-        <vessel_device_picker
-          @vessel_id = vessel_id_function($event)
-          @device_id = device_id_function($event)
-        ></vessel_device_picker>
+        <div>
+        <network_gateway_picker
+          @gateway_id = gateway_id_function($event)
+        ></network_gateway_picker>
         </div>
         <v-layout row wrap>
         <!-- Date Picker-->
@@ -32,11 +24,11 @@
         <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
         </v-flex>
         </v-layout>
-          <v-btn v-on:click="downloadCSV(device_data)">Export</v-btn>
+          <v-btn v-on:click="downloadCSV(gateway_statistics)">Export</v-btn>
         <v-btn v-on:click="generate_function()">Generate</v-btn>
 
     <v-toolbar class="elevation-1" color="grey lighten-3">
-      <v-toolbar-title>Device Uplink</v-toolbar-title>
+      <v-toolbar-title>Gateway Statistics</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -45,7 +37,7 @@
     </v-toolbar>
       <v-data-table
             :headers="display"
-            :items="this.device_data"
+            :items="this.gateway_statistics"
             :pagination.sync="pagination"
             :loading="loading"
             :rows-per-page-items= "rows_per_page_items"
@@ -69,8 +61,7 @@
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
 import date_time_picker from "./../Date_Time_Picker";
-import network_subnetwork_vessel_device_picker from "./../Network_Subnet_Vessel_Device_Picker";
-import vessel_device_picker from "./../Vessel_Device_Picker";
+import network_gateway_picker from "./Network_Gateway_Picker";
 
 
 
@@ -115,22 +106,22 @@ function return_date_time(date, time){
 export default {
   components:{
     date_time_picker,
-    network_subnetwork_vessel_device_picker,
-    vessel_device_picker
+    network_gateway_picker,
 
   },
   data(){
     return {
         access: 0,
+        initial_state :0, //This is to ensure that when value is updated initially it does not cause the value watcher to execute
 
-        device_data: [],
+        gateway_statistics: [],
         loading: true,
         pagination: {},
         rows_per_page_items: [ 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
-        header_names: [], //Array holding the headings
-        value: [],
-        display: [],
-        headers: [],
+        headers: [], //Array of objects that holds all the headers database and table names {value: , text: } (static)
+        header_names: [], //Array holding the headings, onlt the text (static)
+        value: [], //Currently selected list of headers which will be displayed in the picker 
+        display: [], //Header value names used for the table it self
         start_date: null,
         start_time: null,
         end_date: null,
@@ -139,15 +130,9 @@ export default {
         end_date_time: null, //This holds the end date and time in the format of the data in the db
         filter_parameters: {},
 
-        sub_network_id: null,
-        vessel_id: null,
-        device_id: null,
-
+        gateway_id: null,
     }
   },
-  props: [
-    'devices_prop'
-  ],
   created: async function(){
     try{
       if (this.$store.state.loginState == false) {
@@ -158,20 +143,20 @@ export default {
           });
         this.access =1;
         //-------------------------Start-------------------------
-        let result;
-        result = await AuthenticationService.get_gateway_statistics_headers()
-        .catch(err => {
-          //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-          throw err;
-          })
-        this.headers = JSON.parse(result.data.headers);
-        //this.headers =  JSON.parse(result.data.headers);
+        //Get gateway stats and headers
+        this.data = await AuthenticationService.get_gateway_statistics_initial()
+          .catch(err => {
+            //Error getting the gateway stats from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            })
+        this.headers = JSON.parse(this.data.data.headers);
         for(let i =0; i< this.headers.length; i++){
-          this.header_names.push(this.headers[i]);
-          this.value.push(this.headers[i]);
+          this.header_names.push(this.headers[i].text);
+          this.value.push(this.headers[i].text);
         }
-        this.display = this.headers
+        this.display = this.headers;
+        this.gateway_statistics = JSON.parse(this.data.data.gateway_statistics);
         this.loading = false;
         }else{
           alert('Please login.');
@@ -193,25 +178,28 @@ export default {
       }
     }
   },
-  watch: {
-    devices_prop: function(){
-      this.devices = this.devices_prop;
-    },
+   watch: {
     pagination: async function(){
       try{
-        this.generate_function();
+        if(this.initial_state != 0){
+          this.generate_function();
+        }
+        this.initial_state = 1;
       }catch(err){
         console.log(err);
       }
     },
     value: async function(){
       try{
-        //this.generate_function();
+        if(this.initial_state != 0){
+          this.generate_function();
+        }
+        this.initial_state = 1;
       }catch(err){
         console.log(err);
       }
     }
-  },
+  }, 
   methods: {
     start_date_function(date){
       this.start_date = date;
@@ -232,7 +220,7 @@ export default {
     downloadCSV: function(args) {
       var data, filename, link;
       var csv = convertArrayOfObjectsToCSV({
-        data: this.device_data
+        data: this.gateway_statistics
       });
       if (csv == null) return;
       filename = args.filename || 'export.csv';
@@ -261,59 +249,31 @@ export default {
         if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
         else this.filter_parameters["order"] = 'DESC';
       }
-      if(this.device_id){
-        this.filter_parameters["device"] = this.device_id;
-        this.filter_parameters["vessel"] = this.vessel_id;
-        this.filter_parameters["sub_network"] = this.sub_network_id;
-      }else if(this.vessel_id){
-        this.filter_parameters["vessel"] = this.vessel_id;
-        this.filter_parameters["sub_network"] = this.sub_network_id;
-      }else if(this.sub_network_id){
-        this.filter_parameters["sub_network"] = this.sub_network_id;
+      if(this.gateway_id){
+        this.filter_parameters["gateway_id"] = this.gateway_id;
       }
-       let result = await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value)
+       let result = await AuthenticationService.gateway_statistics_filtered(this.filter_parameters, this.value)
           .catch(err => {
-            //Error getting the devices from the server
+            //Error getting the gateway statistics from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             }) 
-      this.device_data = JSON.parse(result.data.device_data);
-      this.headers =  JSON.parse(result.data.headers); 
-      this.display = this.headers
+      this.gateway_statistics = JSON.parse(result.data.gateway_statistics);
+      if(this.gateway_statistics.length > 0 ){ //This is so if no data is returned we do not get an error in the table because we need at least one objec to be able
+      //to create the headers of the table. So if no data is returns we leave the table with the previous headers and just display no data
+        this.display = JSON.parse(result.data.headers);
+      }
       this.filter_parameters = {}; 
       this.loading = false;
       
     },
-    end_date_time_function: async function(data){
-      this.end_date_time = data;
-      this.loading = true;
-        let result = await AuthenticationService.get_device_data_specific_heading_specified_date(this.pagination, this.value, this.start_date_time, this.end_date_time)
-          .catch(err => {
-            //Error getting the devices from the server
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-            throw err;
-            })
-        this.device_data = JSON.parse(result.data.device_data);
-        this.headers =  JSON.parse(result.data.headers);
-        this.display = this.headers
-        this.generate = 0;
-        this.loading = false;
-    },
-    sub_network_id_function: function(data){
+    gateway_id_function: function(data){
       //The if else statements were used because in the Picker we always want to emit when the value changes not only when the array is greater than 0.
-      //This is because if we clear the array in the picker it will not emit to clear the id data on the device_data component.
+      //This is because if we clear the array in the picker it will not emit to clear the id data on the gateway_Stats component.
       //Now since we are always emitting we only want to save to the local variable when it is greater than 0. Any other time we set it to null. 
-      if(data.length > 0 )this.sub_network_id = data
-      else this.sub_network_id = null
+      if(data.length > 0 ){this.gateway_id = data}
+      else {this.gateway_id = null}
     },
-    vessel_id_function: function(data){
-      if(data.length > 0 )this.vessel_id = data
-      else this.vessel_id = null
-    },
-    device_id_function: function(data){
-      if(data.length > 0 )this.device_id = data
-      else this.device_id = null
-    }
   }
 }
 </script>

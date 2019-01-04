@@ -78,7 +78,7 @@ module.exports = {
             throw err;
           })
       }
-      //users = JSON.stringify(users);
+      users = JSON.stringify(users);
       res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });
     } catch (err) {
       res.status(500).send({ message: "Failed to get users", type: 'error' });
