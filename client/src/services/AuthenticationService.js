@@ -284,6 +284,10 @@ export default {
     },
 
     //Device uplink data
+    get_device_uplink_specified_id(device_uplink_id){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`devices/uplink/specific_id/${device_uplink_id}`);
+    },
     device_rx_filtered(parameters , columns){ 
         parameters = JSON.stringify(parameters); 
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

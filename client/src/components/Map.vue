@@ -12,16 +12,7 @@ export default {
   data: function () {
     return {
       mapName: this.name + "-map",
-      markerCoordinates: [{
-        lat: 10.431135,
-        lng: -61.623766
-      }, {
-        lat: 10.584085,
-        lng: -61.702689
-      }, {
-        lat: 10.731110,
-        lng: -61.703193
-      }],
+      markerCoordinates: [],
       map: null,
       bounds: null,
       markers: [],
@@ -30,6 +21,8 @@ export default {
       coordinates: [],
       contentString: [],
       gateways: '',
+
+      i: 1 //Just to fetch the device locations/// to delete
       
     }
   },
@@ -72,15 +65,38 @@ export default {
           };
       })(marker,content,infowindow));
     }
-/*     this.flightPath = new google.maps.Polyline({
-          path: this.coordinates,
+        //await this.fetch_locations()        
+  },
+  methods: {
+    fetch_locations: async function(){
+      let device_uplink_data;
+        device_uplink_data = await AuthenticationService.get_device_uplink_specified_id(this.i)
+        .catch(err => {
+          console.log(err);
+        }) 
+        device_uplink_data = JSON.parse(device_uplink_data.data.device_data);
+
+        this.markerCoordinates.push({lat: parseFloat(device_uplink_data[0].gps_latitude),
+        lng: parseFloat(device_uplink_data[0].gps_longitude)})
+          const position = new google.maps.LatLng(this.markerCoordinates[(this.i -1)].lat, this.markerCoordinates[this.i -1].lng);
+           var image = 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png';
+          const marker = new google.maps.Marker({ 
+            position,
+            map: this.map,
+            icon: image
+          });
+          this.markers.push(marker)
+                this.i = this.i+1;
+          this.flightPath = new google.maps.Polyline({
+          path: this.markerCoordinates,
           geodesic: true,
           strokeColor: '#FF0088',
           strokeOpacity: 1.0,
           strokeWeight: 2,
           map: this.map
-        }); */
-        
+        }); 
+        setTimeout(this.fetch_locations, 2000)
+    }
   }
 };
 </script>
