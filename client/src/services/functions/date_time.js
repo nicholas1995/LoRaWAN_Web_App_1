@@ -43,11 +43,23 @@ return_month: function(month){
       break;
     }
   },
-//This function ensures that the digit returned has 2 digits (eg 1-> 01)
-add_zero: function(i){
-  if(i < 10){
-    i = "0" + i;
+  //This function ensures that the digit returned has 2 digits (eg 1-> 01)
+  add_zero: function(i){
+    if(i < 10){
+      i = "0" + i;
+    }
+      return i;
+  },
+  convert_picker_date_to_UTC: function (date) {
+    date = new Date(date);
+    let month = this.add_zero(date.getUTCMonth() + 1); //returns the month in 3 letters
+    let day = this.add_zero(date.getUTCDate()); //Need to minus one cause for some reason UTCDay adds one to the day
+    let year = date.getUTCFullYear(); //converts the full year to 2 digits 
+    let hour = this.add_zero(date.getUTCHours());
+    let minutes = this.add_zero(date.getUTCMinutes());
+    let seconds = this.add_zero(date.getUTCSeconds());
+    console.log(day);
+    let full_date = year + "-" + month + "-" + day + "T" + hour + ":" + minutes + ":" + seconds + "Z";
+    return (full_date);
   }
-    return i;
-}
 }

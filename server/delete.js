@@ -1,3 +1,4 @@
+/* //This is a converter for the location lat and long to llp
 let llp = [];
 let powers = [0.0001, 0.001, 0.0256, 0.256, 6.5536, 65.536];
 
@@ -186,3 +187,20 @@ function byte_length_is_8(byte) {
       break;
   }
 }
+ */
+function add_zero(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+let date = "2019-01-16 02:00:00";
+date = new Date(date);
+let month = add_zero(date.getUTCMonth() + 1); //returns the month in 3 letters
+let day = add_zero(date.getUTCDate());
+let year = date.getUTCFullYear(); //converts the full year to 2 digits 
+let hour = add_zero(date.getUTCHours());
+let minutes = add_zero(date.getUTCMinutes());
+let seconds = add_zero(date.getUTCSeconds());
+full_date = year + "-" + month + "-" + day + "T" + hour + ":" + minutes + ":" + seconds+"Z";
+console.log(full_date);

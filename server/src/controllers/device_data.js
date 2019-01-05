@@ -100,7 +100,7 @@ function add_zero(i) {
     }
 function convert_dates(data){
     for(let i =0; i< data.length; i++){
-        data[i]["r_info_time"] = return_date(data[i]["r_info_time"]);
+        data[i]["rx_time"] = return_date(data[i]["rx_time"]);
         data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
     }
     return data;
@@ -189,13 +189,12 @@ module.exports = {
         try {
             let parameters = JSON.parse(req.params.parameters); 
             let columns = req.params.columns
-            console.log(columns)
             if (columns) {
                 columns = convert_from_ui_to_db(columns);
                 sql = `SELECT ${columns} FROM device_uplink `;
             }
             if(parameters.start_date){
-                sql_where.push(`time_stamp > '${parameters.start_date}'`);
+                sql_where.push(`time_stamp > '${parameters.start_date}'`); //We use the time stamp because the rx_time will only be present if we have the receive gw metadata option enabled
             }if(parameters.end_date){
                 sql_where.push(`time_stamp < '${parameters.end_date}'`);
             }

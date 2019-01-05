@@ -62,6 +62,7 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import date_time_picker from "./../Date_Time_Picker";
 import network_gateway_picker from "./Network_Gateway_Picker";
+import date_time_functions from "../../services/functions/date_time.js"
 
 
 
@@ -239,9 +240,11 @@ export default {
       this.start_date_time = return_date_time(this.start_date, this.start_time);
       this.end_date_time =return_date_time(this.end_date, this.end_time);
       if(this.start_date_time){
+        this.start_date_time = date_time_functions.convert_picker_date_to_UTC(this.start_date_time);
         this.filter_parameters["start_date"] = this.start_date_time;
       }
       if(this.end_date_time){
+        this.end_date_time = date_time_functions.convert_picker_date_to_UTC(this.end_date_time);
         this.filter_parameters["end_date"] = this.end_date_time;
       }
       if(this.pagination.sortBy){
@@ -274,6 +277,23 @@ export default {
       if(data.length > 0 ){this.gateway_id = data}
       else {this.gateway_id = null}
     },
+    add_zero: function(i) {
+      if (i < 10) {
+        i = "0" + i;
+      }
+      return i;
+    },
+    convert_picker_date_to_UTC: function(date){
+      date = new Date(date);
+      let month = this.add_zero(date.getUTCMonth() + 1); //returns the month in 3 letters
+      let day = this.add_zero(date.getUTCDay());
+      let year = date.getUTCFullYear(); //converts the full year to 2 digits 
+      let hour = this.add_zero(date.getUTCHours());
+      let minutes = this.add_zero(date.getUTCMinutes());
+      let seconds = this.add_zero(date.getUTCSeconds());
+      let full_date = year + "-" + month + "-" + day + "T" + hour + ":" + minutes + ":" + seconds + "Z";
+      return(full_date);
+    }
   }
 }
 </script>
