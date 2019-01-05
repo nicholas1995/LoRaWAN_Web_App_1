@@ -39,5 +39,12 @@ module.exports = {
         FROM device_uplink
         WHERE r_info_time BETWEEN '${start_date}' AND '${end_date}'`;
         return db.queryAsync(sql);
-    }
+    }/* ,
+    //TO DELETE-- this is to update the locations of device data records
+    update_location: function(id, lat, lng){
+        let sql = `UPDATE device_uplink
+        SET gps_latitude = '${lat}', gps_longitude = '${lng}'
+        WHERE device_uplink_id = '${id}'`;
+        return db.queryAsync(sql);
+    } */
 };

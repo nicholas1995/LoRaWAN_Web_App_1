@@ -1,3 +1,46 @@
+var fs = require("fs");
+const DB_DEVICE_UPLINK = require("./src/services/database/device_rx_db");
+
+require.extensions[".txt"] = function(module, filename) {
+  module.exports = fs.readFileSync(filename, "utf8");
+};
+
+var vessel_route = require("./Vessel_route.txt");
+let length_of_file = vessel_route.length;
+let pos_1 = 0; // the position of the / before the coordinated
+let pos_2 = 0; //the position of the / after the coordinated
+
+let coordinates = [];
+let i = 0;
+while (i < 1390) {
+  //pos_2 < length_of_file) {
+  pos_2 = vessel_route.indexOf("/", pos_1);
+  coordinates.push(vessel_route.slice(pos_1, pos_2));
+  pos_1 = pos_2 + 1;
+  i = i + 1;
+}
+async function update_location(){
+  let lat;
+  let lng;
+  let coor = [];
+  let pos = 0;
+  let length;
+  for (let j = 0; j < 1389; j++) {
+    length = coordinates[j].length;
+    pos = coordinates[j].indexOf(",");
+    lat = coordinates[j].slice(1, pos);
+    lng = coordinates[j].slice(pos + 4, length - 1);
+    coor.push({ lat: lat, lng: lng });
+    await DB_DEVICE_UPLINK.update_location(j, lat, lng).catch(err => {
+        console.log(err)
+      })
+  }
+  console.log(coor);
+}
+update_location()
+
+//console.log(coordinates); // string
+
 /* //This is a converter for the location lat and long to llp
 let llp = [];
 let powers = [0.0001, 0.001, 0.0256, 0.256, 6.5536, 65.536];
@@ -188,19 +231,3 @@ function byte_length_is_8(byte) {
   }
 }
  */
-function add_zero(i) {
-  if (i < 10) {
-    i = "0" + i;
-  }
-  return i;
-}
-let date = "2019-01-16 02:00:00";
-date = new Date(date);
-let month = add_zero(date.getUTCMonth() + 1); //returns the month in 3 letters
-let day = add_zero(date.getUTCDate());
-let year = date.getUTCFullYear(); //converts the full year to 2 digits 
-let hour = add_zero(date.getUTCHours());
-let minutes = add_zero(date.getUTCMinutes());
-let seconds = add_zero(date.getUTCSeconds());
-full_date = year + "-" + month + "-" + day + "T" + hour + ":" + minutes + ":" + seconds+"Z";
-console.log(full_date);
