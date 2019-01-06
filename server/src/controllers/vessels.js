@@ -55,10 +55,38 @@ module.exports = {
         try{ 
             let vessels_db; 
             if (req.access == "all") {
-                vessels_db = await DB.get_vessels(null, null, req.params.deleted, req.params.sub_network_id)
-                    .catch(err => {
-                    throw err;
-                    });
+                if (req.params.sub_network_id) {
+                    if (req.params.deleted) {
+                        //Sub-Network and Deleted specified
+                        console.log('both')
+                        vessels_db = await DB.get_vessels(null, null, req.params.deleted, req.params.sub_network_id)
+                            .catch(err => {
+                                throw err;
+                            });
+                    } else { 
+                        console.log('subnet')
+                        //Sub network specified
+                        vessels_db = await DB.get_vessels(null, null, null, req.params.sub_network_id)
+                            .catch(err => {
+                                throw err;
+                            });
+                    }
+                } else if (req.params.deleted) {
+                    //Deleted Specified
+                    console.log('deleted')
+                    vessels_db = await DB.get_vessels(null, null, req.params.deleted, null)
+                        .catch(err => {
+                            throw err;
+                        });
+                }
+                else {
+                    //None Specified
+                    console.log('none')
+                    vessels_db = await DB.get_vessels(null, null, null, null)
+                        .catch(err => {
+                            throw err;
+                        });
+                }
             } 
             else if(req.access == 'self'){
                 vessels_db = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)

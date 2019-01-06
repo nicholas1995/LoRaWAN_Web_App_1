@@ -32,12 +32,13 @@ module.exports = {
   },
 
   //This returns all the vessels that has deleted parameter set to 0
-  get_vessels_not_deleted: function() {
+  get_vessels_not_deleted: function () {
     let sql = `SELECT *
         FROM vessel
         WHERE vessel_deleted = 0`;
     return db.queryAsync(sql);
   },
+
   //This returns all the vessels that has deleted parameter set to 0
   // and belongs to the sub_network specified
   get_vessels_not_deleted_filter_sub_network: function(sub_network_id) {
@@ -69,7 +70,13 @@ module.exports = {
     return db.queryAsync(sql);
   },
   //This creates a vessel using the specified information
-  create_vessels: function (vessel_name, vessel_unique_vessel_identifier, vessel_international_radio_call_sign, vessel_type, sub_network_id) {
+  create_vessels: function(
+    vessel_name,
+    vessel_unique_vessel_identifier,
+    vessel_international_radio_call_sign,
+    vessel_type,
+    sub_network_id
+  ) {
     let sql = `INSERT INTO vessel
         (vessel_name, vessel_unique_vessel_identifier, vessel_international_radio_call_sign, vessel_type, sub_network_id)
         VALUES ('${vessel_name}', '${vessel_unique_vessel_identifier}', '${vessel_international_radio_call_sign}', '${vessel_type}', '${sub_network_id}')`;
@@ -90,7 +97,7 @@ module.exports = {
   },
   //This updates all the parameters of a sinlge vessel instance
   //using the information provided
-  update_vessels_all_parameters: function (data, vessel_id) {
+  update_vessels_all_parameters: function(data, vessel_id) {
     console.log(vessel_id);
     let sql = `UPDATE vessel
         SET vessel_name = '${data.vessel_name}'

@@ -101,8 +101,8 @@
   
 
 <script>
-import AuthenticationService from "../services/AuthenticationService.js";
-import functions from "./../services/functions/forms_functions.js"
+import AuthenticationService from "../../services/AuthenticationService.js";
+import functions from "./../../services/functions/forms_functions.js"
 
 export default {
   data() {
