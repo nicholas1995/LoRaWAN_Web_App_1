@@ -281,6 +281,7 @@ export default {
       }else if(this.sub_network_id){
         this.filter_parameters["sub_network"] = this.sub_network_id;
       }
+      console.log(this.filter_parameters)
        let result = await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value)
           .catch(err => {
             //Error getting the devices from the server

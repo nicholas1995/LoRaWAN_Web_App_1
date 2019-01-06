@@ -91,6 +91,198 @@ function return_month(month) {
                 return 'NA';
         }
     }
+
+function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers_database) { //takes in the headers of the database and returns the table version
+    switch (device_uplink_table_headers_database) {
+      case "device_uplink_id":
+        return "Device Uplink ID";
+        break;
+      case "device_id":
+        return "Device ID";
+        break;
+      case "sub_network_id":
+        return "Sub-Network ID";
+        break;
+      case "vessel_id":
+        return "Vessel ID";
+        break;
+      case "time_stamp":
+        return "Time Stamp";
+        break;
+      case "sub_network_name":
+        return "Sub Network Name";
+        break;
+      case "device_eui":
+        return "Device EUI";
+        break;
+      case "device_name":
+        return "Device Name";
+        break;
+      case "gateway_id_lora":
+        return "Gateway ID LoRa";
+        break;
+      case "gateway_name":
+        return "Gateway Name";
+        break;
+      case "rx_time":
+        return "Rx Time";
+        break;
+      case "rx_rssi":
+        return "Rx RSSI";
+        break;
+      case "rx_lora_snr":
+        return "Tx LoRa SNR";
+        break;
+      case "gateway_latitude":
+        return "Gateway Latitude";
+        break;
+      case "gateway_longitude":
+        return "Gateway Longitude";
+        break;
+      case "gateway_altitude":
+        return "Gateway Altitude";
+        break;
+      case "tx_frequency":
+        return "Tx Frequency";
+        break;
+      case "tx_data_rate":
+        return "Tx Data Rate";
+        break;
+      case "adr":
+        return "ADR";
+        break;
+      case "frame_counter":
+        return "Frame Counter";
+        break;
+      case "fport":
+        return "FPort";
+        break;
+      case "encoded_data":
+        return "Encoded Data";
+        break;
+      case "gps_latitude":
+        return "GPS Latitude";
+        break;
+      case "gps_longitude":
+        return "GPS Longitude";
+        break;
+      case "gps_altitude":
+        return "GPS Altitude";
+        break;
+      default:
+        return "Null";
+    }
+}
+
+function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers_table) { //takes in the headers of the table and returns the database version
+    switch (device_uplink_table_headers_table) {
+      case "Device Uplink ID":
+        return "device_uplink_id";
+        break;
+      case "Device ID":
+        return "device_id";
+        break;
+      case "Sub-Network ID":
+        return "sub_network_id";
+        break;
+      case "Vessel ID":
+        return "vessel_id";
+        break;
+      case "Time Stamp":
+        return "time_stamp";
+        break;
+      case "Sub Network Name":
+        return "sub_network_name";
+        break;
+      case "Device EUI":
+        return "device_eui";
+        break;
+      case "Device Name":
+        return "device_name";
+        break;
+      case "Gateway ID LoRa":
+        return "gateway_id_lora";
+        break;
+      case "Gateway Name":
+        return "gateway_name";
+        break;
+      case "Rx Time":
+        return "rx_time";
+        break;
+      case "Rx RSSI":
+        return "rx_rssi";
+        break;
+      case "Tx LoRa SNR":
+        return "rx_lora_snr";
+        break;
+      case "Gateway Latitude":
+        return "gateway_latitude";
+        break;
+      case "Gateway Longitude":
+        return "gateway_longitude";
+        break;
+      case "Gateway Altitude":
+        return "gateway_altitude";
+        break;
+      case "Tx Frequency":
+        return "tx_frequency";
+        break;
+      case "Tx Data Rate":
+        return "tx_data_rate";
+        break;
+      case "ADR":
+        return "adr";
+        break;
+      case "Frame Counter":
+        return "frame_counter";
+        break;
+      case "FPort":
+        return "fport";
+        break;
+      case "Encoded Data":
+        return "encoded_data";
+        break;
+      case "GPS Latitude":
+        return "gps_latitude";
+        break;
+      case "GPS Longitude":
+        return "gps_longitude";
+        break;
+      case "GPS Altitude":
+        return "gps_altitude";
+        break;
+      default:
+        return "Null";
+    }
+}
+//Takes as the input an array of lenght 1 of the device uplink data and returns the headers in the form {text: "Table form", value: "database form"};
+function convert_device_uplink_headers_database_to_table(device_uplink) {
+    let headers_database = Object.keys(device_uplink);
+    let headers_table = [];
+    let place_holder = {}; //object which will store the text and value data
+    for (let i = 0; i < headers_database.length; i++) {
+        place_holder["text"] = device_uplink_headers_database_to_table_LUT(headers_database[i]);
+        place_holder["value"] = headers_database[i];
+        headers_table[i] = place_holder;
+        place_holder = {};
+    }
+    return headers_table;
+}
+//Takes as the input an array of lenght 1 of the device uplink data and returns the headers in the form {text: "Table form", value: "database form"};
+function convert_gateway_statistics_headers_table_to_database(columns) {
+    try {
+        let headers_table = columns.split(",");
+        let headers_database = []
+        for (let i = 0; i < headers_table.length; i++) {
+            headers_database[i] = device_uplink_headers_table_to_database_LUT(headers_table[i]);
+        }
+        return headers_database;
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
     //This function ensures that the digit returned has 2 digits (eg 1-> 01)
 function add_zero(i) {
         if (i < 10) {
@@ -126,7 +318,7 @@ module.exports = {
                     //Error getting device data from DB
                     throw error.error_message("get device data : database", err.message);
                 });
-            headers = header(device_data[0]);
+            headers = convert_device_uplink_headers_database_to_table(device_data[0]);
             device_data = convert_dates(device_data);
             device_data = JSON.stringify(device_data);
             headers = JSON.stringify(headers);
@@ -145,7 +337,7 @@ module.exports = {
                 });
         let sql_where = [];
         let where = '';
-            let sql = `SELECT * FROM device_rx `;;
+            let sql = `SELECT * FROM device_uplink `;;
             for (let i = 0; i < user_vessels.length; i++){
                 if(user_vessels[i].date_deleted == null){
                     sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
@@ -172,7 +364,7 @@ module.exports = {
             .catch(err => {
                 throw err;
             }) 
-            headers = header(device_data[0]);
+            headers = convert_device_uplink_headers_database_to_table(device_data[0]);
             device_data = convert_dates(device_data);
             device_data = JSON.stringify(device_data);
             headers = JSON.stringify(headers);
@@ -187,10 +379,39 @@ module.exports = {
         let sql_order_by = [];
         let sql = '';
         try {
+            if(req.access == "self" || req.params.access == "self"){
+                let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
+                    .catch(err => {
+                        //Error fetching vessels for user
+                        throw err;
+                    });
+                for (let i = 0; i < user_vessels.length; i++) {
+                    if (user_vessels[i].date_deleted == null) {
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                    } else {
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                        sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
+                    }
+                    sql_where.push(`vessel_id = '${user_vessels[i].vessel_id}'`);
+                    where = `${where} (`;
+                    for (let j = 0; j < sql_where.length; j++) {
+                        if (j < sql_where.length - 1) {
+                            //will run every time but the last cause we do not want it ending with AND
+                            where = where + `${sql_where[j]} AND `;
+                        } else {
+                            where = where + `${sql_where[j]}`;
+                        }
+                    }
+                    if (i != user_vessels.length - 1) { where = `${where}) OR` }
+                    else { where = `${where})` }
+                    sql_where = [];
+                }
+                where = `(${where}) ` //Puts the user filter data in brackets
+            }
             let parameters = JSON.parse(req.params.parameters); 
             let columns = req.params.columns
             if (columns) {
-                columns = convert_from_ui_to_db(columns);
+                columns = convert_gateway_statistics_headers_table_to_database(columns);
                 sql = `SELECT ${columns} FROM device_uplink `;
             }
             if(parameters.start_date){
@@ -208,6 +429,7 @@ module.exports = {
 
 
             if (parameters.start_date || parameters.end_date || parameters.device || parameters.vessel || parameters.sub_network) {
+                where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
               for (let i = 0; i < sql_where.length; i++) {
                 if (i < sql_where.length - 1) {
                   //will run every time but the last cause we do not want it ending with AND
@@ -225,11 +447,12 @@ module.exports = {
             }else{//So that no mater what the data is ordered in descending order based on the timestamp
                 sql = `${sql} ORDER BY time_stamp DESC`;
             }
+            console.log(sql)
             let device_data = await DB.get_specified_parameters(sql)
                 .catch(err => {
                     throw err;
                 })
-            headers = header(device_data[0]);
+            headers = convert_device_uplink_headers_database_to_table(device_data[0]);
             device_data = convert_dates(device_data);
             device_data = JSON.stringify(device_data);
             headers = JSON.stringify(headers);

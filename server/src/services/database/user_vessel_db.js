@@ -6,7 +6,7 @@ module.exports = {
     let where = '';
     let sql = `SELECT user_vessel.*, DATE_FORMAT(user_vessel.date_created, GET_FORMAT(DATETIME, 'JIS')) AS date_created, 
     DATE_FORMAT(user_vessel.date_deleted, GET_FORMAT(DATETIME, 'JIS')) AS date_deleted, 
-    vessel.name AS vessel_name FROM user_vessel INNER JOIN vessel ON user_vessel.vessel_id=vessel.id`;
+    vessel.vessel_name FROM user_vessel INNER JOIN vessel ON user_vessel.vessel_id=vessel.vessel_id`;
     if (id != null && id != 'null') {
       sql_where.push(`id = '${id}'`);
     }
