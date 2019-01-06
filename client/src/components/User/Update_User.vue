@@ -211,8 +211,8 @@ mixins: [validationMixin],
         this.user_vessels = JSON.parse(this.user_vessels.data.user_vessels);
         for(let i = 0; i< this.user_vessels.length; i++){ 
           for(let j =0; j< this.vessels.length; j++){
-            if(this.user_vessels[i].vessel_id == this.vessels[j].id){
-              this.vessel_name_form.push(`${this.vessels[j].id}`.concat(":",this.vessels[j].name));
+            if(this.user_vessels[i].vessel_id == this.vessels[j].vessel_id){
+              this.vessel_name_form.push(`${this.vessels[j].vessel_id}`.concat(":",this.vessels[j].vessel_name));
             }
           }
         }
@@ -244,7 +244,7 @@ mixins: [validationMixin],
       this.sub_network_id=functions.extract_id_id_name(this.sub_network_name_form);
       for(let i = 0; i< this.vessels.length; i++){
         if(this.sub_network_id == this.vessels[i].sub_network_id){
-          this.vessel_names.push(`${this.vessels[i].id}`.concat(":",this.vessels[i].name));
+          this.vessel_names.push(`${this.vessels[i].vessel_id}`.concat(":",this.vessels[i].vessel_name));
         }
       }
     }

@@ -251,7 +251,7 @@ mixins: [validationMixin],
       this.sub_network_id=functions.extract_id_id_name(this.sub_network_name_form);
       for(let i = 0; i< this.vessels.length; i++){
         if(this.sub_network_id == this.vessels[i].sub_network_id){
-          this.vessel_names.push(`${this.vessels[i].id}`.concat(":",this.vessels[i].name));
+          this.vessel_names.push(`${this.vessels[i].vessel_id}`.concat(":",this.vessels[i].vessel_name));
         }
       }
     }
