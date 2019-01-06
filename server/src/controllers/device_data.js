@@ -189,7 +189,6 @@ module.exports = {
         try {
             let parameters = JSON.parse(req.params.parameters); 
             let columns = req.params.columns
-            console.log(parameters)
             if (columns) {
                 columns = convert_from_ui_to_db(columns);
                 sql = `SELECT ${columns} FROM device_uplink `;

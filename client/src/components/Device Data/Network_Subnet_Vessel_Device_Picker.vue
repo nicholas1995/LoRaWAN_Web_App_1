@@ -204,7 +204,7 @@ export default {
           })
         this.vessels = JSON.parse(this.vessels.data.vessels_db);
         for(let j = 0; j < this.vessels.length; j++){
-          this.vessel_names.push(this.vessels[j].id +":"+this.vessels[j].name);
+          this.vessel_names.push(this.vessels[j].vessel_id +":"+this.vessels[j].vessel_name);
         }
       }
       this.$emit('sub_network_id', this.sub_network_id)

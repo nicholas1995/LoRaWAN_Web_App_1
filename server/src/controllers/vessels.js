@@ -58,13 +58,13 @@ module.exports = {
                 if (req.params.sub_network_id) {
                     if (req.params.deleted) {
                         //Sub-Network and Deleted specified
-                        console.log('both')
+                        console.log("both - vessels controlla");
                         vessels_db = await DB.get_vessels(null, null, req.params.deleted, req.params.sub_network_id)
                             .catch(err => {
                                 throw err;
                             });
                     } else { 
-                        console.log('subnet')
+                        console.log('subnet - vessels controlla')
                         //Sub network specified
                         vessels_db = await DB.get_vessels(null, null, null, req.params.sub_network_id)
                             .catch(err => {
@@ -73,7 +73,7 @@ module.exports = {
                     }
                 } else if (req.params.deleted) {
                     //Deleted Specified
-                    console.log('deleted')
+                    console.log("deleted - vessels controlla");
                     vessels_db = await DB.get_vessels(null, null, req.params.deleted, null)
                         .catch(err => {
                             throw err;
@@ -81,7 +81,7 @@ module.exports = {
                 }
                 else {
                     //None Specified
-                    console.log('none')
+                    console.log("none - vessels controlla");
                     vessels_db = await DB.get_vessels(null, null, null, null)
                         .catch(err => {
                             throw err;
