@@ -34,7 +34,7 @@ import Update_Service_Profile from "../components/Service Profile/Update_Service
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
-import Device_Data from "../components/Device_Data";
+import Device_Data from "../components/Device Data/Device_Data.vue";
 import Error_Logs from "../components/Error Logs/Error_Logs.vue";
 
 

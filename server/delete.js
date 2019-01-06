@@ -1,4 +1,37 @@
-var fs = require("fs");
+function compare(old_value, new_value) {
+  let accounted_for = [];
+  let added = [];
+  let deleted = [];
+
+  for (let i = 0; i < new_value.length; i++) {
+    if (old_value.length == 0) {
+      added.push(i);
+      //console.log('Sub-Network Added');
+    }
+    for (let j = 0; j < old_value.length; j++) {
+      if (new_value[i] == old_value[j]) {
+        accounted_for.push(j);
+        break;
+      } else if (j == old_value.length - 1) {
+        added.push(i);
+        //console.log('Sub-Network Added');
+      } else if (new_value[i] != old_value[j]) {
+      }
+    }
+  }
+  for (let l = 0; l < old_value.length; l++) {
+    let index = accounted_for.indexOf(l);
+    if (index == -1) {
+      deleted.push(old_value[l]);
+      //console.log('subnetwork deleted')
+    }
+  }
+  console.log(deleted);
+}
+compare();
+
+//This updates the location of the uplink data in the databse using those from the text file
+/* var fs = require("fs");
 const DB_DEVICE_UPLINK = require("./src/services/database/device_rx_db");
 
 require.extensions[".txt"] = function(module, filename) {
@@ -37,7 +70,7 @@ async function update_location(){
   }
   console.log(coor);
 }
-update_location()
+update_location() */
 
 //console.log(coordinates); // string
 

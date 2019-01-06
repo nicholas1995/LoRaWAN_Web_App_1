@@ -131,6 +131,7 @@ module.exports = {
             for(let l=0; l<db.length; l++){
                 let index = accounted_for.indexOf(l);
                 if(index ==-1){
+                    //console.log('subnetwork deleted')
                     await sub_network_db.update('sub_network_deleted', 1, db[l].sub_network_id)
                         .catch(err => {
                             //Error deleting sub-network

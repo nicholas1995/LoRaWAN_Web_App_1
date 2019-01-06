@@ -101,8 +101,14 @@ export default {
         return Api.get(`/sub_networks/one/${sub_network_id}`);
     },
     get_sub_networks_db_given_network(network) {
-        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/sub_networks/database/${network}`);
+        if(network){
+            Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+            return Api.get(`/sub_networks/database/network/${network}`);
+        }else{
+            Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+            return Api.get(`/sub_networks/database/`);
+        }
+        
     },
     create_sub_networks(data){
         data = JSON.stringify(data);
@@ -121,8 +127,22 @@ export default {
 
     //Vessels
     get_vessels(sub_network_id, deleted) {//This returns vessels. set sub_net to null to leave open ended.. deleted to null for both.... deleted to 0 for not deleted.. deleted to 1 for deleted
-        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/vessels/${sub_network_id}/${deleted}`);
+        if(sub_network_id){
+            if(deleted){
+                Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                return Api.get(`/vessels/sub_network/${sub_network_id}/deleted/${deleted}`);
+            }else{
+                Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                return Api.get(`/vessels/sub_network/${sub_network_id}`);
+            }
+        }else if(deleted || deleted == 0){ //if 0 not specify they treat it as a null value
+            Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+            return Api.get(`/vessels/deleted/${deleted}`);
+        }else{
+            Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+            return Api.get(`/vessels`);
+        }
+
     },
     get_vessels_db_given_sub_networks(sub_network_id) {//This returns deleted and not deleted vessels in the database under the specified subnet
         //NEED TO REMOVE

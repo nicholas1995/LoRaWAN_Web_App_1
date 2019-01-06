@@ -92,7 +92,10 @@ module.exports = ((app) => {
     app.get("/sub_networks/one/:sub_network_id", authenticate, grant_access, sub_networks.get_one);
 
     //Sub_Networks (Read subnetworks from database under specified network)
-    app.get("/sub_networks/database/:networks", authenticate, grant_access, sub_networks.get_sub_subnetworks_database_specified_networks);
+    app.get("/sub_networks/database/network/:networks", authenticate, grant_access, sub_networks.get_sub_subnetworks_database);
+
+    //Sub_Networks (Read subnetworks from database)
+    app.get("/sub_networks/database", authenticate, grant_access, sub_networks.get_sub_subnetworks_database);
 
     //Sub_Networks (Create)
     app.post("/sub_networks", authenticate, grant_access, sub_network_policy.create, sub_networks.create);
@@ -104,6 +107,18 @@ module.exports = ((app) => {
     app.delete("/sub_networks/:sub_network_id", authenticate, grant_access, sub_networks.delete);
 
     //----------------------Vessels-----------------
+    //Vessels (Read)
+    app.get("/vessels/sub_network/:sub_network_id/deleted/:deleted", authenticate, grant_access, vessels.get);
+
+    //Vessels (Read)
+    app.get("/vessels/sub_network/:sub_network_id", authenticate, grant_access, vessels.get);
+
+    //Vessels (Read)
+    app.get("/vessels/deleted/:deleted", authenticate, grant_access, vessels.get);
+
+    //Vessels (Read)
+    app.get("/vessels", authenticate, grant_access, vessels.get);
+
     //Vessels (Read)
     app.get("/vessels/:sub_network_id/:deleted", authenticate, grant_access, vessels.get);
 

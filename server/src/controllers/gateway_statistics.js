@@ -152,7 +152,6 @@ module.exports = {
         try{
             let parameters = JSON.parse(req.params.parameters);
             let columns = req.params.columns;
-            console.log(parameters.start_date)
             columns = convert_gateway_statistics_headers_table_to_database(columns);
             let gateway_statistics = await db_gateway_statistics.get_gateway_statistics_filtered(parameters, columns)
                 .catch(err =>{
