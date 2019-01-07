@@ -92,82 +92,162 @@ function return_month(month) {
         }
     }
 
-function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers_database) { //takes in the headers of the database and returns the table version
+function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers_database, view) { //takes in the headers of the database and returns the table version
     switch (device_uplink_table_headers_database) {
       case "device_uplink_id":
-        return "Device Uplink ID";
+            return "Device Uplink ID";
         break;
       case "device_id":
-        return "Device ID";
+            return "Device ID";
         break;
       case "sub_network_id":
-        return "Sub-Network ID";
+        if(view == 'all'){
+            return "Sub-Network ID";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "vessel_id":
-        return "Vessel ID";
+            return "Vessel ID";
         break;
       case "time_stamp":
-        return "Time Stamp";
+            return "Time Stamp";
         break;
       case "sub_network_name":
-        return "Sub Network Name";
+        if(view == 'all'){
+            return "Sub Network Name";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "device_eui":
-        return "Device EUI";
+            return "Device EUI";
         break;
       case "device_name":
-        return "Device Name";
+            return "Device Name";
         break;
       case "gateway_id_lora":
-        return "Gateway ID LoRa";
+        if(view == 'all'){
+            return "Gateway ID LoRa";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "gateway_name":
-        return "Gateway Name";
+        if(view == 'all'){
+            return "Gateway Name";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "rx_time":
-        return "Rx Time";
+        if(view == 'all'){
+            return "Rx Time";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "rx_rssi":
-        return "Rx RSSI";
+        if(view == 'all'){
+            return "Rx RSSI";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "rx_lora_snr":
-        return "Tx LoRa SNR";
+        if(view == 'all'){
+            return "Tx LoRa SNR";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "gateway_latitude":
-        return "Gateway Latitude";
+        if(view == 'all'){
+            return "Gateway Latitude";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "gateway_longitude":
-        return "Gateway Longitude";
+        if(view == 'all'){
+            return "Gateway Longitude";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "gateway_altitude":
-        return "Gateway Altitude";
+        if(view == 'all'){
+            return "Gateway Altitude";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "tx_frequency":
-        return "Tx Frequency";
+        if(view == 'all'){
+            return "Tx Frequency";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "tx_data_rate":
-        return "Tx Data Rate";
+        if(view == 'all'){
+            return "Tx Data Rate";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "adr":
-        return "ADR";
+        if(view == 'all'){
+            return "ADR";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "frame_counter":
-        return "Frame Counter";
+        if(view == 'all'){
+            return "Frame Counter";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "fport":
-        return "FPort";
+        if(view == 'all'){
+            return "FPort";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "encoded_data":
-        return "Encoded Data";
+        if(view == 'all'){
+            return "Encoded Data";
         break;
+        }else if(view == 'self'){
+            return null;
+        break;
+        }
       case "gps_latitude":
-        return "GPS Latitude";
+            return "GPS Latitude";
         break;
       case "gps_longitude":
-        return "GPS Longitude";
+            return "GPS Longitude";
         break;
       case "gps_altitude":
-        return "GPS Altitude";
+            return "GPS Altitude";
         break;
       default:
         return "Null";
@@ -256,15 +336,20 @@ function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers
     }
 }
 //Takes as the input an array of lenght 1 of the device uplink data and returns the headers in the form {text: "Table form", value: "database form"};
-function convert_device_uplink_headers_database_to_table(device_uplink) {
+//view is a variable that holds the permission of the user fetching the data.... can be either 'all' or 'self'
+function convert_device_uplink_headers_database_to_table(device_uplink, view) {
     let headers_database = Object.keys(device_uplink);
     let headers_table = [];
     let place_holder = {}; //object which will store the text and value data
+    let x; //this is just a place holder for the value returned by device_uplink_headers_database_to_table_LUT
     for (let i = 0; i < headers_database.length; i++) {
-        place_holder["text"] = device_uplink_headers_database_to_table_LUT(headers_database[i]);
-        place_holder["value"] = headers_database[i];
-        headers_table[i] = place_holder;
-        place_holder = {};
+        x = device_uplink_headers_database_to_table_LUT(headers_database[i], view);
+        if(x != null){
+            place_holder["text"] = x;
+            place_holder["value"] = headers_database[i];
+            headers_table.push(place_holder);
+            place_holder = {};
+        }
     }
     return headers_table;
 }
@@ -318,57 +403,65 @@ module.exports = {
                     //Error getting device data from DB
                     throw error.error_message("get device data : database", err.message);
                 });
-            headers = convert_device_uplink_headers_database_to_table(device_data[0]);
-            device_data = convert_dates(device_data);
-            device_data = JSON.stringify(device_data);
-            headers = JSON.stringify(headers);
-            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+            if (device_data.length > 0) {
+                headers = convert_device_uplink_headers_database_to_table(device_data[0], 'all');
+                device_data = convert_dates(device_data);
+                device_data = JSON.stringify(device_data);
+                headers = JSON.stringify(headers);
+                res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+            } else {
+                res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
+            }
         } catch (err) { 
             console.log(err);
         }
     },
     get_self: async function (req, res) {
-        let headers;
         try {
+            let headers;
+            let sql_where = [];
+            let where = '';
+            let sql = `SELECT * FROM device_uplink `;
             let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
                 .catch(err => {
                     //Error fetching vessels for user
                     throw err;
                 });
-        let sql_where = [];
-        let where = '';
-            let sql = `SELECT * FROM device_uplink `;;
-            for (let i = 0; i < user_vessels.length; i++){
-                if(user_vessels[i].date_deleted == null){
-                    sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
-                }else{
-                    sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
-                    sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
-                }
-                sql_where.push(`vessel_id = '${user_vessels[i].vessel_id}'`);
-                where = `${where} (`;
-                for (let j = 0; j < sql_where.length; j++) {
-                    if (j < sql_where.length - 1) {
-                        //will run every time but the last cause we do not want it ending with AND
-                        where = where + `${sql_where[j]} AND `;
+            if(user_vessels.length > 0){ //User has a vessel assigned
+                for (let i = 0; i < user_vessels.length; i++) {
+                    if (user_vessels[i].date_deleted == null) {
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
                     } else {
-                        where = where + `${sql_where[j]}`;
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                        sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
                     }
+                    sql_where.push(`vessel_id = '${user_vessels[i].vessel_id}'`);
+                    where = `${where} (`;
+                    for (let j = 0; j < sql_where.length; j++) {
+                        if (j < sql_where.length - 1) {
+                            //will run every time but the last cause we do not want it ending with AND
+                            where = where + `${sql_where[j]} AND `;
+                        } else {
+                            where = where + `${sql_where[j]}`;
+                        }
+                    }
+                    if (i != user_vessels.length - 1) { where = `${where}) OR` }
+                    else { where = `${where})` }
+                    sql_where = [];
                 }
-                if ( i != user_vessels.length-1) {where = `${where}) OR`}
-                else { where = `${where})`}
-                sql_where=[];
+                sql = ` ${sql} WHERE ${where} ORDER BY time_stamp DESC`
+                let device_data = await DB.get_specified_parameters(sql)
+                    .catch(err => {
+                        throw err;
+                    })
+                headers = convert_device_uplink_headers_database_to_table(device_data[0], 'self');
+                device_data = convert_dates(device_data);
+                device_data = JSON.stringify(device_data);
+                headers = JSON.stringify(headers);
+                res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+            }else{
+                res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
             }
-            sql = ` ${sql} WHERE ${where} ORDER BY time_stamp DESC`
-        let device_data = await DB.get_specified_parameters(sql)
-            .catch(err => {
-                throw err;
-            }) 
-            headers = convert_device_uplink_headers_database_to_table(device_data[0]);
-            device_data = convert_dates(device_data);
-            device_data = JSON.stringify(device_data);
-            headers = JSON.stringify(headers);
-            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
         } catch (err) {
             console.log(err);
         }
@@ -378,8 +471,10 @@ module.exports = {
         let where = '';
         let sql_order_by = [];
         let sql = '';
+        let access = 'all';// This will be set to 1 if the data is being fetched for the users vessels
         try {
             if(req.access == "self" || req.params.access == "self"){
+                access = 'self';
                 let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
                     .catch(err => {
                         //Error fetching vessels for user
@@ -419,17 +514,24 @@ module.exports = {
             }if(parameters.end_date){
                 sql_where.push(`time_stamp < '${parameters.end_date}'`);
             }
-            if (parameters.device) {
+            //We need to add the access check because if it is self the user can only filter the data based on the vessel and the device
+            if (parameters.device && access == 'all') {
                 sql_where.push(`device_id IN (${parameters.device}) AND vessel_id IN (${parameters.vessel}) AND sub_network_id IN (${parameters.sub_network})`);
-            } else if (parameters.vessel) {
+            } else if (parameters.device && access == 'self') {
+                sql_where.push(`device_id IN (${parameters.device}) AND vessel_id IN (${parameters.vessel})`);
+            } else if (parameters.vessel && access == 'all') {
                 sql_where.push(`vessel_id IN (${parameters.vessel}) AND sub_network_id IN (${parameters.sub_network})`);
-            } else if (parameters.sub_network) {
+            } else if (parameters.vessel && access == 'self') {
+                sql_where.push(`vessel_id IN (${parameters.vessel})`);
+            }  else if (parameters.sub_network) {
                 sql_where.push(`sub_network_id IN (${parameters.sub_network})`);
             }
 
 
             if (parameters.start_date || parameters.end_date || parameters.device || parameters.vessel || parameters.sub_network) {
-                where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
+                if (req.access == "self" || req.params.access == "self") {
+                  where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
+                }
               for (let i = 0; i < sql_where.length; i++) {
                 if (i < sql_where.length - 1) {
                   //will run every time but the last cause we do not want it ending with AND
@@ -447,16 +549,19 @@ module.exports = {
             }else{//So that no mater what the data is ordered in descending order based on the timestamp
                 sql = `${sql} ORDER BY time_stamp DESC`;
             }
-            console.log(sql)
             let device_data = await DB.get_specified_parameters(sql)
                 .catch(err => {
-                    throw err;
+                    throw err; 
                 })
-            headers = convert_device_uplink_headers_database_to_table(device_data[0]);
-            device_data = convert_dates(device_data);
-            device_data = JSON.stringify(device_data);
-            headers = JSON.stringify(headers);
-            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+            if(device_data.length>0){
+                headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
+                device_data = convert_dates(device_data);
+                device_data = JSON.stringify(device_data);
+                headers = JSON.stringify(headers);
+                res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+            }else{
+                res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
+            }
         }catch(err){
             console.log(err);
         }

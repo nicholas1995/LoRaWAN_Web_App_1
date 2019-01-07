@@ -50,6 +50,7 @@ module.exports = {
     }
     return db.queryAsync(sql);
   },
+  
   update: function(col, value, condition) { //--------------------------------
     let sql = `UPDATE devices
         SET ${col} = '${value}'

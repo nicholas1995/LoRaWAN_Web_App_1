@@ -52,6 +52,11 @@
             class="elevation-1"
             style="max-height: 700px; overflow-y: auto"
           >
+          <template slot="no-data" >
+            <v-alert :value="this.allow_no_data" color="info" icon="warning" >
+              No data available.
+            </v-alert>
+          </template>
         <template slot="items" slot-scope="myprops">
           <tr style="height: 30px;"> 
         <td v-for="header in display"
@@ -143,7 +148,9 @@ export default {
         vessel_id: null,
         device_id: null,
 
-        self: 0 //This will be set high if the data user class user wants to view vessles assigned to them 
+        self: 0, //This will be set high if the data user class user wants to view vessles assigned to them 
+        inital: true, //this is used to prevent the refetching of data when values is first assigned... so when value changes this will be set to false
+        allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
     }
   },
   props: [
@@ -168,6 +175,7 @@ export default {
             throw err;
             })
         }else{
+          this.self =1; 
           result = await AuthenticationService.get_device_data_initial_self()
           .catch(err => {
             //Error getting the devices from the server
@@ -175,14 +183,23 @@ export default {
             throw err;
             })
         }
-        this.device_data = JSON.parse(result.data.device_data);
-        this.headers =  JSON.parse(result.data.headers);
-        for(let i =0; i< this.headers.length; i++){
-          this.header_names.push(this.headers[i].text);
-          this.value.push(this.headers[i].text);
-        }
-        this.display = this.headers
-        this.loading = false;
+          if(result.status == 204){ //No Data returned 
+            this.allow_no_data = true;
+            this.device_data = [];
+            this.filter_parameters = {}; 
+            this.loading = false;
+         }else{ //Data returned
+            this.allow_no_data = true;
+            this.device_data = JSON.parse(result.data.device_data);
+            this.headers =  JSON.parse(result.data.headers);
+            for(let i =0; i< this.headers.length; i++){
+              this.header_names.push(this.headers[i].text);
+              this.value.push(this.headers[i].text);
+            }
+            this.display = this.headers
+            this.loading = false;
+         }
+
         }else{
           alert('Please login.');
           this.$router.push('/login');
@@ -209,14 +226,20 @@ export default {
     },
     pagination: async function(){
       try{
-        this.generate_function();
+        if(this.inital ==false){
+          this.generate_function();
+        }   
+        this.inital = false;
       }catch(err){
         console.log(err);
       }
     },
     value: async function(){
       try{
-        this.generate_function();
+        if(this.inital == false){
+          this.generate_function();
+        }
+        this.inital = false;
       }catch(err){
         console.log(err);
       }
@@ -257,43 +280,55 @@ export default {
       link.click();
     },
     generate_function: async function(){
-      this.loading = true;
-      this.start_date_time = return_date_time(this.start_date, this.start_time);
-      this.end_date_time =return_date_time(this.end_date, this.end_time);
-      if(this.start_date_time){
-        this.filter_parameters["start_date"] = this.start_date_time;
-      }
-      if(this.end_date_time){
-        this.filter_parameters["end_date"] = this.end_date_time;
-      }
-      if(this.pagination.sortBy){
-        this.filter_parameters["sort_by"] = this.pagination.sortBy;
-        if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
-        else this.filter_parameters["order"] = 'DESC';
-      }
-      if(this.device_id){
-        this.filter_parameters["device"] = this.device_id;
-        this.filter_parameters["vessel"] = this.vessel_id;
-        this.filter_parameters["sub_network"] = this.sub_network_id;
-      }else if(this.vessel_id){
-        this.filter_parameters["vessel"] = this.vessel_id;
-        this.filter_parameters["sub_network"] = this.sub_network_id;
-      }else if(this.sub_network_id){
-        this.filter_parameters["sub_network"] = this.sub_network_id;
-      }
-      console.log(this.filter_parameters)
-       let result = await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value)
-          .catch(err => {
+      if(this.value.length > 0){ //So we do not try to fetch data from the database unless we have a specified heading or else a 404 error will occur
+        this.loading = true;
+        this.start_date_time = return_date_time(this.start_date, this.start_time);
+        this.end_date_time =return_date_time(this.end_date, this.end_time);
+        if(this.start_date_time){
+          this.filter_parameters["start_date"] = this.start_date_time;
+        }
+        if(this.end_date_time){
+          this.filter_parameters["end_date"] = this.end_date_time;
+        }
+        if(this.pagination.sortBy){
+          this.filter_parameters["sort_by"] = this.pagination.sortBy;
+          if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
+          else this.filter_parameters["order"] = 'DESC';
+        }
+        if(this.device_id && this.self ==0){
+          this.filter_parameters["device"] = this.device_id;
+          this.filter_parameters["vessel"] = this.vessel_id;
+          this.filter_parameters["sub_network"] = this.sub_network_id;
+        }else if(this.device_id && this.self ==1){
+          this.filter_parameters["device"] = this.device_id;
+          this.filter_parameters["vessel"] = this.vessel_id;
+        }else if(this.vessel_id && this.self ==0){
+          this.filter_parameters["vessel"] = this.vessel_id;
+          this.filter_parameters["sub_network"] = this.sub_network_id;
+        }else if(this.vessel_id && this.self ==1){
+          this.filter_parameters["vessel"] = this.vessel_id;
+        }else if(this.sub_network_id){
+          this.filter_parameters["sub_network"] = this.sub_network_id;
+        }
+        await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value).then(result=>{
+          if(result.status == 204){ //No Data returned 
+          this.device_data = [];
+          this.filter_parameters = {}; 
+          this.loading = false;
+          }else{
+          this.device_data = JSON.parse(result.data.device_data);
+          this.headers =  JSON.parse(result.data.headers); 
+          this.display = this.headers
+          this.filter_parameters = {}; 
+          this.loading = false;
+          }
+        }).catch(err => {
             //Error getting the devices from the server
+            console.log(err)
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             }) 
-      this.device_data = JSON.parse(result.data.device_data);
-      this.headers =  JSON.parse(result.data.headers); 
-      this.display = this.headers
-      this.filter_parameters = {}; 
-      this.loading = false;
-      
+      }else this.device_data = [] //If no heading selected just set the data to empty so the message appears
     },
     end_date_time_function: async function(data){
       this.end_date_time = data;

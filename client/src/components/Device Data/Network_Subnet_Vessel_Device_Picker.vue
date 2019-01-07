@@ -175,7 +175,7 @@ export default {
           this.sub_network_names.push(this.sub_networks[i].sub_network_id.concat(":",this.sub_networks[i].sub_network_name));
         }
         for(let i = 0; i < this.sub_networks.length; i++){ //will get the ids of the subnets under the selected network and emit it. If generate is pressed these ids will be used to filter the data
-          this.sub_network_id.push(this.sub_networks[i].id);
+          this.sub_network_id.push(this.sub_networks[i].sub_network_id);
         }
       }
       this.$emit('sub_network_id', this.sub_network_id)
