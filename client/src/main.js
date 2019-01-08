@@ -9,7 +9,18 @@ import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import store from './store/store'
 
 Vue.config.productionTip = false
-Vue.use(Vuetify)
+
+Vue.use(Vuetify, {
+  theme: {
+    primary: "#1E88E5",
+    secondary: "#BBDEFB",
+    accent: "#2196F3",
+    error: "#FF5252",
+    info: "#2196F3",
+    success: "#4CAF50",
+    warning: "#FFC107"
+  }
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
