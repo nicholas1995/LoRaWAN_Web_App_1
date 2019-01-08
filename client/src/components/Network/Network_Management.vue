@@ -94,7 +94,7 @@ export default {
         .catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })
-        this.networks = JSON.parse(this.networks.data.networks_lora);
+        this.networks = this.networks.data.networks_lora;
       }else{
         alert('Please login.');
         this.$router.push('/login');
@@ -121,7 +121,7 @@ export default {
     delete_network(network){
       if(confirm('Are you sure you want to delete this network?') == true){
         AuthenticationService.delete_networks(network.network_id).then(result => {
-          this.networks = JSON.parse(result.data.networks_lora);
+          this.networks = result.data.networks_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a network on the lora app server

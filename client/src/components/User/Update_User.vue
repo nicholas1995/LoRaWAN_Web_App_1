@@ -334,7 +334,7 @@ computed: {
     },
     async fetch_networks_sub_networks_vessels(){
         await AuthenticationService.get_networks().then(result => {
-          this.networks = JSON.parse(result.data.networks_lora);
+          this.networks = result.data.networks_lora;
           for(let i = 0; i < this.networks.length; i++){
             this.network_names.push(this.networks[i].network_id.concat(":",this.networks[i].network_name));
           }

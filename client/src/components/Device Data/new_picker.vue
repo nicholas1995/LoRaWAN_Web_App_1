@@ -140,7 +140,7 @@ export default {
   created: function(){
     //Get Networks
     AuthenticationService.get_networks_database().then(result => {
-      this.networks = JSON.parse(result.data.networks_db);
+      this.networks = result.data.networks_db;
       for(let i = 0; i < this.networks.length; i++){
         this.network_names.push(this.networks[i].network_id.concat(":",this.networks[i].network_name));
       }

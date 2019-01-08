@@ -118,7 +118,6 @@ module.exports = {
                     error_location = 1;
                     throw error_message("get networks", err.message);
                 });
-            networks_lora = JSON.stringify(networks_lora);
             res.status(200).send({networks_lora: networks_lora, message: 'Networks fetched', type: 'success'});
         }catch(err){
             error_handler.error_logger(req, err);
@@ -126,7 +125,6 @@ module.exports = {
                 res.status(500).send({ message: "Failed to get networks" , type: 'error'});
             }
             else if(error_location ==1){
-                networks_lora = JSON.stringify(networks_lora);
                 res.status(200).send({networks_lora: networks_lora, message: "Error updating networks in database", type: 'info'})
             }else{
                 res.status(500).send({ message: 'Failed to get networks', type: 'error'})
@@ -140,9 +138,8 @@ module.exports = {
               error_location = 1;
               throw error_message("get networks : database", err.message);
             });
-            networks_db = JSON.stringify(networks_db);
             res.status(200).send({ networks_db: networks_db, message: 'Networks fetched', type: 'success' });
-            console.log('Networks fetched from database')
+            //console.log('Networks fetched from database')
         }catch(err){
             error_handler.error_logger(req, err);
             res.status(500).send({ message: "Failed to get networks", type: 'error' });
@@ -152,7 +149,7 @@ module.exports = {
         let error_location = null; //0=lora, 1=lora 2=db
         let networks_lora;
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.network;
             let request_body = network_api_request_data(data, 1);
             let result = await lora_app_server.create_organizations(request_body)
                 .catch(err => {
@@ -188,7 +185,7 @@ module.exports = {
         let error_location = null; //0=lora, 1=lora 2=db
         let networks_lora;
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.network;
             let request_body = network_api_request_data(data, 2);
             let result = await lora_app_server.update_organizations(request_body, req.params.network_id)
                 .catch(err => {
@@ -242,7 +239,6 @@ module.exports = {
                     error_location = 2;
                     throw error_message("delete network : lora app server", err.message);
                 });
-            networks_lora = JSON.stringify(networks_lora);
             res.status(200).send({ networks_lora: networks_lora, message: 'Network deleted', type: 'success' });
         }catch(err){
             error_handler.error_logger(req, err);
@@ -254,11 +250,9 @@ module.exports = {
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete network", type: 'error' });
             } else if (error_location == 1) {
-                networks_lora = JSON.stringify([]);
                 res.status(200).send({ networks_lora: networks_lora, message: "Network deleted. Failed to fetch networks", type: 'info' })
             }
             else if (error_location == 2) {
-                networks_lora = JSON.stringify(networks_lora);
                 res.status(200).send({ networks_lora: networks_lora, message: "Network deleted. Error updating network in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })

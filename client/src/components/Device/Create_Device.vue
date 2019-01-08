@@ -350,7 +350,7 @@ export default {
         })
         //Get Networks
         AuthenticationService.get_networks().then(result => {
-          let networks_lora = JSON.parse(result.data.networks_lora);
+          let networks_lora = result.data.networks_lora;
           for(let i = 0; i < networks_lora.length; i++){
             this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
           }

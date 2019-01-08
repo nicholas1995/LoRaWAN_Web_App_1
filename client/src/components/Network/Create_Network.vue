@@ -125,7 +125,7 @@ mixins: [validationMixin],
         .catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })
-        this.networks = JSON.parse(this.networks.data.networks_lora);
+        this.networks = this.networks.data.networks_lora;
       }else{
         alert('Please login.');
         this.$router.push('/login');

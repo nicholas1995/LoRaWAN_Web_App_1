@@ -76,15 +76,14 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('networks/database');
     },
-    create_networks(data){
-        data = JSON.stringify(data);
+    create_networks(network){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('networks',{data});
+        return Api.post('networks', {network});
     },
-    update_networks(data, id){
+    update_networks(network, id){
         data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.put(`/networks/${id}`,{data});
+        return Api.put(`/networks/${id}`, {network});
     },
     delete_networks(id){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;

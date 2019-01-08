@@ -125,7 +125,7 @@ export default {
           .catch(err => {
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
           })
-        this.networks = JSON.parse(this.networks.data.networks_lora);
+        this.networks = this.networks.data.networks_lora;
         for(let i = 0; i< this.networks.length; i++){
           if(this.networks[i].network_id == this.$route.params.network_id){
             this.network_update = this.networks[i];
