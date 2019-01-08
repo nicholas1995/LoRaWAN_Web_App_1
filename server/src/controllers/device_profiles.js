@@ -13,7 +13,7 @@ function device_profile_api_request_data(data, type) {
             //search: null
         }
     }
-    else if (type == 1) {//create form
+/*     else if (type == 1) {//create form
         request = {
             "organization": {
                 "canHaveGateways": data.can_have_gateways,
@@ -29,7 +29,7 @@ function device_profile_api_request_data(data, type) {
                 "name": `${data.name}`
             }
         }
-    }
+    } */
     return request;
 }
 
@@ -74,8 +74,7 @@ function parse(device_profile_lora, device_profile_db) {
         }
         return device_profile_lora;
     } catch (err) {
-        let error = new VError("%s", err.message);
-        throw error;
+        throw new VError("%s", err.message);
     }
 }
 
@@ -86,22 +85,19 @@ async function get_device_profiles(req) { //We fetch from the db twice because i
         let device_profiles_lora = await lora_app_server.get_device_profiles(request_body)
             .catch(err => {
                 //Error getting device profiles from lora app server
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             });
         device_profiles_lora = convert_names_device_profiles(device_profiles_lora.data.result);
         let device_profiles_db = await db_device_profile.get_device_profile()
             .catch(err => {
                 //Error getting device profiles from database
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             })
         await compare.compare_device_profile(device_profiles_lora, device_profiles_db);
         device_profiles_db = await db_device_profile.get_device_profile()
             .catch(err => {
                 //Error getting device profiles from database
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             })
         device_profiles_lora = parse(device_profiles_lora, device_profiles_db)
         return device_profiles_lora;
@@ -120,10 +116,9 @@ module.exports = {
                     //Error getting device_profiles from lora app server
                     throw error.error_message("get device profiles", err.message);
                 });
-            device_profiles_lora = JSON.stringify(device_profiles_lora);
             res.status(200).send({ device_profiles_lora: device_profiles_lora, message: 'Device profiles fetched', type: 'success' });
         } catch (err) {
-            console.log(err);
+            //console.log(err);
             res.status(500).send({ message: "Failed to get device profiles", type: 'error' });
         }
     },
@@ -133,21 +128,18 @@ module.exports = {
             let device_profiles_lora = await lora_app_server.get_device_profiles_specified_sub_network(request_body, req.params.sub_network_id)
                 .catch(err => {
                     //Error getting device profiles from lora app server
-                    let error = new VError("%s", err.message);
-                    throw error;
+                    throw new VError("%s", err.message);
                 });
             device_profiles_lora = convert_names_device_profiles(device_profiles_lora.data.result);
             let device_profiles_db = await db_device_profile.get_device_profile()
                 .catch(err => {
                     //Error getting device profiles from database
-                    let error = new VError("%s", err.message);
-                    throw error;
+                    throw new VError("%s", err.message);
                 })
             device_profiles_lora = parse(device_profiles_lora, device_profiles_db)
-            device_profiles_lora = JSON.stringify(device_profiles_lora);
             res.status(200).send({ device_profiles_lora: device_profiles_lora, message: 'Device profiles fetched', type: 'success' });
         } catch (err) {
-            console.log(err);
+            //console.log(err);
             res.status(500).send({ message: "Failed to get device profiles", type: 'error' });
         }
     }

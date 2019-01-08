@@ -270,7 +270,7 @@ export default {
           }
         }
         await AuthenticationService.get_device_profiles_specified_sub_network(this.device_update.sub_network_id).then(result => {
-          this.device_profiles = JSON.parse(result.data.device_profiles_lora);
+          this.device_profiles = result.data.device_profiles_lora;
           let j = 0;
           for(let i = 0; i < this.device_profiles.length; i++){
             this.device_profile_names.push(this.device_profiles[i].device_profile_id + ":" + this.device_profiles[i].device_profile_name);

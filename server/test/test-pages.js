@@ -368,6 +368,42 @@ describe('SUB-NETWORK API', function () {
             })); */
     });
 
+    //-----------------------------------------------------DEVICE PROFILES----------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------
+    describe('DEVICE PROFILE API', function () {
+        it("Should return the device profiles under the specified sub network", integration({
+            //--Device profile get test
+            app,
+            req: {
+                method: "GET",
+                url: "/device_profiles/57",
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                }
+            },
+            res: {
+                status: 200
+            }
+        })); 
+
+        it("Should return the device profiles", integration({
+            //--Device profile get test
+            app,
+            req: {
+            method: "GET",
+            url: "/device_profiles",
+            headers: {
+                Authorization:
+                "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+            },
+            res: {
+            status: 200
+            }
+        })); 
+    });
+
     //-----------------------------------------------------DEVICE UPLINK------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
     describe('DEVICE UPLINK API', function () {

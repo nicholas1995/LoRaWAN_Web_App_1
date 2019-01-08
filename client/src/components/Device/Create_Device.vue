@@ -367,7 +367,7 @@ export default {
         })
         //Get Device Profiles
         AuthenticationService.get_device_profiles().then(result => { //Fetch Device Profiles
-          this.device_profiles = JSON.parse(result.data.device_profiles_lora);
+          this.device_profiles = result.data.device_profiles_lora;
         }).catch(err=> {
           //Error requesting device profiles from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
