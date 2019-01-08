@@ -224,7 +224,7 @@ mixins: [validationMixin],
           })
         //Get Network Servers
           AuthenticationService.get_network_servers().then(result => {
-            let network_servers = JSON.parse(result.data.network_servers_lora);
+            let network_servers = result.data.network_servers_lora;
             for(let i = 0; i < network_servers.length; i++){
               this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
             }
