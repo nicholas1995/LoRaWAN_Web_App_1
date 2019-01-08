@@ -81,7 +81,6 @@ export default {
         return Api.post('networks', {network});
     },
     update_networks(network, id){
-        data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.put(`/networks/${id}`, {network});
     },
