@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">18.18% </span>
+        <span class="strong">24.24% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>12/66</span>
+        <span class='fraction'>16/66</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">12.9% </span>
+        <span class="strong">19.35% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>4/31</span>
+        <span class='fraction'>6/31</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">18.18% </span>
+        <span class="strong">24.24% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>12/66</span>
+        <span class='fraction'>16/66</span>
       </div>
     </div>
     <p class="quiet">
@@ -248,6 +248,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -263,30 +285,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -432,46 +432,46 @@ module.exports = {
     return instance.get(`/api/organizations?limit=${data.limit}`);
   },
   //---------Create---------
-  create_organizations: function(organization) {
-    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
-    return instance.post("/api/organizations", organization);
+  create_organizations: <span class="fstat-no" title="function not covered" >fu</span>nction(organization) {
+<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
+<span class="cstat-no" title="statement not covered" >    return instance.post("/api/organizations", organization);</span>
   },
   //---------Update---------
-  update_organizations: function(organization, id) {
-    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
-    return instance.put(`/api/organizations/${id}`, organization);
+  update_organizations: <span class="fstat-no" title="function not covered" >fu</span>nction(organization, id) {
+<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
+<span class="cstat-no" title="statement not covered" >    return instance.put(`/api/organizations/${id}`, organization);</span>
   },
   //---------Delete---------
-  delete_organizations: function(id) {
-    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
-    return instance.delete(`/api/organizations/${id}`);
+  delete_organizations: <span class="fstat-no" title="function not covered" >fu</span>nction(id) {
+<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
+<span class="cstat-no" title="statement not covered" >    return instance.delete(`/api/organizations/${id}`);</span>
   },
 &nbsp;
   //------------------------Sub-Network------------------------
   //---------Read---------
-  get_applications: <span class="fstat-no" title="function not covered" >fu</span>nction(data) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.get(`/api/applications?limit=${data.limit}`);</span>
+  get_applications: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/applications?limit=${data.limit}`);
   },
   //---------Read ONE---------
-  get_application_one: <span class="fstat-no" title="function not covered" >fu</span>nction(sub_network_id) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.get(`/api/applications/${sub_network_id}`);</span>
+  get_application_one: function(sub_network_id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/applications/${sub_network_id}`);
   },
   //--------- Create---------
-  create_applications: <span class="fstat-no" title="function not covered" >fu</span>nction(data) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.post("/api/applications", data);</span>
+  create_applications: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.post("/api/applications", data);
   },
   //---------Update---------
-  update: <span class="fstat-no" title="function not covered" >fu</span>nction(data, id) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.put(`/api/applications/${id}`, data);</span>
+  update: function(data, id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.put(`/api/applications/${id}`, data);
   },
   //---------Delete---------
-  delete: <span class="fstat-no" title="function not covered" >fu</span>nction(id) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.delete(`/api/applications/${id}`);</span>
+  delete: function(id) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.delete(`/api/applications/${id}`);
   },
 &nbsp;
   //------------------------Devices------------------------
@@ -607,7 +607,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 16:35:07 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 17:47:20 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

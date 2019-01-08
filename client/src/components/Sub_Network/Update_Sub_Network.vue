@@ -151,7 +151,7 @@ export default {
               //------------------------Start------------------------
               //Get Subnetworks
               await AuthenticationService.get_sub_networks().then(result => {
-                  this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+                  this.sub_networks = result.data.sub_networks_lora;
                   this.$emit('message_display',{message:result.data.message, type:result.data.type})  
                 }).catch(err => {
                   //Error requesting the subnetworks from the server
@@ -159,7 +159,7 @@ export default {
                 })
                 //Get Subnetwork to update
               this.sub_network = AuthenticationService.get_sub_network_one(this.$route.params.sub_network_id).then(result => {
-                this.sub_network = JSON.parse(result.data.sub_network);
+                this.sub_network = result.data.sub_network;
                 this.sub_network_name = this.sub_network.sub_network_name;
                 this.sub_network_description = this.sub_network.sub_network_description;
                 this.payload_codec_form = this.sub_network.payload_codec;

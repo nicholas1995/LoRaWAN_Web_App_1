@@ -245,7 +245,7 @@ export default {
             })
         //Get Subnetworks
           AuthenticationService.get_sub_networks().then(result => {
-          this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+          this.sub_networks = result.data.sub_networks_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
             }).catch(err => {
               //Error requesting the subnetworks from the server

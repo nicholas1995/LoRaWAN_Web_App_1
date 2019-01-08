@@ -80,7 +80,7 @@ describe('NETWORK API', function () {
         }
     }));
     
-    it("Should create a network", integration({
+/*     it("Should create a network", integration({
         //--Unauthorized test.... no token sent in request
         app,
         req: {
@@ -137,28 +137,136 @@ describe('NETWORK API', function () {
         res: {
             status: 200
         }
-    }));
+    })); */
 
 });
 
 //-----------------------------------------------------SUB-NETWORKS-------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 describe('SUB-NETWORK API', function () {
-/*     it("Should send Unauthorized(No token)", integration({
-        //--Unauthorized test.... no token sent in request
+    it("Should return Sub-Networks", integration({
+        //--Should return all the currently implemented sub-networks
+        app,
+        req: {
+          method: "GET",
+          url: "/sub_networks",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+          }
+        },
+        res: {
+          status: 200
+        }
+      }));
+    it("Should return specified Sub-Netowrks", integration({
+        //--should return the specified subnetwork
+        app,
+        req: {
+          method: "GET",
+          url: "/sub_networks/one/140",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+          }
+        },
+        res: {
+          status: 200
+        }
+      }));
+    it("Should return Sub-Netowrks from database under specifed network", integration({
+        //--should return the subnetworks from the database under the specifed network
         app,
         req: {
             method: "GET",
-            url: "/users",
+            url: "/sub_networks/database/network/57",
             headers: {
                 Authorization:
-                "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
             }
         },
         res: {
-            status: 401
+            status: 200
         }
-    })); */
+    }));
+    it("Should return Sub-Netowrks from database", integration({
+        //--should return the subnetworks from the database
+        app,
+        req: {
+            method: "GET",
+            url: "/sub_networks/database",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+            }
+        },
+        res: {
+            status: 200
+        }
+    }));
+    it("Should create a Sub-Netowrk ", integration({
+        //--should create a sub-network
+        app,
+        req: {
+          method: "POST",
+          url: "/sub_networks",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+          },
+          data: {
+            sub_network: {
+              sub_network_name: "Test3",
+              sub_network_description: "to delete... testing route",
+              network_id: "57",
+              service_profile_id: "e4f6ebc7-bc5a-48d3-b629-1e26674448f2",
+              payload_codec: ""
+            }
+          }
+        },
+        res: {
+          status: 201
+        }
+      }));
+    it("Should update the specified Sub-Netowrk ", integration({
+        //--should return the specified subnetwork
+        app,
+        req: {
+          method: "PUT",
+          url: "/sub_networks/150",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+          },
+          data: {
+            sub_network: {
+              sub_network_name: "Test12",
+              sub_network_description: "to delete... testing route",
+              network_id: "57",
+              service_profile_id: "e4f6ebc7-bc5a-48d3-b629-1e26674448f2",
+              payload_codec: ""
+            }
+          }
+        },
+        res: {
+          status: 200
+        }
+      }));
+    it("Should delete the specified Sub-Netowrk ", integration({
+        //--should return the specified subnetwork
+        app,
+        req: {
+            method: "DELETE",
+            url: "/sub_networks/150",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+            },
+        },
+        res: {
+            status: 200
+        }
+    }));
 });
 
 //-----------------------------------------------------VESSELS------------------------------------------------------------

@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">16.67% </span>
+        <span class="strong">83.33% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>2/12</span>
+        <span class='fraction'>10/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,21 +30,21 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/5</span>
+        <span class='fraction'>4/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">16.67% </span>
+        <span class="strong">83.33% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>2/12</span>
+        <span class='fraction'>10/12</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -83,28 +83,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -115,29 +115,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const db = require("../../db");
 &nbsp;
 module.exports = {
-    get_sub_networks: <span class="fstat-no" title="function not covered" >fu</span>nction () {
-        let sql = <span class="cstat-no" title="statement not covered" >`SELECT *</span>
+    get_sub_networks: function () {
+        let sql = `SELECT *
         FROM sub_network`;
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     },
     //This returns all the subnetworks under the specified network or networks 
-    get_sub_networks_specified_network: <span class="fstat-no" title="function not covered" >fu</span>nction (networks) {
-        let sql = <span class="cstat-no" title="statement not covered" >`SELECT *</span>
+    get_sub_networks_specified_network: function (networks) {
+        let sql = `SELECT *
         FROM sub_network
         WHERE network_id IN (${networks})`;
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     },
-    update: <span class="fstat-no" title="function not covered" >fu</span>nction (col, value, condition) {
-        let sql = <span class="cstat-no" title="statement not covered" >`UPDATE sub_network</span>
+    update: function (col, value, condition) {
+        let sql = `UPDATE sub_network
         SET ${col} = '${value}'
         WHERE sub_network_id = '${condition}'`;
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     },
-    update_sub_networks_all_parameters: <span class="fstat-no" title="function not covered" >fu</span>nction (data, id) {
-        let sql = <span class="cstat-no" title="statement not covered" >`UPDATE sub_network</span>
+    update_sub_networks_all_parameters: function (data, id) {
+        let sql = `UPDATE sub_network
         SET sub_network_name = '${data.sub_network_name}', sub_network_description= '${data.sub_network_description}'
         WHERE sub_network_id = '${id}'`;
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     },
     create_sub_network: <span class="fstat-no" title="function not covered" >fu</span>nction (sub_network_id, network_id, service_profile_id, sub_network_name, sub_network_description) {
         let sql = <span class="cstat-no" title="statement not covered" >`INSERT INTO sub_network</span>
@@ -151,7 +151,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 16:35:07 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 17:47:20 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

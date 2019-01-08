@@ -108,15 +108,13 @@ export default {
         }
         
     },
-    create_sub_networks(data){
-        data = JSON.stringify(data);
+    create_sub_networks(sub_network){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('/sub_networks',{data});
+        return Api.post('/sub_networks', {sub_network});
     },
-    update_sub_networks(data, sub_network_id){
-        data = JSON.stringify(data);
+    update_sub_networks(sub_network, sub_network_id){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.put(`/sub_networks/${sub_network_id}`, { data });
+        return Api.put(`/sub_networks/${sub_network_id}`, {sub_network});
     },
     delete_sub_networks(sub_network_id){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

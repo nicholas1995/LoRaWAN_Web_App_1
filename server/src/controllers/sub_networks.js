@@ -131,7 +131,6 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("get sub-networks : database", err.message);
                 });
-            sub_networks_lora = JSON.stringify(sub_networks_lora);
             res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Networks fetched', type: 'success' });
         }
         catch(err){
@@ -140,7 +139,6 @@ module.exports = {
                 res.status(500).send({ message: "Failed to get sub-networks", type: 'error' });
             }
             else if (error_location == 1) {
-                sub_networks_lora = JSON.stringify(sub_networks_lora);
                 res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Error updating sub-networks in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
@@ -156,7 +154,6 @@ module.exports = {
                 }
                 );
             sub_network = convert_name_sub_network_single(sub_network.data);
-            sub_network = JSON.stringify(sub_network);
             res.status(200).send({ sub_network });
         } catch (err) {
             console.log(err);
@@ -179,7 +176,6 @@ module.exports = {
                         throw error.error_message("get sub-networks : database", err.message);
                     })
             }
-            sub_networks = JSON.stringify(sub_networks);
             res.status(200).send({ sub_networks: sub_networks, message: 'Sub-Networks fetched', type: 'success' });
         }catch(err){
             console.log(err);
@@ -189,7 +185,7 @@ module.exports = {
     create: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db 3=db
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.sub_network;
             let request_body = sub_network_api_request_data(data, 1);
             let result = await lora_app_server.create_applications(request_body)
                 .catch(err => {
@@ -227,7 +223,7 @@ module.exports = {
         let error_location = null; //0=lora, 1=lora 2=db
         let sub_networks_lora;
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.sub_network;
             let request_body = sub_network_api_request_data(data, 2);
             await lora_app_server.update(request_body, req.params.sub_network_id)
                 .catch(err => {
@@ -280,18 +276,14 @@ module.exports = {
                     //Error deleting vessels under selected subnetwork
                     throw error.error_message("delete sub-network : delete vessel ", err.message);
                 });
-            sub_networks_lora = JSON.stringify(sub_networks_lora);
             res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Network deleted.', type: 'success' });
         } catch (err) {
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete sub-network", type: 'error' });
             } else if (error_location == 1) {
-                sub_networks_lora = JSON.stringify([]);
                 res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network deleted. Failed to fetch sub-networks", type: 'info' })
-            }
-            else if (error_location == 2) {
-                sub_networks_lora = JSON.stringify(sub_networks_lora);
+            } else if (error_location == 2) {
                 res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network deleted. Error deleting sub-network in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })

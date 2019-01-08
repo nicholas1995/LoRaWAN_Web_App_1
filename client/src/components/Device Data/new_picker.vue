@@ -150,7 +150,7 @@ export default {
     })
     //Get Sub-Networks
     AuthenticationService.get_sub_networks_db_given_network().then(result => {
-        this.sub_networks = JSON.parse(result.data.sub_networks);
+        this.sub_networks = result.data.sub_networks;
     }).catch(err => {
         //Error fetching sub_networks specified by network from server
         console.log(err)

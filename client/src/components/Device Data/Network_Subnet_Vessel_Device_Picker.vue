@@ -170,7 +170,7 @@ export default {
             //Error fetching sub_networks specified by network from server
             console.log(err)
           })
-        this.sub_networks = JSON.parse(this.sub_networks.data.sub_networks);
+        this.sub_networks = this.sub_networks.data.sub_networks;
         for(let i = 0; i < this.sub_networks.length; i++){
           this.sub_network_names.push(this.sub_networks[i].sub_network_id.concat(":",this.sub_networks[i].sub_network_name));
         }

@@ -343,7 +343,7 @@ computed: {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
         })
         await AuthenticationService.get_sub_networks().then(result => {
-          this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+          this.sub_networks = result.data.sub_networks_lora;
         }).catch(err => {
           //Error getting sub-networks from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  

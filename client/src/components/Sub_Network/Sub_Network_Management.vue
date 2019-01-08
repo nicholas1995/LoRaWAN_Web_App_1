@@ -99,7 +99,7 @@ export default {
               this.access =1;
               //----------------------------Start-----------------------
               AuthenticationService.get_sub_networks().then(result => {
-                this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+                this.sub_networks = result.data.sub_networks_lora;
                 this.$emit('message_display',{message:result.data.message, type:result.data.type})  
               }).catch(err => {
                 //Error requesting the subnetworks from the server
@@ -140,7 +140,7 @@ export default {
     delete_sub_neworks(sub_network){
       if(confirm('Are you sure you want to delete this Sub-Network?') == true){
         AuthenticationService.delete_sub_networks(sub_network.sub_network_id).then(result => {
-          this.sub_networks = JSON.parse(result.data.sub_networks_lora);
+          this.sub_networks = result.data.sub_networks_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  

@@ -3,7 +3,7 @@ const error_logger = require("../controllers/error_logs");
 
 module.exports = {
     create (req, res, next){
-        let data = JSON.parse(req.body.data);
+        let data = req.body.sub_network;
         const schema = {
             sub_network_name: Joi.string().required().max(80).regex(
                 new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
@@ -50,7 +50,7 @@ module.exports = {
         }
     },
     update(req, res, next) {
-        let data = JSON.parse(req.body.data);
+        let data = req.body.sub_network;
         const schema = {
             sub_network_name: Joi.string().required().max(80).regex(
                 new RegExp(/^[a-zA-Z0-9\-\_]*$/)),
