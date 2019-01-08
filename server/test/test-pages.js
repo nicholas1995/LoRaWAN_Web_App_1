@@ -404,6 +404,25 @@ describe('SUB-NETWORK API', function () {
         })); 
     });
 
+    //-----------------------------------------------------GATEWAY PROFILES---------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------------
+    describe('SERVICE PROFILE API', function () {
+             it("Should return the gateway profiles", integration({
+                 app,
+                 req: {
+                   method: "GET",
+                   url: "/gateway_profiles",
+                   headers: {
+                     Authorization:
+                       "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                   }
+                 },
+                 res: {
+                   status: 200
+                 }
+               })); 
+    });
+
     //-----------------------------------------------------DEVICE UPLINK------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
     describe('DEVICE UPLINK API', function () {

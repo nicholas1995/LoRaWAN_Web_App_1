@@ -460,7 +460,7 @@ export default {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         });
         AuthenticationService.get_gateway_profiles().then(result => {
-          this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
+          this.gateway_profiles = result.data.gateway_profiles_lora;
           let j = 0;//fetch all the gateway profiles... filter them based on the currently selected network server... check to see if the lora_if of the profile is the same as that on the 
           // ith gateway profile... if yes add that name to the form
           for(let i =0; i< this.gateway_profiles.length; i++){

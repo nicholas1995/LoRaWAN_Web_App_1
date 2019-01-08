@@ -77,8 +77,7 @@ function parse(gateway_profile_lora, gateway_profile_db) {
         }
         return gateway_profile_lora;
     } catch (err) {
-        let error = new VError("%s", err.message);
-        throw error;
+        throw new VError("%s", err.message);
     }
 }
 
@@ -89,22 +88,19 @@ async function get_gateway_profiles(req) { //We fetch from the db twice because 
         let gateway_profiles_lora = await lora_app_server.get_gateway_profiles(request_body)
             .catch(err => {
                 //Error getting gateway profiles from lora app server
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             });
         gateway_profiles_lora = convert_names_gateway_profiles(gateway_profiles_lora.data.result);
         let gateway_profiles_db = await db_gateway_profile.get_gateway_profile()
             .catch(err => {
                 //Error getting gateway profiles from database
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             })
         await compare.compare_gateway_profile(gateway_profiles_lora, gateway_profiles_db);
         gateway_profiles_db = await db_gateway_profile.get_gateway_profile()
             .catch(err => {
                 //Error getting gateway profiles from database
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             })
         gateway_profiles_lora = parse(gateway_profiles_lora, gateway_profiles_db)
         return gateway_profiles_lora;
@@ -122,7 +118,6 @@ module.exports = {
                     //Error getting gateway_profiles from lora app server
                     throw error.error_message("get gateway profiles", err.message);
                 });
-            gateway_profiles_lora = JSON.stringify(gateway_profiles_lora);
             res.status(200).send({ gateway_profiles_lora: gateway_profiles_lora, message: 'Gateway profiles fetched', type: 'success' });
         } catch (err) {
             console.log(err);

@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">27.92% </span>
+        <span class="strong">34.17% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>67/240</span>
+        <span class='fraction'>82/240</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">24.51% </span>
+        <span class="strong">28.43% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>25/102</span>
+        <span class='fraction'>29/102</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">7.69% </span>
+        <span class="strong">10.26% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/39</span>
+        <span class='fraction'>4/39</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">28.03% </span>
+        <span class="strong">34.31% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>67/239</span>
+        <span class='fraction'>82/239</span>
       </div>
     </div>
     <p class="quiet">
@@ -792,35 +792,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -829,9 +829,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1246,27 +1246,27 @@ module.exports = {
 <span class="cstat-no" title="statement not covered" >            throw error.error_message("compare", err.message);</span>
         }
     },
-    compare_gateway_profile: <span class="fstat-no" title="function not covered" >as</span>ync function (lora, db) {
-        let accounted_for = <span class="cstat-no" title="statement not covered" >[];</span>
-        let added_lora = <span class="cstat-no" title="statement not covered" >[];</span>
-        let gateway_profile_added = <span class="cstat-no" title="statement not covered" >[];</span>
-<span class="cstat-no" title="statement not covered" >        try {</span>
-<span class="cstat-no" title="statement not covered" >            for (let i = 0; i &lt; lora.length; i++) {</span>
-<span class="cstat-no" title="statement not covered" >                if (db.length == 0) {</span>
+    compare_gateway_profile: async function (lora, db) {
+        let accounted_for = [];
+        let added_lora = [];
+        let gateway_profile_added = [];
+        try {
+            for (let i = 0; i &lt; lora.length; i++) {
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (db.length == 0) {
 <span class="cstat-no" title="statement not covered" >                    added_lora.push(i);</span>
                     //console.log('Gateway Profile Added');
                 }
-<span class="cstat-no" title="statement not covered" >                for (let j = 0; j &lt; db.length; j++) {</span>
-<span class="cstat-no" title="statement not covered" >                    if (lora[i].gateway_profile_id_lora == db[j].gateway_profile_id_lora) {</span>
-<span class="cstat-no" title="statement not covered" >                        if (lora[i].gateway_profile_name != db[j].gateway_profile_name) {</span>
+                for (let j = 0; j &lt; db.length; j++) {
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (lora[i].gateway_profile_id_lora == db[j].gateway_profile_id_lora) {
+                        <span class="missing-if-branch" title="if path not taken" >I</span>if (lora[i].gateway_profile_name != db[j].gateway_profile_name) {
 <span class="cstat-no" title="statement not covered" >                            DB_GATEWAY_PROFILE.update_gateway_profile('gateway_profile_name', lora[i].gateway_profile_name, lora[i].gateway_profile_id_lora)</span>
                                 .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
 <span class="cstat-no" title="statement not covered" >                                    throw error.error_message(`update: ID-${lora[i].gateway_profile_id_lora}`, err.message);</span>
                                 })
                             //console.log('Different name');
                         } 
-<span class="cstat-no" title="statement not covered" >                        accounted_for.push(j);</span>
-<span class="cstat-no" title="statement not covered" >                        break;</span>
+                        accounted_for.push(j);
+                        break;
                     }
                     else <span class="cstat-no" title="statement not covered" >if (j == (db.length - 1)) {</span>
 <span class="cstat-no" title="statement not covered" >                        added_lora.push(i);</span>
@@ -1275,7 +1275,7 @@ module.exports = {
                            }
                 }
             }
-<span class="cstat-no" title="statement not covered" >            for (let k = 0; k &lt; added_lora.length; k++) {</span>
+            for (let k = 0; k &lt; added_lora.length; k++) {
 <span class="cstat-no" title="statement not covered" >                await DB_GATEWAY_PROFILE.create_gateway_profile(lora[added_lora[k]].gateway_profile_id_lora, lora[added_lora[k]].gateway_profile_name, lora[added_lora[k]].network_server_id,</span>
                     lora[added_lora[k]].created_at_time_stamp)
                     .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
@@ -1284,9 +1284,9 @@ module.exports = {
 <span class="cstat-no" title="statement not covered" >                gateway_profile_added.push(lora[added_lora[k]].gateway_profile_id_lora);</span>
                 //console.log('Inserted Added Gateway Profile');
             }
-<span class="cstat-no" title="statement not covered" >            for (let l = 0; l &lt; db.length; l++) {</span>
-                let index = <span class="cstat-no" title="statement not covered" >accounted_for.indexOf(l);</span>
-<span class="cstat-no" title="statement not covered" >                if (index == -1) {</span>
+            for (let l = 0; l &lt; db.length; l++) {
+                let index = accounted_for.indexOf(l);
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (index == -1) {
 <span class="cstat-no" title="statement not covered" >                    await DB_GATEWAY_PROFILE.update_gateway_profile('gateway_profile_deleted', 1, db[l].gateway_profile_id_lora)</span>
                         .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
 <span class="cstat-no" title="statement not covered" >                            throw error.error_message(`delete: ID-${db[l].gateway_profile_id_lora}`, err.message);</span>
@@ -1417,7 +1417,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 18:54:50 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 19:06:47 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

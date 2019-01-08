@@ -504,7 +504,7 @@ export default {
         //Get Gateway Profiles
         AuthenticationService.get_gateway_profiles()
         .then(result => {
-          this.gateway_profiles = JSON.parse(result.data.gateway_profiles_lora);
+          this.gateway_profiles = result.data.gateway_profiles_lora;
         }).catch(err=> {
           //Error requesting service profiles from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
