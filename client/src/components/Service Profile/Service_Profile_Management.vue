@@ -97,7 +97,7 @@ export default {
         .catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })
-        this.service_profiles = JSON.parse(this.service_profiles.data.service_profiles);
+        this.service_profiles = this.service_profiles.data.service_profiles;
       }else{
         alert('Please login.');
         this.$router.push('/login');
@@ -124,7 +124,7 @@ export default {
     delete_service_profile(service_profile){
       if(confirm('Are you sure you want to delete this service profile?') == true){
         AuthenticationService.delete_service_profiles(service_profile.service_profile_id_lora).then(result => {
-          this.service_profiles = JSON.parse(result.data.service_profiles);
+          this.service_profiles = result.data.service_profiles;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a service_profile on the lora app server

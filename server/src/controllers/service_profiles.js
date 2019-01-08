@@ -106,8 +106,7 @@ function parse(service_profile_lora, service_profile_db) {
         }
         return service_profile_lora;
     } catch (err) {
-        let error = new VError("%s", err.message);
-        throw error;
+        throw new VError("%s", err.message);
     }
 }
 
@@ -119,22 +118,19 @@ async function get_service_profiles(req) {
     let service_profiles_lora = await lora_app_server.get_service_profiles(request_body)
       .catch(err => {
         //Error getting service profiles from lora app server
-        let error = new VError("%s", err.message);
-        throw error;
+          throw new VError("%s", err.message);
       });
     service_profiles_lora = convert_names_service_profiles(service_profiles_lora.data.result);
     let service_profiles_db = await db_service_profile.get_service_profile()
       .catch(err => {
         //Error getting service profiles from database
-        let error = new VError("%s", err.message);
-        throw error;
+          throw new VError("%s", err.message);
       });
     await compare.compare_service_profile(service_profiles_lora, service_profiles_db);
     service_profiles_db = await db_service_profile.get_service_profile()
       .catch(err => {
         //Error getting service profiles from database
-        let error = new VError("%s", err.message);
-        throw error;
+          throw new VError("%s", err.message);
       });
     service_profiles_lora = parse(service_profiles_lora, service_profiles_db);
     return service_profiles_lora;
@@ -156,7 +152,6 @@ module.exports = {
                     //Error getting service profiles from the Lora App Server
                     throw error.error_message("get service-profiles : lora app server", err.message);
                 })
-            service_profiles = JSON.stringify(service_profiles);
             res.status(200).send({ service_profiles: service_profiles, message: 'Service Profiles fetched', type: 'success'});
         }catch(err) {
             console.log(err);
@@ -169,11 +164,9 @@ module.exports = {
             let service_profiles = await lora_app_server.get_service_profile_one(req.params.service_profile_id_lora)
                 .catch(err => {
                     //Error getting service profile from lora app server
-                    let error = new VError("%s", err.message);
-                    throw error;
+                    throw new VError("%s", err.message);
                 });
             service_profiles = convert_names_service_profiles_single(service_profiles.data.serviceProfile);
-            service_profiles = JSON.stringify(service_profiles);
             res.status(200).send({ service_profiles: service_profiles, message: 'Service Profile fetched', type: 'success' });
         } catch (err) {
             console.log(err);
@@ -184,7 +177,7 @@ module.exports = {
     create_service_profile: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         try {
-            let data = JSON.parse(req.body.data);
+            let data = req.body.service_profile;
             let request_body = service_profile_api_request_data(data, 1);
             let result = await lora_app_server.create_service_profiles(request_body)
                 .catch(err => {
@@ -217,7 +210,7 @@ module.exports = {
     update_service_profile: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         try {
-            let data = JSON.parse(req.body.data);
+            let data = req.body.service_profile;
             let request_body = service_profile_api_request_data(data, 2);
             let result = await lora_app_server.update_service_profiles(request_body, req.params.service_profile_id_lora)
                 .catch(err => {
@@ -281,7 +274,6 @@ module.exports = {
                     throw error;
                 });
             service_profiles = parse(service_profiles, service_profiles_db);
-            service_profiles = JSON.stringify(service_profiles);
             res.status(200).send({ service_profiles: service_profiles, message: 'Service Profile deleted', type: 'success' });
         }catch(err){
             //e_l =0 (problem deleteing service profile)
@@ -294,11 +286,9 @@ module.exports = {
             } else if (error_location == 1) {
                 res.status(412).send({ message: "Delete Sub-Network that uses Service Profile to be deleted", type: 'info' })
             }else if (error_location == 2) {
-                service_profiles = JSON.stringify([]);
                 res.status(200).send({ service_profiles: service_profiles, message: "Service Profile deleted. Failed to fetch service_profiles", type: 'info' })
             }
             else if (error_location == 3) {
-                service_profiles = JSON.stringify(service_profiles);
                 res.status(200).send({ service_profiles: service_profiles, message: "Service Profile deleted. Error updating service_profiles in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })

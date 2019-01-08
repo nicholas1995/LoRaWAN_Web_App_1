@@ -106,7 +106,6 @@ export default {
             Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
             return Api.get(`/sub_networks/database/`);
         }
-        
     },
     create_sub_networks(sub_network){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
@@ -260,15 +259,13 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/service_profiles/${service_profile_id_lora}`);
     },
-    create_service_profiles(data) {
-        data = JSON.stringify(data);
+    create_service_profiles(service_profile) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.post("/service_profiles", { data });
+        return Api.post("/service_profiles", { service_profile });
     }, 
-    update_service_profiles(data, service_profile_id_lora) {
-        data = JSON.stringify(data);
+    update_service_profiles(service_profile, service_profile_id_lora) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.put(`/service_profiles/${service_profile_id_lora}`, { data });
+        return Api.put(`/service_profiles/${service_profile_id_lora}`, { service_profile });
     },
     delete_service_profiles(service_profile_id_lora) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

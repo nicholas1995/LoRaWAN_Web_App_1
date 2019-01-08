@@ -3,7 +3,7 @@ const error_logger = require("../controllers/error_logs");
 
 module.exports = {
     create (req, res, next){
-        let data = JSON.parse(req.body.data);
+        let data = req.body.service_profile;
         const schema = {
             service_profile_name: Joi.string().required().max(80),
             network_id: Joi.number().required(),
@@ -79,7 +79,7 @@ module.exports = {
         }
     },
     update(req, res, next) {
-        let data = JSON.parse(req.body.data);
+        let data = req.body.service_profile;
         const schema = {
             service_profile_name: Joi.string().required().max(80),
             add_gw_metadata: Joi.boolean().insensitive(true),

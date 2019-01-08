@@ -177,7 +177,7 @@ mixins: [validationMixin],
         .catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })
-        this.service_profile_update = JSON.parse(this.service_profile_update.data.service_profiles);
+        this.service_profile_update = this.service_profile_update.data.service_profiles;
 
         this.service_profile_name = this.service_profile_update.service_profile_name
         this.network_id = this.service_profile_update.network_id

@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">27.27% </span>
+        <span class="strong">42.42% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>18/66</span>
+        <span class='fraction'>28/66</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">22.58% </span>
+        <span class="strong">38.71% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>7/31</span>
+        <span class='fraction'>12/31</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">27.27% </span>
+        <span class="strong">42.42% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>18/66</span>
+        <span class='fraction'>28/66</span>
       </div>
     </div>
     <p class="quiet">
@@ -365,28 +365,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -549,29 +549,29 @@ module.exports = {
 &nbsp;
   //------------------------Service Profile------------------------
   //---------Read---------
-  get_service_profiles: <span class="fstat-no" title="function not covered" >fu</span>nction(data) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.get(`/api/service-profiles?limit=${data.limit}`);</span>
+  get_service_profiles: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/service-profiles?limit=${data.limit}`);
   },
   //---------Read One---------
-  get_service_profile_one: <span class="fstat-no" title="function not covered" >fu</span>nction(service_profile_id_lora) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.get(`/api/service-profiles/${service_profile_id_lora}`);</span>
+  get_service_profile_one: function(service_profile_id_lora) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/service-profiles/${service_profile_id_lora}`);
   },
   //--------- Create---------
-  create_service_profiles: <span class="fstat-no" title="function not covered" >fu</span>nction(data) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.post("/api/service-profiles", data);</span>
+  create_service_profiles: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.post("/api/service-profiles", data);
   },
   //---------Update---------
-  update_service_profiles: <span class="fstat-no" title="function not covered" >fu</span>nction(data, service_profile_id_lora) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.put(`/api/service-profiles/${service_profile_id_lora}`, data);</span>
+  update_service_profiles: function(data, service_profile_id_lora) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.put(`/api/service-profiles/${service_profile_id_lora}`, data);
   },
   //---------Delete---------
-  delete_service_profiles: <span class="fstat-no" title="function not covered" >fu</span>nction(service_profile_id_lora) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.delete(`/api/service-profiles/${service_profile_id_lora}`);</span>
+  delete_service_profiles: function(service_profile_id_lora) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.delete(`/api/service-profiles/${service_profile_id_lora}`);
   },
 &nbsp;
   //------------------------Device Profile------------------------
@@ -607,7 +607,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 19:06:47 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 19:45:17 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

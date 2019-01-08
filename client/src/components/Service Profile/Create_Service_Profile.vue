@@ -211,7 +211,7 @@ mixins: [validationMixin],
         .catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })
-        this.service_profiles = JSON.parse(this.service_profiles.data.service_profiles);
+        this.service_profiles = this.service_profiles.data.service_profiles;
         //Get Networks
           AuthenticationService.get_networks().then(result => {
             let networks_lora = result.data.networks_lora;

@@ -351,21 +351,128 @@ describe('SUB-NETWORK API', function () {
     //-----------------------------------------------------SERVICE PROFILES---------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
     describe('SERVICE PROFILE API', function () {
-        /*     it("Should send Unauthorized(No token)", integration({
-                //--Unauthorized test.... no token sent in request
+             it("Should return the specified service profile", integration({
                 app,
                 req: {
                     method: "GET",
-                    url: "/users",
+                    url: "/service_profiles/e8cff53d-e82f-4861-8c91-da44fe30b6a2",
                     headers: {
                         Authorization:
                         "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
                     }
                 },
                 res: {
-                    status: 401
+                    status: 200
                 }
-            })); */
+            })); 
+        it("Should return the service profiles", integration({
+            app,
+            req: {
+                method: "GET",
+                url: "/service_profiles",
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                }
+            },
+            res: {
+                status: 200
+            }
+        })); 
+        it("Should create the service profiles", integration({
+            app,
+            req: {
+                method: "POST",
+                url: "/service_profiles",
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                },
+                data: {
+                    service_profile: {
+                        service_profile_name: "test2",
+                        network_id: "57",
+                        network_server_id: "8",
+                        add_gw_metadata: true,
+                        report_device_status_battery: false,
+                        report_device_status_margin: false,
+                        network_geo_location: false,
+                        device_status_req_frequency: "0",
+                        dr_min: "5",
+                        dr_max: "4",
+                    }
+                }
+            },
+            res: {
+                status: 201
+            }
+        })); 
+        it("Should return error (invalid service profile id lora)", integration({
+            app,
+            req: {
+                method: "PUT",
+                url: "/service_profiles/23",
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                },
+                data: {
+                    service_profile: {
+                        service_profile_name: 'test_1',
+                        add_gw_metadata: true,
+                        report_device_status_battery: false,
+                        report_device_status_margin: false,
+                        network_geo_location: false,
+                        device_status_req_frequency: 0,
+                        dr_min: 5,
+                        dr_max: 4
+                    }
+                }
+            },
+            res: {
+                status: 500
+            }
+        }));
+        it("Should update the specified service profiles", integration({
+            app,
+            req: {
+                method: "PUT",
+                url: "/service_profiles/fab7b895-3396-4337-a30a-39886dd0de61",
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                },
+                data: {
+                    service_profile: {
+                        service_profile_name: 'test_1',
+                        add_gw_metadata: true,
+                        report_device_status_battery: false,
+                        report_device_status_margin: false,
+                        network_geo_location: false,
+                        device_status_req_frequency: 0,
+                        dr_min: 5,
+                        dr_max: 4
+                    }
+                }
+            },
+            res: {
+                status: 200
+            }
+        })); 
+        it("Should delete the specified service profiles", integration({
+            app,
+            req: {
+                method: "DELETE",
+                url: "/service_profiles/fab7b895-3396-4337-a30a-39886dd0de61",
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                }
+            },
+            res: {
+                status: 200
+            }
+        })); 
     });
 
     //-----------------------------------------------------DEVICE PROFILES----------------------------------------------------

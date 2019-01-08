@@ -253,7 +253,7 @@ export default {
             })
         //Get Service Profiles
           AuthenticationService.get_service_profiles().then(result => {
-            this.service_profile = JSON.parse(result.data.service_profiles);
+            this.service_profile = result.data.service_profiles;
               }).catch(err=> {
                 //Error requesting service profiles from server
                 this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
