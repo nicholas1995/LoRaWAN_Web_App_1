@@ -18,7 +18,7 @@ module.exports = function(req,res, next){
     }catch(err){
         //Error with token.... either expired or sum else.
         let error = new VError(`Unauthorized Access`);
-        console.log(error.message);
+        //console.log(error.message);
         res.status(401).send({
             error: 'Do not have access!'});
     }
