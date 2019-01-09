@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">72.73% </span>
+        <span class="strong">63.64% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>24/33</span>
+        <span class='fraction'>21/33</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">57.14% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>8/14</span>
+        <span class='fraction'>7/14</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>3/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">72.73% </span>
+        <span class="strong">63.64% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>24/33</span>
+        <span class='fraction'>21/33</span>
       </div>
     </div>
     <p class="quiet">
@@ -114,32 +114,32 @@
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -155,10 +155,10 @@
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,9 +181,9 @@ function convert_user_class(user_class){
 <span class="branch-1 cbranch-no" title="branch not covered" >        case 'Software Admin':</span>
 <span class="cstat-no" title="statement not covered" >            user = 'Software_Admin';</span>
 <span class="cstat-no" title="statement not covered" >            break;</span>
-<span class="branch-2 cbranch-no" title="branch not covered" >        default:</span>
-<span class="cstat-no" title="statement not covered" >            user = user_class;</span>
-<span class="cstat-no" title="statement not covered" >            break;</span>
+        default:
+            user = user_class;
+            break;
     }
     return user;
 }
@@ -193,15 +193,15 @@ function convert_method(method){
         case 'get':
             access = 'read';
             break;
-        case 'post':
-            access = 'create';
-            break;
-        case 'put':
-            access = 'update';
-            break;
-        case 'delete':
-            access = 'delete';
-            break;
+<span class="branch-1 cbranch-no" title="branch not covered" >        case 'post':</span>
+<span class="cstat-no" title="statement not covered" >            access = 'create';</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
+<span class="branch-2 cbranch-no" title="branch not covered" >        case 'put':</span>
+<span class="cstat-no" title="statement not covered" >            access = 'update';</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
+<span class="branch-3 cbranch-no" title="branch not covered" >        case 'delete':</span>
+<span class="cstat-no" title="statement not covered" >            access = 'delete';</span>
+<span class="cstat-no" title="statement not covered" >            break;</span>
 <span class="branch-4 cbranch-no" title="branch not covered" >        default:</span>
 <span class="cstat-no" title="statement not covered" >            access = 'none';</span>
 <span class="cstat-no" title="statement not covered" >        break;</span>
@@ -215,12 +215,12 @@ module.exports = {
         let access = convert_method(method);
         <span class="missing-if-branch" title="else path not taken" >E</span>if(ACL[user].hasOwnProperty(ability)){ //See if the user class of the user has permission to use the ability( eg networks, users)
             <span class="missing-if-branch" title="else path not taken" >E</span>if(ACL[user][ability].hasOwnProperty(access)){ //See if the user class of the user has the ability to perform that specified action on the resource (eg read users)
-                <span class="missing-if-branch" title="else path not taken" >E</span>if(ACL[user][ability][access] == 'All'){ //See if the user class of the user has the ability to perform the action on all or a specific item
+                if(ACL[user][ability][access] == 'All'){ //See if the user class of the user has the ability to perform the action on all or a specific item
                     //console.log('Has Access to All');
                     return 'all';
                 }else{
                     //console.log('Has Access to Self');
-<span class="cstat-no" title="statement not covered" >                    return 'self';</span>
+                    return 'self';
                 }
             }else{
                 //console.log('Do not have Access!');
@@ -238,7 +238,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 19:45:17 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 20:40:40 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

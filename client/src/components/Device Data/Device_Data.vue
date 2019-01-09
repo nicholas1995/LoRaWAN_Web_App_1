@@ -190,8 +190,8 @@ export default {
             this.loading = false;
          }else{ //Data returned
             this.allow_no_data = true;
-            this.device_data = JSON.parse(result.data.device_data);
-            this.headers =  JSON.parse(result.data.headers);
+            this.device_data = result.data.device_data;
+            this.headers =  result.data.headers;
             for(let i =0; i< this.headers.length; i++){
               this.header_names.push(this.headers[i].text);
               this.value.push(this.headers[i].text);
@@ -316,8 +316,8 @@ export default {
           this.filter_parameters = {}; 
           this.loading = false;
           }else{
-          this.device_data = JSON.parse(result.data.device_data);
-          this.headers =  JSON.parse(result.data.headers); 
+          this.device_data = result.data.device_data;
+          this.headers =  result.data.headers; 
           this.display = this.headers
           this.filter_parameters = {}; 
           this.loading = false;
@@ -329,21 +329,6 @@ export default {
             throw err;
             }) 
       }else this.device_data = [] //If no heading selected just set the data to empty so the message appears
-    },
-    end_date_time_function: async function(data){
-      this.end_date_time = data;
-      this.loading = true;
-        let result = await AuthenticationService.get_device_data_specific_heading_specified_date(this.pagination, this.value, this.start_date_time, this.end_date_time)
-          .catch(err => {
-            //Error getting the devices from the server
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-            throw err;
-            })
-        this.device_data = JSON.parse(result.data.device_data);
-        this.headers =  JSON.parse(result.data.headers);
-        this.display = this.headers
-        this.generate = 0;
-        this.loading = false;
     },
     sub_network_id_function: function(data){
       //The if else statements were used because in the Picker we always want to emit when the value changes not only when the array is greater than 0.

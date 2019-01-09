@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">42.08% </span>
+        <span class="strong">41.67% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>101/240</span>
+        <span class='fraction'>100/240</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">37.25% </span>
+        <span class="strong">36.27% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>38/102</span>
+        <span class='fraction'>37/102</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">12.82% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>5/39</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">42.26% </span>
+        <span class="strong">41.84% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>101/239</span>
+        <span class='fraction'>100/239</span>
       </div>
     </div>
     <p class="quiet">
@@ -849,39 +849,39 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-yes">190x</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">171x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">171x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -891,8 +891,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1317,10 +1317,10 @@ module.exports = {
                                 })
                             //console.log('Different name');
                         }
-                        if (lora[i].service_profile_created_at != db[j].service_profile_created_at) {
+                        <span class="missing-if-branch" title="if path not taken" >I</span>if (lora[i].service_profile_created_at != db[j].service_profile_created_at) {
                             //This is here because when i create a service profile i do not have the date returned by the lora app server that it was created at
                             //hence i create it with dummy data then route to /servie_profile and there the data will be fetched and comared and the date created will be updated
-                            service_profile_db.update_service_profile('service_profile_created_at', lora[i].service_profile_created_at, lora[i].service_profile_id_lora)
+<span class="cstat-no" title="statement not covered" >                            service_profile_db.update_service_profile('service_profile_created_at', lora[i].service_profile_created_at, lora[i].service_profile_id_lora)</span>
                                 .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
 <span class="cstat-no" title="statement not covered" >                                    throw error.error_message(`update: ID-${lora[i].service_profile_id_lora}`, err.message);</span>
                                 })
@@ -1417,7 +1417,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 19:45:17 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 20:40:40 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

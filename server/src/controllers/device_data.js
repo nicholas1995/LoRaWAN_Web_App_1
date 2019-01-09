@@ -3,44 +3,6 @@ const DB_USER_VESSEL = require ("../services/database/user_vessel_db")
 const error = require("../services/errors");
 const VError = require("verror");
 
-function header(row){
-    try{
-        let ui = [], db = [], headers = [];
-        let i = 0;
-        for (let key in row) {
-          ui[i] = convert_to_space(key);
-          db[i]= key;
-          i = i+1;
-        }
-        for(let j =0; j<ui.length; j++){
-            headers.push({text: ui[j], value: db[j]})
-        }
-        return headers;
-    }catch(err){
-        console.log(err);
-    }
-}
-
-function convert_from_ui_to_db(headers) {
-    try {
-        for (let i = 0; i < headers.length; i++) {
-            headers = convert_to_underscore(headers);
-        }
-        return headers;
-    } catch (err) {
-        console.log(err);
-    }
-}
-
-function convert_to_space(name){
-    name = name.replace("_", " ");
-    return name;
-}
-
-function convert_to_underscore(name) {
-    name = name.replace(" ", "_");
-    return name;
-}
 function return_date(date) {
     try{
         if (date == "" || date == null) {
@@ -96,159 +58,118 @@ function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers
     switch (device_uplink_table_headers_database) {
       case "device_uplink_id":
             return "Device Uplink ID";
-        break;
       case "device_id":
             return "Device ID";
-        break;
       case "sub_network_id":
         if(view == 'all'){
             return "Sub-Network ID";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "vessel_id":
             return "Vessel ID";
-        break;
       case "time_stamp":
             return "Time Stamp";
-        break;
       case "sub_network_name":
         if(view == 'all'){
             return "Sub Network Name";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "device_eui":
             return "Device EUI";
-        break;
       case "device_name":
             return "Device Name";
-        break;
       case "gateway_id_lora":
         if(view == 'all'){
             return "Gateway ID LoRa";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "gateway_name":
         if(view == 'all'){
             return "Gateway Name";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "rx_time":
         if(view == 'all'){
             return "Rx Time";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "rx_rssi":
         if(view == 'all'){
             return "Rx RSSI";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "rx_lora_snr":
         if(view == 'all'){
             return "Tx LoRa SNR";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "gateway_latitude":
         if(view == 'all'){
             return "Gateway Latitude";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "gateway_longitude":
         if(view == 'all'){
             return "Gateway Longitude";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "gateway_altitude":
         if(view == 'all'){
             return "Gateway Altitude";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "tx_frequency":
         if(view == 'all'){
             return "Tx Frequency";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "tx_data_rate":
         if(view == 'all'){
             return "Tx Data Rate";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "adr":
         if(view == 'all'){
             return "ADR";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "frame_counter":
         if(view == 'all'){
             return "Frame Counter";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "fport":
         if(view == 'all'){
             return "FPort";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "encoded_data":
         if(view == 'all'){
             return "Encoded Data";
-        break;
         }else if(view == 'self'){
             return null;
-        break;
         }
       case "gps_latitude":
             return "GPS Latitude";
-        break;
       case "gps_longitude":
             return "GPS Longitude";
-        break;
       case "gps_altitude":
             return "GPS Altitude";
-        break;
       default:
         return "Null";
     }
@@ -258,79 +179,54 @@ function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers
     switch (device_uplink_table_headers_table) {
       case "Device Uplink ID":
         return "device_uplink_id";
-        break;
       case "Device ID":
         return "device_id";
-        break;
       case "Sub-Network ID":
         return "sub_network_id";
-        break;
       case "Vessel ID":
         return "vessel_id";
-        break;
       case "Time Stamp":
         return "time_stamp";
-        break;
       case "Sub Network Name":
         return "sub_network_name";
-        break;
       case "Device EUI":
         return "device_eui";
-        break;
       case "Device Name":
         return "device_name";
-        break;
       case "Gateway ID LoRa":
         return "gateway_id_lora";
-        break;
       case "Gateway Name":
         return "gateway_name";
-        break;
       case "Rx Time":
         return "rx_time";
-        break;
       case "Rx RSSI":
         return "rx_rssi";
-        break;
       case "Tx LoRa SNR":
         return "rx_lora_snr";
-        break;
       case "Gateway Latitude":
         return "gateway_latitude";
-        break;
       case "Gateway Longitude":
         return "gateway_longitude";
-        break;
       case "Gateway Altitude":
         return "gateway_altitude";
-        break;
       case "Tx Frequency":
         return "tx_frequency";
-        break;
       case "Tx Data Rate":
         return "tx_data_rate";
-        break;
       case "ADR":
         return "adr";
-        break;
       case "Frame Counter":
         return "frame_counter";
-        break;
       case "FPort":
         return "fport";
-        break;
       case "Encoded Data":
         return "encoded_data";
-        break;
       case "GPS Latitude":
         return "gps_latitude";
-        break;
       case "GPS Longitude":
         return "gps_longitude";
-        break;
       case "GPS Altitude":
         return "gps_altitude";
-        break;
       default:
         return "Null";
     }
@@ -406,8 +302,6 @@ module.exports = {
             if (device_data.length > 0) {
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], 'all');
                 device_data = convert_dates(device_data);
-                device_data = JSON.stringify(device_data);
-                headers = JSON.stringify(headers);
                 res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
             } else {
                 res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
@@ -456,8 +350,6 @@ module.exports = {
                     })
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], 'self');
                 device_data = convert_dates(device_data);
-                device_data = JSON.stringify(device_data);
-                headers = JSON.stringify(headers);
                 res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
@@ -556,8 +448,6 @@ module.exports = {
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
                 device_data = convert_dates(device_data);
-                device_data = JSON.stringify(device_data);
-                headers = JSON.stringify(headers);
                 res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
@@ -566,29 +456,7 @@ module.exports = {
             console.log(err);
         }
     },
-    get_specified_headings: async function(req, res){
-        try{ 
-            let headers, order, device_data
-            headers = convert_from_ui_to_db(req.params.headers);
-            if (req.params.descending == 'false') {
-                order = "ASC";
-            } else {
-                order = "DESC";
-            }
-            device_data= await DB.get_specified_headings(req.params.sort_by, order, headers)
-                .catch(err => {
-                    //Error fetching specified data headings from db
-                    throw err;
-                })
-            headers = header(device_data[0]);
-            device_data = convert_dates(device_data);
-            device_data = JSON.stringify(device_data);
-            headers = JSON.stringify(headers);
-            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
-        }catch(err){
-            console.log(err);
-        }
-    }, get_specified_id: async function (req, res) { //TEST(TO DELETE)
+/*     get_specified_id: async function (req, res) { //TEST(TO DELETE)
         try {
             let device_data
             device_data = await DB.get_specified_id(req.params.device_uplink_id)
@@ -601,28 +469,5 @@ module.exports = {
         } catch (err) {
             console.log(err);
         }
-    },
-    get_specified_headings_date: async function(req, res){
-        try {
-            let headers, order, device_data
-            headers = convert_from_ui_to_db(req.params.headers);
-            if (req.params.descending == 'false') {
-                order = "ASC"; 
-            } else {
-                order = "DESC";
-            }
-            device_data = await DB.get_specified_headings_date(req.params.sort_by, order, headers, req.params.start_date, req.params.end_date)
-                .catch(err => {
-                    //Error fetching specified data headings from db
-                    throw err;
-                })
-            headers = header(device_data[0]);
-            device_data = convert_dates(device_data);
-            device_data = JSON.stringify(device_data);
-            headers = JSON.stringify(headers);
-            res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
-        } catch (err) {
-            console.log(err);
-        }
-    }
+    } */
 }

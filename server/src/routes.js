@@ -225,26 +225,17 @@ module.exports = ((app) => {
     app.get("/gateway_profiles", authenticate, grant_access, gateway_profiles.get);
 
     //----------------------Device Uplink Data-----------------
-    //Device (Initial fetch) (TO DELETE) --JUST TESTING
-    app.get("/devices/uplink/specific_id/:device_uplink_id", authenticate, grant_access, device_data.get_specified_id);
+    //Device (Initial fetch) (TO DELETE) --JUST TESTING FOR THE MAP
+    //app.get("/devices/uplink/specific_id/:device_uplink_id", authenticate, grant_access, device_data.get_specified_id);
 
-    //Device (Initial fetch)
+    //Device (Initial fetch) 
     app.get("/devices/uplink/initial", authenticate, grant_access, device_data.get);
 
-    //Device (Initial fetch self)
+    //Device (Initial fetch self) 
     app.get("/devices/uplink/initial/self", authenticate, grant_access, device_data.get_self);
 
     //Device (Filtered) 
-    app.get("/devices/rx/:parameters/:columns", authenticate, grant_access, device_data.get_filtered);
-
-    //Device (Specified pagination)
-    app.get("/devices/uplink/:sort_by/:descending", authenticate, grant_access, device_data.get); 
-
-    //Device (Specified Headings)
-    app.get("/devices/uplink/headers/:sort_by/:descending/:headers", authenticate, grant_access, device_data.get_specified_headings);
-
-    //Device (Specified Date)
-    app.get("/devices/uplink/headers/date/:sort_by/:descending/:headers/:start_date/:end_date", authenticate, grant_access, device_data.get_specified_headings_date);
+    app.get("/devices/uplink/parameters/:parameters/columns/:columns", authenticate, grant_access, device_data.get_filtered);
 
     //----------------------Error Logs-----------------
     //Error Logs (Get)

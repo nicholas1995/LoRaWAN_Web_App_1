@@ -379,7 +379,7 @@ describe('SUB-NETWORK API', function () {
                 status: 200
             }
         })); 
-        it("Should create the service profiles", integration({
+/*         it("Should create the service profiles", integration({
             app,
             req: {
                 method: "POST",
@@ -472,7 +472,7 @@ describe('SUB-NETWORK API', function () {
             res: {
                 status: 200
             }
-        })); 
+        }));  */
     });
 
     //-----------------------------------------------------DEVICE PROFILES----------------------------------------------------
@@ -533,22 +533,86 @@ describe('SUB-NETWORK API', function () {
     //-----------------------------------------------------DEVICE UPLINK------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
     describe('DEVICE UPLINK API', function () {
-        /*     it("Should send Unauthorized(No token)", integration({
-                //--Unauthorized test.... no token sent in request
+             it("Should return the initial set of deivce uplink data", integration({
                 app,
                 req: {
                     method: "GET",
-                    url: "/users",
+                    url: "/devices/uplink/initial",
                     headers: {
                         Authorization:
                         "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
                     }
                 },
                 res: {
-                    status: 401
+                    status: 200
                 }
-            })); */
+            })); 
+        it("Should return the initial set of deivce uplink for the user", integration({
+            app,
+            req: {
+                method: "GET",
+                url: "/devices/uplink/initial/self",
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJuaWNob2xhc2Jvc3MxQGhvdG1haWwuY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU0Njk5MjQzOSwiZXhwIjoxNTk3MDM1NjM5fQ.Bp96asucx_iVPqkLho7SOR9qHVv8IzHGR44DFcGqIe0"
+                }
+            },
+            res: {
+                status: 200
+            }
+        })); 
+        //----------------------
+        let parameters = {
+            device: [23],
+            end_date: "2019-01-09 00:00:00",
+            start_date: "2019-01-01 00:00:00",
+            vessel: [30,30]
+        }
+        parameters = JSON.stringify(parameters); 
+        let columns = ["Device Uplink ID", "Device ID", "Vessel ID", "Time Stamp", "Device EUI",
+                    "Device Name", "GPS Latitude", "GPS Longitude", "GPS Altitude"]
+        it("Should return the filtered data for the fishers view", integration({
+            app,
+            req: {
+                method: "GET",
+                url: `/devices/uplink/parameters/${parameters}/columns/${columns}`,
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJuaWNob2xhc2Jvc3MxQGhvdG1haWwuY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU0Njk5MjQzOSwiZXhwIjoxNTk3MDM1NjM5fQ.Bp96asucx_iVPqkLho7SOR9qHVv8IzHGR44DFcGqIe0"
+                }
+            },
+            res: {
+                status: 200
+            }
+        })); 
+        //----------------------
+        parameters = {
+            end_date: "2019-01-09 00:00:00",
+            start_date: "2019-01-01 00:00:00",
+            vessel: [30],
+            sub_network: [140],
+            vessel: [30],
+            device: [23],
+
+        }
+        parameters = JSON.stringify(parameters); 
+        columns = ["Device Uplink ID", "Device ID", "Sub-Network ID", "Vessel ID", "Time Stamp", "Sub Network Name", "Device EUI", "Device Name", "Gateway ID LoRa", "Gateway Name", "Rx Time", "Rx RSSI", "Tx LoRa SNR", "Gateway Latitude", "Gateway Longitude", "Gateway Altitude", "Tx Frequency", "Tx Data Rate", "ADR", "Frame Counter", "FPort", "Encoded Data", "GPS Latitude", "GPS Longitude", "GPS Altitude"]
+        it("Should return the filtered data for the data users", integration({
+            app,
+            req: {
+                method: "GET",
+                url: `/devices/uplink/parameters/${parameters}/columns/${columns}`,
+                headers: {
+                    Authorization:
+                        "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+                }
+            },
+            res: {
+                status: 200
+            }
+        })); 
     });
+    
 
     //-----------------------------------------------------GATEWAY STATS------------------------------------------------------
     //------------------------------------------------------------------------------------------------------------------------
