@@ -528,13 +528,17 @@ module.exports = {
     },
     get_devices_activation: async function (req, res){
         try{
-            let device_activation = await get_device_activation(req.params.device_eui)
-            .catch(
-              err => {
-                //Error getting device activation from lora app server
-                    throw error.error_message("get device activation : lora app server", err.message);
-              });
-            res.status(200).send({ device_activation: device_activation, message: 'Device Activation fetched.', type: 'success' });
+            if(req.user.user_class == "IoT Network Admin"){
+                let device_activation = await get_device_activation(req.params.device_eui)
+                    .catch(
+                        err => {
+                            //Error getting device activation from lora app server
+                            throw error.error_message("get device activation : lora app server", err.message);
+                        });
+                res.status(200).send({ device_activation: device_activation, message: 'Device Activation fetched.', type: 'success' });
+            }else{
+                res.status(403).send({ error: "Forbidden" });
+            }
         }catch(err){
             console.log(err);
         }
@@ -543,14 +547,19 @@ module.exports = {
     },
     create_devices_activation: async function (req, res) {
         try{
-            let data = req.body.device_activation;
-            let request_data = device_api_request_data(data, 3);
-            await lora_app_server.create_devices_activation(request_data, req.params.device_eui)
-                .catch(err => {
-                    //Error creating device activation on lora app server
-                    throw error.error_message("create device activation : lora app server", err.message);
-                })
-            res.status(200).send({message: 'Device activated.', type: 'success' });
+            if (req.user.user_class == "IoT Network Admin") {
+                let data = req.body.device_activation;
+                let request_data = device_api_request_data(data, 3);
+                await lora_app_server.create_devices_activation(request_data, req.params.device_eui)
+                    .catch(err => {
+                        //Error creating device activation on lora app server
+                        throw error.error_message("create device activation : lora app server", err.message);
+                    })
+                res.status(200).send({ message: 'Device activated.', type: 'success' });
+            } else {
+                res.status(403).send({ error: "Forbidden" });
+            }
+
         }catch(err){
             res.status(200).send({message: "Device activation failed.", type: 'error' })
         }
