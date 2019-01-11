@@ -3,7 +3,7 @@ const error_logger = require("../controllers/error_logs");
 
 module.exports = {
     create(req, res, next) {
-        let data = JSON.parse(req.body.data);
+        let data = req.body.device;
         if(data.reference_altitude =="")data.reference_altitude = 1; //this is just to allow it to validate if the reference is left out 
         const schema = {
             device_name: Joi.string().required().max(80).regex(
@@ -68,7 +68,7 @@ module.exports = {
         }
     },
     update(req, res, next) {
-        let data = JSON.parse(req.body.data);
+        let data = req.body.device;
         const schema = {
             device_id: Joi.number(),
             device_name: Joi.string().required().max(80).regex(

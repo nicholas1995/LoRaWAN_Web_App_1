@@ -156,7 +156,7 @@ mixins: [validationMixin],
         //----------------------Start------------------
         //Get Devices
         await AuthenticationService.get_devices().then(result => {
-          this.devices = JSON.parse(result.data.devices_lora);
+          this.devices = result.data.devices_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
@@ -173,7 +173,7 @@ mixins: [validationMixin],
               //Error getting network to be updated information
               this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             });
-        this.device_activation = JSON.parse(this.device_activation.data.device_activation);
+        this.device_activation = this.device_activation.data.device_activation;
         this.dev_addr = this.device_activation.dev_addr;
         this.nwk_s_enc_key = this.device_activation.nwk_s_enc_key;
         this.app_s_key = this.device_activation.app_s_key;

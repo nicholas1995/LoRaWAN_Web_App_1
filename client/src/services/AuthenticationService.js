@@ -165,7 +165,6 @@ export default {
         return Api.get('/devices');
     }, 
     get_device(device_eui) {
-        console.log('here')
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/devices/${device_eui}`);
     },
@@ -178,15 +177,13 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/devices/database/${vessels}`);
     },
-    create_devices(data) {
-        data = JSON.stringify(data);
+    create_devices(device) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('/devices', { data });
+        return Api.post('/devices', { device });
     },
-    update_devices(data, device_eui) {
-        data = JSON.stringify(data);
+    update_devices(device, device_eui) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.put(`/devices/${device_eui}`, { data });
+        return Api.put(`/devices/${device_eui}`, { device });
     },
     delete_devices(device_eui) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
@@ -198,6 +195,7 @@ export default {
         return Api.get(`/devices/activation/${device_eui}`);
     }, 
     create_devices_activation(data, device_eui) {
+        console.log(data)
         data = JSON.stringify(data);
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.post(`/devices/activation/${device_eui}`, { data });

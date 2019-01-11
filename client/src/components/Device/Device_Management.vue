@@ -128,7 +128,7 @@ export default {
         this.access =1;
         //----------------------Start------------------
         AuthenticationService.get_devices().then(result => {
-          this.devices = JSON.parse(result.data.devices_lora);
+          this.devices = result.data.devices_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
@@ -158,7 +158,7 @@ export default {
     delete_device(device){
       if(confirm('Are you sure you want to delete this Device?') == true){
         AuthenticationService.delete_devices(device.device_eui).then(result => {
-          this.devices  = JSON.parse(result.data.devices_lora);
+          this.devices  = result.data.devices_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error deleting device 

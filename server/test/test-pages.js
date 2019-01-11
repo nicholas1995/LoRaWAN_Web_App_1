@@ -292,21 +292,169 @@ describe('VESSEL API', function () {
 //-----------------------------------------------------DEVICES------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 describe('DEVICE API', function () {
-    /*     it("Should send Unauthorized(No token)", integration({
-            //--Unauthorized test.... no token sent in request
-            app,
-            req: {
-                method: "GET",
-                url: "/users",
-                headers: {
-                    Authorization:
+    it("Should return the specified device", integration({
+        app,
+        req: {
+          method: "GET",
+          url: "/devices/0000000000000002",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+          }
+        },
+        res: {
+          status: 200
+        }
+      })); 
+    it("Should return the devices", integration({
+        app,
+        req: {
+            method: "GET",
+            url: "/devices",
+            headers: {
+                Authorization:
                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-                }
-            },
-            res: {
-                status: 401
             }
-        })); */
+        },
+        res: {
+            status: 200
+        }
+    })); 
+    let user_vessel_info = [{ vessel_id: 30, date_deleted: '2019-01-06 13:32:41' },
+        { vessel_id: 30, date_deleted: '2019-01-06 13:35:12' }];
+    user_vessel_info = JSON.stringify(user_vessel_info);
+    it("Should return all the devices that user owns", integration({
+        app,
+        req: {
+            method: "GET",
+            url: `/devices/self/${user_vessel_info}`,
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    })); 
+    let vessels = "20,23"
+    it("Should return all the devices from the database on the specified vessel", integration({
+        app,
+        req: {
+            method: "GET",
+            url: `/devices/database/${vessels}`,
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    })); 
+/*     it("Should create the device", integration({
+        app,
+        req: {
+            method: "POST",
+            url: `/devices`,
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            },data: {
+                device: {
+                    device_name: "Test",
+                    device_eui: "0000000000000000",
+                    device_description: "Test device",
+                    sub_network_id: "121",
+                    vessel_id: 2,
+                    device_profile_id_lora: "8b14b99e-5a7b-46a9-856d-987958ad4d62",
+                    reference_altitude: "5",
+                    skip_frame_counter: true,
+                }
+            }
+        },
+        res: {
+            status: 201
+        }
+    })); 
+    it("Should update the specified device", integration({
+        app,
+        req: {
+            method: "PUT",
+            url: `/devices/0000000000000000`,
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }, data: {
+                device: {
+                    device_id: 29,
+                    device_name: "Test",
+                    device_eui: "0000000000000000",
+                    device_description: "Test device",
+                    sub_network_id: "121",
+                    vessel_id: 2,
+                    device_profile_id_lora: "8b14b99e-5a7b-46a9-856d-987958ad4d62",
+                    reference_altitude: "5",
+                    skip_frame_counter: true,
+                }
+            }
+        },
+        res: {
+            status: 201
+        }
+    })); 
+    it("Should delete the specified device", integration({
+        app,
+        req: {
+            method: "DELETE",
+            url: `/devices/0000000000000000`,
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        } 
+    })); */
+    it("Should get the specified device activation", integration({
+        app,
+        req: {
+          method: "GET",
+            url: `/devices/activation/0000000000000002`,
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+          }
+        },
+        res: {
+          status: 200
+        }
+      })); 
+    it("Should activation the specified device", integration({
+        app,
+        req: {
+          method: "POST",
+          url: `/devices/activation/2222222222222222`,
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+          },data: {
+              device_activation: {
+                  device_eui: "2222222222222222",
+                  dev_addr: "35467457",
+                  nwk_s_enc_key: "45764576457645674576457645764576",
+                  app_s_key: "45674567457645764567457645674567",
+                  f_cnt_up: "10",
+                  n_f_cnt_down: "20",
+              }
+          }
+        },
+        res: {
+          status: 200
+        }
+      })); 
+
 });
 
 //-----------------------------------------------------GATEWAYS-----------------------------------------------------------

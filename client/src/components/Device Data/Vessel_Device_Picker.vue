@@ -118,7 +118,7 @@ export default {
             //Error fetching devices specified by vessel from server
             console.log(err)
           }) 
-        this.devices = JSON.parse(this.devices.data.devices);
+        this.devices = this.devices.data.devices;
         for(let j = 0; j < this.devices.length; j++){
           this.device_names.push(this.devices[j].device_id +":"+this.devices[j].device_name);
         }

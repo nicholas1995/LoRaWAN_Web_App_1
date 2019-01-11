@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">39.39% </span>
+        <span class="strong">51.52% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>26/66</span>
+        <span class='fraction'>34/66</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,21 +30,21 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">35.48% </span>
+        <span class="strong">48.39% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>11/31</span>
+        <span class='fraction'>15/31</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">39.39% </span>
+        <span class="strong">51.52% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>26/66</span>
+        <span class='fraction'>34/66</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -292,8 +292,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -312,21 +317,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -476,14 +476,14 @@ module.exports = {
 &nbsp;
   //------------------------Devices------------------------
   //---------Read---------
-  get_devices: <span class="fstat-no" title="function not covered" >fu</span>nction(data) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.get(`/api/devices?limit=${data.limit}`);</span>
+  get_devices: function(data) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/devices?limit=${data.limit}`);
   },
   //---------Read ONE---------
-  get_device_one: <span class="fstat-no" title="function not covered" >fu</span>nction(device_eui) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.get(`/api/devices/${device_eui}`);</span>
+  get_device_one: function(device_eui) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/devices/${device_eui}`);
   },
   //--------- Create---------
   create_devices: <span class="fstat-no" title="function not covered" >fu</span>nction(data) {
@@ -503,15 +503,15 @@ module.exports = {
 &nbsp;
   //------------------------Device Activation------------------------
   //---------Read---------
-  get_devices_activation: <span class="fstat-no" title="function not covered" >fu</span>nction(device_eui) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.get(`/api/devices/${device_eui}/activation`);</span>
+  get_devices_activation: function(device_eui) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/devices/${device_eui}/activation`);
   },
 &nbsp;
   //---------Create---------
-  create_devices_activation: <span class="fstat-no" title="function not covered" >fu</span>nction(data, device_eui) {
-<span class="cstat-no" title="statement not covered" >    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;</span>
-<span class="cstat-no" title="statement not covered" >    return instance.post(`/api/devices/${device_eui}/activate`, data);</span>
+  create_devices_activation: function(data, device_eui) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.post(`/api/devices/${device_eui}/activate`, data);
   },
 &nbsp;
   //---------Delete---------
@@ -607,7 +607,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 00:23:28 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 01:16:13 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

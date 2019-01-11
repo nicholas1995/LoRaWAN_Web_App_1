@@ -282,17 +282,14 @@ module.exports = {
             console.log('Vessel deivce realtionships currently implemented fetched');
             devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora, devices_db);
             console.log("Vessel assigned to device parsed");
-            devices_lora = JSON.stringify(devices_lora);
             res.status(200).send({ devices_lora: devices_lora, message: 'Devices fetched', type: 'success' });
         }catch(err){
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to get devices", type: 'error' });
             } else if (error_location == 1) {
-                devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Error updating devices in database", type: 'info' })
             } else if (error_location == 2) {
-                devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Error pasing vessel ID to deivce data", type: 'info' })
             }  else {
                 res.status(500).send({ message: 'Error', type: 'error' })
@@ -309,7 +306,6 @@ module.exports = {
               }
             );
             device = convert_name_device_single(device.data);
-            device = JSON.stringify(device);
             res.status(200).send({ device });
         }catch(err){
             console.log(err);
@@ -325,7 +321,6 @@ module.exports = {
                     error_location = 2;
                     throw error.error_message("get devices : getting vessel devices relationships : database",err.message);
                 });
-            devices = JSON.stringify(devices);
             res.status(200).send({ devices: devices, message: 'Devices fetched', type: 'success' });
         }catch(err){
             console.log(err);
@@ -341,7 +336,6 @@ module.exports = {
                     error_location = 2; 
                     throw error.error_message("get devices : getting vessel devices relationships : database", err.message);
                 });
-            devices = JSON.stringify(devices);
             res.status(200).send({ devices: devices, message: 'Devices fetched', type: 'success' }); 
         } catch (err) {
             console.log(err);
@@ -352,7 +346,7 @@ module.exports = {
         let error_location = null; //0=lora, 1=lora 2=db
         let devices_lora;
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.device;
             let request_body = device_api_request_data(data, 1);
             await lora_app_server.create_devices(request_body)
                 .catch(err => {
@@ -360,14 +354,14 @@ module.exports = {
                     error_location = 0;
                     throw error.error_message("create device : lora app server", err.message);
                 });
-            console.log('Device created on lora app server')
+            //console.log('Device created on lora app server')
             await db.create(data.sub_network_id, data.device_profile_id_lora, data.device_eui, data.device_name, data.device_description)
                 .catch(err => {
                     //Error creating device on database
                     error_location = 2;
                     throw error.error_message("create device : database", err.message);
                 }); 
-            console.log('Device created in database')
+            //console.log('Device created in database')
             let device_added = await db.get_newest()
                 .catch(err => {
                     //Error creating relationship between vessel and device
@@ -381,7 +375,7 @@ module.exports = {
                         error_location = 4;
                         throw error.error_message("create device : vessel device relationship : database", err.message);
                     });
-                console.log("Device vessel relationship created");
+                //console.log("Device vessel relationship created");
             }else{ //Device not assigned to vessel so it will be assigned to the default vessel
                 await add_device_to_default_vessel(device_added[0].device_id, data.device_eui, data.sub_network_id)
                     .catch(err => {
@@ -412,7 +406,7 @@ module.exports = {
     update: async function(req, res){
         let error_location = null; //0=lora, 1=lora 2=db
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.device;
             let request_data = device_api_request_data(data, 2);
             await lora_app_server.update_devices(request_data, req.params.device_eui)
                 .catch(err => {
@@ -450,7 +444,7 @@ module.exports = {
                     error_location = 2;
                     throw error.error_message("update device : database", err.message);   
                 })
-            res.status(200).send({ message: 'Device updated.', type: 'success' });
+            res.status(201).send({ message: 'Device updated.', type: 'success' });
         }catch(err){
             console.log(err)
             if (error_location == 0) {
@@ -512,26 +506,20 @@ module.exports = {
             console.log('Devices fetched from database')
             devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora, devices_db);
             console.log("Vessel ID parsed to device data");
-            devices_lora = JSON.stringify(devices_lora);
             res.status(200).send({ devices_lora: devices_lora, message: 'Device deleted.', type: 'success' });
         }catch(err){
             console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete device", type: 'error' });
             } else if (error_location == 1) {
-                devices_lora = JSON.stringify([]);
                 res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Failed to fetch devices", type: 'info' })
             } else if (error_location == 2) {
-                devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error deleting device in database", type: 'info' })
             } else if (error_location == 3) {
-                devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error deleting device vessel relationship in database", type: 'info' })
             } else if (error_location == 4) {
-                devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error parsing vessel ID to device data", type: 'info' })
             } else if (error_location == 5) {
-                devices_lora = JSON.stringify(devices_lora);
                 res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error parsing vessel ID to device data", type: 'info' })
             }  else {
                 res.status(500).send({ message: 'Error', type: 'error' })
@@ -546,7 +534,6 @@ module.exports = {
                 //Error getting device activation from lora app server
                     throw error.error_message("get device activation : lora app server", err.message);
               });
-            device_activation = JSON.stringify(device_activation);
             res.status(200).send({ device_activation: device_activation, message: 'Device Activation fetched.', type: 'success' });
         }catch(err){
             console.log(err);
@@ -556,7 +543,7 @@ module.exports = {
     },
     create_devices_activation: async function (req, res) {
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.device_activation;
             let request_data = device_api_request_data(data, 3);
             await lora_app_server.create_devices_activation(request_data, req.params.device_eui)
                 .catch(err => {
@@ -569,6 +556,9 @@ module.exports = {
         }
     },
     delete_devices_activation: async function (req, res) {
-
+        try{
+            res.status(501).send({ message: 'Function not implemented.', type: 'error' });
+        }catch(err){
+        }
     }
 }

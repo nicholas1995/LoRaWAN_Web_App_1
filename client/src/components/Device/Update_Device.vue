@@ -225,7 +225,7 @@ export default {
         //----------------------Start------------------
         //Get Devices
         await AuthenticationService.get_devices().then(result => {
-          this.devices = JSON.parse(result.data.devices_lora);
+          this.devices = result.data.devices_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
@@ -254,7 +254,7 @@ export default {
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
           });
         await AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
-            device = JSON.parse(result.data.device);
+            device = result.data.device;
             this.device_name = device.device_name;
             this.device_description = device.device_description;
             this.reference_altitude = device.reference_altitude;

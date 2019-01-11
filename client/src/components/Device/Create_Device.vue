@@ -342,7 +342,7 @@ export default {
         //----------------------Start------------------
         //Get Devices
         AuthenticationService.get_devices().then(result => {
-          this.devices = JSON.parse(result.data.devices_lora);
+          this.devices = result.data.devices_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
