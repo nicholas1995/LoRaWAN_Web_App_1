@@ -119,9 +119,6 @@ module.exports = ((app) => {
     //Vessels (Read)
     app.get("/vessels", authenticate, grant_access, vessels.get);
 
-    //Vessels (Read)
-    app.get("/vessels/:sub_network_id/:deleted", authenticate, grant_access, vessels.get);
-
     //Vessels (Read vessels from the database under specified sub_network. This returns deleted and not deleted vessels)
     app.get("/vessels/all/:sub_networks", authenticate, grant_access, vessels.get_all);
 
