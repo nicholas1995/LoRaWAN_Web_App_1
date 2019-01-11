@@ -192,11 +192,9 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/devices/activation/${device_eui}`);
     }, 
-    create_devices_activation(data, device_eui) {
-        console.log(data)
-        data = JSON.stringify(data);
+    create_devices_activation(device_activation, device_eui) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post(`/devices/activation/${device_eui}`, { data });
+        return Api.post(`/devices/activation/${device_eui}`, { device_activation });
     }, 
     delete_devices_activation() {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
