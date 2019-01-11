@@ -37,9 +37,6 @@ const ACL = {
       delete: "All",
       create: "All"
     },
-    gateway: {
-      read: "All"
-    },
     gateway_statistics: {
       read: "All"
     },

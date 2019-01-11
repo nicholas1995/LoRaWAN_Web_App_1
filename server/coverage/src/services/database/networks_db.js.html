@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>6/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,21 +30,21 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">40% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>5/5</span>
+        <span class='fraction'>2/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">100% </span>
+        <span class="strong">50% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>12/12</span>
+        <span class='fraction'>6/12</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line high'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -93,22 +93,22 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const db = require("../../db");
 &nbsp;
@@ -124,23 +124,23 @@ module.exports = {
         WHERE network_deleted ='0'`;
     return db.queryAsync(sql);
   },
-  update_network: function(col, value, condition) {
-    let sql = `UPDATE network
+  update_network: <span class="fstat-no" title="function not covered" >fu</span>nction(col, value, condition) {
+    let sql = <span class="cstat-no" title="statement not covered" >`UPDATE network</span>
         SET ${col} = '${value}'
         WHERE network_id = '${condition}'`;
-    return db.queryAsync(sql);
+<span class="cstat-no" title="statement not covered" >    return db.queryAsync(sql);</span>
   },
-    create_network: function (network_id, network_name, network_display_name, network_can_have_gateways) {
-    let sql = `INSERT INTO network
+    create_network: <span class="fstat-no" title="function not covered" >fu</span>nction (network_id, network_name, network_display_name, network_can_have_gateways) {
+    let sql = <span class="cstat-no" title="statement not covered" >`INSERT INTO network</span>
         (network_id, network_name, network_display_name, network_can_have_gateways)
         VALUES ('${network_id}', '${network_name}', '${network_display_name}', ${network_can_have_gateways})`;
-    return db.queryAsync(sql);
+<span class="cstat-no" title="statement not covered" >    return db.queryAsync(sql);</span>
   },
-    update_networks_all_parameters: function (data, network_id) {
-    let sql = `UPDATE network
+    update_networks_all_parameters: <span class="fstat-no" title="function not covered" >fu</span>nction (data, network_id) {
+    let sql = <span class="cstat-no" title="statement not covered" >`UPDATE network</span>
         SET network_name = '${data.network_name}', network_display_name= '${data.network_display_name}', network_can_have_gateways= ${data.network_can_have_gateways}
         WHERE network_id = '${network_id}'`;
-    return db.queryAsync(sql);
+<span class="cstat-no" title="statement not covered" >    return db.queryAsync(sql);</span>
   }
 };</pre></td></tr>
 </table></pre>
@@ -148,7 +148,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 21:00:55 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 00:08:59 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

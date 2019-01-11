@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">16.67% </span>
+        <span class="strong">83.33% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>2/12</span>
+        <span class='fraction'>10/12</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -30,21 +30,21 @@
         <span class='fraction'>0/0</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">80% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/5</span>
+        <span class='fraction'>4/5</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">16.67% </span>
+        <span class="strong">83.33% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>2/12</span>
+        <span class='fraction'>10/12</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -82,24 +82,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -108,21 +99,30 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const db = require("../../db");
 &nbsp;
 module.exports = {
-    get_gateway: <span class="fstat-no" title="function not covered" >fu</span>nction () {
-        let sql = <span class="cstat-no" title="statement not covered" >`SELECT *</span>
+    get_gateway: function () {
+        let sql = `SELECT *
         FROM gateway
         WHERE gateway_deleted ='0'`;
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     },
-    get_gateway_all: <span class="fstat-no" title="function not covered" >fu</span>nction () {
-        let sql = <span class="cstat-no" title="statement not covered" >`SELECT *</span>
+    get_gateway_all: function () {
+        let sql = `SELECT *
         FROM gateway`;
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     },
     update_gateway: <span class="fstat-no" title="function not covered" >fu</span>nction (col, value, condition) {
         let sql = <span class="cstat-no" title="statement not covered" >`UPDATE gateway</span>
@@ -130,17 +130,17 @@ module.exports = {
         WHERE gateway_id_lora = '${condition}'`;
 <span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
     },
-    create_gateway: <span class="fstat-no" title="function not covered" >fu</span>nction (network_id, gateway_name, gateway_id_lora, gateway_description, network_server_id) {
-        let sql = <span class="cstat-no" title="statement not covered" >`INSERT INTO gateway</span>
+    create_gateway: function (network_id, gateway_name, gateway_id_lora, gateway_description, network_server_id) {
+        let sql = `INSERT INTO gateway
         (network_id, gateway_name, gateway_id_lora, gateway_description, network_server_id)
         VALUES ('${network_id}', '${gateway_name}', '${gateway_id_lora}', '${gateway_description}', '${network_server_id}')`;
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     },
-    update_gateway_all_parameters: <span class="fstat-no" title="function not covered" >fu</span>nction (data, gateway_id) {
-        let sql = <span class="cstat-no" title="statement not covered" >`UPDATE gateway</span>
+    update_gateway_all_parameters: function (data, gateway_id) {
+        let sql = `UPDATE gateway
         SET gateway_name = '${data.gateway_name}', gateway_description= '${data.gateway_description}', network_server_id= ${data.network_server_id}
         WHERE gateway_id = '${gateway_id}' AND gateway_deleted = 0`; //the AND is not really needed again
-<span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
+        return db.queryAsync(sql);
     }
 }</pre></td></tr>
 </table></pre>
@@ -148,7 +148,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jan 08 2019 21:00:55 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 00:08:59 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

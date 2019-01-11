@@ -173,11 +173,11 @@ module.exports = ((app) => {
     //Gateway (Read from database)
     app.get("/gateways/database", authenticate, grant_access, gateways.get_gateways_database);
     
+    //Gateway (Read one)
+    app.get("/gateways/:gateway_id", authenticate, grant_access, gateways.get_one);
+
     //Gateways (Read)
     app.get("/gateways", authenticate, grant_access, gateways.get);
-
-    //Gateway (Read one)
-    app.get("/gateway/:gateway_id", authenticate, grant_access, gateways.get_one);
 
     //Gateways (Create)
     app.post("/gateways", authenticate, grant_access, gateway_policy.create, gateways.create);

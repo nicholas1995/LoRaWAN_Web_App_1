@@ -80,7 +80,7 @@ describe('NETWORK API', function () {
         }
     }));
 
-         it("Should create a network", integration({
+/*      it("Should create a network", integration({
             //--Unauthorized test.... no token sent in request
             app,
             req: {
@@ -137,7 +137,7 @@ describe('NETWORK API', function () {
             res: {
                 status: 200
             }
-        })); 
+        }));  */
 
 });
 
@@ -204,7 +204,7 @@ describe('SUB-NETWORK API', function () {
             status: 200
         }
     }));
-    it("Should create a Sub-Netowrk ", integration({
+/*     it("Should create a Sub-Netowrk ", integration({
         //--should create a sub-network
         app,
         req: {
@@ -266,7 +266,7 @@ describe('SUB-NETWORK API', function () {
         res: {
             status: 200
         }
-    }));
+    })); */
 });
 
 //-----------------------------------------------------VESSELS------------------------------------------------------------
@@ -312,21 +312,139 @@ describe('DEVICE API', function () {
 //-----------------------------------------------------GATEWAYS-----------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 describe('GATEWAY API', function () {
-    /*     it("Should send Unauthorized(No token)", integration({
-            //--Unauthorized test.... no token sent in request
-            app,
-            req: {
-                method: "GET",
-                url: "/users",
-                headers: {
-                    Authorization:
+    it("Should return the specified gateways", integration({
+        app,
+        req: {
+          method: "GET",
+          url: "/gateways/2222222222222222",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+          }
+        },
+        res: {
+          status: 200
+        }
+      })); 
+    it("Should return the gateways", integration({
+        app,
+        req: {
+          method: "GET",
+          url: "/gateways",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+          }
+        },
+        res: {
+          status: 200
+        }
+      })); 
+    it("Should return the gateways from the database", integration({
+        app,
+        req: {
+            method: "GET",
+            url: "/gateways/database",
+            headers: {
+                Authorization:
                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-                }
-            },
-            res: {
-                status: 401
             }
-        })); */
+        },
+        res: {
+            status: 200
+        }
+    })); 
+    it("Should return the gateways with the data for the map", integration({
+        app,
+        req: {
+            method: "GET",
+            url: "/gateways/map",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    })); 
+    it("Should create the gateway", integration({
+        app,
+        req: {
+            method: "POST",
+            url: "/gateways",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }, data: {
+                gateway: {
+                    gateway_name: "Test",
+                    gateway_id_lora: "7777777777777777",
+                    gateway_description: "Test gateway",
+                    network_id: 286,
+                    network_server_id: 8,
+                    gateway_profile_id: "55849de0-eb07-43cf-bbdf-fc8aa579365c",
+                    gateway_accuracy: '2',
+                    gateway_altitude: "0",
+                    gateway_latitude: "5",
+                    gateway_longitude: "4",
+                    gateway_location_source: "UNKNOWN",
+                    discovery_enabled: false,
+                    fine_time_stamp_key: "45364364356345634563456454444444",
+                    fpga_id: "4363564564564564"
+                }
+            }
+        },
+        res: {
+            status: 201
+        }
+    })); 
+    it("Should update the specified gateway", integration({
+        app,
+        req: {
+            method: "PUT",
+            url: "/gateways/27",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }, data: {
+                gateway: {
+                    gateway_name: "Test",
+                    gateway_id: 27,
+                    gateway_id_lora: "7777777777777777",
+                    gateway_description: "Test gateway",
+                    network_id: 286,
+                    network_server_id: 8,
+                    gateway_profile_id: "55849de0-eb07-43cf-bbdf-fc8aa579365c",
+                    gateway_accuracy: '2',
+                    gateway_altitude: "0",
+                    gateway_latitude: "5",
+                    gateway_longitude: "4",
+                    gateway_location_source: "UNKNOWN",
+                    discovery_enabled: false,
+                    fine_time_stamp_key: "45364364356345634563456454444444",
+                    fpga_id: "4363564564564564"
+                }
+            }
+        },
+        res: {
+            status: 201
+        }
+    })); 
+    it("Should delete the specified gateway", integration({
+        app,
+        req: {
+          method: "DELETE",
+          url: "/gateways/7777777777777777",
+          headers: {
+            Authorization:
+              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+          }
+        },
+        res: {
+          status: 200
+        }
+      }));  
 });
 //-----------------------------------------------------NETWORK SERVERS----------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
@@ -379,7 +497,7 @@ describe('SERVICE PROFILE API', function () {
             status: 200
         }
     })); 
-    it("Should create the service profiles", integration({
+/*     it("Should create the service profiles", integration({
         app,
         req: {
             method: "POST",
@@ -472,7 +590,7 @@ describe('SERVICE PROFILE API', function () {
         res: {
             status: 200
         }
-    })); 
+    }));  */
 });
 
 //-----------------------------------------------------DEVICE PROFILES----------------------------------------------------

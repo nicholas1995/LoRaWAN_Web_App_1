@@ -410,7 +410,7 @@ export default {
         //-------------------------Start----------------------
         //Get Gateways
         await AuthenticationService.get_gateways().then(result => {
-          this.gateways = JSON.parse(result.data.gateways_lora); 
+          this.gateways = result.data.gateways_lora; 
           this.$emit('message_display',{message:result.data.message, type:result.data.type})   
         }).catch(err => {
           //Error requesting the gateways from the server
@@ -424,7 +424,7 @@ export default {
         }
         let gateway;
         await AuthenticationService.get_gateway(this.gateway_update.gateway_id_lora).then(result => {
-              gateway = JSON.parse(result.data.gateway);
+              gateway = result.data.gateway;
               this.gateway_name = gateway.gateway_name;
               this.description = gateway.gateway_description;
               this.network_id = gateway.network_id,
@@ -514,7 +514,7 @@ export default {
             this.gateway_profile_id = this.gateway_profiles[i].gateway_profile_id_lora;
             break;
           }
-        }
+        }console.log('herereeeee')
          AuthenticationService.update_gateways({
           gateway_name: this.gateway_name,
           gateway_id: this.gateway_update.gateway_id,

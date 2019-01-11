@@ -95,7 +95,7 @@ export default {
         this.access =1;
         //-------------------------Start----------------------
         AuthenticationService.get_gateways().then(result => {
-          this.gateways = JSON.parse(result.data.gateways_lora); 
+          this.gateways = result.data.gateways_lora; 
           this.$emit('message_display',{message:result.data.message, type:result.data.type})   
         }).catch(err => {
           //Error requesting the gateways from the server
@@ -125,7 +125,7 @@ export default {
     delete_gateways(gateway){
       if(confirm('Are you sure you want to delete this Gateway?') == true){
         AuthenticationService.delete_gateways(gateway.gateway_id_lora).then(result => {
-          this.gateways  = JSON.parse(result.data.gateways_lora);
+          this.gateways  = result.data.gateways_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error deleting gateways from the lora server

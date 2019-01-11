@@ -214,7 +214,7 @@ export default {
     },
     get_gateway(gateway_id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/gateway/${gateway_id}`);
+        return Api.get(`/gateways/${gateway_id}`);
     },
     get_gateways_database() {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
@@ -224,15 +224,14 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/gateways/map`);
     },
-    create_gateways(data){
-        data = JSON.stringify(data);
+    create_gateways(gateway){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.post('/gateways', { data });
+        return Api.post("/gateways", { gateway });
     }, 
-    update_gateways(data, gateway_id) {
-        data = JSON.stringify(data);
+    update_gateways(gateway, gateway_id) {
+        console.log(gateway)
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.put(`/gateways/${gateway_id}`, { data });
+        return Api.put(`/gateways/${gateway_id}`, { gateway });
     },
     delete_gateways(gateway_id) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

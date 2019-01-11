@@ -475,7 +475,7 @@ export default {
         //-------------------------Start----------------------
         //Get Gateways
         AuthenticationService.get_gateways().then(result => {
-          this.gateways = JSON.parse(result.data.gateways_lora); 
+          this.gateways = result.data.gateways_lora; 
           this.$emit('message_display',{message:result.data.message, type:result.data.type})   
         }).catch(err => {
           //Error requesting the gateways from the server

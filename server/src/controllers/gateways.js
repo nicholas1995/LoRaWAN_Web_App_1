@@ -130,27 +130,23 @@ async function get_gateways() {
         let request_params = gateway_api_request_data(null, 0);
         let gateways_lora = await lora_app_server.get_gateways(request_params)
             .catch(err => {
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             });
         gateways_lora = convert_names_gateways(gateways_lora.data.result);
         let gateways_db = await db_gateway.get_gateway()
             .catch(err => {
                 //Error getting gateways from database
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             });
         await compare.compare_gateways(gateways_lora, gateways_db)
             .catch(err => {
                 //Error comparing
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             })
         gateways_db = await db_gateway.get_gateway()
             .catch(err => {
                 //Error getting gateways from database
-                let error = new VError("%s", err.message);
-                throw error;
+                throw new VError("%s", err.message);
             });
         gateways_lora = parse(gateways_lora, gateways_db);
         return gateways_lora;
@@ -169,8 +165,7 @@ function parse(gateway_lora, gateways_db) {
         }
         return gateway_lora;
     } catch (err) {
-        let error = new VError("%s", err.message);
-        throw error;
+        throw new VError("%s", err.message);
     }
 }
  
@@ -185,7 +180,6 @@ module.exports = {
                 error_location = 0;
                 throw error.error_message("get gateways : lora app server", err.message);
             });
-            gateways_lora = JSON.stringify(gateways_lora);
             res.status(200).send({ gateways_lora: gateways_lora, message: 'Gateways fetched', type: 'success' });
         }catch(err){
             console.log(err);
@@ -205,7 +199,6 @@ module.exports = {
                 });
             gateway = gateway.data.gateway;
             gateway = convert_name_gateway_single(gateway);
-            gateway = JSON.stringify(gateway);
             res.status(200).send({ gateway });
         } catch (err) {
             console.log(err);
@@ -232,7 +225,6 @@ module.exports = {
                 gateway = convert_name_gateway_single(gateway);
                 gateways[i] = gateway;
             }
-            gateways = JSON.stringify(gateways);
             res.status(200).send({ gateways : gateways });
         }catch(err){
             console.log(err);
@@ -244,10 +236,8 @@ module.exports = {
             let gateways = await db_gateway.get_gateway_all()
                 .catch(err => {
                     //Error getting gateways from database
-                    let error = new VError("%s", err.message);
-                    throw error;
+                    throw new VError("%s", err.message);
                 });
-            gateways = JSON.stringify(gateways);
             res.status(200).send({ gateways: gateways });
         } catch (err) {
             console.log(err);
@@ -257,7 +247,7 @@ module.exports = {
     create: async function(req, res){
         let error_location = null; //0=lora 1=lora
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.gateway;
             let request_body = gateway_api_request_data(data, 1);
             result = await lora_app_server.create_gateways(request_body)
             .catch(err => {
@@ -286,7 +276,7 @@ module.exports = {
     update: async function(req, res){
         let error_location = null; //0=lora 1=lora
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.gateway;
             let request_body = gateway_api_request_data(data, 1);
             await lora_app_server.update_gateways(request_body, data.gateway_id_lora)
                 .catch(err => {
@@ -325,17 +315,20 @@ module.exports = {
             let request_params = gateway_api_request_data(null, 0);
             gateways_lora = await lora_app_server.get_gateways(request_params)
                 .catch(err => {
-                    let error = new VError("%s", err.message);
-                    throw error;
+                    throw new VError("%s", err.message);
                 });
             gateways_lora = convert_names_gateways(gateways_lora.data.result);
-            
             await db_gateway.update_gateway('gateway_deleted', 1, req.params.gateway_id_lora)
                 .catch(err => {
                     //Error deleting gateway from database
                     throw error.error_message("delete gateways : database", err.message);
                 })
-            gateways_lora = JSON.stringify(gateways_lora); 
+            gateways_db = await db_gateway.get_gateway()
+                .catch(err => {
+                    //Error getting gateways from database
+                    throw new VError("%s", err.message);
+                });
+            gateways_lora = parse(gateways_lora, gateways_db);
             res.status(200).send({ gateways_lora: gateways_lora, message: 'Gateway deleted', type: 'success' });
         }catch(err){
             console.log(err);

@@ -32,7 +32,7 @@ export default {
         //Error getting gateway information from server
         console.log(err);
       })
-    this.gateways = JSON.parse(this.gateways.data.gateways);
+    this.gateways = this.gateways.data.gateways;
 
     this.bounds = new google.maps.LatLngBounds();
     const element = document.getElementById(this.mapName)

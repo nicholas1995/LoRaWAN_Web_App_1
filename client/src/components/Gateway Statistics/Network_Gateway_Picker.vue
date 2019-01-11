@@ -87,7 +87,7 @@ export default {
       this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
     })
     AuthenticationService.get_gateways_database().then(result => {
-      this.gateways = JSON.parse(result.data.gateways);
+      this.gateways = result.data.gateways;
     }).catch(err => {
       //Error getting networks from server
       this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
