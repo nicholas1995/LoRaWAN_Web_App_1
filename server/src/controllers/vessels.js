@@ -58,13 +58,11 @@ module.exports = {
                 if (req.params.sub_network_id) {
                     if (req.params.deleted) {
                         //Sub-Network and Deleted specified
-                        console.log("both - vessels controlla");
                         vessels_db = await DB.get_vessels(null, null, req.params.deleted, req.params.sub_network_id)
                             .catch(err => {
                                 throw err;
                             });
                     } else { 
-                        console.log('subnet - vessels controlla')
                         //Sub network specified
                         vessels_db = await DB.get_vessels(null, null, null, req.params.sub_network_id)
                             .catch(err => {
@@ -73,7 +71,6 @@ module.exports = {
                     }
                 } else if (req.params.deleted) {
                     //Deleted Specified
-                    console.log("deleted - vessels controlla");
                     vessels_db = await DB.get_vessels(null, null, req.params.deleted, null)
                         .catch(err => {
                             throw err;
@@ -81,7 +78,6 @@ module.exports = {
                 }
                 else {
                     //None Specified
-                    console.log("none - vessels controlla");
                     vessels_db = await DB.get_vessels(null, null, null, null)
                         .catch(err => {
                             throw err;
@@ -95,7 +91,6 @@ module.exports = {
                         throw err;
                     });
             }
-            vessels_db = JSON.stringify(vessels_db);
             res.status(200).send({ vessels_db: vessels_db, message: 'Vessels fetched', type: 'success'});
         }catch(err){
             console.log(err);
@@ -108,39 +103,29 @@ module.exports = {
     },
     get_all: async function(req, res){
         try{
-            let sub_networks = (req.params.sub_networks);
-            console.log('hereeeeee')
-             let vessels = await DB.get_vessels_specified_sub_network(sub_networks)
-                .catch(err => {
-                    //Error fetching sub_networks under specified network 
-                    throw error.error_message("get vessels : database", err.message);
-                })
-                console.log('vessels')
-            vessels = JSON.stringify(vessels);
-            res.status(200).send({ vessels: vessels, message: 'Vessels fetched', type: 'success' }); 
+            res.status(501).send({ message: 'Not Implemented: Vessels get all', type: 'error' }); 
         }catch(err){
-            console.log(err);
-            res.status(500).send({ message: "Failed to fetch vessels", type: 'error' });
+            console.log(err)
         }
     },
     create: async function(req, res){
         let error_location = null; 
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.vessel;
             await DB.create_vessels(data.vessel_name, data.vessel_unique_vessel_identifier, data.vessel_international_radio_call_sign, data.vessel_type, data.sub_network_id)
             .catch(err => {
                 //error creating vessel on db
                 error_location = 0;
                 throw error_message("create vessel : database",err.message);
             });
-            console.log("Vessel created");
+            //console.log("Vessel created");
             res.status(201).send({ message: 'Vessel created', type: 'success' });
         }catch(err){
             //e_l =0 (problem creating vessel)
             //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
-                res.status(201).send({ message: "Error creating vessel.", type: 'info' })
+                res.status(500).send({ message: "Error creating vessel.", type: 'info' })
             }else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -149,14 +134,14 @@ module.exports = {
     update: async function(req, res){
         let error_location = null; 
         try{
-            let data = JSON.parse(req.body.data);
+            let data = req.body.vessel;
             await DB.update_vessels_all_parameters(data, req.params.vessel_id)
                 .catch(err => {
                     //error updating vessel on db
                     error_location = 0;
                     throw error_message("update vessel : database", err.message);
                 });
-            console.log("Vessel Updated. Vessel ID: " + req.params.vessel_id);
+            //console.log("Vessel Updated. Vessel ID: " + req.params.vessel_id);
             res.status(201).send({ message: 'Vessel updated', type: 'success' });
         }catch(err){
             //e_l =0 (problem updating vessel)
@@ -184,22 +169,21 @@ module.exports = {
                     //Error adding devices to default vessel
                     throw error_message("reassign device", err.message);
                 });
-            console.log("Vessel deleted parameter set high in database. Vessel ID: " + req.params.vessel_id);
+            //console.log("Vessel deleted parameter set high in database. Vessel ID: " + req.params.vessel_id);
             await DB_VESSEL_DEVICE.delete_given_vessel_id(req.params.vessel_id)
                 .catch(err => {
                     //Error deleting relationship between device and vessel from database
                     error_location = 1;
                     throw error.error_message("delete vessel : delete device vessel relationship: database", err.message);
                 });
-            console.log("Device vessel relationship deleted parameter set high in database. Vessel ID: " + req.params.vessel_id);
+            //console.log("Device vessel relationship deleted parameter set high in database. Vessel ID: " + req.params.vessel_id);
             vessels_db = await DB.get_vessels_not_deleted()
                 .catch(err => {
                     //error getting vessel on db
                     error_location = 2;
                     throw error_message("fetch vessel : database", err.message);
                 });
-            vessels_db = JSON.stringify(vessels_db);
-            res.status(201).send({ vessels_db: vessels_db, message: 'Vessel deleted', type: 'success' });
+            res.status(200).send({ vessels_db: vessels_db, message: 'Vessel deleted', type: 'success' });
         }catch(err){
             //e_l =0 (problem deleteing vessel)
             //e_l =1 (vessel deleted.. failed to delete vessel device relationship)

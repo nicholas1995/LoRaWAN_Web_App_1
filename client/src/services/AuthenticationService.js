@@ -144,15 +144,13 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/vessels/all/${sub_network_id}`);
     },
-    create_vessels(data) {
-        data = JSON.stringify(data);
+    create_vessels(vessel) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post("/vessels", { data });
+        return Api.post("/vessels", { vessel });
     },
-    update_vessels(data, vessel_id) {
-        data = JSON.stringify(data);
+    update_vessels(vessel, vessel_id) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.put(`/vessels/${vessel_id}`, { data });
+        return Api.put(`/vessels/${vessel_id}`, { vessel });
     },
     delete_vessels(vessel_id) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

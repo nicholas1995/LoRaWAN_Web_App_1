@@ -272,21 +272,116 @@ describe('SUB-NETWORK API', function () {
 //-----------------------------------------------------VESSELS------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 describe('VESSEL API', function () {
-    /*     it("Should send Unauthorized(No token)", integration({
-            //--Unauthorized test.... no token sent in request
-            app,
-            req: {
-                method: "GET",
-                url: "/users",
-                headers: {
-                    Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-                }
-            },
-            res: {
-                status: 401
+    it("Should return all of the vessels", integration({
+        app,
+        req: {
+            method: "GET",
+            url: "/users",
+            headers: {
+                Authorization:
+                "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
             }
-        })); */
+        },
+        res: {
+            status: 200
+        }
+    })); 
+    it("Should return all of the currently implemented vessels", integration({
+        app,
+        req: {
+            method: "GET",
+            url: "/vessels/deleted/0",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    })); 
+    it("Should return all of the vessels under the specified sub-network", integration({
+        app,
+        req: {
+            method: "GET",
+            url: "/vessels/sub_network/121",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    })); 
+    it("Should return all of the currently implemented vessels under the specified sub-network", integration({
+        app,
+        req: {
+            method: "GET",
+            url: "/vessels/sub_network/121/deleted/0",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    })); 
+/*     it("Should create the vessel", integration({
+        app,
+        req: {
+            method: "POST",
+            url: "/vessels",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }, data: {
+                vessel: {
+                    vessel_name: "Test",
+                    vessel_unique_vessel_identifier: "345345",
+                    vessel_international_radio_call_sign: "3245234",
+                    vessel_type: "Fishing",
+                    sub_network_id: "121",
+                }
+            }
+        },
+        res: {
+            status: 201
+        }
+    })); 
+    it("Should update the specified vessel", integration({
+        app,
+        req: {
+            method: "PUT",
+            url: "/vessels/44",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }, data: {
+                vessel: {
+                    vessel_name: "Test",
+                }
+            }
+        },
+        res: {
+            status: 201
+        }
+    })); 
+    it("Should delete the specified vessel", integration({
+        app,
+        req: {
+            method: "DELETE",
+            url: "/vessels/47",
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    }));  */
 });
 
 //-----------------------------------------------------DEVICES------------------------------------------------------------

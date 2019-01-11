@@ -189,7 +189,7 @@ mixins: [validationMixin],
         //---------------------------Start------------------------
         //Get Vessels
         AuthenticationService.get_vessels(null, 0).then(result => {
-          this.vessels = JSON.parse(result.data.vessels_db);
+          this.vessels = result.data.vessels_db;
           this.$emit('message_display',{message:result.data.message, type:result.data.type})   
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      

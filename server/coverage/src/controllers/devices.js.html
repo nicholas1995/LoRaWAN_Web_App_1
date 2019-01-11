@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">34.7% </span>
+        <span class="strong">35.85% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>93/268</span>
+        <span class='fraction'>95/265</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">18.33% </span>
+        <span class="strong">20.31% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>11/60</span>
+        <span class='fraction'>13/64</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">26.53% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>13/49</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">34.7% </span>
+        <span class="strong">35.85% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>93/268</span>
+        <span class='fraction'>95/265</span>
       </div>
     </div>
     <p class="quiet">
@@ -616,7 +616,9 @@
 <a name='L568'></a><a href='#L568'>568</a>
 <a name='L569'></a><a href='#L569'>569</a>
 <a name='L570'></a><a href='#L570'>570</a>
-<a name='L571'></a><a href='#L571'>571</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L571'></a><a href='#L571'>571</a>
+<a name='L572'></a><a href='#L572'>572</a>
+<a name='L573'></a><a href='#L573'>573</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -909,8 +911,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1141,17 +1141,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1164,9 +1160,13 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1176,6 +1176,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1476,10 +1480,8 @@ module.exports = {
 <span class="cstat-no" title="statement not covered" >            if (error_location == 0) {</span>
 <span class="cstat-no" title="statement not covered" >                res.status(500).send({ message: "Failed to get devices", type: 'error' });</span>
             } else <span class="cstat-no" title="statement not covered" >if (error_location == 1) {</span>
-<span class="cstat-no" title="statement not covered" >                devices_lora = JSON.stringify(devices_lora);</span>
 <span class="cstat-no" title="statement not covered" >                res.status(200).send({ devices_lora: devices_lora, message: "Error updating devices in database", type: 'info' })</span>
             } else <span class="cstat-no" title="statement not covered" >if (error_location == 2) {</span>
-<span class="cstat-no" title="statement not covered" >                devices_lora = JSON.stringify(devices_lora);</span>
 <span class="cstat-no" title="statement not covered" >                res.status(200).send({ devices_lora: devices_lora, message: "Error pasing vessel ID to deivce data", type: 'info' })</span>
             }  else {
 <span class="cstat-no" title="statement not covered" >                res.status(500).send({ message: 'Error', type: 'error' })</span>
@@ -1702,19 +1704,14 @@ module.exports = {
 <span class="cstat-no" title="statement not covered" >            if (error_location == 0) {</span>
 <span class="cstat-no" title="statement not covered" >                res.status(500).send({ message: "Failed to delete device", type: 'error' });</span>
             } else <span class="cstat-no" title="statement not covered" >if (error_location == 1) {</span>
-<span class="cstat-no" title="statement not covered" >                devices_lora = JSON.stringify([]);</span>
 <span class="cstat-no" title="statement not covered" >                res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Failed to fetch devices", type: 'info' })</span>
             } else <span class="cstat-no" title="statement not covered" >if (error_location == 2) {</span>
-<span class="cstat-no" title="statement not covered" >                devices_lora = JSON.stringify(devices_lora);</span>
 <span class="cstat-no" title="statement not covered" >                res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error deleting device in database", type: 'info' })</span>
             } else <span class="cstat-no" title="statement not covered" >if (error_location == 3) {</span>
-<span class="cstat-no" title="statement not covered" >                devices_lora = JSON.stringify(devices_lora);</span>
 <span class="cstat-no" title="statement not covered" >                res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error deleting device vessel relationship in database", type: 'info' })</span>
             } else <span class="cstat-no" title="statement not covered" >if (error_location == 4) {</span>
-<span class="cstat-no" title="statement not covered" >                devices_lora = JSON.stringify(devices_lora);</span>
 <span class="cstat-no" title="statement not covered" >                res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error parsing vessel ID to device data", type: 'info' })</span>
             } else <span class="cstat-no" title="statement not covered" >if (error_location == 5) {</span>
-<span class="cstat-no" title="statement not covered" >                devices_lora = JSON.stringify(devices_lora);</span>
 <span class="cstat-no" title="statement not covered" >                res.status(200).send({ devices_lora: devices_lora, message: "Device deleted. Error parsing vessel ID to device data", type: 'info' })</span>
             }  else {
 <span class="cstat-no" title="statement not covered" >                res.status(500).send({ message: 'Error', type: 'error' })</span>
@@ -1723,13 +1720,17 @@ module.exports = {
     },
     get_devices_activation: async function (req, res){
         try{
-            let device_activation = await get_device_activation(req.params.device_eui)
-            .catch(
-<span class="fstat-no" title="function not covered" >              er</span>r =&gt; {
-                //Error getting device activation from lora app server
-<span class="cstat-no" title="statement not covered" >                    throw error.error_message("get device activation : lora app server", err.message);</span>
-              });
-            res.status(200).send({ device_activation: device_activation, message: 'Device Activation fetched.', type: 'success' });
+            <span class="missing-if-branch" title="else path not taken" >E</span>if(req.user.user_class == "IoT Network Admin"){
+                let device_activation = await get_device_activation(req.params.device_eui)
+                    .catch(
+<span class="fstat-no" title="function not covered" >                        er</span>r =&gt; {
+                            //Error getting device activation from lora app server
+<span class="cstat-no" title="statement not covered" >                            throw error.error_message("get device activation : lora app server", err.message);</span>
+                        });
+                res.status(200).send({ device_activation: device_activation, message: 'Device Activation fetched.', type: 'success' });
+            }else{
+<span class="cstat-no" title="statement not covered" >                res.status(403).send({ error: "Forbidden" });</span>
+            }
         }catch(err){
 <span class="cstat-no" title="statement not covered" >            console.log(err);</span>
         }
@@ -1738,14 +1739,19 @@ module.exports = {
     },
     create_devices_activation: async function (req, res) {
         try{
-            let data = req.body.device_activation;
-            let request_data = device_api_request_data(data, 3);
-            await lora_app_server.create_devices_activation(request_data, req.params.device_eui)
-                .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
-                    //Error creating device activation on lora app server
-<span class="cstat-no" title="statement not covered" >                    throw error.error_message("create device activation : lora app server", err.message);</span>
-                })
-            res.status(200).send({message: 'Device activated.', type: 'success' });
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (req.user.user_class == "IoT Network Admin") {
+                let data = req.body.device_activation;
+                let request_data = device_api_request_data(data, 3);
+                await lora_app_server.create_devices_activation(request_data, req.params.device_eui)
+                    .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
+                        //Error creating device activation on lora app server
+<span class="cstat-no" title="statement not covered" >                        throw error.error_message("create device activation : lora app server", err.message);</span>
+                    })
+                res.status(200).send({ message: 'Device activated.', type: 'success' });
+            } else {
+<span class="cstat-no" title="statement not covered" >                res.status(403).send({ error: "Forbidden" });</span>
+            }
+&nbsp;
         }catch(err){
 <span class="cstat-no" title="statement not covered" >            res.status(200).send({message: "Device activation failed.", type: 'error' })</span>
         }
@@ -1762,7 +1768,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 01:16:13 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 12:31:00 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

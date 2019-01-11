@@ -91,7 +91,7 @@ export default {
         this.access =1;
         //---------------------------Start------------------------
         AuthenticationService.get_vessels(null, 0).then(result => {
-          this.vessels = JSON.parse(result.data.vessels_db);
+          this.vessels = result.data.vessels_db;
           this.$emit('message_display',{message:result.data.message, type:result.data.type})   
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
@@ -129,7 +129,7 @@ export default {
     delete_vessel(vessel){
       if(confirm('Are you sure you want to delete this vessel?') == true){
         AuthenticationService.delete_vessels(vessel.vessel_id).then(result => {
-          this.vessels = JSON.parse(result.data.vessels_db);
+          this.vessels = result.data.vessels_db;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a vessel on the lora app server

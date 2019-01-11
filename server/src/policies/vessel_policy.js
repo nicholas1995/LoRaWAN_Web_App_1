@@ -3,7 +3,7 @@ const error_logger = require("../controllers/error_logs");
 
 module.exports = {
     create (req, res, next){
-        let data = JSON.parse(req.body.data);
+        let data = req.body.vessel;
         const schema = { 
             vessel_name: Joi.string().required().max(80),
             vessel_unique_vessel_identifier: Joi.string().required().max(80),
@@ -50,7 +50,7 @@ module.exports = {
         }
     }, 
     update (req, res, next){
-        let data = JSON.parse(req.body.data);
+        let data = req.body.vessel;
         const schema = {
             vessel_name: Joi.string().required().max(80),
         };

@@ -242,7 +242,7 @@ export default {
         //Create the id name pairs for these vessels
         //Look for the vessel that that device is currently assigned to if any and assign the id name pair to the form
         await AuthenticationService.get_vessels(this.device_update.sub_network_id, 0).then(result =>{
-            let vessels = JSON.parse(result.data.vessels_db);
+            let vessels = result.data.vessels_db;
             for(let i =0; i< vessels.length; i++){
               this.vessel_names.push(vessels[i].vessel_id +":"+vessels[i].vessel_name);
               if(vessels[i].vessel_id == this.device_update.vessel_id){

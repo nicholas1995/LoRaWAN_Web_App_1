@@ -202,7 +202,7 @@ export default {
             //Error fetching sub_networks specified by network from server
             console.log(err)
           })
-        this.vessels = JSON.parse(this.vessels.data.vessels_db);
+        this.vessels = this.vessels.data.vessels_db;
         for(let j = 0; j < this.vessels.length; j++){
           this.vessel_names.push(this.vessels[j].vessel_id +":"+this.vessels[j].vessel_name);
         }

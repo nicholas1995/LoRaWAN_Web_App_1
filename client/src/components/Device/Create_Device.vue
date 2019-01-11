@@ -374,7 +374,7 @@ export default {
         })
         //Get Vessels
         AuthenticationService.get_vessels(null, 0).then(result => { //Fetch Vessels
-          this.vessels = JSON.parse(result.data.vessels_db); 
+          this.vessels = result.data.vessels_db; 
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
         })

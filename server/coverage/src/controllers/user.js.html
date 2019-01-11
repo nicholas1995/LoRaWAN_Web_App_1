@@ -20,24 +20,24 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.41% </span>
+        <span class="strong">10.9% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>10/156</span>
+        <span class='fraction'>17/156</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">4.17% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/24</span>
+        <span class='fraction'>1/24</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">2.08% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/48</span>
+        <span class='fraction'>1/48</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.41% </span>
+        <span class="strong">10.9% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>10/156</span>
+        <span class='fraction'>17/156</span>
       </div>
     </div>
     <p class="quiet">
@@ -482,29 +482,29 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -857,16 +857,16 @@ function <span class="fstat-no" title="function not covered" >compare(</span>dat
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 module.exports = {
   //Get Users
-  get: <span class="fstat-no" title="function not covered" >as</span>ync function (req, res) {
+  get: async function (req, res) {
     let users;
-<span class="cstat-no" title="statement not covered" >    try {</span>
-<span class="cstat-no" title="statement not covered" >      if(req.access == 'self'){</span>
-<span class="cstat-no" title="statement not covered" >        users = await user_db.get_profile(req.user.email).catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {</span>
+    try {
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(req.access == 'self'){
+        users = await user_db.get_profile(req.user.email).catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
           //Error fetching user profile information from database
 <span class="cstat-no" title="statement not covered" >          throw err;</span>
         });
-<span class="cstat-no" title="statement not covered" >        users = users[0];</span>
-<span class="cstat-no" title="statement not covered" >        users = {</span>
+        users = users[0];
+        users = {
           first_name: users.first_name,
           last_name: users.last_name,
           address: users.address,
@@ -880,8 +880,8 @@ module.exports = {
 <span class="cstat-no" title="statement not covered" >            throw err;</span>
           })
       }
-<span class="cstat-no" title="statement not covered" >      users = JSON.stringify(users);</span>
-<span class="cstat-no" title="statement not covered" >      res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });</span>
+      users = JSON.stringify(users);
+      res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });
     } catch (err) {
 <span class="cstat-no" title="statement not covered" >      res.status(500).send({ message: "Failed to get users", type: 'error' });</span>
     }
@@ -1183,7 +1183,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 01:16:13 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 12:31:00 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>
