@@ -12,46 +12,32 @@ function gateway_statistics_headers_database_to_table_LUT(gateway_statistics_tab
     switch (gateway_statistics_table_headers_database) {
       case "gateway_statistics_id":
         return "Gateway Statistics ID";
-        break;
         case "gateway_id":
         return "Gateway ID";
-        break;
       case "gateway_id_lora":
         return "Gateway ID LoRa";
-        break;
       case "gateway_ip":
         return "Gateway IP Address";
-        break;
       case "time_stamp":
         return "Time Stamp";
-        break;
       case "gateway_latitude":
         return "Gateway Latitude";
-        break;
       case "gateway_longitude":
         return "Gateway Longitude";
-        break;
       case "gateway_altitude":
         return "Gateway Altitude";
-        break;
       case "location_source":
         return "Location Source";
-        break;
       case "configeration_version":
         return "Configeration Version";
-        break;
       case "rx_packets_received":
         return "Rx Packets Received";
-        break;
       case "rx_packets_received_ok":
         return "Rx Packets Received Ok";
-        break;
       case "tx_packets_received":
         return "Tx Packets Received";
-        break;
       case "tx_packets_emitted":
         return "Tx Packets Emitted";
-        break;
     default:
         return "Null"
     }
@@ -60,46 +46,32 @@ function gateway_statistics_headers_table_to_database_LUT(gateway_statistics_tab
     switch (gateway_statistics_table_headers_table) {
         case "Gateway Statistics ID":
             return "gateway_statistics_id";
-        break;
         case "Gateway ID":
             return "gateway_id";
-        break;
         case "Gateway ID LoRa":
             return "gateway_id_lora";
-        break;
         case "Gateway IP Address":
             return "gateway_ip";
-        break;
         case "Time Stamp":
             return "time_stamp";
-        break;
         case "Gateway Latitude":
             return " gateway_latitude";
-        break;
         case "Gateway Longitude":
             return "gateway_longitude";
-        break;
         case "Gateway Altitude":
             return "gateway_altitude";
-        break;
         case "Location Source":
             return "location_source";
-        break;
         case "Configeration Version":
             return "configeration_version";
-        break;
         case "Rx Packets Received":
             return "rx_packets_received";
-        break;
         case "Rx Packets Received Ok":
             return "rx_packets_received_ok";
-        break;
         case "Tx Packets Received":
             return "tx_packets_received";
-        break;
         case "Tx Packets Emitted":
             return "tx_packets_emitted";
-        break;
       default:
         return "Null"
     }
@@ -141,8 +113,6 @@ module.exports = {
                     throw err;
                 })
             let headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
-            headers = JSON.stringify(headers);
-            gateway_statistics = JSON.stringify(gateway_statistics);
             res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
         }catch(err){
             console.log(err)
@@ -150,7 +120,7 @@ module.exports = {
     },
     get_gateway_statistics_filtered: async function(req, res){
         try{
-            let parameters = JSON.parse(req.params.parameters);
+            let parameters = req.params.parameters;
             let columns = req.params.columns;
             columns = convert_gateway_statistics_headers_table_to_database(columns);
             let gateway_statistics = await db_gateway_statistics.get_gateway_statistics_filtered(parameters, columns)
@@ -162,8 +132,6 @@ module.exports = {
             if(gateway_statistics.length > 0){
                 headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
             }
-            headers = JSON.stringify(headers);
-            gateway_statistics = JSON.stringify(gateway_statistics);
             res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
         }catch(err){
             console.log(err)

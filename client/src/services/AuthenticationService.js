@@ -229,7 +229,6 @@ export default {
         return Api.post("/gateways", { gateway });
     }, 
     update_gateways(gateway, gateway_id) {
-        console.log(gateway)
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.put(`/gateways/${gateway_id}`, { gateway });
     },
@@ -244,9 +243,10 @@ export default {
     },
 
     gateway_statistics_filtered(parameters, columns){
-        parameters = JSON.stringify(parameters);
+        console.log(parameters)
+        console.log(columns)
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/gateway_statistics/${parameters}/${columns}`);
+        return Api.get(`/gateway_statistics/parameters/${parameters}/columns/${columns}`);
     },
 
     //Service Profile

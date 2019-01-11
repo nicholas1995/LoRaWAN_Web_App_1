@@ -193,7 +193,7 @@ module.exports = ((app) => {
     app.get("/gateway_statistics/initial", authenticate, grant_access, gateway_statistics.get_gateway_statistics_initial);
 
     //Gateway Statistics (Filtered)
-    app.get("/gateway_statistics/:parameters/:columns", authenticate, grant_access, gateway_statistics.get_gateway_statistics_filtered);
+    app.get("/gateway_statistics/parameters/:parameters/columns/:columns", authenticate, grant_access, gateway_statistics.get_gateway_statistics_filtered);
 
     //----------------------Service Profile----------------------
     //Service Profile (Read One)

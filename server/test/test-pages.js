@@ -368,7 +368,7 @@ describe('GATEWAY API', function () {
             status: 200
         }
     })); 
-    it("Should create the gateway", integration({
+/*     it("Should create the gateway", integration({
         app,
         req: {
             method: "POST",
@@ -444,7 +444,7 @@ describe('GATEWAY API', function () {
         res: {
           status: 200
         }
-      }));  
+      }));   */
 });
 //-----------------------------------------------------NETWORK SERVERS----------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
@@ -735,21 +735,42 @@ describe('DEVICE UPLINK API', function () {
 //-----------------------------------------------------GATEWAY STATS------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 describe('GATEWAY STATS API', function () {
-    /*     it("Should send Unauthorized(No token)", integration({
-            //--Unauthorized test.... no token sent in request
-            app,
-            req: {
-                method: "GET",
-                url: "/users",
-                headers: {
-                    Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-                }
-            },
-            res: {
-                status: 401
+    it("Should return the initial gateway statistics", integration({
+        app,
+        req: {
+        method: "GET",
+        url: "gateway_statistics/initial",
+        headers: {
+            Authorization:
+            "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
             }
-        })); */
+        },
+        res: {
+        status: 200
+        }
+    })); 
+    let parameters = {
+        gateway_id: [11],
+        end_date: "2019-01-09 00:00:00",
+        start_date: "2019-01-01 00:00:00",
+    }
+    parameters = JSON.stringify(parameters);
+    let columns = ["Gateway Statistics ID", "Gateway ID", "Gateway ID LoRa", "Gateway IP Address", "Time Stamp", "Gateway Latitude", "Gateway Longitude",
+        "Gateway Altitude", "Location Source", "Configeration Version", "Rx Packets Received", "Rx Packets Received Ok", "Tx Packets Received", "Tx Packets Emitted"]
+    it("Should return the filtered gateway statistics", integration({
+        app,
+        req: {
+            method: "GET",
+            url: `gateway_statistics/parameters/${parameters}/columns/${columns}`,
+            headers: {
+                Authorization:
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+            }
+        },
+        res: {
+            status: 200
+        }
+    })); 
 });
 
 /*     it("should login correctly", integration({

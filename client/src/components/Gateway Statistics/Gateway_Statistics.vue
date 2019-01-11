@@ -151,13 +151,13 @@ export default {
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             })
-        this.headers = JSON.parse(this.data.data.headers);
+        this.headers = this.data.data.headers;
         for(let i =0; i< this.headers.length; i++){
           this.header_names.push(this.headers[i].text);
           this.value.push(this.headers[i].text);
         }
         this.display = this.headers;
-        this.gateway_statistics = JSON.parse(this.data.data.gateway_statistics);
+        this.gateway_statistics = this.data.data.gateway_statistics;
         this.loading = false;
         }else{
           alert('Please login.');
@@ -261,10 +261,10 @@ export default {
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             }) 
-      this.gateway_statistics = JSON.parse(result.data.gateway_statistics);
+      this.gateway_statistics = result.data.gateway_statistics;
       if(this.gateway_statistics.length > 0 ){ //This is so if no data is returned we do not get an error in the table because we need at least one objec to be able
       //to create the headers of the table. So if no data is returns we leave the table with the previous headers and just display no data
-        this.display = JSON.parse(result.data.headers);
+        this.display = result.data.headers;
       }
       this.filter_parameters = {}; 
       this.loading = false;
