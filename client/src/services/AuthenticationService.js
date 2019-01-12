@@ -175,6 +175,14 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/devices/database/${vessels}`);
     },
+    get_device_data_map_initial(){//Gets all the initial device MAP data 
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/map/initial`);
+    },
+    refresh_device_data_map(device_id){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/map/refresh/${device_id}`);
+    },
     create_devices(device) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.post('/devices', { device });
@@ -217,6 +225,11 @@ export default {
     get_gateways_map(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/gateways/map`);
+    },
+    refresh_gateway_data_map(gateway_id, gateway_id_lora){
+        //we will send both the id's to remove the need to have to do a database call to get the gateway_id and then have to parse
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/gateways/map/refresh/${gateway_id}/${gateway_id_lora}`);
     },
     create_gateways(gateway){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

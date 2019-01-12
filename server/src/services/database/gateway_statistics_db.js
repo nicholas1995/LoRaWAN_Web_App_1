@@ -46,6 +46,16 @@ module.exports = {
             throw err;
         }
     },
+    get_most_recent_specified_gateway: function (gateway_id) {
+        //returns the most recent gateways stat for the specified gateway... to be used for the map..
+        //Called in gateways
+        let sql = `SELECT gateway_statistics.*, DATE_FORMAT(gateway_statistics.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
+            FROM gateway_statistics
+            WHERE gateway_id = "${gateway_id}"
+            ORDER BY gateway_statistics_id DESC
+            LIMIT 1`;
+        return db.queryAsync(sql);
+    },
     create_gateway_statistics: function (gateway_id_lora, gateway_ip, time_stamp, gateway_latitude, gateway_longitude, 
         gateway_altitude, location_source, configeration_version, rx_packets_received, rx_packets_received_ok, tx_packets_received, tx_packets_emitted) {
         let sql = `INSERT INTO gateway_statistics

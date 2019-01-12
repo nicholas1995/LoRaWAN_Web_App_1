@@ -144,6 +144,12 @@ module.exports = ((app) => {
     //Device (Read all under specified vessel from db)
     app.get("/devices/database/:vessels", authenticate, grant_access, devices.get_database);
 
+    //Device (Read the initial device data for the map)
+    app.get("/devices/map/initial", authenticate, grant_access, devices.get_map_initial);
+
+    //Device (Read the refresh device data for the map)
+    app.get("/devices/map/refresh/:device_id", authenticate, grant_access, devices.get_map_refresh);
+
     //Devices (Create)
     app.post("/devices", authenticate, grant_access, device_policy.create, devices.create); //need to add in device validation
 
@@ -165,7 +171,10 @@ module.exports = ((app) => {
 
     //----------------------Gateways-----------------
     //Gateway (Read for Map)
-    app.get("/gateways/map", authenticate, grant_access, gateways.get_map);
+    app.get("/gateways/map", authenticate, grant_access, gateways.get_map); 
+
+    //Gateway (Read for refresh device data for the map)
+    app.get("/gateways/map/refresh/:gateway_id/:gateway_id_lora", authenticate, grant_access, gateways.get_map_refresh);
 
     //Gateway (Read from database)
     app.get("/gateways/database", authenticate, grant_access, gateways.get_gateways_database);

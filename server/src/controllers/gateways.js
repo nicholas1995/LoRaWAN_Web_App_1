@@ -1,9 +1,9 @@
 const lora_app_server = require("../services/API/lora_app_server");
 const db_gateway = require('../services/database/gateway_db');
+const db_gateway_statistics = require("../services/database/gateway_statistics_db");
 const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
-
 
 function gateway_api_request_data(data, type) {
     let request;
@@ -168,6 +168,24 @@ function parse(gateway_lora, gateways_db) {
         throw new VError("%s", err.message);
     }
 }
+function parse_gateway_stats(gateway, gateway_stats) {
+    try {
+        gateway["gateway_statistics_id"] = gateway_stats.gateway_statistics_id;
+        gateway["time_stamp"] = gateway_stats.time_stamp;
+        gateway.gateway_latitude = gateway_stats.gateway_latitude;
+        gateway.gateway_longitude = gateway_stats.gateway_longitude;
+        gateway.gateway_altitude = gateway_stats.gateway_altitude;
+        gateway.gateway_location_source_form = gateway_stats.location_source;
+        gateway["configeration_version"] = gateway_stats.configeration_version;
+        gateway["rx_packets_received"] = gateway_stats.rx_packets_received;
+        gateway["rx_packets_received_ok"] = gateway_stats.rx_packets_received_ok;
+        gateway["tx_packets_received"] = gateway_stats.tx_packets_received;
+        gateway["tx_packets_emitted"] = gateway_stats.tx_packets_emitted;
+        return gateway;
+    } catch (err) {
+        throw new VError("%s", err.message);
+    }
+}
  
 module.exports = {
     get: async function(req, res){
@@ -206,29 +224,81 @@ module.exports = {
         }
     },
     get_map: async function (req, res){
+        //get all the gateways from the lora app server -->
+        //then fetch the specific gateway instance to get all the data from the lora app server ->
+        //then fetch all the gateways not deleted in the database (so we can parse the id) -->
+        //parse the unique id to the gateways 
         try{
-            let gateways = []; //This is an array that holds all the information returns for individual gateway calls
-            let gateways_lora = await get_gateways()
+            let gateways_lora; //the list of gateways on the lora app server 
+            let gateways_lora_individual; //the individual full gw info from the lora app server
+            let gateways_full_data_lora = []; //an array which holds all the info about the gateways on the lora app server
+            let gateways_db; //array of gateways which are not deleted in the database
+            let gateways_full_data_lora_db; //array which holds all the info for the gateways on the lora app server parsed with the gateway_ids from the db
+            let gateways = []; //The final array with the full gw data from the lora app server, the gateway_id and also the most recent gw stat if any 
+            let request_params = gateway_api_request_data(null, 0);
+            gateways_lora = await lora_app_server.get_gateways(request_params)
                 .catch(err => {
-                    //Error getting gateways from lora app server
-                    error_location = 0;
-                    throw error.error_message("get gateways : lora app server", err.message);
+                    throw new VError("%s", err.message);
                 });
-                let gateway ;
+            gateways_lora = convert_names_gateways(gateways_lora.data.result);
             for(let i = 0; i < gateways_lora.length; i++){
-                gateway = await lora_app_server.get_gateway_one(gateways_lora[i].gateway_id_lora)
+                gateways_lora_individual = await lora_app_server.get_gateway_one(gateways_lora[i].gateway_id_lora)
                     .catch(err => {
                         //Error getting gateways from lora app server
                         throw error.error_message("get gateway : lora app server", err.message);
                     });
-                gateway = gateway.data.gateway;
-                gateway = convert_name_gateway_single(gateway);
-                gateways[i] = gateway;
+                gateways_lora_individual = convert_name_gateway_single(gateways_lora_individual.data.gateway);
+                gateways_full_data_lora.push(gateways_lora_individual);
             }
-            res.status(200).send({ gateways : gateways });
+            gateways_db = await db_gateway.get_gateway()
+                .catch(err => {
+                    //Error getting gateways from database
+                    throw new VError("%s", err.message);
+                });
+            gateways_full_data_lora_db = parse(gateways_full_data_lora, gateways_db);
+            for(let i =0; i < gateways_full_data_lora_db.length; i++){
+                let gateway_stats = await db_gateway_statistics.get_most_recent_specified_gateway(gateways_full_data_lora_db[i].gateway_id)
+                    .catch(err => {
+                        //Error getting most recent gateway stat
+                        throw err;
+                    })
+                if (gateway_stats.length > 0){
+                    gateways.push(parse_gateway_stats(gateways_full_data_lora_db[i], gateway_stats[0]));
+                } else {gateways.push(gateways_full_data_lora_db[i])}
+            }
+            res.status(200).send({ gateways: gateways, message: "Gateway data retrived", type: 'success' });
         }catch(err){
             console.log(err);
-            res.status(500).send({ message: "Failed to get gateway", type: 'error' });
+            res.status(500).send({ message: "Failed to get gateway data", type: 'error' });
+        }
+    },
+    get_map_refresh: async function(req, res){
+        try{
+            let gateways_lora_individual; //the individual full gw info from the lora app server
+            let gateways_full_data_lora_db; //array which holds all the info for the gateways on the lora app server parsed with the gateway_ids from the db
+            let gateway_data = []; //The final array with the full gw data from the lora app server, the gateway_id and also the most recent gw stat if any 
+            gateways_lora_individual = await lora_app_server.get_gateway_one(req.params.gateway_id_lora)
+                .catch(err => {
+                    //Error getting gateways from lora app server
+                    throw error.error_message("get gateway : lora app server", err.message);
+                });
+            gateways_lora_individual = convert_name_gateway_single(gateways_lora_individual.data.gateway);
+            gateways_lora_individual["gateway_id"] = req.params.gateway_id; //this is the equivalent to parsing
+            gateways_full_data_lora_db = gateways_lora_individual;
+            let gateway_stats = await db_gateway_statistics.get_most_recent_specified_gateway(gateways_full_data_lora_db.gateway_id)
+                .catch(err => {
+                    //Error getting most recent gateway stat
+                    throw err;
+                })
+            if (gateway_stats.length > 0) {
+                gateway_data = parse_gateway_stats(gateways_full_data_lora_db, gateway_stats[0]);
+            } else { 
+                gateway_data = gateways_full_data_lora_db;
+            }
+            res.status(200).send({ gateway_data: gateway_data, message: "Updated gateway data retrived", type: 'success' });
+        }catch(err){
+            console.log(err)
+            res.status(500).send({ message: "Failed to get gateway data", type: 'error' });
         }
     },
     get_gateways_database: async function (req, res) {

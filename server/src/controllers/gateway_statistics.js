@@ -1,6 +1,6 @@
 const VError = require('verror');
 const error_handler = require('./error_logs');
-const db_gateway_statistics = require("../services/database/gateway_statistics");
+const db_gateway_statistics = require("../services/database/gateway_statistics_db");
 
 
 function error_message(current_error_message, previous_error) {

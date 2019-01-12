@@ -28,22 +28,15 @@ module.exports = {
     get_specified_parameters: function (sql) {
         return db.queryAsync(sql);
     },
-    get_specified_headings: function (order_by, order, headings) {
-        let sql = `SELECT ${headings}
-        FROM device_uplink
-        ORDER BY ${order_by} ${order}`;
-        return db.queryAsync(sql);
-    },
-    get_specified_headings_date: function (order_by, order, headings, start_date, end_date){
-        let sql = `SELECT ${headings}
-        FROM device_uplink
-        WHERE r_info_time BETWEEN '${start_date}' AND '${end_date}'`;
-        return db.queryAsync(sql);
-    },
-    get_specified_id: function(device_uplink_id){
-        let sql = `SELECT *
-        FROM device_uplink
-        WHERE device_uplink_id ='${device_uplink_id}'`;
+    get_most_recent_specified_device(device_id){
+    //This returns the most recent device uplink for the specified device. Used for the initial map data
+    //CALLED FROM DEVICES
+        let sql = `SELECT device_uplink.*, vessel.vessel_name, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
+            FROM device_uplink
+            LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id
+            WHERE device_id = "${device_id}"
+            ORDER BY device_uplink_id DESC
+            LIMIT 1`;
         return db.queryAsync(sql);
     }
     /* ,

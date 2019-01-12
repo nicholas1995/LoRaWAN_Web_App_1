@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Toolbar from '@/components/Toolbar'
 import Login from '@/components/Login'
 import Dashboard from './../components/Dashboard/Dashboard.vue'
-import Interactive_Map from '../components/Map.vue'
+import Interactive_Map from '../components/Map/Map.vue'
 
 import Network from '../components/Network/Network_Management.vue'
 import Create_Network from "../components/Network/Create_Network.vue";

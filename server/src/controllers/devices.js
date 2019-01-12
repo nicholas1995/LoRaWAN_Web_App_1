@@ -2,6 +2,7 @@ const lora_app_server = require("../services/API/lora_app_server");
 const db = require("../services/database/devices_db");
 const DB_VESSEL_DEVICE = require("../services/database/vessel_device_db");
 const DB_VESSEL = require("../services/database/vessels_db");
+const DB_DEVICE_UPLINK = require("../services/database/device_rx_db");
 const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
@@ -239,14 +240,14 @@ module.exports = {
                     error_location = 0;
                     throw error.error_message("get devices : lora app server", err.message);
                 });
-            console.log("Devices fetched from the lora app server");
+            //console.log("Devices fetched from the lora app server");
             let devices_db = await db.get_not_deleted()
                 .catch(err => {
                     //error getting devices from db
                     error_location = 1;
                     throw error.error_message("get devices : database", err.message);
                 });
-            console.log("Devices fetched from the database");
+            //console.log("Devices fetched from the database");
             let devices_added = await compare.devices(devices_lora, devices_db)
                 .catch(err => {
                     //Error comparing devices
@@ -272,16 +273,16 @@ module.exports = {
                     }
                 }
             }
-            console.log("Devices information on lora app sevrer and database compared");
+            //console.log("Devices information on lora app sevrer and database compared");
             vessel_device_relationships_db = await DB_VESSEL_DEVICE.get_not_deleted()
                 .catch(err => {
                     //Error getting vessel device relationships currently implemented
                     error_location = 2;
                     throw error.error_message("get devices : getting vessel devices relationships : database", err.message);
                 })
-            console.log('Vessel deivce realtionships currently implemented fetched');
+            //console.log('Vessel deivce realtionships currently implemented fetched');
             devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora, devices_db);
-            console.log("Vessel assigned to device parsed");
+            //console.log("Vessel assigned to device parsed");
             res.status(200).send({ devices_lora: devices_lora, message: 'Devices fetched', type: 'success' });
         }catch(err){
             console.log(err);
@@ -297,7 +298,6 @@ module.exports = {
         }
     },
     get_one: async function(req, res){
-        console.log(req.params.device_eui);
         try{
             let device = await lora_app_server.get_device_one(req.params.device_eui)
             .catch(err => {
@@ -340,6 +340,58 @@ module.exports = {
         } catch (err) {
             console.log(err);
             res.status(500).send({ message: "Failed to get device", type: 'error' });
+        }
+    },
+    get_map_initial: async function(req, res){
+        //Get devices that are not deleted in the database ->
+        //get the most recent device data for the devices not deleted
+        let error_location = 0;
+        try {
+            let device_data = [];
+            if(req.access == 'all'){
+                let devices_db = await db.get_not_deleted()
+                    .catch(err => {
+                        //error getting devices from db
+                        error_location = 0;
+                        throw error.error_message("get devices : database", err.message);
+                    });
+                for(let i =0; i< devices_db.length; i++){
+                    await DB_DEVICE_UPLINK.get_most_recent_specified_device(devices_db[i].device_id)
+                    .then(result => {
+                        if(result.length > 0){
+                            device_data.push(result[0])
+                        }
+                    }).catch(err => {
+                            //Error getting the most recent device uplink record
+                            throw err;
+                    });                    
+                }
+            }else if(req.access == 'self'){
+
+            }
+/*             let user_vessel_info = JSON.parse(req.params.user_vessel_info);
+            let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info)
+                .catch(err => {
+                    //Error getting vessel device relationships currently implemented
+                    error_location = 2;
+                    throw error.error_message("get devices : getting vessel devices relationships : database", err.message);
+                }); */
+            res.status(200).send({ device_data: device_data, message: 'Devices fetched', type: 'success' });
+        } catch (err) {
+            console.log(err);
+            res.status(500).send({ message: "Failed to get device", type: 'error' });
+        }
+    },
+    get_map_refresh: async function(req, res){ 
+        try{
+            let device_data = await DB_DEVICE_UPLINK.get_most_recent_specified_device(req.params.device_id)
+                .catch(err => {
+                    //Error getting the most recent device uplink record
+                    throw err;
+                });
+            res.status(200).send({ device_data: device_data, message: 'Devices data', type: 'success' });
+        }catch(err){
+            console.log(err)
         }
     },
     create: async function(req, res){
@@ -468,44 +520,44 @@ module.exports = {
                     error_location = 0;
                     throw error.error_message("delete device : lora app server", err.message);
                 });
-            console.log('Device deleted from lora app server. Device_EUI: ' + req.params.device_eui)
+            //console.log('Device deleted from lora app server. Device_EUI: ' + req.params.device_eui)
             devices_lora = await get_devices()
                 .catch(err => {
                     //Error getting devices from lora app server
                     error_location = 1;
                     throw error.error_message("delete device : lora app server", err.message);
                 });
-            console.log('Devices fetched from lora app server')
+            //console.log('Devices fetched from lora app server')
             await db.update('device_deleted',1,req.params.device_eui)
                 .catch(err => {
                     //Error deleting device from database
                     error_location = 2;
                     throw error.error_message("delete device : database", err.message);
                 });
-            console.log("Device deleted parameter set high in database. Device_EUI: " + req.params.device_eui);
+            //console.log("Device deleted parameter set high in database. Device_EUI: " + req.params.device_eui);
             await DB_VESSEL_DEVICE.delete_given_deivce_eui(req.params.device_eui)
                 .catch(err => {
                     //Error deleting relationship between device and vessel from database
                     error_location = 3;
                     throw error.error_message("delete device : delete device vessel relationship: database", err.message);
                 });
-            console.log("Device vessel relationship deleted parameter set high in database. Device_EUI: " + req.params.device_eui);
+            //console.log("Device vessel relationship deleted parameter set high in database. Device_EUI: " + req.params.device_eui);
             vessel_device_relationships_db = await DB_VESSEL_DEVICE.get_not_deleted()
                 .catch(err => {
                     //Error getting vessel device relationships that are not deleted
                     error_location = 4;
                     throw error.error_message("get devices : getting vessel devices relationships :database", err.message);
                 })
-            console.log('Vessel deivce realtionships currently implemented fetched');
+            //console.log('Vessel deivce realtionships currently implemented fetched');
             let devices_db = await db.get_not_deleted()
                 .catch(err => {
                     //error getting devices from db
                     error_location = 5;
                     throw error.error_message("get devices : database", err.message);
                 });
-            console.log('Devices fetched from database')
+            //console.log('Devices fetched from database')
             devices_lora = parse_vessel_to_device_data(vessel_device_relationships_db, devices_lora, devices_db);
-            console.log("Vessel ID parsed to device data");
+            //console.log("Vessel ID parsed to device data");
             res.status(200).send({ devices_lora: devices_lora, message: 'Device deleted.', type: 'success' });
         }catch(err){
             console.log(err);
