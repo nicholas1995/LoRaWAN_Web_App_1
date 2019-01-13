@@ -389,7 +389,7 @@ module.exports = {
                     //Error getting the most recent device uplink record
                     throw err;
                 });
-            res.status(200).send({ device_data: device_data, message: 'Devices data', type: 'success' });
+            res.status(200).send({ device_data: device_data, message: 'Devices data', type: 'success' }); 
         }catch(err){
             console.log(err)
         }

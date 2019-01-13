@@ -455,19 +455,5 @@ module.exports = {
         }catch(err){
             console.log(err);
         }
-    },
-/*     get_specified_id: async function (req, res) { //TEST(TO DELETE)
-        try {
-            let device_data
-            device_data = await DB.get_specified_id(req.params.device_uplink_id)
-                .catch(err => {
-                    //Error fetching specified data headings from db
-                    throw err;
-                })
-            device_data = JSON.stringify(device_data);
-            res.status(200).send({ device_data: device_data, message: 'Device data fetched', type: 'success' });
-        } catch (err) {
-            console.log(err);
-        }
-    } */
+    }
 }

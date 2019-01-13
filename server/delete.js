@@ -1,3 +1,42 @@
+/* var fs = require("fs");
+const DB_DEVICE_UPLINK = require("./src/services/database/device_rx_db");
+
+require.extensions[".txt"] = function(module, filename) {
+  module.exports = fs.readFileSync(filename, "utf8");
+};
+
+var vessel_route = require("./Vessel_route.txt");
+let length_of_file = vessel_route.length;
+let pos_1 = 0; // the position of the / before the coordinated
+let pos_2 = 0; //the position of the / after the coordinated
+
+let coordinates = [];
+let i = 0;
+while (i < 100) {
+  //pos_2 < length_of_file) {
+  pos_2 = vessel_route.indexOf("/", pos_1);
+  coordinates.push(vessel_route.slice(pos_1, pos_2));
+  pos_1 = pos_2 + 1;
+  i = i + 1;
+}
+async function update_location(){
+  let lat;
+  let lng;
+  let coor = [];
+  let pos = 0;
+  let length;
+  for (let j = 0; j < 100; j++) {
+    length = coordinates[j].length;
+    pos = coordinates[j].indexOf(",");
+    lat = coordinates[j].slice(1, pos);
+    lng = coordinates[j].slice(pos + 4, length - 1);
+    coor.push({ lat: lat, lng: lng });
+  }
+  console.log(coor);
+}
+update_location() */
+
+//Just a compare funcion 
 function compare(old_value, new_value) {
   let accounted_for = [];
   let added = [];
@@ -26,9 +65,13 @@ function compare(old_value, new_value) {
       //console.log('subnetwork deleted')
     }
   }
+  for(let i = 0; i< added.length; i++){ 
+    added[i]=new_value[i]
+  }
   console.log(deleted);
+  console.log(added);
 }
-compare();
+compare([1,3,7,9], [2,11,1,3]);
 
 //This updates the location of the uplink data in the databse using those from the text file
 /* var fs = require("fs");

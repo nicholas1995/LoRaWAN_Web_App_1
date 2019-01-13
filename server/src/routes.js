@@ -231,9 +231,6 @@ module.exports = ((app) => {
     app.get("/gateway_profiles", authenticate, grant_access, gateway_profiles.get);
 
     //----------------------Device Uplink Data-----------------
-    //Device (Initial fetch) (TO DELETE) --JUST TESTING FOR THE MAP
-    //app.get("/devices/uplink/specific_id/:device_uplink_id", authenticate, grant_access, device_data.get_specified_id);
-
     //Device (Initial fetch) 
     app.get("/devices/uplink/initial", authenticate, grant_access, device_data.get);
 

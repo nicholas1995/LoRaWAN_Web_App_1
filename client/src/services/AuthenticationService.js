@@ -303,10 +303,6 @@ export default {
     },
 
     //Device uplink data
-    get_device_uplink_specified_id(device_uplink_id){
-        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`devices/uplink/specific_id/${device_uplink_id}`);
-    },
     device_rx_filtered(parameters , columns){ 
         //the reason we do no stringify the columns is becasue when it arrives at the server
         //it is already converted to commar seperated format
