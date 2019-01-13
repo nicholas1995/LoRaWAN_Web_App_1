@@ -51,7 +51,10 @@ const ACL = {
       create: "All"
     },
     device_profiles: {
-      read: "All"
+      read: "All",
+      update: "All",
+      delete: "All",
+      create: "All"
     },
     network_servers: {
       read: "All"

@@ -60,13 +60,14 @@ export default {
           { title: 'Map', icon: 'map'}, //8
           { title: 'Error Logs', icon: 'error'}, //9
           { title: 'Account Management', icon: 'people_outlined'}, //10
+          { title: 'Device Profile', icon: 'people_outlined'}, //11
         ],
         items:[]
     };
   },
   created: function () {
     if(this.$store.state.user_class =='IoT Network Admin'){
-      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7],this.items_all[8],this.items_all[9]];
+      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7],this.items_all[8],this.items_all[9],this.items_all[11]];
     }else if(this.$store.state.user_class =='Software Admin'){
       this.items = [this.items_all[5],this.items_all[7],this.items_all[8],this.items_all[9],this.items_all[10]];
     }else if(this.$store.state.user_class =='Analyst'){
@@ -100,6 +101,8 @@ export default {
         this.$router.push('/map'); 
       }else if(item=="Error Logs"){
         this.$router.push('/error_logs'); 
+      }else if(item=="Device Profile"){
+        this.$router.push('/device_profile'); 
       }else{
         this.$router.push('/dashboard'); 
       }

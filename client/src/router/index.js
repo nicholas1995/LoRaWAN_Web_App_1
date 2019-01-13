@@ -35,6 +35,10 @@ import Service_Profile from "../components/Service Profile/Service_Profile_Manag
 import Create_Service_Profile from "../components/Service Profile/Create_Service_Profile.vue";
 import Update_Service_Profile from "../components/Service Profile/Update_Service_Profile.vue";
 
+import Device_Profile from "../components/Device Profile/Device_Profile_Management.vue";
+import Create_Device_Profile from "../components/Device Profile/Create_Device_Profile.vue";
+import Update_Device_Profile from "../components/Device Profile/Update_Device_Profile.vue";
+
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
@@ -184,6 +188,22 @@ export default new Router({
       path: "/service_profile/update/:service_profile_id_lora", //reasons sending the lora instead of the database is because we do not need to fetch all the profiles from the server for this form this there are no requriements to the name
       name: "service_profile_update",
       component: Update_Service_Profile
+    },
+   //-------------------------Device_Profile-------------------------
+   {
+    path: "/device_profile",
+    name: "device_profile",
+    component: Device_Profile
+    },
+    {
+      path: "/device_profile/create",
+      name: "device_profile_create",
+      component: Create_Device_Profile
+    },
+    {
+      path: "/device_profile/update/:device_profile_id_lora", //reasons sending the lora instead of the database is because we do not need to fetch all the profiles from the server for this form this there are no requriements to the name
+      name: "device_profile_update", //CHECK TO SEE WHICH ID TO PUT
+      component: Update_Device_Profile
     },
 
     {

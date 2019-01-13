@@ -13,13 +13,35 @@ function device_profile_api_request_data(data, type) {
             //search: null
         }
     }
-/*     else if (type == 1) {//create form
+    else if (type == 1) {//create form
         request = {
-            "organization": {
-                "canHaveGateways": data.can_have_gateways,
-                "displayName": `${data.display_name}`,
-                "name": `${data.name}`
+            "deviceProfile": {
+              "classBTimeout": data.class_b_timeout,
+              "classCTimeout": data.class_c_timeout,
+              "factoryPresetFreqs": [
+                0
+              ],
+              "macVersion": `${data.mac_version}`,
+              "maxDutyCycle": data.max_duty_cycle,
+              "maxEIRP": data.max_eirp,
+              "name": `${data.device_profile_name}`,
+              "networkServerID": `${data.network_server_id}`,
+              "organizationID": `${data.network_id}`,
+              "pingSlotDR": data.ping_slot_dr,
+              "pingSlotFreq": data.ping_slot_frequency,
+              "pingSlotPeriod": data.ping_slot_period,
+              "regParamsRevision": `${data.reg_params_revision}`,
+              "rfRegion": `${data.rf_region}`,
+              "rxDROffset1": data.rx_dr_offset_1,
+              "rxDataRate2": data.rx_dr_2,
+              "rxDelay1": data.rx_delay_1,
+              "rxFreq2": data.rx_frequency_2,
+              "supports32BitFCnt": data.supports_32_bit_fcnt,
+              "supportsClassB": data.supports_class_b,
+              "supportsClassC": data.supports_class_c,
+              "supportsJoin": data.supports_join
             }
+          
         }
     } else if (type == 2) {//Update form
         request = {
@@ -29,7 +51,7 @@ function device_profile_api_request_data(data, type) {
                 "name": `${data.name}`
             }
         }
-    } */
+    }
     return request;
 }
 
@@ -141,6 +163,13 @@ module.exports = {
         } catch (err) {
             //console.log(err);
             res.status(500).send({ message: "Failed to get device profiles", type: 'error' });
+        }
+    },
+    create_device_profile: async function(){
+        try{
+
+        }catch(err){
+            console.log(err)
         }
     }
 }
