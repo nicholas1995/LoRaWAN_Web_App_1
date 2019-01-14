@@ -25,7 +25,7 @@
               max-height = "135">
               <v-card-text>
                 <v-layout row wrap>
-                  <v-flex xs12 sm6 md3 >
+                  <v-flex xs12 sm6 md2 >
                     <v-radio-group
                       :mandatory="false"
                       v-on:change="update_controller_array($event, i)"
@@ -44,26 +44,44 @@
                       ></v-radio>
                     </v-radio-group>
                   </v-flex>
-                  <v-flex xs12 sm6 md9 >
+                  <v-flex xs12 sm6 md10 >
                     <div v-if=" controller[(i-1)].action == 'disable_tracking' || controller[(i-1)].action == 'null'">
-                      <v-flex xs12 sm12 md12  >
-                        <v-btn class="grey lighten-2" small 
-                          @click.stop="clear_all_device_tracks(i)">
-                          Clear all device tracks
-                        </v-btn>
-                      </v-flex>  
-                      <v-flex xs12 sm12 md12  >
-                        <v-btn class="grey lighten-2" small
-                          @click.stop="clear_real_time_device_tracks(i)">
-                          Clear realtime device tracks
-                        </v-btn>
-                      </v-flex>  
-                      <v-flex xs12 sm12 md12  >
-                        <v-btn class="grey lighten-2" small
-                          @click.stop="clear_historic_device_tracks(i)">
-                          Clear historic device tracks
-                        </v-btn>
-                      </v-flex>  
+                      <v-layout row wrap>
+                      <v-flex xs12 sm6 md6 >
+                        <v-flex xs12 sm12 md12  >
+                          <v-btn class="grey lighten-2" small 
+                            @click.stop="clear_all_device_tracks(i)">
+                            Clear all device tracks
+                          </v-btn>
+                        </v-flex>  
+                        <v-flex xs12 sm12 md12  >
+                          <v-btn class="grey lighten-2" small
+                            @click.stop="clear_real_time_device_tracks(i)">
+                            Clear device realtime tracks
+                          </v-btn>
+                        </v-flex>  
+                        <v-flex xs12 sm12 md12  >
+                          <v-btn class="grey lighten-2" small
+                            @click.stop="clear_historic_device_tracks(i)">
+                            Clear device historic tracks
+                          </v-btn>
+                        </v-flex>  
+                      </v-flex>
+                      <v-flex xs12 sm6 md6 >
+                        <v-flex xs12 sm12 md12  >
+                          <v-btn class="grey lighten-2" small 
+                            @click.stop="download_csv(device_real_time_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_real_time_data.csv`)">
+                            Download device realtime tracks
+                          </v-btn>
+                        </v-flex>  
+                        <v-flex xs12 sm12 md12  >
+                          <v-btn class="grey lighten-2" small 
+                            @click.stop="download_csv(device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)">
+                            Download device historic tracks
+                          </v-btn>
+                        </v-flex>  
+                      </v-flex>
+                      </v-layout>
                     </div>
                     <div v-else-if=" controller[(i-1)].action == 'real_time_tracking'">
                     </div>
@@ -132,6 +150,30 @@ function return_date_time(date, time){
   return date_time;
 }
 
+function convertArrayOfObjectsToCSV(args) {
+    var result, ctr, keys, columnDelimiter, lineDelimiter, data;
+    data = args.data || null;
+    if (data == null || !data.length) {
+      return null;
+    }
+    columnDelimiter = args.columnDelimiter || ',';
+    lineDelimiter = args.lineDelimiter || '\n';
+    keys = Object.keys(data[0]);
+    result = '';
+    result += keys.join(columnDelimiter);
+    result += lineDelimiter;
+    data.forEach(function(item) {
+      ctr = 0;
+      keys.forEach(function(key) {
+      if (ctr > 0) result += columnDelimiter;
+  
+      result += item[key];
+      ctr++;
+      });
+      result += lineDelimiter;
+    });
+    return result;
+  }
 
 export default {
   components:{
@@ -192,6 +234,9 @@ export default {
       self: 0, //This will be set high if the data user class user wants to view vessles assigned to them 
 
       controller: [], //this stores all the information about the controller... and the ith array info will refer to the ith device in the device_data array
+
+      device_real_time_tracking_data: [], //a 2d array which stores the device real time tracking data
+      device_historic_tracking_data: [], //a 2d array which stores the device historic tracking data
     }
   },
   mounted: async function () {
@@ -269,6 +314,9 @@ export default {
         this.device_real_time_polyline_tracker.push([]);
         this.device_historic_polyline_tracker.push([]);
 
+        this.device_real_time_tracking_data.push([]);
+        this.device_historic_tracking_data.push([]);
+
         this.controller.push({
           action: 'null',
           initial: 1, //this will go to 0 when radio is moved to any option other than no_tracking on the first select
@@ -297,7 +345,7 @@ export default {
           marker = new google.maps.Marker({ 
             position,
             map: this.map,
-            label: `${(this.markers.length)}`,//`${device.device_id}`
+            label: `${device.device_id}`
           });
         }
         let i = this.find_device_array_position(device.device_id);
@@ -306,10 +354,11 @@ export default {
 
         //set device trackers
         this.device_marker_tracker[i].push(position_in_marker_array);
-        console.log(this.device_marker_tracker[0]);
         if(this.controller[i].action == 'real_time_tracking'){
+          this.device_real_time_tracking_data[i].push(device); //stores the device real time tracking data so it can be downloaded
           this.device_real_time_marker_tracker[i].push(position_in_marker_array)
         }else if(this.controller[i].action == 'historic_tracking'){
+          this.device_historic_tracking_data[i].push(device); //stores the device historic tracking data so it can be downloaded
           this.device_historic_marker_tracker[i].push(position_in_marker_array)
         }
 
@@ -385,19 +434,28 @@ export default {
       })(marker,content,info_window));
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
-    start_device_tracking: function(i){
+    start_device_tracking: async function(i){
       console.log('tracking called')
-      let path = [];
-      path = (this.create_device_polyline(this.device_data[i], path));
-      var x = setInterval(this.refresh_device_polyline, 5000, path, this.device_data[i], i);//this is the syntax for it to work
+      let device_id = this.find_device_id(i);
+      let device_data_update = await AuthenticationService.refresh_device_data_map(device_id)
+        .catch(err => {
+          //Error gettin most recent 
+          console.log(err)
+        })
+      device_data_update = device_data_update.data.device_data[0];
+      this.device_data[i] = device_data_update;
+      this.create_device_marker(device_data_update, 0)  
+      this.create_device_polyline(this.device_data[i]);
+      var x = setInterval(this.refresh_device_polyline, 5000, this.device_data[i], i);//this is the syntax for it to work
       this.cleartick_device_polyline[i]  = null; 
       this.cleartick_device_polyline[i]  = x; 
     },
   //--------------------------------------------------------------------------------------------------------------------------------------------
-    create_device_polyline: function(device, path){
+    create_device_polyline: function(device){
+    //creates the polyline and sets the first position to the location of the existing marker
       console.log('create device polyline')
       let i = this.find_device_array_position(device.device_id);
-      //creates the polyline and sets the first position to the location of the existing marker
+      let path = [];
       path.push({lat: parseFloat(device.gps_latitude),
         lng: parseFloat(device.gps_longitude)})
         let polyline = new google.maps.Polyline({
@@ -417,10 +475,9 @@ export default {
         polyline.setOptions({strokeColor: `${this.historic_polyline_color}`});
         this.device_historic_polyline_tracker[i].push(polyline); //track the historic polylines for this device 
       }
-        return path;
     },
   //--------------------------------------------------------------------------------------------------------------------------------------------
-    refresh_device_polyline: async function(path, device_data, i){
+    refresh_device_polyline: async function( device_data, i){
       console.log('refresh polyline')
         let device_data_update = await AuthenticationService.refresh_device_data_map(device_data.device_id)
         .catch(err => {
@@ -465,95 +522,6 @@ export default {
     find_device_id: function(array_position){
       //this takes in the device array_position and returns the device id
       return this.device_data[array_position].device_id;
-    },
-  //--------------------------------------------------------------------------------------------------------------------------------------------
-    compare: function(old_value_form, new_value_form) {
-      let old_value = [];
-      let new_value = [];
-      if(old_value_form.length > 0){
-        for(let i =0; i< old_value_form.length; i++){
-          old_value[i] = functions.extract_id_id_name(old_value_form[i]);
-        }
-      }
-      if(new_value_form.length > 0){
-        for(let i =0; i< new_value_form.length; i++){
-          new_value[i] = functions.extract_id_id_name(new_value_form[i]);
-        }
-      }
-      let accounted_for = [];
-      let added = [];
-      let deleted = [];
-
-      for (let i = 0; i < new_value.length; i++) {
-        if (old_value.length == 0) {
-          added.push(new_value[i]);
-        }
-        for (let j = 0; j < old_value.length; j++) {
-          if (new_value[i] == old_value[j]) {
-            accounted_for.push(j);
-            break;
-          } else if (j == old_value.length - 1) {
-            added.push(new_value[i]);
-          } else if (new_value[i] != old_value[j]) {
-          }
-        }
-      }
-      for (let l = 0; l < old_value.length; l++) {
-        let index = accounted_for.indexOf(l);
-        if (index == -1) {
-          deleted.push(old_value[l]);
-        }
-      }
-      return {added: added[0], deleted: deleted[0]}
-    },
-    //--------------------------------------------------------------------------------------------------------------------------------------------
-    clear_all_device_tracks: function(i){
-      i = i-1
-      for(let j = 0; j< (this.device_polyline_tracker[i].length); j++){
-          this.device_polyline_tracker[i][j].setMap(null)
-          this.device_polyline_tracker[i][j] = null;
-      }
-      let holder;
-      for(let j = 0; j< (this.device_marker_tracker[i].length - 1); j++){
-        holder = this.device_marker_tracker[i][j];
-        this.markers[holder].setMap(null)
-      }
-    },
-    //--------------------------------------------------------------------------------------------------------------------------------------------
-    clear_real_time_device_tracks: function(i){
-      i = i-1;
-      for(let j = 0; j< (this.device_real_time_polyline_tracker[i].length); j++){
-        if(this.device_real_time_polyline_tracker[i][j]){
-          this.device_real_time_polyline_tracker[i][j].setMap(null)
-        }
-      }
-      let holder;
-      for(let j = 0; j< (this.device_real_time_marker_tracker[i].length); j++){
-        if(this.device_real_time_marker_tracker[i][j] || this.device_real_time_marker_tracker[i][j] == 0){
-          holder = this.device_real_time_marker_tracker[i][j];
-          this.markers[holder].setMap(null)
-        }
-      }
-      this.device_real_time_polyline_tracker[i] = [];
-      this.device_real_time_marker_tracker[i] = [];
-    },    
-    //--------------------------------------------------------------------------------------------------------------------------------------------
-    clear_historic_device_tracks: function(i){
-      i = i-1
-      for(let j = 0; j< (this.device_historic_polyline_tracker[i].length); j++){
-        if(this.device_historic_polyline_tracker[i][j]){
-          this.device_historic_polyline_tracker[i][j].setMap(null)
-        }
-      }         
-      let holder;
-      for(let j = 0; j< (this.device_historic_marker_tracker[i].length); j++){
-        if(this.device_historic_marker_tracker[i][j]){
-          holder = this.device_historic_marker_tracker[i][j];
-          this.markers[holder].setMap(null)
-        }
-      }
-      this.device_historic_polyline_tracker[i] = [];
-      this.device_historic_marker_tracker[i] = [];
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     start_date_function(date){
@@ -602,7 +570,7 @@ export default {
       return data;
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------  
-        update_controller_array: function(action, i){
+    update_controller_array: function(action, i){
       //action refers to the action to what type of plotting is required for that device.... they relate to the radio buttons
       i = i-1; //this is done because the counter in the tabs starts at 1 and not 0 
       let previous_action = this.controller[i].action;
@@ -611,6 +579,9 @@ export default {
             let holder  = this.cleartick_device_marker[i];
             clearInterval(holder);
             this.cleartick_device_marker[i] = null ; 
+            let length = this.device_marker_tracker[i].length; //anytime we switch to another option we delete the no tracking marker 
+            let position = this.device_marker_tracker[i][(length-1)];
+            this.markers[(position)].setMap(null)
           }else if(previous_action == "real_time_tracking"){ //stops the polyline set interval of the device
             let holder  = this.cleartick_device_polyline[i];
             clearInterval(holder);
@@ -618,91 +589,34 @@ export default {
           }else if(previous_action == "historic_tracking"){
             
           }
-          if(action == "disable_tracking" && previous_action != 'null'){
-            this.controller[i].action = 'disable_tracking';
-            this.controller[i].historic_tracking.start_date_time = null;
-            this.controller[i].historic_tracking.end_date_time = null;
-            this.create_device_marker(this.device_data[i], 1)
-
-
-          }
-          else if(action == "real_time_tracking"){
-            if(previous_action == "disable_tracking" || previous_action == 'null'){ //adds the previous marker to the real time tracker only if the previosu action was disable_tracking
-              let length = this.device_marker_tracker[i].length;
-              length = length -1;
-              length = this.device_marker_tracker[i][length];
-
-              this.device_real_time_marker_tracker[i].push((length));//this is done because we start the track from the previously created marker.... hence it wont be added to this tracker 
-            }
-            this.controller[i].action = 'real_time_tracking';
-            this.controller[i].historic_tracking.start_date_time = null;
-            this.controller[i].historic_tracking.end_date_time = null;
-            this.start_device_tracking(i);
-          }else if(action == "historic_tracking"){
-              if(previous_action == "disable_tracking" || previous_action == 'null'){ //adds the previous marker to the real time tracker only if the previosu action was disable_tracking
-              let length = this.device_marker_tracker[i].length; //since the marker created under the disable_tracking option does not fall under historic_tracking markers.... we need to delete it or else it will be left floating when we delete history_tracker_markers
-              let position = this.device_marker_tracker[i][(length-1)];
-              this.markers[(position)].setMap(null)
-            }
-            this.controller[i].action = 'historic_tracking';
-          }
+        ///-----------------------------------------------------------
+        if(action == "disable_tracking" && previous_action != 'null'){
+          this.controller[i].action = 'disable_tracking';
+          this.controller[i].historic_tracking.start_date_time = null;
+          this.controller[i].historic_tracking.end_date_time = null;
+          this.create_device_marker(this.device_data[i], 1)
+        }
+        else if(action == "real_time_tracking"){
+          this.controller[i].action = 'real_time_tracking';
+          this.controller[i].historic_tracking.start_date_time = null;
+          this.controller[i].historic_tracking.end_date_time = null;
+          this.start_device_tracking(i);
+        }else if(action == "historic_tracking"){
+          this.controller[i].action = 'historic_tracking';
+        }
       }
     },
-/*     update_controller_array: function(action, i){
-      //action refers to the action to what type of plotting is required for that device.... they relate to the radio buttons
-      i = i-1; //this is done because the counter in the tabs starts at 1 and not 0 
-      let previous_action = this.controller[i].action;
-      if(previous_action != action){ //to prevent it from updating if they keep pressing the button
-      console.log('validddd')
-          if(previous_action == "disable_tracking" || previous_action == 'null'){ //stops the marker set interval for the device
-            let holder  = this.cleartick_device_marker[i];
-            clearInterval(holder);
-            this.cleartick_device_marker[i] = null ; 
-          }else if(previous_action == "real_time_tracking"){ //stops the polyline set interval of the device
-            let holder  = this.cleartick_device_polyline[i];
-            clearInterval(holder);
-            this.cleartick_device_polyline[i] = null ; 
-          }else if(previous_action == "historic_tracking"){
-            
-          }
-          if(action == "disable_tracking" && previous_action != 'null'){
-            this.controller[i].action = 'disable_tracking';
-            this.controller[i].historic_tracking.start_date_time = null;
-            this.controller[i].historic_tracking.end_date_time = null;
-            this.create_device_marker(this.device_data[i], 1)
-
-
-          }
-          else if(action == "real_time_tracking"){
-            if(previous_action == "disable_tracking" || previous_action == 'null'){ //adds the previous marker to the real time tracker only if the previosu action was disable_tracking
-              let length = this.device_marker_tracker[i].length;
-              this.device_real_time_marker_tracker[i].push((length-1));//this is done because we start the track from the previously created marker.... hence it wont be added to this tracker 
-            }
-            this.controller[i].action = 'real_time_tracking';
-            this.controller[i].historic_tracking.start_date_time = null;
-            this.controller[i].historic_tracking.end_date_time = null;
-            this.start_device_tracking(i);
-          }else if(action == "historic_tracking"){
-              if(previous_action == "disable_tracking" || previous_action == 'null'){ //adds the previous marker to the real time tracker only if the previosu action was disable_tracking
-              let position = this.device_marker_tracker[i];
-              this.markers[(position)].setMap(null)
-            }
-            this.controller[i].action = 'historic_tracking';
-          }
-      }
-    }, */
     //--------------------------------------------------------------------------------------------------------------------------------------------  
     generate_historic_device_tracks: async function(i){
       i=i-1;
       this.controller[i].historic_tracking.start_date_time = return_date_time(this.start_date, this.start_time);
       this.controller[i].historic_tracking.end_date_time = return_date_time(this.end_date, this.end_time);
       let device_id = this.find_device_id(i);
-      let path = [];
       this.generate_function(device_id).then(result => {
         for(let j = 0;j < result.length; j++){
             this.create_device_marker(result[j], 0);
             if(j ==0){//create the polyline once
-              this.create_device_polyline(result[j], path)
+              this.create_device_polyline(result[j])
             }else{//append to the previously created polyline 
               this.append_device_polyline(i, result[j], 'historic_tracking')
             }
@@ -713,7 +627,87 @@ export default {
           console.log(err)
         })
     },
-  }
+  //--------------------------------------------------------------------------------------------------------------------------------------------
+    clear_all_device_tracks: function(i){
+      i = i-1
+      for(let j = 0; j< (this.device_polyline_tracker[i].length); j++){
+          this.device_polyline_tracker[i][j].setMap(null)
+          this.device_polyline_tracker[i][j] = null;
+      }
+      let holder;
+      for(let j = 0; j< (this.device_marker_tracker[i].length - 1); j++){
+        holder = this.device_marker_tracker[i][j];
+        this.markers[holder].setMap(null)
+      }
+      this.device_polyline_tracker[i] = [];
+      this.device_real_time_polyline_tracker[i] = [];
+      this.device_real_time_marker_tracker[i] = [];
+      this.device_historic_polyline_tracker[i] = [];
+      this.device_historic_marker_tracker[i] = [];
+
+      this.device_real_time_tracking_data[i] = [];
+      this.device_historic_tracking_data[i] = [];
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    clear_real_time_device_tracks: function(i){
+      i = i-1;
+      console.log(this.device_real_time_tracking_data[i]);
+      for(let j = 0; j< (this.device_real_time_polyline_tracker[i].length); j++){
+        if(this.device_real_time_polyline_tracker[i][j]){
+          this.device_real_time_polyline_tracker[i][j].setMap(null)
+        }
+      }
+      let holder;
+      for(let j = 0; j< (this.device_real_time_marker_tracker[i].length); j++){
+        if(this.device_real_time_marker_tracker[i][j] || this.device_real_time_marker_tracker[i][j] == 0){
+          holder = this.device_real_time_marker_tracker[i][j];
+          this.markers[holder].setMap(null)
+        }
+      }
+      this.device_real_time_tracking_data[i] = [];
+      this.device_real_time_polyline_tracker[i] = [];
+      this.device_real_time_marker_tracker[i] = [];
+    },    
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    clear_historic_device_tracks: function(i){
+      i = i-1
+      for(let j = 0; j< (this.device_historic_polyline_tracker[i].length); j++){
+        if(this.device_historic_polyline_tracker[i][j]){
+          this.device_historic_polyline_tracker[i][j].setMap(null)
+        }
+      }         
+      let holder;
+      for(let j = 0; j< (this.device_historic_marker_tracker[i].length); j++){
+        if(this.device_historic_marker_tracker[i][j]){
+          holder = this.device_historic_marker_tracker[i][j];
+          this.markers[holder].setMap(null)
+        }
+      }
+      this.device_historic_tracking_data[i] = [];
+      this.device_historic_polyline_tracker[i] = [];
+      this.device_historic_marker_tracker[i] = [];
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    download_csv: function(download_data, name) {
+      if(download_data.length >0){
+        var data, filename, link;
+        var csv = convertArrayOfObjectsToCSV({
+          data: download_data
+        });
+        if (csv == null) return;
+        filename = name || 'export.csv';
+        
+        if (!csv.match(/^data:text\/csv/i)) {
+          csv = 'data:text/csv;charset=utf-8,' + csv;
+        }
+        data = encodeURI(csv);
+        link = document.createElement('a');
+        link.setAttribute('href', data);
+        link.setAttribute('download', filename);
+        link.click();
+      }
+    }
+  },
 };
 </script>
 

@@ -349,7 +349,7 @@ module.exports = {
         try {
             let device_data = [];
             if(req.access == 'all'){
-                let devices_db = await db.get_not_deleted()
+                let devices_db = await db.get()
                     .catch(err => {
                         //error getting devices from db
                         error_location = 0;

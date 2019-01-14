@@ -2,8 +2,7 @@ const db = require("../../db");
 
 module.exports = {
   get: function() {
-    let sql = `SELECT 
-        device_eui, device_name, sub_network_id, device_deleted
+    let sql = `SELECT *
         FROM device`;
     return db.queryAsync(sql);
   },
