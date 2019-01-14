@@ -170,6 +170,8 @@ function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers
             return "GPS Longitude";
       case "gps_altitude":
             return "GPS Altitude";
+    case "sos":
+            return "SOS";
       default:
         return "Null";
     }
@@ -227,6 +229,8 @@ function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers
         return "gps_longitude";
       case "GPS Altitude":
         return "gps_altitude";
+    case "SOS":
+        return "sos";
       default:
         return "Null";
     }
@@ -449,6 +453,92 @@ module.exports = {
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
                 device_data = convert_dates(device_data);
                 res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+            }else{
+                res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
+            }
+        }catch(err){
+            console.log(err);
+        }
+    },
+    get_historical: async function(req, res){
+        let sql_where = [];
+        let where = '';
+        let sql_order_by = [];
+        let sql = `SELECT device_uplink.*, vessel.vessel_name, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
+        FROM device_uplink
+        LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id`;
+        let access = 'all';// This will be set to 1 if the data is being fetched for the users vessels
+        try {
+            if(req.access == "self" || req.params.access == "self"){
+                access = 'self';
+                let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
+                    .catch(err => {
+                        //Error fetching vessels for user
+                        throw err;
+                    });
+                for (let i = 0; i < user_vessels.length; i++) {
+                    if (user_vessels[i].date_deleted == null) {
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                    } else {
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                        sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
+                    }
+                    sql_where.push(`vessel_id = '${user_vessels[i].vessel_id}'`);
+                    where = `${where} (`;
+                    for (let j = 0; j < sql_where.length; j++) {
+                        if (j < sql_where.length - 1) {
+                            //will run every time but the last cause we do not want it ending with AND
+                            where = where + `${sql_where[j]} AND `;
+                        } else {
+                            where = where + `${sql_where[j]}`;
+                        }
+                    }
+                    if (i != user_vessels.length - 1) { where = `${where}) OR` }
+                    else { where = `${where})` }
+                    sql_where = [];
+                }
+                where = `(${where}) ` //Puts the user filter data in brackets
+            }
+            let parameters = JSON.parse(req.params.parameters); 
+            if(parameters.start_date){
+                sql_where.push(`time_stamp > '${parameters.start_date}'`); //We use the time stamp because the rx_time will only be present if we have the receive gw metadata option enabled
+            }if(parameters.end_date){
+                sql_where.push(`time_stamp < '${parameters.end_date}'`);
+            }
+            //We need to add the access check because if it is self the user can only filter the data based on the vessel and the device
+            if (parameters.device && access == 'all') {
+                sql_where.push(`device_id IN (${parameters.device})`);
+            }
+            if (parameters.start_date || parameters.end_date || parameters.device ) {
+                if (req.access == "self" || req.params.access == "self") {
+                  where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
+                }
+              for (let i = 0; i < sql_where.length; i++) {
+                if (i < sql_where.length - 1) {
+                  //will run every time but the last cause we do not want it ending with AND
+                  where = where + `${sql_where[i]} AND `;
+                } else {
+                  where = where + `${sql_where[i]}`;
+                }
+              }
+            }
+            if(where){
+                sql = ` ${sql} WHERE ${where}`
+            }
+            if(parameters.sort_by){ 
+                sql = `${sql} ORDER BY ${parameters.sort_by} ${parameters.order}, time_stamp DESC`;
+            }else{//So that no mater what the data is ordered in descending order based on the timestamp
+                sql = `${sql} ORDER BY time_stamp DESC`;
+            }
+            console.log(sql)
+            let device_data = await DB.get_specified_parameters(sql)
+                .catch(err => {
+                    throw err; 
+                })
+            if(device_data.length>0){
+                device_data = convert_dates(device_data);
+                console.log(device_data.length)
+                res.status(200).send({ device_data: device_data, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
             }

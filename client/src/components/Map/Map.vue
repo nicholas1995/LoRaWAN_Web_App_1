@@ -84,7 +84,7 @@ export default {
       cleartick_device_polyline: [],
 
       initial: 1, //This is a flag which is initially set to 1... it is used to ensure that devices clearticks are only added to the array on the initail fetch of the data 
-      polyline: [], //2d array to keep track of the polylines for the devices
+      device_polyline_tracker: [], //2d array to keep track of the polylines for the devices
       device_marker_tracker: [], //this is a 2d array which will be used to keep track of which marker is related to which device
 
       
@@ -161,7 +161,7 @@ export default {
         this.create_device_marker(this.device_data[i], 1)
         this.device_names.push(this.device_data[i].device_id +":"+this.device_data[i].device_name);
         this.cleartick_device_polyline.push(null);
-        this.polyline.push([]);
+        this.device_polyline_tracker.push([]);
       }
       this.initial = 0;
     },
@@ -285,12 +285,13 @@ export default {
                       <b>Temperature:</b> <br>
                       <b>Humidity:</b> <br>
                       <b>Accelerometer:</b> <br>
+                      <b>SOS:</b>${device.sos} <br>
                       <b>GPS Latitude:</b> ${device.gps_latitude}<br>
                       <b>GPS Longitude:</b> ${device.gps_longitude}<br>
                   </div>`;
       google.maps.event.addListener(marker,'rightclick', (function(marker,content,info_window){ 
         return function() {
-         x = 0
+            x = 0
             info_window.setContent(content);
             info_window.open(this.map,marker);
         };
@@ -391,7 +392,7 @@ export default {
           map: this.map
         }); 
         let i = this.find_device_array_position(device.device_id);
-        this.polyline[i].push(polyline); //this is a 2d array where the first dimension is used to store the deivce... the second stores the polylines for that device
+        this.device_polyline_tracker[i].push(polyline); //this is a 2d array where the first dimension is used to store the deivce... the second stores the polylines for that device
         return path;
     },
   //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -469,10 +470,10 @@ export default {
     remove_device_tracks: function(){
       if(this.clear_markers_device_form){
         let position = this.find_device_array_position(functions.extract_id_id_name(this.clear_markers_device_form));
-        for(let i = 0; i< this.polyline[position].length; i++){
-          this.polyline[position][i].setMap(null)
+        for(let i = 0; i< this.device_polyline_tracker[position].length; i++){
+          this.device_polyline_tracker[position][i].setMap(null)
         }
-        this.polyline[position] = [];
+        this.device_polyline_tracker[position] = [];
         let holder;
         for(let i = 0; i< (this.device_marker_tracker[position].length - 1); i++){
           holder = this.device_marker_tracker[position][i];

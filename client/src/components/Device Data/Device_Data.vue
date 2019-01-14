@@ -122,7 +122,6 @@ export default {
     date_time_picker,
     network_subnetwork_vessel_device_picker,
     vessel_device_picker
-
   },
   data(){
     return {

@@ -310,6 +310,12 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/parameters/${parameters}/columns/${columns}`);
     },
+    device_historical_data(parameters){ 
+        //this is used to plot the historical tracks for a device
+        parameters = JSON.stringify(parameters); 
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/uplink/historical/parameters/${parameters}`);
+    },
     get_device_data_initial(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/initial`);

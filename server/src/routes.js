@@ -240,6 +240,9 @@ module.exports = ((app) => {
     //Device (Filtered) 
     app.get("/devices/uplink/parameters/:parameters/columns/:columns", authenticate, grant_access, device_data.get_filtered);
 
+    //Device (Filtered) 
+    app.get("/devices/uplink/historical/parameters/:parameters", authenticate, grant_access, device_data.get_historical);
+
     //----------------------Error Logs-----------------
     //Error Logs (Get)
     app.get(`/error_logs`, authenticate, grant_access, error_logs.get);

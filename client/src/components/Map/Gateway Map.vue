@@ -1,27 +1,6 @@
 <template>
   <v-content>
     <v-layout row wrap>
-      <v-flex xs12 sm6 md3 class="pr-4">
-        <v-select
-          v-model="device_tracking_form"
-          :items="this.device_names"
-          chips
-          multiple
-          label="Device Tracking"
-          prepend-icon="devices"
-          v-on:change="tracking"
-        ></v-select>
-      </v-flex>
-      <v-flex xs12 sm6 md3 class="pr-4">
-        <v-select
-          v-model="clear_markers_device_form"
-          :items="this.device_names"
-          chips
-          label="Select device to clear tracks"
-          clearable
-          v-on:change="remove_device_tracks"
-        ></v-select>
-      </v-flex>
       <v-flex xs12 sm6 md3 class="pr-4" >
         <v-btn class="grey lighten-2" large
           @click.stop="$router.push(`/map`)">
