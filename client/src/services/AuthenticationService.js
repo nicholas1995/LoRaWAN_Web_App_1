@@ -250,8 +250,7 @@ export default {
     },
 
     gateway_statistics_filtered(parameters, columns){
-        console.log(parameters)
-        console.log(columns)
+        parameters = JSON.stringify(parameters); 
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/gateway_statistics/parameters/${parameters}/columns/${columns}`);
     },

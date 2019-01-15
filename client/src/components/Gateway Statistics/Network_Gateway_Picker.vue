@@ -1,7 +1,7 @@
 <template>
   <v-layout row wrap>
     <!--Network Name-->
-      <v-flex xs12 sm6 md3 class="pr-4">
+      <v-flex xs12 sm6 md5 class="pr-2">
         <v-select
           v-model="network_name_form"
           :items="this.network_names"
@@ -25,7 +25,7 @@
         </v-select>
       </v-flex>
     <!--Gateway-->
-      <v-flex xs12 sm6 md3 class="pr-4">
+      <v-flex xs12 sm6 md5 class="mr-4">
         <v-select
           v-model="gateway_name_form"
           :items="this.gateway_names"

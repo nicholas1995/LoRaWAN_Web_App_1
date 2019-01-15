@@ -1,6 +1,5 @@
 <template>
     <v-content>   
-      <v-container fluid fill-height>
        <v-layout row wrap>
           <!-- Date Picker-->
           <v-flex xs12 sm5 md5>
@@ -65,7 +64,6 @@
             </v-icon>
           </v-flex>
         </v-layout>
-      </v-container>
     </v-content>
 </template>
   

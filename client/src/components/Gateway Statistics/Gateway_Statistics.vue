@@ -1,32 +1,29 @@
 <template>
   <v-content v-if="this.access == 1">
     <v-flex xs4 sm12>
-          <v-combobox
-            v-model="value"
-            :items="this.header_names"
-            label="Headings"
-            multiple
-            clearable
-            chips
-          ></v-combobox>
-        </v-flex>
-        <div>
+      <v-combobox
+        v-model="value"
+        :items="this.header_names"
+        label="Headings"
+        multiple
+        clearable
+        chips
+      ></v-combobox>
+    </v-flex>
+    <v-layout row wrap>
+      <v-flex xs4 sm6>
         <network_gateway_picker
           @gateway_id = gateway_id_function($event)
         ></network_gateway_picker>
-        </div>
-        <v-layout row wrap>
-        <!-- Date Picker-->
-        <v-flex xs12 sm6 md4>
+      </v-flex>
+    <!-- Date Picker-->
+      <v-flex xs12 sm6 md3>
         <date_time_picker v-bind:type_prop ='0' @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
-        </v-flex>
-        <v-flex xs12 sm6 md4>
+      </v-flex>
+      <v-flex xs12 sm6 md3>
         <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
-        </v-flex>
-        </v-layout>
-          <v-btn v-on:click="downloadCSV(gateway_statistics)">Export</v-btn>
-        <v-btn v-on:click="generate_function()">Generate</v-btn>
-
+      </v-flex>
+    </v-layout>
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Gateway Statistics</v-toolbar-title>
       <v-divider
@@ -34,6 +31,11 @@
         inset
         vertical
       ></v-divider>
+      <v-spacer></v-spacer>
+            <v-toolbar-items >
+<v-btn flat class ="grey lighten-3" v-on:click="downloadCSV(gateway_statistics)" >Export Gateway Stats</v-btn>
+    <v-btn flat class ="grey lighten-3" v-on:click="generate_function()">Generate Filtered Gateway Stats</v-btn>
+    </v-toolbar-items>
     </v-toolbar>
       <v-data-table
             :headers="display"
@@ -44,6 +46,11 @@
             class="elevation-1"
             style="max-height: 700px; overflow-y: auto"
           >
+          <template slot="no-data" >
+            <v-alert :value="this.allow_no_data" color="info" icon="warning" >
+              No data available.
+            </v-alert>
+          </template>
         <template slot="items" slot-scope="myprops">
           <tr style="height: 30px;"> 
         <td v-for="header in display"
@@ -132,6 +139,8 @@ export default {
         filter_parameters: {},
 
         gateway_id: null,
+
+                allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
     }
   },
   created: async function(){
@@ -151,14 +160,22 @@ export default {
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             })
-        this.headers = this.data.data.headers;
-        for(let i =0; i< this.headers.length; i++){
-          this.header_names.push(this.headers[i].text);
-          this.value.push(this.headers[i].text);
-        }
-        this.display = this.headers;
-        this.gateway_statistics = this.data.data.gateway_statistics;
-        this.loading = false;
+        if(this.data.status == 204){ //No data returned
+            this.allow_no_data = true;
+            this.gateway_statistics = [];
+            this.filter_parameters = {}; 
+            this.loading = false;
+        }else{//Data returned
+          this.headers = this.data.data.headers;
+          this.allow_no_data = true;
+          for(let i =0; i< this.headers.length; i++){
+            this.header_names.push(this.headers[i].text);
+            this.value.push(this.headers[i].text);
+          }
+          this.display = this.headers;
+          this.gateway_statistics = this.data.data.gateway_statistics;
+          this.loading = false;
+          }
         }else{
           alert('Please login.');
           this.$router.push('/login');
@@ -236,39 +253,40 @@ export default {
       link.click();
     },
     generate_function: async function(){
-      this.loading = true;
-      this.start_date_time = return_date_time(this.start_date, this.start_time);
-      this.end_date_time =return_date_time(this.end_date, this.end_time);
-      if(this.start_date_time){
-        this.start_date_time = date_time_functions.convert_picker_date_to_UTC(this.start_date_time);
-        this.filter_parameters["start_date"] = this.start_date_time;
-      }
-      if(this.end_date_time){
-        this.end_date_time = date_time_functions.convert_picker_date_to_UTC(this.end_date_time);
-        this.filter_parameters["end_date"] = this.end_date_time;
-      }
-      if(this.pagination.sortBy){
-        this.filter_parameters["sort_by"] = this.pagination.sortBy;
-        if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
-        else this.filter_parameters["order"] = 'DESC';
-      }
-      if(this.gateway_id){
-        this.filter_parameters["gateway_id"] = this.gateway_id;
-      }
-       let result = await AuthenticationService.gateway_statistics_filtered(this.filter_parameters, this.value)
-          .catch(err => {
-            //Error getting the gateway statistics from the server
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-            throw err;
-            }) 
-      this.gateway_statistics = result.data.gateway_statistics;
-      if(this.gateway_statistics.length > 0 ){ //This is so if no data is returned we do not get an error in the table because we need at least one objec to be able
-      //to create the headers of the table. So if no data is returns we leave the table with the previous headers and just display no data
-        this.display = result.data.headers;
-      }
-      this.filter_parameters = {}; 
-      this.loading = false;
-      
+      if(this.value.length > 0){
+        this.loading = true;
+        this.start_date_time = return_date_time(this.start_date, this.start_time);
+        this.end_date_time =return_date_time(this.end_date, this.end_time);
+        if(this.start_date_time){
+          this.start_date_time = date_time_functions.convert_picker_date_to_UTC(this.start_date_time);
+          this.filter_parameters["start_date"] = this.start_date_time;
+        }
+        if(this.end_date_time){
+          this.end_date_time = date_time_functions.convert_picker_date_to_UTC(this.end_date_time);
+          this.filter_parameters["end_date"] = this.end_date_time;
+        }
+        if(this.pagination.sortBy){
+          this.filter_parameters["sort_by"] = this.pagination.sortBy;
+          if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
+          else this.filter_parameters["order"] = 'DESC';
+        }
+        if(this.gateway_id){
+          this.filter_parameters["gateway_id"] = this.gateway_id;
+        }
+        let result = await AuthenticationService.gateway_statistics_filtered(this.filter_parameters, this.value)
+            .catch(err => {
+              //Error getting the gateway statistics from the server
+              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+              throw err;
+              }) 
+        this.gateway_statistics = result.data.gateway_statistics;
+        if(this.gateway_statistics.length > 0 ){ //This is so if no data is returned we do not get an error in the table because we need at least one objec to be able
+        //to create the headers of the table. So if no data is returns we leave the table with the previous headers and just display no data
+          this.display = result.data.headers;
+        }
+        this.filter_parameters = {}; 
+        this.loading = false;
+      }else this.gateway_statistics = []
     },
     gateway_id_function: function(data){
       //The if else statements were used because in the Picker we always want to emit when the value changes not only when the array is greater than 0.

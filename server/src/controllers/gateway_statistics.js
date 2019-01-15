@@ -107,20 +107,25 @@ function convert_gateway_statistics_headers_table_to_database(columns) {
 module.exports = {
     get_gateway_statistics_initial: async function(req, res){
         try{
+            let headers;
             let gateway_statistics = await db_gateway_statistics.get_gateway_statistics()
                 .catch(err => {
                     //Error getting gateway stats from the database
                     throw err;
                 })
-            let headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
-            res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
+            if(gateway_statistics.length > 0){
+                let headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
+                res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
+            }else{
+                res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
+            }
         }catch(err){
             console.log(err)
         }
     },
     get_gateway_statistics_filtered: async function(req, res){
         try{
-            let parameters = req.params.parameters;
+            let parameters = JSON.parse(req.params.parameters); 
             let columns = req.params.columns;
             columns = convert_gateway_statistics_headers_table_to_database(columns);
             let gateway_statistics = await db_gateway_statistics.get_gateway_statistics_filtered(parameters, columns)
