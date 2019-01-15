@@ -202,7 +202,7 @@ module.exports = ((app) => {
     app.get("/gateway_statistics/parameters/:parameters/columns/:columns", authenticate, grant_access, gateway_statistics.get_gateway_statistics_filtered);
 
     //Gateway Statistics (Export via email)
-    app.post("/gateway_statistics/export_email", authenticate, grant_access, gateway_statistics.gateway_statistics_export_via_email);
+    app.get("/gateway_statistics/export_email", authenticate, grant_access, gateway_statistics.gateway_statistics_export_via_email);
 
     //----------------------Service Profile----------------------
     //Service Profile (Read One)
@@ -247,7 +247,7 @@ module.exports = ((app) => {
     app.get("/devices/uplink/export_email", authenticate, grant_access, device_data.get_historical);
 
     //Device (Export via email)
-    app.post("/devices/uplink/export_email", authenticate, grant_access, device_data.export_via_email);
+    app.get("/devices/uplink/export_email", authenticate, grant_access, device_data.export_via_email);
 
     //----------------------Error Logs-----------------
     //Error Logs (Get)

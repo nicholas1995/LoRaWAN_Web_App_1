@@ -499,7 +499,7 @@ module.exports = {
                     else { where = `${where})` }
                     sql_where = [];
                 }
-                where = `(${where}) ` //Puts the user filter data in brackets
+                where = `(${where}) ` //Puts the user filter data in brackets 
             }
             let parameters = JSON.parse(req.params.parameters); 
             if(parameters.start_date){
@@ -549,7 +549,8 @@ module.exports = {
         }
     },
     export_via_email: async function(req, res){
-        try{
+        try{ ///NEED TO ADD IN EXCEPTION HANDLER FOR WHEN THE DATA IS TO LARGER TO SEND OVER EMAIL
+            console.log('hereeeee')
             let device_uplink_data_csv = req.body.device_uplink_data_csv;
             console.log(device_uplink_data_csv)
             var mailOptions = {
