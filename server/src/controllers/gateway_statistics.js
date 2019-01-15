@@ -1,12 +1,7 @@
 const VError = require('verror');
 const error_handler = require('./error_logs');
 const db_gateway_statistics = require("../services/database/gateway_statistics_db");
-
-
 const email = require("../services/email");
-
-
-
 
 function error_message(current_error_message, previous_error) {
     let error = new VError("%s : %s", current_error_message, previous_error);
@@ -167,7 +162,6 @@ module.exports = {
             });
             console.log('Email send:' ,email_result.response)
             res.status(200).send({message: 'Gateway statistics sent via email.', type: 'success'})
-            
         }catch(err){
             console.log(err)
         }

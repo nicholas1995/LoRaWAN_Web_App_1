@@ -1,40 +1,37 @@
 <template>
   <v-content v-if="this.access == 1">
     <v-flex xs4 sm12>
-          <v-combobox
-            v-model="value"
-            :items="this.header_names"
-            label="Headings"
-            multiple
-            clearable
-            chips
-          ></v-combobox>
-        </v-flex>
-        <div v-if="this.$store.state.user_class !='Fisher'">
-        <network_subnetwork_vessel_device_picker
-          @sub_network_id = sub_network_id_function($event)
-          @vessel_id = vessel_id_function($event)
-          @device_id = device_id_function($event)
-        ></network_subnetwork_vessel_device_picker>
-        </div>
-        <div v-else-if="this.$store.state.user_class =='Fisher'">
-        <vessel_device_picker
-          @vessel_id = vessel_id_function($event)
-          @device_id = device_id_function($event)
-        ></vessel_device_picker>
-        </div>
-        <v-layout row wrap>
-        <!-- Date Picker-->
-        <v-flex xs12 sm6 md4>
+      <v-combobox
+        v-model="value"
+        :items="this.header_names"
+        label="Headings"
+        multiple
+        clearable
+        chips
+      ></v-combobox>
+    </v-flex>
+    <div v-if="this.$store.state.user_class !='Fisher'">
+      <network_subnetwork_vessel_device_picker
+        @sub_network_id = sub_network_id_function($event)
+        @vessel_id = vessel_id_function($event)
+        @device_id = device_id_function($event)
+      ></network_subnetwork_vessel_device_picker>
+    </div>
+    <div v-else-if="this.$store.state.user_class =='Fisher'">
+      <vessel_device_picker
+        @vessel_id = vessel_id_function($event)
+        @device_id = device_id_function($event)
+      ></vessel_device_picker>
+    </div>
+    <v-layout row wrap>
+      <!-- Date Picker-->
+      <v-flex xs12 sm6 md4>
         <date_time_picker v-bind:type_prop ='0' @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
-        </v-flex>
-        <v-flex xs12 sm6 md4>
+      </v-flex>
+      <v-flex xs12 sm6 md4>
         <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
-        </v-flex>
-        </v-layout>
-          <v-btn v-on:click="downloadCSV(device_data)">Export</v-btn>
-        <v-btn v-on:click="generate_function()">Generate</v-btn>
-
+      </v-flex>
+    </v-layout>
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
       <v-divider
@@ -42,6 +39,24 @@
         inset
         vertical
       ></v-divider>
+      <v-spacer></v-spacer>
+      <v-toolbar-items >
+        <v-menu :nudge-width="100">
+          <v-toolbar-title slot="activator">
+            <v-btn flat class ="grey lighten-3" v-on:click="export_device_data" >Export Device Uplink Data</v-btn>
+          </v-toolbar-title>
+          <v-list>
+            <v-list-tile
+              v-for="item in export_options"
+              :key="item"
+              v-on:click="export_device_data(item)"
+            >
+              <v-list-tile-title v-text="item"></v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+        <v-btn flat class ="grey lighten-3" v-on:click="generate_function()">Generate Filtered Device Uplink Data</v-btn>
+      </v-toolbar-items>
     </v-toolbar>
       <v-data-table
             :headers="display"
@@ -150,6 +165,8 @@ export default {
         self: 0, //This will be set high if the data user class user wants to view vessles assigned to them 
         inital: true, //this is used to prevent the refetching of data when values is first assigned... so when value changes this will be set to false
         allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
+
+        export_options: ["Local Storage", "Email"],
     }
   },
   props: [
@@ -261,13 +278,13 @@ export default {
       this.end_time = time;
       this.end_date_time = null;
     },
-    downloadCSV: function(args) {
+    download_csv: function(name) {
       var data, filename, link;
       var csv = convertArrayOfObjectsToCSV({
         data: this.device_data
       });
       if (csv == null) return;
-      filename = args.filename || 'export.csv';
+      filename = name || 'export.csv';
       
       if (!csv.match(/^data:text\/csv/i)) {
         csv = 'data:text/csv;charset=utf-8,' + csv;
@@ -277,6 +294,24 @@ export default {
       link.setAttribute('href', data);
       link.setAttribute('download', filename);
       link.click();
+    },
+    download_email: async function(){
+      let device_uplink_data_csv = convertArrayOfObjectsToCSV({
+        data: this.device_data
+      });
+      await AuthenticationService.device_uplink_export_via_email(device_uplink_data_csv)
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    export_device_data: function(option){
+      if(this.device_data.length > 0){
+        if(option =="Local Storage"){
+          this.download_csv("device_uplink_data.csv")
+        }else if(option == 'Email'){
+          this.download_email();
+        }
+      }
     },
     generate_function: async function(){
       if(this.value.length > 0){ //So we do not try to fetch data from the database unless we have a specified heading or else a 404 error will occur

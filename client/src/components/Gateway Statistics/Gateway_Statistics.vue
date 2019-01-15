@@ -268,14 +268,21 @@ export default {
       link.click();
     },
     download_email: async function(){
+      let csv_data = convertArrayOfObjectsToCSV({
+        data: this.gateway_statistics
+      });
+      await AuthenticationService.gateway_statistics_export_via_email(csv_data)
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    export_gateway_statistics: function(option){
       if(this.gateway_statistics.length > 0){
-        let csv_data = convertArrayOfObjectsToCSV({
-          data: this.gateway_statistics
-        });
-        await AuthenticationService.gateway_statistics_export_via_email(csv_data)
-          .catch(err => {
-            console.log(err);
-          })
+        if(option =="Local Storage"){
+          this.download_csv("gateway_statistics.csv")
+        }else if(option == 'Email'){
+          this.download_email();
+        }
       }
     },
     generate_function: async function(){
@@ -326,13 +333,6 @@ export default {
         i = "0" + i;
       }
       return i;
-    },
-    export_gateway_statistics: function(option){
-      if(option =="Local Storage"){
-        this.download_csv("gateway_statistics.csv")
-      }else if(option == 'Email'){
-        this.download_email();
-      }
     },
     convert_picker_date_to_UTC: function(date){
       date = new Date(date);

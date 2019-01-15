@@ -244,7 +244,10 @@ module.exports = ((app) => {
     app.get("/devices/uplink/parameters/:parameters/columns/:columns", authenticate, grant_access, device_data.get_filtered);
 
     //Device (Filtered) 
-    app.get("/devices/uplink/historical/parameters/:parameters", authenticate, grant_access, device_data.get_historical);
+    app.get("/devices/uplink/export_email", authenticate, grant_access, device_data.get_historical);
+
+    //Device (Export via email)
+    app.post("/devices/uplink/export_email", authenticate, grant_access, device_data.export_via_email);
 
     //----------------------Error Logs-----------------
     //Error Logs (Get)

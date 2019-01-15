@@ -327,6 +327,10 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/initial/self`);
     }, 
+    device_uplink_export_via_email(device_uplink_data_csv){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.post(`/devices/uplink/export_email`, {device_uplink_data_csv});
+    },
 
     //Error Logs
     get_error_logs(){

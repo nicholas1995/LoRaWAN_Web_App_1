@@ -2,6 +2,8 @@ const DB = require("../services/database/device_rx_db");
 const DB_USER_VESSEL = require ("../services/database/user_vessel_db")
 const error = require("../services/errors");
 const VError = require("verror");
+const email = require("../services/email");
+
 
 function return_date(date) {
     try{
@@ -544,6 +546,31 @@ module.exports = {
             }
         }catch(err){
             console.log(err);
+        }
+    },
+    export_via_email: async function(req, res){
+        try{
+            let device_uplink_data_csv = req.body.device_uplink_data_csv;
+            console.log(device_uplink_data_csv)
+            var mailOptions = {
+                from: 'lorawanconsole@gmail.com',
+                to: req.user.email,
+                subject: 'Device Uplink Data(Private Marine IoT Network Console)',
+                text: 'See attached the filtered device uplink data.',
+                attachments: [{   
+                    filename: 'device_uplink_data.csv',
+                    content: device_uplink_data_csv 
+                }],
+                };
+                let email_result = await email.transporter.sendMail(mailOptions)
+                .catch(err => {
+                    //error sending gateway statistics
+                    throw err;
+                });
+                console.log('Email send:' ,email_result.response)
+                res.status(200).send({message: 'Gateway statistics sent via email.', type: 'success'})
+        }catch(err){
+            console.log(err)
         }
     }
 }
