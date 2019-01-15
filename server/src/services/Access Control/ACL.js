@@ -64,6 +64,9 @@ const ACL = {
     },
     error_logs: {
       read: "All"
+    },
+    email: {
+      create: "All"
     }
   },
   Software_Admin: {
@@ -97,6 +100,9 @@ const ACL = {
     },
     error_logs: {
       read: "All"
+    },
+    email: {
+      create: "All"
     }
   },
   Analyst: {
@@ -125,6 +131,9 @@ const ACL = {
     },
     gateway_statistics: {
       read: "All"
+    },
+    email: {
+      create: "All"
     }
   },
   Fisher: {
@@ -141,6 +150,9 @@ const ACL = {
     device_data: {
       read: "Self",
       export: "Self"
+    },
+    email: {
+      create: "All"
     }
   }
 };

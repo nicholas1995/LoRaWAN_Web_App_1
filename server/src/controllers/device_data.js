@@ -532,14 +532,12 @@ module.exports = {
             }else{//So that no mater what the data is ordered in descending order based on the timestamp
                 sql = `${sql} ORDER BY time_stamp DESC`;
             }
-            console.log(sql)
             let device_data = await DB.get_specified_parameters(sql)
                 .catch(err => {
                     throw err; 
                 })
             if(device_data.length>0){
                 device_data = convert_dates(device_data);
-                console.log(device_data.length)
                 res.status(200).send({ device_data: device_data, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
@@ -550,9 +548,7 @@ module.exports = {
     },
     export_via_email: async function(req, res){
         try{ ///NEED TO ADD IN EXCEPTION HANDLER FOR WHEN THE DATA IS TO LARGER TO SEND OVER EMAIL
-            console.log('hereeeee')
             let device_uplink_data_csv = req.body.device_uplink_data_csv;
-            console.log(device_uplink_data_csv)
             var mailOptions = {
                 from: 'lorawanconsole@gmail.com',
                 to: req.user.email,

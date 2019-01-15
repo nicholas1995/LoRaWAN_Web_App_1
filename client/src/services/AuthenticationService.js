@@ -256,7 +256,7 @@ export default {
     },
     gateway_statistics_export_via_email(gateway_stats_csv){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/gateway_statistics/export_email`, {gateway_stats_csv});
+        return Api.post(`/email/gateway_statistics/export_email`, {gateway_stats_csv});
     },
 
     //Service Profile
@@ -329,7 +329,7 @@ export default {
     }, 
     device_uplink_export_via_email(device_uplink_data_csv){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/devices/uplink/export_email`, {device_uplink_data_csv});
+        return Api.post(`/email/devices/uplink/export_email`, {device_uplink_data_csv});
     },
 
     //Error Logs
