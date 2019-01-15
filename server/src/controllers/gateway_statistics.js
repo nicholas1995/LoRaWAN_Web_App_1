@@ -3,6 +3,11 @@ const error_handler = require('./error_logs');
 const db_gateway_statistics = require("../services/database/gateway_statistics_db");
 
 
+const email = require("../services/email");
+
+
+
+
 function error_message(current_error_message, previous_error) {
     let error = new VError("%s : %s", current_error_message, previous_error);
     return error;
@@ -138,6 +143,31 @@ module.exports = {
                 headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
             }
             res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
+        }catch(err){
+            console.log(err)
+        }
+    },
+    gateway_statistics_export_via_email: async function(req, res){
+        try{
+            let gateway_stats_csv = req.body.gateway_stats_csv;
+            var mailOptions = {
+            from: 'lorawanconsole@gmail.com',
+            to: req.user.email,
+            subject: 'Gateway Statistics(Private Marine IoT Network Console)',
+            text: 'See attached the filtered gateway statistics.',
+            attachments: [{   
+                filename: 'gateway_statistics.csv',
+                content: gateway_stats_csv 
+            }],
+            };
+            let email_result = await email.transporter.sendMail(mailOptions)
+            .catch(err => {
+                //error sending gateway statistics
+                throw err;
+            });
+            console.log('Email send:' ,email_result.response)
+            res.status(200).send({message: 'Gateway statistics sent via email.', type: 'success'})
+            
         }catch(err){
             console.log(err)
         }

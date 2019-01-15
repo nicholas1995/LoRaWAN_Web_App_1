@@ -38,7 +38,8 @@ const ACL = {
       create: "All"
     },
     gateway_statistics: {
-      read: "All"
+      read: "All",
+      create: "All"
     },
     device_data: {
       read: "All",

@@ -32,10 +32,23 @@
         vertical
       ></v-divider>
       <v-spacer></v-spacer>
-            <v-toolbar-items >
-<v-btn flat class ="grey lighten-3" v-on:click="downloadCSV(gateway_statistics)" >Export Gateway Stats</v-btn>
-    <v-btn flat class ="grey lighten-3" v-on:click="generate_function()">Generate Filtered Gateway Stats</v-btn>
-    </v-toolbar-items>
+      <v-toolbar-items >
+        <v-menu :nudge-width="100">
+          <v-toolbar-title slot="activator">
+            <v-btn flat class ="grey lighten-3" v-on:click="export_gateway_statistics" >Export Gateway Stats</v-btn>
+          </v-toolbar-title>
+          <v-list>
+            <v-list-tile
+              v-for="item in export_options"
+              :key="item"
+              v-on:click="export_gateway_statistics(item)"
+            >
+              <v-list-tile-title v-text="item"></v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-menu>
+        <v-btn flat class ="grey lighten-3" v-on:click="generate_function()">Generate Filtered Gateway Stats</v-btn>
+      </v-toolbar-items>
     </v-toolbar>
       <v-data-table
             :headers="display"
@@ -140,7 +153,9 @@ export default {
 
         gateway_id: null,
 
-                allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
+        allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
+
+        export_options: ["Local Storage", "Email"],
     }
   },
   created: async function(){
@@ -235,13 +250,13 @@ export default {
       this.end_time = time;
       this.end_date_time = null;
     },
-    downloadCSV: function(args) {
+    download_csv: function(name) {
       var data, filename, link;
       var csv = convertArrayOfObjectsToCSV({
         data: this.gateway_statistics
       });
       if (csv == null) return;
-      filename = args.filename || 'export.csv';
+      filename = name || 'export.csv';
       
       if (!csv.match(/^data:text\/csv/i)) {
         csv = 'data:text/csv;charset=utf-8,' + csv;
@@ -251,6 +266,17 @@ export default {
       link.setAttribute('href', data);
       link.setAttribute('download', filename);
       link.click();
+    },
+    download_email: async function(){
+      if(this.gateway_statistics.length > 0){
+        let csv_data = convertArrayOfObjectsToCSV({
+          data: this.gateway_statistics
+        });
+        await AuthenticationService.gateway_statistics_export_via_email(csv_data)
+          .catch(err => {
+            console.log(err);
+          })
+      }
     },
     generate_function: async function(){
       if(this.value.length > 0){
@@ -300,6 +326,13 @@ export default {
         i = "0" + i;
       }
       return i;
+    },
+    export_gateway_statistics: function(option){
+      if(option =="Local Storage"){
+        this.download_csv("gateway_statistics.csv")
+      }else if(option == 'Email'){
+        this.download_email();
+      }
     },
     convert_picker_date_to_UTC: function(date){
       date = new Date(date);

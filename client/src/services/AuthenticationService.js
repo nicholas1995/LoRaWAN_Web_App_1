@@ -254,6 +254,10 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/gateway_statistics/parameters/${parameters}/columns/${columns}`);
     },
+    gateway_statistics_export_via_email(gateway_stats_csv){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.post(`/gateway_statistics/export_email`, {gateway_stats_csv});
+    },
 
     //Service Profile
     get_service_profiles(){

@@ -201,6 +201,9 @@ module.exports = ((app) => {
     //Gateway Statistics (Filtered)
     app.get("/gateway_statistics/parameters/:parameters/columns/:columns", authenticate, grant_access, gateway_statistics.get_gateway_statistics_filtered);
 
+    //Gateway Statistics (Export via email)
+    app.post("/gateway_statistics/export_email", authenticate, grant_access, gateway_statistics.gateway_statistics_export_via_email);
+
     //----------------------Service Profile----------------------
     //Service Profile (Read One)
     app.get("/service_profiles/:service_profile_id_lora", authenticate, grant_access, service_profiles.get_one_service_profile);
