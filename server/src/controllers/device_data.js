@@ -277,10 +277,14 @@ function add_zero(i) {
         }
         return i;
     }
-function convert_dates(data){
+function convert_dates(data, permission){ //to ensure that when a fisher downloads the data it does not have any info about rx_time
     for(let i =0; i< data.length; i++){
-        data[i]["rx_time"] = return_date(data[i]["rx_time"]);
-        data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
+        if(permission =='self'){
+            data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
+        }else if(permission =='all'){
+            data[i]["rx_time"] = return_date(data[i]["rx_time"]);
+            data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
+        }
     }
     return data;
 }
@@ -307,7 +311,7 @@ module.exports = {
                 });
             if (device_data.length > 0) {
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], 'all');
-                device_data = convert_dates(device_data);
+                device_data = convert_dates(device_data, 'all');
                 res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
             } else {
                 res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
@@ -355,7 +359,7 @@ module.exports = {
                         throw err;
                     })
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], 'self');
-                device_data = convert_dates(device_data);
+                device_data = convert_dates(device_data, 'self');
                 res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
@@ -453,7 +457,7 @@ module.exports = {
                 })
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
-                device_data = convert_dates(device_data);
+                device_data = convert_dates(device_data, access);
                 res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
@@ -537,7 +541,7 @@ module.exports = {
                     throw err; 
                 })
             if(device_data.length>0){
-                device_data = convert_dates(device_data);
+                device_data = convert_dates(device_data, access);
                 res.status(200).send({ device_data: device_data, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
