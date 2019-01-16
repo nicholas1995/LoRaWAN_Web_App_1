@@ -1,7 +1,13 @@
 <template>
   <v-content>
     <div v-if="initial == 0">
+      <div v-if="this.$store.state.user_class !='Fisher'">
+        <network_subnetwork_vessel_device_picker
+          @device_id = device_id_function($event)
+        ></network_subnetwork_vessel_device_picker>
+      </div>
       <v-tabs
+        v-model="active_tab"
         dark
         color="blue"
         show-arrows
@@ -127,6 +133,23 @@
     <v-flex xs12 sm6 md3 class="pr-4">
       <div class="google-map" :id="map_name" ></div>
     </v-flex>
+    <v-snackbar
+      v-model="snackbar"
+      bottom="bottom"
+      left="left"
+      multi-line="multi-line"
+      right="right"
+      :timeout="this.timeout"
+      auto-height="auto-height"
+      :color ="this.color"
+    >
+      {{ this.message }}
+      <v-btn
+        flat
+        @click="snackbar = 0"
+      >        Close
+      </v-btn>
+    </v-snackbar>
   </v-content>
 </template>
   
@@ -135,6 +158,7 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import functions from "./../../services/functions/forms_functions.js"
 import date_time_picker from "./../Date_Time_Picker";
+import network_subnetwork_vessel_device_picker from "./Network_Subnet_Vessel_Device_Picker";
 
 function return_date_time(date, time){
   let date_time = null;
@@ -178,6 +202,7 @@ function convertArrayOfObjectsToCSV(args) {
 export default {
   components:{
     date_time_picker,
+    network_subnetwork_vessel_device_picker,
   },
   name: 'google',
   props: ['name'],
@@ -237,6 +262,14 @@ export default {
 
       device_real_time_tracking_data: [], //a 2d array which stores the device real time tracking data
       device_historic_tracking_data: [], //a 2d array which stores the device historic tracking data
+
+      device_id: '', //the device id of the device selected to control
+      active_tab: '', //the tab postion to be opened. the number will be based on the device position in the device_data array
+
+      snackbar:0,
+      timeout: 1500,
+      color: "error",
+      message: "blank",
     }
   },
   mounted: async function () {
@@ -706,8 +739,28 @@ export default {
         link.setAttribute('download', filename);
         link.click();
       }
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    device_id_function: function(data){
+      if(data){
+        this.device_id = data
+        if(this.find_device_array_position(this.device_id) == undefined){
+          this.message_display({type: 'info', message: 'No uplink data for selected device'})
+        }else{
+          this.active_tab = this.find_device_array_position(this.device_id);
+        }
+      }
+      else {
+        this.device_id = null
+      }
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    message_display(data){
+      this.snackbar=1;
+      this.color =data.type;
+      this.message = data.message;
     }
-  },
+  }
 };
 </script>
 

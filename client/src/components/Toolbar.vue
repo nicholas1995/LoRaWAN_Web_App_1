@@ -1,24 +1,24 @@
 <template>
   <v-content>
-  <v-toolbar fixed color ="grey lighten-2" >
+  <v-toolbar fixed class = 'primary' >
       <!--This is the menu icon -->
       <v-toolbar-side-icon  flat v-if="!this.$store.state.loginState"
         class=" mt-2" @click.stop="$emit('toggle-drawer')" >
       </v-toolbar-side-icon>
     <v-toolbar-title>Private Marine IoT Network Console </v-toolbar-title>
       <v-divider
-        class="mx-2"
+        class="mx-2 secondary"
         inset
         vertical
       ></v-divider>
     <v-spacer></v-spacer>
     <v-toolbar-items>
-      <v-btn class="grey lighten-2" @click="login" flat v-if="this.$store.state.loginState">
+      <v-btn class="primary" @click="login" flat v-if="this.$store.state.loginState">
         Login
       </v-btn>
       <v-menu :nudge-width="100">
         <v-toolbar-title slot="activator">
-            <v-icon large @click="profile"  v-if="!this.$store.state.loginState" class="mr-3">
+            <v-icon large @click="profile"  v-if="!this.$store.state.loginState" class="mr-3 primary">
               account_box
             </v-icon>
         </v-toolbar-title>
@@ -33,7 +33,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-btn class="grey lighten-2" @click="logout" flat v-if="!this.$store.state.loginState">
+      <v-btn class="primary"  @click="logout" flat v-if="!this.$store.state.loginState">
         Logout
       </v-btn>
     </v-toolbar-items>
