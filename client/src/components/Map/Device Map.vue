@@ -9,11 +9,11 @@
       <v-tabs
         v-model="active_tab"
         dark
-        color="blue"
+        color="primary"
         show-arrows
         grow
       >
-        <v-tabs-slider color="red"></v-tabs-slider>
+        <v-tabs-slider color="secondary"></v-tabs-slider>
         <v-tab
           v-for="i in device_data.length"
           :key="i"

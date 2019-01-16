@@ -1,6 +1,6 @@
 <template>
   <v-content v-if="this.access == 1">
-    <v-toolbar class="elevation-1" color="grey lighten-3">
+    <v-toolbar class="elevation-1 primary">
       <v-toolbar-title>VESSELS</v-toolbar-title>
       <v-divider
         class="mx-2"

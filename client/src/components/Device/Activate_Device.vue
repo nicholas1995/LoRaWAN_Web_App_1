@@ -4,7 +4,7 @@
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
-            <v-toolbar light class="grey lighten-2 ">
+            <v-toolbar light class="primary">
               <v-toolbar-title>Device Activation</v-toolbar-title>
             </v-toolbar>
           </v-card>

@@ -1,9 +1,9 @@
 <template>
   <v-content v-if="this.access == 1">
-    <v-toolbar class="elevation-1" color="grey lighten-3">
+    <v-toolbar class="elevation-1 primary" >
       <v-toolbar-title>NETWORKS</v-toolbar-title>
       <v-divider
-        class="mx-2"
+        class="mx-2 secondary"
         inset
         vertical
       ></v-divider>
@@ -25,7 +25,7 @@
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">
-          <td class="justify-center layout px-0">
+          <td class="justify-center layout px-0 ">
             <v-tooltip bottom>
               <v-icon slot="activator"
                 small
