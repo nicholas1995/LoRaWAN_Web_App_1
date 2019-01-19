@@ -8,7 +8,7 @@
               <v-toolbar-title>Update Sub-Network</v-toolbar-title>
             </v-toolbar>
           </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
+          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
             <!--Sub-Network Name -->
             <v-flex >
               <v-text-field
@@ -44,11 +44,11 @@
                 {{message}}
               </div>
             <!-- Buttons -->
-              <v-btn class="grey lighten-2"
+              <v-btn class="button"
                 @click.stop="update_sub_network()">
                 Update Sub-Network
               </v-btn>
-             <v-btn class="grey lighten-2"
+             <v-btn class="button"
                 @click.stop="$router.push(`/subnetwork`)">
                 Cancel
               </v-btn>

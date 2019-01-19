@@ -1,6 +1,6 @@
-<template>
-  <v-content v-if="this.access == 1">
-    <v-container fluid fill-height>
+<template >
+  <v-content v-if="this.access == 1" >
+    <v-container fluid fill-height >
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
@@ -8,7 +8,7 @@
               <v-toolbar-title>Create Network</v-toolbar-title>
             </v-toolbar>
           </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
+          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
             <v-form>
               <!--$touch is used to manually set dirty when the event occurs
               and dirty is used to validate the data field--> 
@@ -41,11 +41,11 @@
               <div div class="text">
                 {{message}} 
               </div>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button"
                 @click.stop="create_network()">
                 Create Network
               </v-btn>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button"
                 @click.stop="$router.push(`/network`)">
                 Cancel
               </v-btn>

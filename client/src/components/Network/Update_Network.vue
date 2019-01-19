@@ -8,7 +8,7 @@
               <v-toolbar-title>Update Network</v-toolbar-title>
             </v-toolbar>
           </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
+          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
             <!--Network Name -->
             <v-flex >
               <v-text-field
@@ -39,11 +39,11 @@
               <div div class="text">
                 {{message}}
               </div>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button"
                 @click.stop="update_network()">
                 Update Network
               </v-btn>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button"
                 @click.stop="$router.push(`/network`)">
                 Cancel
               </v-btn>

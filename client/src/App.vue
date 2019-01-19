@@ -1,17 +1,17 @@
 <template>
 <html>
-  <body>
+  <body >
     <div id="app">
-      <v-app>
+      <v-app class = "app_background">
         <v-content>
           <v-container>
             <toolbar @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer" @message_display="message_display($event)"></toolbar>
-            <v-layout>
+            <v-layout >
               <v-flex >
                 <navigation_drawer ref="drawer" flat v-if="!this.$store.state.loginState"></navigation_drawer>
               </v-flex>
-              <v-flex xs12>
-                 <router-view></router-view>
+              <v-flex xs12 >
+                 <router-view ></router-view>
               </v-flex>
             </v-layout>
           </v-container>
