@@ -2,154 +2,193 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
-          <v-card class=" elevation-10 ">
-            <v-toolbar light class="primary">
-              <v-toolbar-title>Update Gateway</v-toolbar-title>
-            </v-toolbar>
-          </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
-            <!--Gateway Name -->
-            <v-flex >
-              <v-text-field
-                v-model="gateway_name"
-                label="Gateway Name*"
-                :error-messages = "gateway_name_Errors"
-                @keyup="$v.gateway_name.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_name"></tool_tips_forms>
-              </v-text-field>
-              </v-flex>
-            <!--Description  -->
-            <v-flex >
-              <v-textarea
-                auto-grow
-                rows="1"
-                v-model="description"
-                label="Description*"
-                :error-messages = "description_Errors"
-                @keyup="$v.description.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_description"></tool_tips_forms>
-              </v-textarea>
-              </v-flex>
-            <!--Network Server Name-->
-              <v-select
-                v-model="network_server_name_form"
-                :items="this.network_server_names"
-                label="Network Server*"
-                :error-messages = "network_server_name_form_Errors"
-                @blur="$v.network_server_name_form.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_network_server"></tool_tips_forms>
-              </v-select>
-            <!--Gateway Profile Name-->
-              <v-select
-                v-model="gateway_profile_name_form"
-                :items="this.gateway_profile_names"
-                label="Gateway Profile*"
-                :error-messages = "gateway_profile_name_form_Errors"
-                @blur="$v.gateway_profile_name_form.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_profile"></tool_tips_forms>
-              </v-select>
-            <!--Gateway Accuracy-->
-              <v-flex >
-                <v-text-field
-                  v-model="gateway_accuracy"
-                  label="Gateway Accuracy*"
-                  suffix = "meters"
-                  :error-messages = "gateway_accuracy_Errors"
-                  @keyup="$v.gateway_accuracy.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_accuracy"></tool_tips_forms>
-                </v-text-field>
-                </v-flex>
-            <!--Gateway Altitude-->
-              <v-flex >
-                <v-text-field
-                  v-model="gateway_altitude"
-                  label="Gateway Altitude*"
-                  suffix = "meters"
-                  :error-messages = "gateway_altitude_Errors"
-                  @keyup="$v.gateway_altitude.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_altitude"></tool_tips_forms>
-                </v-text-field>
-                </v-flex>
-            <!--Gateway Latitude-->
-              <v-flex >
-                <v-text-field
-                  v-model="gateway_latitude"
-                  label="Gateway Latitude*"
-                  :error-messages = "gateway_latitude_Errors"
-                  @keyup="$v.gateway_latitude.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_latitude"></tool_tips_forms>
-                </v-text-field>
-                </v-flex>
-            <!--Gateway Longitude-->
-              <v-flex >
-                <v-text-field
-                  v-model="gateway_longitude"
-                  label="Gateway Longitude*"
-                  :error-messages = "gateway_longitude_Errors"
-                  @keyup="$v.gateway_longitude.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_longitude"></tool_tips_forms>
-                </v-text-field>
-                </v-flex>
-            <!--Gateway Location Source-->
-              <v-select
-                v-model="gateway_location_source_form"
-                :items="this.gateway_location_source"
-                label="Source*"
-                :error-messages = "gateway_location_source_form_Errors"
-                @blur="$v.gateway_location_source_form.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_source"></tool_tips_forms>
-              </v-select>
-              <!--Discovery Enabled-->
-                <v-checkbox
-                  v-model="discovery_enabled"
-                  label="Discovery Enabled"
-                ></v-checkbox>
-            <!--Fine Time Stamp Key-->
-              <v-flex >
-                <v-text-field
-                  v-model="fine_time_stamp_key"
-                  label="Fine Time Stamp Key"
-                  :error-messages = "fine_time_stamp_key_Errors"
-                  @keyup="$v.fine_time_stamp_key.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_fine_time_stamp_key"></tool_tips_forms>
-                </v-text-field>
-                </v-flex>
-            <!--FPGA ID-->
-              <v-flex >
-                <v-text-field
-                  v-model="fpga_id"
-                  label="FPGA ID"
-                  :error-messages = "fpga_id_Errors"
-                  @keyup="$v.fpga_id.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_fpga_id"></tool_tips_forms>
-                </v-text-field>
-                </v-flex>
-              <!-- Message -->
-              <div div class="text">
-                {{message}}
-              </div>
-              <!-- Buttons -->
-              <v-btn class="grey lighten-2"
-                @click.stop="update_gateway()">
-                Update Gateway
-              </v-btn>
-              <v-btn class="grey lighten-2"
-                @click.stop="$router.push(`/gateway`)">
-                Cancel
-              </v-btn>
-          </v-card>
+        <v-flex xs12 sm8 md8>
+          <v-toolbar light class="primary ">
+            <v-toolbar-title>Update Gateway</v-toolbar-title>
+          </v-toolbar>
+            <v-stepper non-linear class = "elevation-5">
+              <v-stepper-header>
+                <v-stepper-step editable step="1">Basic Information</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="2">Gateway Location</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="3">Additional Information</v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items >
+<!--Stepper 1--><v-stepper-content step="1" >
+                <!--Gateway Name -->
+                  <v-flex >
+                    <v-text-field
+                      v-model="gateway_name"
+                      label="Gateway Name*"
+                      :error-messages = "gateway_name_Errors"
+                      @keyup="$v.gateway_name.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_name"></tool_tips_forms>
+                    </v-text-field>
+                    </v-flex>
+                  <!--Description  -->
+                  <v-flex >
+                    <v-textarea
+                      auto-grow
+                      rows="1"
+                      v-model="description"
+                      label="Description*"
+                      :error-messages = "description_Errors"
+                      @keyup="$v.description.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_description"></tool_tips_forms>
+                    </v-textarea>
+                    </v-flex>
+                  <!--Network Server Name-->
+                    <v-select
+                      v-model="network_server_name_form"
+                      :items="this.network_server_names"
+                      label="Network Server*"
+                      :error-messages = "network_server_name_form_Errors"
+                      @blur="$v.network_server_name_form.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_network_server"></tool_tips_forms>
+                    </v-select>
+                  <!--Gateway Profile Name-->
+                    <v-select
+                      v-model="gateway_profile_name_form"
+                      :items="this.gateway_profile_names"
+                      label="Gateway Profile*"
+                      :error-messages = "gateway_profile_name_form_Errors"
+                      @blur="$v.gateway_profile_name_form.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_profile"></tool_tips_forms>
+                    </v-select>
+                <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click.stop="update_gateway()">
+                      Update Gateway
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/gateway`)">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+<!--Stepper 2--><v-stepper-content step="2" >
+                <!--Gateway Accuracy-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="gateway_accuracy"
+                      label="Gateway Accuracy*"
+                      suffix = "meters"
+                      :error-messages = "gateway_accuracy_Errors"
+                      @keyup="$v.gateway_accuracy.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_accuracy"></tool_tips_forms>
+                    </v-text-field>
+                    </v-flex>
+                <!--Gateway Altitude-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="gateway_altitude"
+                      label="Gateway Altitude*"
+                      suffix = "meters"
+                      :error-messages = "gateway_altitude_Errors"
+                      @keyup="$v.gateway_altitude.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_altitude"></tool_tips_forms>
+                    </v-text-field>
+                    </v-flex>
+                <!--Gateway Latitude-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="gateway_latitude"
+                      label="Gateway Latitude*"
+                      :error-messages = "gateway_latitude_Errors"
+                      @keyup="$v.gateway_latitude.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_latitude"></tool_tips_forms>
+                    </v-text-field>
+                    </v-flex>
+                <!--Gateway Longitude-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="gateway_longitude"
+                      label="Gateway Longitude*"
+                      :error-messages = "gateway_longitude_Errors"
+                      @keyup="$v.gateway_longitude.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_longitude"></tool_tips_forms>
+                    </v-text-field>
+                    </v-flex>
+                <!--Gateway Location Source-->
+                  <v-select
+                    v-model="gateway_location_source_form"
+                    :items="this.gateway_location_source"
+                    label="Source*"
+                    :error-messages = "gateway_location_source_form_Errors"
+                    @blur="$v.gateway_location_source_form.$touch()" 
+                  >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_source"></tool_tips_forms>
+                  </v-select>
+                <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click.stop="update_gateway()">
+                      Update Gateway
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/gateway`)">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+<!--Stepper 3--><v-stepper-content step="3" >
+                  <!--Discovery Enabled-->
+                    <v-checkbox
+                      v-model="discovery_enabled"
+                      label="Discovery Enabled"
+                    ></v-checkbox>
+                  <!--Fine Time Stamp Key-->
+                    <v-flex >
+                      <v-text-field
+                        v-model="fine_time_stamp_key"
+                        label="Fine Time Stamp Key"
+                        :error-messages = "fine_time_stamp_key_Errors"
+                        @keyup="$v.fine_time_stamp_key.$touch()" 
+                      >
+                        <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_fine_time_stamp_key"></tool_tips_forms>
+                      </v-text-field>
+                      </v-flex>
+                  <!--FPGA ID-->
+                    <v-flex >
+                      <v-text-field
+                        v-model="fpga_id"
+                        label="FPGA ID"
+                        :error-messages = "fpga_id_Errors"
+                        @keyup="$v.fpga_id.$touch()" 
+                      >
+                        <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_fpga_id"></tool_tips_forms>
+                      </v-text-field>
+                      </v-flex>
+                  <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click.stop="update_gateway()">
+                      Update Gateway
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/gateway`)">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
         </v-flex>
       </v-layout>
     </v-container>

@@ -3,7 +3,6 @@
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md12>
-            
             <v-toolbar light class="primary">
               <v-toolbar-title>Create Device Profile</v-toolbar-title>
             </v-toolbar>
