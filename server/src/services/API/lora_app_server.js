@@ -162,6 +162,26 @@ module.exports = {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.get(`/api/device-profiles?limit=${data.limit}`);
   },
+  //---------Read One---------
+   get_device_profile_one: function(device_profile_id_lora) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/device-profiles/${device_profile_id_lora}`);
+  },
+ //---------Create---------
+ create_device_profiles: function(data) {
+  instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+  return instance.post("/api/device-profiles", data);
+},
+//---------Update---------
+update_device_profiles: function(data, device_profile_id_lora) {
+  instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+  return instance.put(`/api/device-profiles/${device_profile_id_lora}`, data);
+},
+ //---------Delete---------
+ delete_device_profiles: function(device_profile_id_lora) {
+  instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+  return instance.delete(`/api/device-profiles/${device_profile_id_lora}`);
+},
 
   //---------Read for a specified Sub-Network---------
   get_device_profiles_specified_sub_network: function(data, sub_network_id) {

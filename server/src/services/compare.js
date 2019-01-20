@@ -419,6 +419,12 @@ module.exports = {
                                     throw error.error_message(`update: ID-${lora[i].device_profile_id_lora}`, err.message);
                                 })
                             //console.log('Different name');
+                        } else if (lora[i].device_profile_created_at != db[j].device_profile_created_at) {
+                            device_profile_db.update_device_profile('device_profile_created_at', lora[i].device_profile_created_at, lora[i].device_profile_id_lora)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].device_profile_id_lora}`, err.message);
+                                })
+                            //console.log('Update the date created at');
                         }
                         accounted_for.push(j);
                         break;

@@ -19,10 +19,10 @@ module.exports = {
         WHERE device_profile_id_lora = '${condition}' AND device_profile_deleted = 0`;
     return db.queryAsync(sql);
   },
-  update_device_profile_all_parameters: function (data, device_profile_id) {
+  update_device_profile_all_parameters: function (data, device_profile_id_lora) {
     let sql = `UPDATE device_profile
         SET device_profile_name = '${data.device_profile_name}'
-        WHERE device_profile_id = '${device_profile_id}'`;
+        WHERE device_profile_id_lora = '${device_profile_id_lora}' AND device_profile_deleted = 0`;
     return db.queryAsync(sql);
   },
 };

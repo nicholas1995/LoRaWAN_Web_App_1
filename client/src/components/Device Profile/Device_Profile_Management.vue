@@ -30,7 +30,7 @@
               <v-icon slot="activator"
                 small
                 class="mr-2 pt-3"
-                @click.stop="$router.push(`/device_profile/update/${props.item.device_profile_id}`)"
+                @click.stop="$router.push(`/device_profile/update/${props.item.device_profile_id_lora}`)"
               >
                 edit
               </v-icon>
@@ -40,7 +40,7 @@
               <v-icon slot="activator"
                 small
                 class="pt-3 pr-3"
-                @click="delete_device_profile(props.item)"
+                @click="delete_device_profile(props.item.device_profile_id_lora)"
               >
                 delete
               </v-icon>
@@ -120,10 +120,10 @@ export default {
   },
   
   methods: {
-    delete_device_profile(network){
-      if(confirm('Are you sure you want to delete this network?') == true){
-        AuthenticationService.delete_networks(network.network_id).then(result => {
-          this.device_profiles = result.data.networks_lora;
+    delete_device_profile(device_profile_id_lora){
+      if(confirm('Are you sure you want to delete this device profile?') == true){
+        AuthenticationService.delete_device_profiles(device_profile_id_lora).then(result => {
+          this.device_profiles = result.data.device_profiles;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a network on the lora app server

@@ -22,6 +22,7 @@ const sub_network_policy = require('./policies/sub_network_policy');
 const vessel_policy = require("./policies/vessel_policy");
 const device_policy = require("./policies/device_policy");
 const gateway_policy = require("./policies/gateway_policy");
+const device_profile_policy = require("./policies/device_profile_policy");
 const service_profile_policy = require("./policies/service_profile_policy");
 const password_policy = require("./policies/UpdatePasswordPolicy")
 
@@ -222,10 +223,22 @@ module.exports = ((app) => {
 
     //----------------------Device Profile----------------------
     //Device Profile (Read Specific Sub-Network)
-    app.get("/device_profiles/:sub_network_id", authenticate, grant_access, device_profiles.get_specified_sub_network);
+    app.get("/device_profiles/sub_network/:sub_network_id", authenticate, grant_access, device_profiles.get_specified_sub_network);
+
+    //Device Profile (Read One)
+    app.get("/device_profiles/:device_profile_id_lora", authenticate, grant_access, device_profiles.get_one);
 
     //Device Profile (Read)
     app.get("/device_profiles", authenticate, grant_access, device_profiles.get);
+
+    //Device Profile (Create)
+    app.post("/device_profiles", authenticate, grant_access, device_profile_policy.create, device_profiles.create_device_profile);
+
+    //Device Profile (Update)
+    app.put("/device_profiles/:device_profile_id_lora", authenticate, grant_access, device_profile_policy.update, device_profiles.update_device_profile);
+
+    //Device Profile (Delete)
+    app.delete("/device_profiles/:device_profile_id_lora", authenticate, grant_access, device_profiles.delete_device_profile);
 
     //----------------------Network servers----------------------
     app.get("/network_servers", authenticate, grant_access, network_servers.get);

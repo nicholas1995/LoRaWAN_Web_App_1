@@ -131,7 +131,6 @@ export default {
             this.network_update = this.networks[i];
             break;
           }if(i == (this.networks.length -1)){
-            console.log('here')
             if(confirm('Invalid Network ID') == true){
               this.$router.push(`/network`)
             }

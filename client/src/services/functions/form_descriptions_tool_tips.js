@@ -32,6 +32,31 @@ const description_device_sub_network = "Sub-network under which the device to be
 const description_device_device_profile = "The profile that defines the device capabilities.";
 const description_device_reference_altitude = "This is used for geolocation purposes to increase the accuracy of the location of devices.";
 
+//Device Profile Forms
+const description_device_profile_name = "";
+const description_mac_version = "";
+const description_reg_params_revision = "";
+const description_network_device_profile = "";
+const description_network_server_device_profile = "";
+const description_max_eirp = "";
+const description_supports_join = "";
+const description_rx_delay_1 = "";
+const description_rx_dr_offset_1 = "";
+const description_rx_dr_2 = "";
+const description_rx_frequency_2 = "";
+const description_factory_preset_frequencies = "";
+const description_supports_class_b = "";
+const description_class_b_timeout = "";
+const description_ping_slot_period = "";
+const description_ping_slot_dr = "";
+const description_ping_slot_frequency = "";
+const description_supports_class_c = "";
+const description_class_c_timeout = "";
+
+
+
+
+
 
 export {
   description_network_name,
@@ -60,4 +85,23 @@ export {
   description_device_sub_network,
   description_device_device_profile,
   description_device_reference_altitude,
+  description_device_profile_name,
+  description_mac_version,
+  description_reg_params_revision,
+  description_max_eirp,
+  description_supports_join,
+  description_rx_delay_1,
+  description_rx_dr_offset_1,
+  description_rx_dr_2,
+  description_rx_frequency_2,
+  description_factory_preset_frequencies,
+  description_supports_class_b,
+  description_class_b_timeout,
+  description_ping_slot_period,
+  description_ping_slot_dr,
+  description_ping_slot_frequency,
+  description_supports_class_c,
+  description_class_c_timeout,
+  description_network_device_profile,
+  description_network_server_device_profile,
 };

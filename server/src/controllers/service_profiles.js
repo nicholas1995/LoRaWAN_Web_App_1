@@ -265,7 +265,7 @@ module.exports = {
                 .catch(err => {
                     //error updating deleted coloum from db
                     error_location = 3;
-                    throw error_message("delete network : lora app server", err.message);
+                    throw error_message("delete service profile : lora app server", err.message);
                 });
             let service_profiles_db = await db_service_profile.get_service_profile()
                 .catch(err => {

@@ -285,12 +285,27 @@ export default {
     //Device Profile
     get_device_profiles_specified_sub_network(sub_network_id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.get(`/device_profiles/${sub_network_id}`);
+        return Api.get(`/device_profiles/sub_network/${sub_network_id}`);
     },
-
+    get_device_profile(device_profile_id_lora) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/device_profiles/${device_profile_id_lora}`);
+    },
     get_device_profiles() {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/device_profiles`);
+    },
+    create_device_profiles(device_profile) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.post("/device_profiles", { device_profile });
+    }, 
+    update_device_profiles(device_profile, device_profile_id_lora) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/device_profiles/${device_profile_id_lora}`, { device_profile });
+    },
+    delete_device_profiles(device_profile_id_lora){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/device_profiles/${device_profile_id_lora}`);
     },
 
     //Network servers
