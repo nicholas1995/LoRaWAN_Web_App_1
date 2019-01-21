@@ -4,7 +4,7 @@
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md8>
 <v-toolbar light class="primary ">
-            <v-toolbar-title>Create Service Profile</v-toolbar-title>
+            <v-toolbar-title>Update Service Profile</v-toolbar-title>
           </v-toolbar>
             <v-stepper non-linear class = "elevation-5">
               <v-stepper-header>

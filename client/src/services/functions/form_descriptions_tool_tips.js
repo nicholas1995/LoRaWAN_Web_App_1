@@ -28,9 +28,12 @@ const description_gateway_fpga_id = "Bye world";
 const description_device_name = "Name of the device to be created on the LoRa Server. Name must be unique to all device names belonging to devices on the same sub-network, less than 80 characters, only contain words, numbers and the symbols - and _.";
 const description_device_eui = "Unique identifier for all devices on the LoRa Server that cannot be changed once the device is created. Consists of 16 hexadecimal digits.";
 const description_device_description = "Description of the device which holds additional details about the device. Must be less than 200 characters long.";
-const description_device_sub_network = "Sub-network under which the device to be created will be placed. Cannot be changed once device is created.";
-const description_device_device_profile = "The profile that defines the device capabilities.";
 const description_device_reference_altitude = "This is used for geolocation purposes to increase the accuracy of the location of devices.";
+const description_skip_frame_counter = "";
+const description_device_network = "Network under which the device to be created will be placed. Cannot be changed once device is created.";
+const description_device_sub_network = "Sub-network under which the device to be created will be placed. Cannot be changed once device is created.";
+const description_vessel_device = "Vessel the device will be placed on. If no vessel selected the device will be associated with the default vessel for the selected Sub-Network"
+const description_device_device_profile = "The profile that defines the device capabilities.";
 
 //Service Profile
 const description_service_profile_name = '';
@@ -94,9 +97,12 @@ export {
   description_device_name,//Device
   description_device_eui,
   description_device_description,
-  description_device_sub_network,
-  description_device_device_profile,
   description_device_reference_altitude,
+  description_skip_frame_counter,
+  description_device_network,
+  description_device_sub_network,
+  description_vessel_device,
+  description_device_device_profile,
 
   description_service_profile_name,//Service Profile
   description_network_service_profile,

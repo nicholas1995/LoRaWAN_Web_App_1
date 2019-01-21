@@ -2,115 +2,139 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
-          <v-card class=" elevation-10 ">
-            <v-toolbar light class="primary ">
-              <v-toolbar-title>Create Device</v-toolbar-title>
-            </v-toolbar>
-          </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
-            <!--Device Name -->
-            <v-flex >
-              <v-text-field
-                v-model="device_name"
-                label="Device Name*"
-                :error-messages = "device_name_Errors"
-                @keyup="$v.device_name.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_name"></tool_tips_forms>
-              </v-text-field>
-              </v-flex>
-            <!--Device EUI -->
-            <v-flex >
-              <v-text-field
-                v-model="device_eui"
-                label="Device EUI*"
-                :error-messages = "device_eui_Errors"
-                @keyup="$v.device_eui.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_eui"></tool_tips_forms>
-              </v-text-field> 
-              </v-flex>
-            <!--Description  -->
-            <v-flex >
-              <v-textarea
-                auto-grow
-                rows="1"
-                v-model="device_description"
-                label="Description*"
-                :error-messages = "device_description_Errors"
-                @keyup="$v.device_description.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_description"></tool_tips_forms>
-              </v-textarea>
-              </v-flex>
-            <!--Network Name-->
-              <v-select
-                v-model="network_name_form"
-                :items="this.network_names"
-                label="Network*"
-                :error-messages = "network_name_form_Errors"
-                @blur="$v.network_name_form.$touch()" 
-              >
-              </v-select>
-            <!--Sub-Network Name-->
-              <v-select
-                v-model="sub_network_name_form"
-                :items="this.sub_network_names"
-                label="Sub-Network*"
-                :error-messages = "sub_network_name_form_Errors"
-                @blur="$v.sub_network_name_form.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_sub_network"></tool_tips_forms>
-              </v-select>
-            <!--Vessel-->
-              <v-select
-                v-model="vessel_name_form"
-                :items="this.vessel_names"
-                label="Vessel"
-              >
-              </v-select>
-            <!--Device Profile Name-->
-              <v-select
-                v-model="device_profile_name_form"
-                :items="this.device_profile_names"
-                label="Device Profile*"
-                :error-messages = "device_profile_name_form_Errors"
-                @blur="$v.device_profile_name_form.$touch()" 
-              >
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_device_profile"></tool_tips_forms>
-              </v-select>
-            <!--Reference Altitude-->
-              <v-flex >
-                <v-text-field
-                  v-model="reference_altitude"
-                  label="Reference Altitude"
-                  suffix = "meters"
-                  :error-messages = "reference_altitude_Errors"
-                  @keyup="$v.reference_altitude.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_reference_altitude"></tool_tips_forms>
-                </v-text-field>
-                </v-flex>
-              <!--Skip Frame Counter-->
-                <v-checkbox
-                  v-model="skip_frame_counter"
-                  label="Skip Frame Counter"
-                ></v-checkbox>
-              <!-- Message -->
-              <div div class="text">
-                {{message}}
-              </div>
-              <!-- Buttons -->
-              <v-btn class="grey lighten-2"
-                @click.stop="create_device()">
-                Create Device
-              </v-btn>
-              <v-btn class="grey lighten-2"
-                @click.stop="$router.push(`/device`)">
-                Cancel
-              </v-btn>
-          </v-card>
+        <v-flex xs12 sm8 md8>
+          <v-toolbar light class="primary ">
+            <v-toolbar-title>Create Device</v-toolbar-title>
+          </v-toolbar>
+            <v-stepper non-linear class = "elevation-5">
+              <v-stepper-header>
+                <v-stepper-step editable step="1">Basic Information</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="2">Other</v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items>
+<!--Stepper 1--><v-stepper-content step ="1">
+                  <!--Device Name -->
+                    <v-flex >
+                      <v-text-field
+                        v-model="device_name"
+                        label="Device Name*"
+                        :error-messages = "device_name_Errors"
+                        @keyup="$v.device_name.$touch()" 
+                      >
+                        <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_name"></tool_tips_forms>
+                      </v-text-field>
+                      </v-flex>
+                    <!--Device EUI -->
+                    <v-flex >
+                      <v-text-field
+                        v-model="device_eui"
+                        label="Device EUI*"
+                        :error-messages = "device_eui_Errors"
+                        @keyup="$v.device_eui.$touch()" 
+                      >
+                        <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_eui"></tool_tips_forms>
+                      </v-text-field> 
+                      </v-flex>
+                    <!--Description  -->
+                    <v-flex >
+                      <v-textarea
+                        auto-grow
+                        rows="1"
+                        v-model="device_description"
+                        label="Description*"
+                        :error-messages = "device_description_Errors"
+                        @keyup="$v.device_description.$touch()" 
+                      >
+                        <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_description"></tool_tips_forms>
+                      </v-textarea>
+                    </v-flex>
+                  <!--Reference Altitude-->
+                    <v-flex >
+                      <v-text-field
+                        v-model="reference_altitude"
+                        label="Reference Altitude"
+                        suffix = "meters"
+                        :error-messages = "reference_altitude_Errors"
+                        @keyup="$v.reference_altitude.$touch()" 
+                      >
+                        <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_reference_altitude"></tool_tips_forms>
+                      </v-text-field>
+                      </v-flex>
+                    <!--Skip Frame Counter-->
+                      <v-checkbox
+                        v-model="skip_frame_counter"
+                        label="Skip Frame Counter"
+                      ></v-checkbox>
+                  <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click.stop="create_device()">
+                      Create Device
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/device`)">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+<!--Stepper 2--><v-stepper-content step ="2">
+                  <!--Network Name-->
+                    <v-select
+                      v-model="network_name_form"
+                      :items="this.network_names"
+                      label="Network*"
+                      :error-messages = "network_name_form_Errors"
+                      @blur="$v.network_name_form.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_network"></tool_tips_forms>
+                    </v-select>
+                  <!--Sub-Network Name-->
+                    <v-select
+                      v-model="sub_network_name_form"
+                      :items="this.sub_network_names"
+                      label="Sub-Network*"
+                      :error-messages = "sub_network_name_form_Errors"
+                      @blur="$v.sub_network_name_form.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_sub_network"></tool_tips_forms>
+                    </v-select>
+                  <!--Vessel-->
+                    <v-select
+                      v-model="vessel_name_form"
+                      :items="this.vessel_names"
+                      label="Vessel"
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_device"></tool_tips_forms>                    
+                    </v-select>
+                  <!--Device Profile Name-->
+                    <v-select
+                      v-model="device_profile_name_form"
+                      :items="this.device_profile_names"
+                      label="Device Profile*"
+                      :error-messages = "device_profile_name_form_Errors"
+                      @blur="$v.device_profile_name_form.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_device_profile"></tool_tips_forms>
+                    </v-select>
+                  <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click.stop="create_device()">
+                      Create Device
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/device`)">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
         </v-flex>
       </v-layout>
     </v-container>
@@ -124,8 +148,8 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, numeric, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
-import {description_device_name, description_device_eui, description_device_description, description_device_sub_network,
-description_device_device_profile, description_device_reference_altitude} from "../../services/functions/form_descriptions_tool_tips.js";
+import {description_device_name, description_device_eui, description_device_description, description_device_reference_altitude, description_skip_frame_counter,
+description_device_network, description_device_sub_network, description_vessel_device, description_device_device_profile} from "../../services/functions/form_descriptions_tool_tips.js";
 import tool_tips_forms from "../Tool_Tip_Forms";
 
 
@@ -286,9 +310,12 @@ export default {
       description_device_name : description_device_name,
       description_device_eui : description_device_eui,
       description_device_description : description_device_description,
-      description_device_sub_network : description_device_sub_network,
-      description_device_device_profile : description_device_device_profile,
       description_device_reference_altitude : description_device_reference_altitude,
+      description_skip_frame_counter : description_skip_frame_counter,
+      description_device_network : description_device_network,
+      description_device_sub_network : description_device_sub_network,
+      description_vessel_device : description_vessel_device,
+      description_device_device_profile : description_device_device_profile,
     };
   },
   watch: {
