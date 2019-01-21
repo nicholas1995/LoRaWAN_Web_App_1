@@ -2,120 +2,166 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
-          <v-card class=" elevation-10 ">
-            <v-toolbar light class="primary">
-              <v-toolbar-title>Create Service Profile</v-toolbar-title>
-            </v-toolbar>
-          </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
-            <v-form>
-              <!--$touch is used to manually set dirty when the event occurs
-              and dirty is used to validate the data field--> 
-              <!--Service Profile Name -->
-                <v-flex >
-                  <v-text-field
-                    v-model="service_profile_name"
-                    :error-messages = "service_profile_name_Errors"
-                    label="Service Profile Name*"
-                    @blur="$v.service_profile_name.$touch()">
-                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
-                  </v-text-field>
-                </v-flex>
-              <!--Network Name-->
-                <v-select
-                  v-model="network_name_form"
-                  :items="this.network_names"
-                  label="Network*"
-                  :error-messages = "network_name_form_Errors"
-                  @blur="$v.network_name_form.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
-                </v-select>
-              <!--Network Server Name-->
-                <v-select
-                  v-model="network_server_name_form"
-                  :items="this.network_server_names"
-                  label="Network Server*"
-                  :error-messages = "network_server_name_form_Errors"
-                  @blur="$v.network_server_name_form.$touch()" 
-                >
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
-                </v-select>
-              <!--Add Gateway Metadata-->
-                <v-checkbox
-                  v-model="add_gw_metadata"
-                  label="Add Gateway Metadata"
-                  required
-                >
-                </v-checkbox>
-              <!--Report Device Status Battery-->
-                <v-checkbox
-                  v-model="report_device_status_battery"
-                  label="Report Device Status Battery"
-                  required
-                >
-                </v-checkbox>
-              <!--Report Device Status Margin-->
-                <v-checkbox
-                  v-model="report_device_status_margin"
-                  label="Report Device Status Margin"
-                  required
-                >
-                </v-checkbox>
-             <!--Network Geolocation-->
-              <v-checkbox
-                v-model="network_geo_location"
-                label="Network Geolocation"
-                required
-              >
-              </v-checkbox>
-            <!--Device Status Request Frequency-->
-              <v-flex >
-                <v-text-field
-                  v-model="device_status_req_frequency"
-                  label="Device Status Request Frequency*"
-                  suffix = "hz"
-                  :error-messages = "device_status_req_frequency_Errors"
-                  @blur="$v.device_status_req_frequency.$touch()" 
-                >
-                </v-text-field>
-              </v-flex>
-            <!--Data Rate Min-->
-              <v-flex >
-                <v-text-field
-                  v-model="dr_min"
-                  label="Minimum Data Rate*"
-                  suffix = "??"
-                  :error-messages = "dr_min_Errors"
-                  @blur="$v.dr_min.$touch()" 
-                >
-                </v-text-field>
-              </v-flex>
-            <!--Data Rate Max-->
-              <v-flex >
-                <v-text-field
-                  v-model="dr_max"
-                  label="Maximum Data Rate*"
-                  suffix = "??"
-                  :error-messages = "dr_max_Errors"
-                  @blur="$v.dr_max.$touch()" 
-                >
-                </v-text-field>
-              </v-flex>
-            </v-form>
-            <div div class="text">
-              {{message}} 
-            </div>
-            <v-btn class="grey lighten-2"
-              @click.stop="create_service_profile()">
-              Create Service Profile
-            </v-btn>
-            <v-btn class="grey lighten-2"
-              @click.stop="$router.push(`/service_profile`)">
-              Cancel
-            </v-btn>
-          </v-card>
+        <v-flex xs12 sm8 md8>
+          <v-toolbar light class="primary ">
+            <v-toolbar-title>Create Service Profile</v-toolbar-title>
+          </v-toolbar>
+            <v-stepper non-linear class = "elevation-5">
+              <v-stepper-header>
+                <v-stepper-step editable step="1">Basic Information</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="2">Device Status Request Settings</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="3">Additional Information</v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items>
+<!--Stepper 1--><v-stepper-content step ="1">
+                <!--Service Profile Name -->
+                  <v-flex >
+                    <v-text-field
+                      v-model="service_profile_name"
+                      :error-messages = "service_profile_name_Errors"
+                      label="Service Profile Name*"
+                      @blur="$v.service_profile_name.$touch()">
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_service_profile_name"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                <!--Network Name-->
+                  <v-select
+                    v-model="network_name_form"
+                    :items="this.network_names"
+                    label="Network*"
+                    :error-messages = "network_name_form_Errors"
+                    @blur="$v.network_name_form.$touch()" 
+                  >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_service_profile"></tool_tips_forms>
+                  </v-select>
+                <!--Network Server Name-->
+                  <v-select
+                    v-model="network_server_name_form"
+                    :items="this.network_server_names"
+                    label="Network Server*"
+                    :error-messages = "network_server_name_form_Errors"
+                    @blur="$v.network_server_name_form.$touch()" 
+                  >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_server_service_profile"></tool_tips_forms>
+                  </v-select>
+                <!--Add Gateway Metadata-->
+                  <v-checkbox
+                    v-model="add_gw_metadata"
+                    label="Add Gateway Metadata"
+                    required
+                  >
+                  </v-checkbox>
+                <!--Network Geolocation-->
+                  <v-checkbox
+                    v-model="network_geo_location"
+                    label="Network Geolocation"
+                    required
+                  >
+                  </v-checkbox>
+                <!--Message -->
+                  <div div class="text">
+                    {{message}} 
+                  </div>
+                <!--Button -->
+                  <v-btn class="grey lighten-2"
+                    @click.stop="create_service_profile()">
+                    Create Service Profile
+                  </v-btn>
+                  <v-btn class="grey lighten-2"
+                    @click.stop="$router.push(`/service_profile`)">
+                    Cancel
+                  </v-btn>
+                </v-stepper-content>
+<!--Stepper 2--><v-stepper-content step ="2">
+                <!--Enable device status request-->
+                  <v-checkbox
+                    v-model="enable_device_status_request"
+                    label="Enable device status request"
+                    required
+                  >
+                  </v-checkbox>
+                <div v-if = "this.enable_device_status_request == true">
+                <!--Device Status Request Frequency-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="device_status_req_frequency"
+                      label="Device Status Request Frequency*"
+                      :error-messages = "device_status_req_frequency_Errors"
+                      @blur="$v.device_status_req_frequency.$touch()" 
+                    >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_status_req_frequency"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                <!--Report Device Status Battery-->
+                  <v-checkbox
+                    v-model="report_device_status_battery"
+                    label="Report Device Status Battery"
+                    required
+                  >
+                  </v-checkbox>
+                <!--Report Device Status Margin-->
+                  <v-checkbox
+                    v-model="report_device_status_margin"
+                    label="Report Device Status Margin"
+                    required
+                  >
+                  </v-checkbox>
+                </div>
+                <!--Message -->
+                  <div div class="text">
+                    {{message}} 
+                  </div>
+                <!--Button -->
+                  <v-btn class="grey lighten-2"
+                    @click.stop="create_service_profile()">
+                    Create Service Profile
+                  </v-btn>
+                  <v-btn class="grey lighten-2"
+                    @click.stop="$router.push(`/service_profile`)">
+                    Cancel
+                  </v-btn>
+                </v-stepper-content>
+<!--Stepper 3--><v-stepper-content step ="3">
+                <!--Data Rate Min-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="dr_min"
+                      label="Minimum Data Rate*"
+                      :error-messages = "dr_min_Errors"
+                      @blur="$v.dr_min.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_dr_min"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                <!--Data Rate Max-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="dr_max"
+                      label="Maximum Data Rate*"
+                      :error-messages = "dr_max_Errors"
+                      @blur="$v.dr_max.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_dr_max"></tool_tips_forms>                    
+                    </v-text-field>
+                  </v-flex>
+                <!--Message -->
+                  <div div class="text">
+                    {{message}} 
+                  </div>
+                <!--Button -->
+                  <v-btn class="grey lighten-2"
+                    @click.stop="create_service_profile()">
+                    Create Service Profile
+                  </v-btn>
+                  <v-btn class="grey lighten-2"
+                    @click.stop="$router.push(`/service_profile`)">
+                    Cancel
+                  </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
         </v-flex>
       </v-layout>
     </v-container>
@@ -128,10 +174,23 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, numeric, helpers } from 'vuelidate/lib/validators'
-import {description_network_name, description_network_display_name} from "../../services/functions/form_descriptions_tool_tips.js";
+import {description_service_profile_name, description_network_service_profile, description_network_server_service_profile, description_add_gw_metadata,
+description_report_device_status_battery, description_report_device_status_margin, description_network_geo_location,
+description_device_status_req_frequency, description_dr_min, description_dr_max} from "../../services/functions/form_descriptions_tool_tips.js";
 import tool_tips_forms from "../Tool_Tip_Forms";
 import functions from "../../services/functions/forms_functions.js"
 
+const first_digit_not_0 = function(value){ 
+  //THis checks to see if the first digit is 0 and if it is removes it
+  if(value.length >1){   //if it is more than one digit in length 
+    if(value[0] == 0){
+      value = parseInt(value, 10); //removes the leading 0 from a number
+    }
+  }else if(value.length == 0){
+    value= 0
+  }
+  return value;
+}
 
 export default {
   components:{
@@ -174,24 +233,37 @@ mixins: [validationMixin],
       network_server_names: [], //array of network servers id:name format
       network_server_name_form: '',
       network_server_id: '',
-
       add_gw_metadata: '',
-      report_device_status_battery: '',
-      report_device_status_margin: '',
       network_geo_location: '',
-      device_status_req_frequency: 0,
-      dr_min: '',
-      dr_max: '',
 
-      description_network_name : description_network_name,
-      description_network_display_name : description_network_display_name,
+      enable_device_status_request: false,
+      device_status_req_frequency: 0,
+      report_device_status_battery: false,
+      report_device_status_margin: false,
+
+      dr_min: 0,
+      dr_max: 0,
+
+      description_service_profile_name : description_service_profile_name,
+      description_network_service_profile : description_network_service_profile,
+      description_network_server_service_profile : description_network_server_service_profile,
+      description_add_gw_metadata : description_add_gw_metadata,
+      description_report_device_status_battery : description_report_device_status_battery,
+      description_report_device_status_margin : description_report_device_status_margin,
+      description_network_geo_location : description_network_geo_location,
+      description_device_status_req_frequency : description_device_status_req_frequency,
+      description_dr_min : description_dr_min,
+      description_dr_max : description_dr_max,
+
       message: ""
     };
   },
   watch: {
-    device_status_req_frequency: function(){
-      if(this.device_status_req_frequency == ''){ 
-      this.device_status_req_frequency = '0';
+    enable_device_status_request: function(){
+      if(this.enable_device_status_request == false){ 
+        this.device_status_req_frequency = 0;
+        this.report_device_status_battery = false;
+        this.report_device_status_margin = false;
       }
     }
   },
@@ -310,9 +382,9 @@ mixins: [validationMixin],
         if(this.network_geo_location ==""){this.network_geo_location =false;} //needed to set empty radio to false
         this.network_id=functions.extract_id_id_name(this.network_name_form);//Extract network id
         this.network_server_id=functions.extract_id_id_name(this.network_server_name_form);//Extract network server id
-        this.device_status_req_frequency = this.check_for_0_start(this.device_status_req_frequency);
-        this.dr_min = this.check_for_0_start(this.dr_min);
-        this.dr_max = this.check_for_0_start(this.dr_max);
+        this.device_status_req_frequency = first_digit_not_0(this.device_status_req_frequency);
+        this.dr_min = first_digit_not_0(this.dr_min);
+        this.dr_max = first_digit_not_0(this.dr_max);
         AuthenticationService.create_service_profiles({
           service_profile_name: this.service_profile_name,
           network_id: this.network_id,
@@ -332,14 +404,6 @@ mixins: [validationMixin],
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
         })
       }
-    },
-    check_for_0_start(value){ //checks to see if the first digit is 0 and if it is removes the 0 from the start of the number because the lora app server does not process it
-      if(value.length > 1){
-        if(value.indexOf('0') == 0){
-          return value.slice(1);
-        }
-      }
-      return value;
     }
   }
 };

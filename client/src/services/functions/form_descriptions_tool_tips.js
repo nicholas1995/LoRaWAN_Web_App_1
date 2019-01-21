@@ -32,6 +32,18 @@ const description_device_sub_network = "Sub-network under which the device to be
 const description_device_device_profile = "The profile that defines the device capabilities.";
 const description_device_reference_altitude = "This is used for geolocation purposes to increase the accuracy of the location of devices.";
 
+//Service Profile
+const description_service_profile_name = '';
+const description_network_service_profile = '';
+const description_network_server_service_profile = '';
+const description_add_gw_metadata = '';
+const description_report_device_status_battery = '';
+const description_report_device_status_margin = '';
+const description_network_geo_location = '';
+const description_device_status_req_frequency = '';
+const description_dr_min = '';
+const description_dr_max = 'DR max';
+
 //Device Profile Forms
 const description_device_profile_name = "";
 const description_mac_version = "";
@@ -55,18 +67,17 @@ const description_class_c_timeout = "";
 
 
 
-
-
-
 export {
-  description_network_name,
+  description_network_name,//Network
   description_network_display_name,
-  description_sub_network_name,
+
+  description_sub_network_name,//Sub-Network
   description_sub_network_descripton,
   description_sub_network_network_name,
   description_sub_network_service_profile,
   description_sub_network_payload_codec,
-  description_gateway_name,
+
+  description_gateway_name,//Gateway
   description_gateway_id,
   description_gateway_description,
   description_gateway_network,
@@ -79,15 +90,30 @@ export {
   description_gateway_location_source,
   description_fine_time_stamp_key,
   description_gateway_fpga_id,
-  description_device_name,
+
+  description_device_name,//Device
   description_device_eui,
   description_device_description,
   description_device_sub_network,
   description_device_device_profile,
   description_device_reference_altitude,
-  description_device_profile_name,
+
+  description_service_profile_name,//Service Profile
+  description_network_service_profile,
+  description_network_server_service_profile,
+  description_add_gw_metadata,
+  description_report_device_status_battery,
+  description_report_device_status_margin,
+  description_network_geo_location,
+  description_device_status_req_frequency,
+  description_dr_min,
+  description_dr_max,
+
+  description_device_profile_name,//Device Profile
   description_mac_version,
   description_reg_params_revision,
+  description_network_device_profile,
+  description_network_server_device_profile,
   description_max_eirp,
   description_supports_join,
   description_rx_delay_1,
@@ -102,6 +128,5 @@ export {
   description_ping_slot_frequency,
   description_supports_class_c,
   description_class_c_timeout,
-  description_network_device_profile,
-  description_network_server_device_profile,
+
 };
