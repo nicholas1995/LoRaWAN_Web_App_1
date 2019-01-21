@@ -214,11 +214,17 @@ export default {
         if(this.network_id == this.sub_networks[i].network_id){
           this.sub_networks_same_network.push(this.sub_networks[i]);
         }
-        for(let i =0; i< this.service_profile.length; i++){
-          if(this.service_profile[i].network_id == this.network_id){
-            this.service_profile_names.push(this.service_profile[i].service_profile_id +":" + this.service_profile[i].service_profile_name);
-          }
+      }
+      for(let i =0; i< this.service_profile.length; i++){
+        if(this.service_profile[i].network_id == this.network_id){
+          this.service_profile_names.push(this.service_profile[i].service_profile_id +":" + this.service_profile[i].service_profile_name);
         }
+      }
+      if(this.service_profile_names.length == 0){
+        //This will route the user to the create service profile page if no service profiles exists under selected network
+        if(confirm('No Service Profiles under selected Network. Route to Create Service Profile Page?') == true){
+          this.$router.push(`/service_profile/create`)
+        };
       }
     }
   },
@@ -235,14 +241,20 @@ export default {
         //--------------------Start-------------------
         //Get Networks
           AuthenticationService.get_networks().then(result => {
-          let networks_lora = result.data.networks_lora;
-          for(let i = 0; i < networks_lora.length; i++){
-            this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
-          }
-            }).catch(err => {
-              //Error getting networks from server
-              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
-            })
+            let networks_lora = result.data.networks_lora;
+            for(let i = 0; i < networks_lora.length; i++){
+              this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+            }
+            if(this.network_names.length == 0){
+              //This will route the user to the create network page if no networks exists 
+              if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+                this.$router.push(`/network/create`)
+              };
+            }
+          }).catch(err => {
+            //Error getting networks from server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+          })
         //Get Subnetworks
           AuthenticationService.get_sub_networks().then(result => {
           this.sub_networks = result.data.sub_networks_lora;

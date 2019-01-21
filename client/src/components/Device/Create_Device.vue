@@ -328,6 +328,23 @@ export default {
           this.sub_network_names.push(this.sub_networks_lora[i].sub_network_id.concat(":",this.sub_networks_lora[i].sub_network_name));
         }
       }
+      if(this.sub_network_names.length == 0){
+        //This will route the user to the create sub-network page if no sub-networks exists under selected network 
+        if(confirm('There are no associated Sub-Networks under selected Network. Route to the Create Sub-Network Page?') == true){
+          this.$router.push(`/subnetwork/create`)
+        };
+      }
+      for(let i =0; i< this.device_profiles.length; i++){ //Filter the device profile based on the selected network
+        if(this.network_id == this.device_profiles[i].network_id){
+          this.device_profile_names.push(this.device_profiles[i].device_profile_id +":"+ this.device_profiles[i].device_profile_name);
+        }
+      }
+      if(this.device_profile_names.length == 0){
+        //This will route the user to the create device profile page if no device profile is associated with the selected network 
+        if(confirm('There are no associated Device Profiles with the selected Network. Route to the Create Device Profile Page?') == true){
+          this.$router.push(`/device_profile/create`)
+        };
+      }
     },
     sub_network_name_form: function(){
       this.device_profile_names =[];
@@ -343,16 +360,17 @@ export default {
             this.devices_same_sub_network.push(this.devices[i]);
           }
         }
-        for(let i =0; i< this.device_profiles.length; i++){ //Filter the device profile based on the selected sub network
-          if(this.network_id == this.device_profiles[i].network_id){
-            this.device_profile_names.push(this.device_profiles[i].device_profile_id +":"+ this.device_profiles[i].device_profile_name);
-          }
+      }
+      for(let i =0; i< this.vessels.length; i++){ //Filter the vessels based on the selected sub network
+        if(this.sub_network_id == this.vessels[i].sub_network_id){
+          this.vessel_names.push(this.vessels[i].vessel_id +":"+ this.vessels[i].vessel_name);
         }
-        for(let i =0; i< this.vessels.length; i++){ //Filter the vessels based on the selected sub network
-          if(this.sub_network_id == this.vessels[i].sub_network_id){
-            this.vessel_names.push(this.vessels[i].vessel_id +":"+ this.vessels[i].vessel_name);
-          }
-        }
+      }
+      if(this.vessel_names.length == 0){
+        //This will route the user to the create vessel page if no vessel is associated with the selected sub-network 
+        if(confirm('There are no associated Vessels with the selected Sub-Network. Route to the Create Vessel Page?') == true){
+          this.$router.push(`/vessel/create`)
+        };
       }
     }
   },
@@ -380,6 +398,12 @@ export default {
           let networks_lora = result.data.networks_lora;
           for(let i = 0; i < networks_lora.length; i++){
             this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
+          }
+          if(this.network_names.length == 0){
+            //This will route the user to the create network page if no networks exists 
+            if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+              this.$router.push(`/network/create`)
+            };
           }
         }).catch(err => {
           //Error getting networks from server

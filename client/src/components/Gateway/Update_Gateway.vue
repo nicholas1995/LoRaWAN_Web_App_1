@@ -486,6 +486,7 @@ export default {
             this.gateways_same_network.push(this.gateways[i]);
             }
           }
+        //Get Network Servers
         AuthenticationService.get_network_servers().then(result => {
           let network_servers = result.data.network_servers_lora;
           for(let i = 0; i < network_servers.length; i++){
@@ -553,7 +554,7 @@ export default {
             this.gateway_profile_id = this.gateway_profiles[i].gateway_profile_id_lora;
             break;
           }
-        }console.log('herereeeee')
+        }
          AuthenticationService.update_gateways({
           gateway_name: this.gateway_name,
           gateway_id: this.gateway_update.gateway_id,

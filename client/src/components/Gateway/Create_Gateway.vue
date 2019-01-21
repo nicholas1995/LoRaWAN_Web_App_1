@@ -499,6 +499,12 @@ export default {
             this.gateway_profile_names.push(this.gateway_profiles[i].gateway_profile_id +":"+ this.gateway_profiles[i].gateway_profile_name);
           }
         }
+        if(this.gateway_profile_names.length == 0){
+          //This will route the user to the create gateway profile page if no gateway profiles exists 
+          if(confirm('There are no created Gateway Profiles associated with the selected Network Server. Route to the Create Gateway Profile?') == true){
+            this.$router.push(`/gateway_profile/create`)
+          };
+        }
       }
   },
   created: async function () {
@@ -526,6 +532,12 @@ export default {
           for(let i = 0; i < network_servers.length; i++){
             this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
           }
+          if(this.network_server_names.length == 0){
+            //This will route the user to the create network server page if no network servers exists 
+            if(confirm('There are no associated Network Servers. Route to the Create Network Server Page?') == true){
+              this.$router.push(`/network_server/create`)
+            };
+          }
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         });
@@ -536,7 +548,13 @@ export default {
             if(networks[i].network_can_have_gateways ==1){
               this.networks_can_have_gateways.push(networks[i].network_id.concat(":",networks[i].network_name));
             }
-          };
+          }
+          if(this.networks_can_have_gateways.length == 0){
+            //This will route the user to the create network page if no network exists 
+            if(confirm('There are no created Networks which can own gateways. Route to the Create Network Page?') == true){
+              this.$router.push(`/network/create`)
+            };
+          }
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
         })

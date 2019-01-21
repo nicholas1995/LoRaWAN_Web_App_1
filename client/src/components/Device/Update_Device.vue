@@ -249,6 +249,12 @@ export default {
                 this.vessel_name_form = this.vessel_names[i] ;
               }
             }
+            if(this.vessel_names.length == 0){
+              //This will route the user to the create vessel page if no vessel is associated with the selected sub-network 
+              if(confirm('There are no associated Vessels with the selected Sub-Network. Route to the Create Vessel Page?') == true){
+                this.$router.push(`/vessel/create`)
+              };
+            }
           }).catch(err => {
             //Error getting network to be updated information
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 

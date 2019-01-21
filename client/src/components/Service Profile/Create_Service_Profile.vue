@@ -290,6 +290,12 @@ mixins: [validationMixin],
             for(let i = 0; i < networks_lora.length; i++){
               this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
             }
+            if(this.network_names.length == 0){
+              //This will route the user to the create network page if no networks exists 
+              if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+                this.$router.push(`/network/create`)
+              };
+            }
           }).catch(err => {
             //Error getting networks from server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
@@ -299,6 +305,12 @@ mixins: [validationMixin],
             let network_servers = result.data.network_servers_lora;
             for(let i = 0; i < network_servers.length; i++){
               this.network_server_names.push(network_servers[i].network_server_id.concat(":",network_servers[i].network_server_name));
+            }
+            if(this.network_server_names.length == 0){
+              //This will route the user to the create network server page if no network servers exists 
+              if(confirm('There are no associated Networks Servers. Route to the Create Network Server Page?') == true){
+                this.$router.push(`/network_server/create`)
+              };
             }
           }).catch(err => {
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  

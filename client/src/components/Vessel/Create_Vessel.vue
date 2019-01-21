@@ -200,6 +200,12 @@ mixins: [validationMixin],
           for(let i = 0; i < networks_lora.length; i++){
             this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
           }
+          if(this.network_names.length == 0){
+            //This will route the user to the create network page if no network exists 
+            if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+              this.$router.push(`/network/create`)
+            };
+          }
         }).catch(err => {
           //Error getting networks from server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
@@ -240,6 +246,12 @@ mixins: [validationMixin],
         if(this.sub_networks_lora[i].network_id == this.network_id){
           this.sub_network_names.push(this.sub_networks_lora[i].sub_network_id.concat(":",this.sub_networks_lora[i].sub_network_name));
         }
+      }
+      if(this.sub_network_names.length == 0){
+        //This will route the user to the create sub-network page if no sub-network exists under selected network 
+        if(confirm('There are no Sub-Networks associated with the selected Network. Route to the Create Sub-Network Page?') == true){
+          this.$router.push(`/subnetwork/create`)
+        };
       }
     }
   },

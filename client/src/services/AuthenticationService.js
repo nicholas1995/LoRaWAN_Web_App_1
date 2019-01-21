@@ -123,7 +123,7 @@ export default {
     //Vessels
     get_vessels(sub_network_id, deleted) {//This returns vessels. set sub_net to null to leave open ended.. deleted to null for both.... deleted to 0 for not deleted.. deleted to 1 for deleted
         if(sub_network_id){
-            if(deleted){
+            if(deleted || deleted == 0){
                 Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
                 return Api.get(`/vessels/sub_network/${sub_network_id}/deleted/${deleted}`);
             }else{
@@ -137,7 +137,6 @@ export default {
             Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
             return Api.get(`/vessels`);
         }
-
     },
     get_vessels_db_given_sub_networks(sub_network_id) {//This returns deleted and not deleted vessels in the database under the specified subnet
         //NEED TO REMOVE
