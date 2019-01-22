@@ -9,7 +9,7 @@ const DB = require('./services/database/device_rx_db')
 require("./services/MQTT");
 
 //app.use(morgan('combined'));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));//this fixed the bug with the email size
 app.use(cors()); //DO RESEACH ON THIS.... 29:42 on first video
 require('./passport');
 //Start Express Server
