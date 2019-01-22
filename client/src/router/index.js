@@ -39,6 +39,10 @@ import Device_Profile from "../components/Device Profile/Device_Profile_Manageme
 import Create_Device_Profile from "../components/Device Profile/Create_Device_Profile.vue";
 import Update_Device_Profile from "../components/Device Profile/Update_Device_Profile.vue";
 
+import Gateway_Profile from "../components/Gateway Profile/Gateway_Profile_Management.vue";
+import Create_Gateway_Profile from "../components/Gateway Profile/Create_Gateway_Profile.vue";
+import Update_Gateway_Profile from "../components/Gateway Profile/Update_Gateway_Profile.vue";
+
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
@@ -202,8 +206,24 @@ export default new Router({
     },
     {
       path: "/device_profile/update/:device_profile_id_lora", //reasons sending the lora instead of the database is because we do not need to fetch all the profiles from the server for this form this there are no requriements to the name
-      name: "device_profile_update", //CHECK TO SEE WHICH ID TO PUT
+      name: "device_profile_update", 
       component: Update_Device_Profile
+    },
+   //-------------------------Gateway_Profile-------------------------
+   {
+    path: "/gateway_profile",
+    name: "gateway_profile",
+    component: Gateway_Profile
+    },
+    {
+      path: "/gateway_profile/create",
+      name: "gateway_profile_create",
+      component: Create_Gateway_Profile
+    },
+    {
+      path: "/gateway_profile/update/:gateway_profile_id_lora", 
+      name: "gateway_profile_update", 
+      component: Update_Gateway_Profile
     },
 
     {

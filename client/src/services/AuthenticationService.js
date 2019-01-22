@@ -307,16 +307,33 @@ export default {
         return Api.delete(`/device_profiles/${device_profile_id_lora}`);
     },
 
+    //Gateway profiles
+    get_gateway_profile(gateway_profile_id_lora) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/gateway_profiles/${gateway_profile_id_lora}`);
+    },
+    get_gateway_profiles(){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/gateway_profiles`);
+    },
+    create_gateway_profiles(gateway_profile) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.post("/gateway_profiles", { gateway_profile });
+    }, 
+    update_gateway_profiles(gateway_profile, gateway_profile_id_lora) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/gateway_profiles/${gateway_profile_id_lora}`, { gateway_profile });
+    },
+    delete_gateway_profiles(gateway_profile_id_lora){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/gateway_profiles/${gateway_profile_id_lora}`);
+    },
+    
+
     //Network servers
     get_network_servers(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get('/network_servers');
-    },
-
-    //Gateway profiles
-    get_gateway_profiles(){
-        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/gateway_profiles`);
     },
 
     //Device uplink data

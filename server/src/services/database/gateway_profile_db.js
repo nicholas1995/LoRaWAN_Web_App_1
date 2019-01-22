@@ -7,10 +7,10 @@ module.exports = {
         WHERE gateway_profile_deleted = '0'`;
     return db.queryAsync(sql);
   },
-  create_gateway_profile: function (gateway_profile_id_lora, gateway_profile_name, network_server_id, created_at_time_stamp) {
+  create_gateway_profile: function (gateway_profile_id_lora, gateway_profile_name, network_server_id, gateway_profile_created_at) {
     let sql = `INSERT INTO gateway_profile
-        (gateway_profile_id_lora, gateway_profile_name, network_server_id, created_at_time_stamp)
-        VALUES ('${gateway_profile_id_lora}', '${gateway_profile_name}', '${network_server_id}', '${created_at_time_stamp}')`;
+        (gateway_profile_id_lora, gateway_profile_name, network_server_id, gateway_profile_created_at)
+        VALUES ('${gateway_profile_id_lora}', '${gateway_profile_name}', '${network_server_id}', '${gateway_profile_created_at}')`;
     return db.queryAsync(sql);
   },
   update_gateway_profile: function (col, value, condition) {

@@ -307,6 +307,15 @@ module.exports = {
                                 })
                             //console.log('Different name');
                         } 
+                        if (lora[i].gateway_profile_created_at != db[j].gateway_profile_created_at) {
+                            //This is here because when I create a gateway profile I do not have the date returned by the lora app server that it was created at
+                            //hence I create it with dummy data then route to /gateway_profile and there the data will be fetched and comared and the date created will be updated
+                            DB_GATEWAY_PROFILE.update_gateway_profile('gateway_profile_created_at', lora[i].gateway_profile_created_at, lora[i].gateway_profile_id_lora)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].gateway_profile_id_lora}`, err.message);
+                                })
+                            //console.log('Update date after it is created because when ');
+                        }
                         accounted_for.push(j);
                         break;
                     }
@@ -360,8 +369,8 @@ module.exports = {
                             //console.log('Different name');
                         }
                         if (lora[i].service_profile_created_at != db[j].service_profile_created_at) {
-                            //This is here because when i create a service profile i do not have the date returned by the lora app server that it was created at
-                            //hence i create it with dummy data then route to /servie_profile and there the data will be fetched and comared and the date created will be updated
+                            //This is here because when I create a service profile I do not have the date returned by the lora app server that it was created at
+                            //hence I create it with dummy data then route to /servie_profile and there the data will be fetched and comared and the date created will be updated
                             service_profile_db.update_service_profile('service_profile_created_at', lora[i].service_profile_created_at, lora[i].service_profile_id_lora)
                                 .catch(err => {
                                     throw error.error_message(`update: ID-${lora[i].service_profile_id_lora}`, err.message);

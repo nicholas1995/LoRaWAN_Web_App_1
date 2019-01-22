@@ -75,7 +75,15 @@ const description_ping_slot_frequency = "";
 const description_supports_class_c = "";
 const description_class_c_timeout = "";
 
-
+//Gateway Profiles
+const description_gateway_profile_name = "gateway_profile_name";
+const description_gateway_profile_channels = "gateway_profile_channels";
+const description_network_server_id_lora = "network_server_id_lora";
+const description_gateway_profile_bandwidth = "gateway_profile_bandwidth";
+const description_gateway_profile_bitrate = "gateway_profile_bitrate";
+const description_gateway_profile_frequency = "gateway_profile_frequency";
+const description_gateway_profile_modulation = "gateway_profile_modulation";
+const description_gateway_profile_spreding_factors = "gateway_profile_spreding_factors";
 
 export {
   description_network_name,//Network
@@ -148,4 +156,12 @@ export {
   description_supports_class_c,
   description_class_c_timeout,
 
+  description_gateway_profile_name,//Gateway Profiles
+  description_gateway_profile_channels,
+  description_network_server_id_lora,
+  description_gateway_profile_bandwidth,
+  description_gateway_profile_bitrate,
+  description_gateway_profile_frequency,
+  description_gateway_profile_modulation,
+  description_gateway_profile_spreding_factors,
 };

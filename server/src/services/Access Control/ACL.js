@@ -60,7 +60,10 @@ const ACL = {
       read: "All"
     },
     gateway_profiles: {
-      read: "All"
+      read: "All",
+      update: "All",
+      delete: "All",
+      create: "All"
     },
     error_logs: {
       read: "All"
