@@ -35,6 +35,13 @@ const description_device_sub_network = "Sub-network under which the device to be
 const description_vessel_device = "Vessel the device will be placed on. If no vessel selected the device will be associated with the default vessel for the selected Sub-Network"
 const description_device_device_profile = "The profile that defines the device capabilities.";
 
+//Device Activation
+const description_dev_addr = "description_dev_addr";
+const description_nwk_s_enc_key = "description_nwk_s_enc_key";
+const description_app_s_key = "description_app_s_key";
+const description_f_cnt_up = "description_f_cnt_up";
+const description_n_f_cnt_down = "description_n_f_cnt_down";
+
 //Service Profile
 const description_service_profile_name = '';
 const description_network_service_profile = '';
@@ -103,6 +110,12 @@ export {
   description_device_sub_network,
   description_vessel_device,
   description_device_device_profile,
+
+  description_dev_addr,//Device Activation
+  description_nwk_s_enc_key,
+  description_app_s_key,
+  description_f_cnt_up,
+  description_n_f_cnt_down,
 
   description_service_profile_name,//Service Profile
   description_network_service_profile,

@@ -46,6 +46,11 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import functions from "./../../services/functions/forms_functions.js"
 
+//Code to get the location of a point when the marker clicked 
+/* google.maps.event.addListener(this.map, 'click', function( event ){
+  alert( "Latitude: "+event.latLng.lat()+" "+", longitude: "+event.latLng.lng() ); 
+});
+ */
 export default {
   name: 'google',
   props: ['name'],
@@ -94,7 +99,7 @@ export default {
     try{
       if (this.$store.state.loginState == false) {
         //User logged in
-        await AuthenticationService.check_permissions("device", "get")
+        await AuthenticationService.check_permissions("devices", "get")
           .catch(err => {
             console.log(err)
             throw err;
@@ -146,6 +151,9 @@ export default {
       this.map = new google.maps.Map(element, {
         zoom: 9,
         center: new google.maps.LatLng(this.map_center.latitude, this.map_center.longitude),
+      });
+      google.maps.event.addListener(this.map, 'click', function( event ){
+        console.log( "Latitude: "+event.latLng.lat()+" "+", longitude: "+event.latLng.lng() ); 
       });
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------

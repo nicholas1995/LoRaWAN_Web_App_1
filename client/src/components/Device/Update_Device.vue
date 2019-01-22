@@ -2,7 +2,7 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+        <v-flex xs12 sm8 md6>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary">
               <v-toolbar-title>Update Device</v-toolbar-title>
@@ -40,6 +40,7 @@
               label="Vessel"
               clearable
             >
+              <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_device"></tool_tips_forms>                    
             </v-select>
             <!--Device Profile Name-->
               <v-select
@@ -95,7 +96,8 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, numeric, helpers } from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
-import {description_device_name, description_device_description, description_device_device_profile, description_device_reference_altitude} from "../../services/functions/form_descriptions_tool_tips.js";
+import {description_device_name, description_device_description, description_vessel_device, description_device_device_profile,
+ description_device_reference_altitude, description_skip_frame_counter} from "../../services/functions/form_descriptions_tool_tips.js";
 import tool_tips_forms from "../Tool_Tip_Forms";
 
 
@@ -207,8 +209,10 @@ export default {
 
       description_device_name : description_device_name,
       description_device_description : description_device_description,
+      description_vessel_device : description_vessel_device,
       description_device_device_profile : description_device_device_profile,
       description_device_reference_altitude : description_device_reference_altitude,
+      description_skip_frame_counter : description_skip_frame_counter,
     };
   },
 

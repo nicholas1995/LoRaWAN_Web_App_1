@@ -18,7 +18,7 @@
                   label="Device Address*"
                   maxlength="8"
                   @keyup="$v.dev_addr.$touch()">
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_dev_addr"></tool_tips_forms>
                 </v-text-field>
                 </v-flex>
               <!--Network Session Key-->
@@ -28,7 +28,7 @@
                   label="Network Session Key*"
                   maxlength="32"
                   @keyup="$v.nwk_s_enc_key.$touch()">
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_nwk_s_enc_key"></tool_tips_forms>
                 </v-text-field>
               <!--Application Session Key-->
                 <v-text-field
@@ -37,7 +37,7 @@
                   label="Application Session Key*"
                   maxlength="32"
                   @keyup="$v.app_s_key.$touch()">
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_app_s_key"></tool_tips_forms>
                 </v-text-field>
               <!--Uplink Frame Counter-->
                 <v-text-field
@@ -45,7 +45,7 @@
                   :error-messages = "f_cnt_up_Errors"
                   label="Uplink Frame Counter*"
                   @keyup="$v.f_cnt_up.$touch()">
-                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_f_cnt_up"></tool_tips_forms>
                 </v-text-field>
               <!--Downlink Frame Counter (Network)-->
                 <v-text-field
@@ -53,7 +53,7 @@
                   :error-messages = "n_f_cnt_down_Errors"
                   label="Downlink Frame Counter*"
                   @keyup="$v.n_f_cnt_down.$touch()">
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_n_f_cnt_down"></tool_tips_forms>
               </v-text-field>
               </v-form>
               <div div class="text">
@@ -85,7 +85,8 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { required, minLength, maxLength, numeric, helpers } from 'vuelidate/lib/validators'
-import {description_network_name, description_network_display_name} from "../../services/functions/form_descriptions_tool_tips.js";
+import {description_dev_addr, description_nwk_s_enc_key, description_app_s_key, description_f_cnt_up, 
+description_n_f_cnt_down} from "../../services/functions/form_descriptions_tool_tips.js";
 import tool_tips_forms from "../Tool_Tip_Forms";
 
 const hex = helpers.regex('hex', /^[a-fA-F0-9]*$/);
@@ -138,8 +139,11 @@ mixins: [validationMixin],
       app_s_key: "",
       f_cnt_up: '',
       n_f_cnt_down: '',
-      description_network_name : description_network_name,
-      description_network_display_name : description_network_display_name,
+      description_dev_addr : description_dev_addr,
+      description_nwk_s_enc_key : description_nwk_s_enc_key,
+      description_app_s_key : description_app_s_key,
+      description_f_cnt_up : description_f_cnt_up,
+      description_n_f_cnt_down : description_n_f_cnt_down,
       message: ""
     };
   },

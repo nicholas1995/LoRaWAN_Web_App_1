@@ -276,7 +276,7 @@ export default {
     try{
       if (this.$store.state.loginState == false) {
         //User logged in
-        await AuthenticationService.check_permissions("device", "get")
+        await AuthenticationService.check_permissions("devices", "get")
           .catch(err => {
             console.log(err)
             throw err;
