@@ -421,7 +421,7 @@ mixins: [validationMixin],
           });
         this.access =1;
         //--------------Start-------------------
-        //Get Service Profiles
+        //Get Device Profiles
         this.device_profile_update = await AuthenticationService.get_device_profile(this.$route.params.device_profile_id_lora)
           .catch(err => {
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      

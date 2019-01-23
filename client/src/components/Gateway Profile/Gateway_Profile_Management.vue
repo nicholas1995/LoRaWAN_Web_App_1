@@ -40,7 +40,7 @@
               <v-icon slot="activator"
                 small
                 class="pt-3 pr-3"
-                @click="delete_network(props.item)"
+                @click="delete_gateway_profile(props.item)"
               >
                 delete
               </v-icon>
@@ -120,10 +120,10 @@ export default {
   },
   
   methods: {
-    delete_network(network){
-      if(confirm('Are you sure you want to delete this network?') == true){
-        AuthenticationService.delete_networks(network.network_id).then(result => {
-          this.gateway_profiles = result.data.networks_lora;
+    delete_gateway_profile(gateway_profile){
+      if(confirm('Are you sure you want to delete this gateway profile?') == true){
+        AuthenticationService.delete_gateway_profiles(gateway_profile.gateway_profile_id_lora).then(result => {
+          this.gateway_profiles = result.data.gateway_profiles;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a network on the lora app server

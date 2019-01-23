@@ -19,10 +19,10 @@ module.exports = {
         WHERE gateway_profile_id_lora = '${condition}' AND gateway_profile_deleted = 0`;
     return db.queryAsync(sql);
   },
-  update_gateway_profile_all_parameters: function (data, gateway_profile_id) {
+  update_gateway_profile_all_parameters: function (data, gateway_profile_id_lora) {
     let sql = `UPDATE gateway_profile
         SET gateway_profile_name = '${data.gateway_profile_name}'
-        WHERE gateway_profile_id = '${gateway_profile_id}'`;
+        WHERE gateway_profile_id_lora = '${gateway_profile_id_lora}' AND gateway_profile_deleted = 0`;
     return db.queryAsync(sql);
   },
 };

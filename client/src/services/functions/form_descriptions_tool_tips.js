@@ -83,7 +83,8 @@ const description_gateway_profile_bandwidth = "gateway_profile_bandwidth";
 const description_gateway_profile_bitrate = "gateway_profile_bitrate";
 const description_gateway_profile_frequency = "gateway_profile_frequency";
 const description_gateway_profile_modulation = "gateway_profile_modulation";
-const description_gateway_profile_spreding_factors = "gateway_profile_spreding_factors";
+const description_gateway_profile_spreading_factors = "gateway_profile_spreading_factors";
+const description_gateway_profile_bit_rate = "description_gateway_profile_bit_rate";
 
 export {
   description_network_name,//Network
@@ -163,5 +164,6 @@ export {
   description_gateway_profile_bitrate,
   description_gateway_profile_frequency,
   description_gateway_profile_modulation,
-  description_gateway_profile_spreding_factors,
+  description_gateway_profile_spreading_factors,
+  description_gateway_profile_bit_rate,
 };

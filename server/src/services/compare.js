@@ -328,7 +328,7 @@ module.exports = {
             }
             for (let k = 0; k < added_lora.length; k++) {
                 await DB_GATEWAY_PROFILE.create_gateway_profile(lora[added_lora[k]].gateway_profile_id_lora, lora[added_lora[k]].gateway_profile_name, lora[added_lora[k]].network_server_id,
-                    lora[added_lora[k]].created_at_time_stamp)
+                    lora[added_lora[k]].gateway_profile_created_at)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].gateway_profile_id_lora}`,err.message);
                   });
