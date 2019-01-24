@@ -62,13 +62,14 @@ export default {
           { title: 'Account Management', icon: 'people_outlined'}, //10
           { title: 'Device Profile', icon: 'people_outlined'}, //11
           { title: 'Gateway Profile', icon: 'settings_input_antenna'}, //12
+          { title: 'Network Server', icon: 'settings_input_antenna'}, //13
         ],
         items:[]
     };
   },
   created: function () {
     if(this.$store.state.user_class =='IoT Network Admin'){
-      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7],this.items_all[8],this.items_all[9],this.items_all[11],this.items_all[12]];
+      this.items = [this.items_all[0],this.items_all[1],this.items_all[2],this.items_all[3],this.items_all[4],this.items_all[5],this.items_all[6],this.items_all[7],this.items_all[8],this.items_all[9],this.items_all[11],this.items_all[12],this.items_all[13]];
     }else if(this.$store.state.user_class =='Software Admin'){
       this.items = [this.items_all[5],this.items_all[7],this.items_all[8],this.items_all[9],this.items_all[10]];
     }else if(this.$store.state.user_class =='Analyst'){
@@ -106,6 +107,8 @@ export default {
         this.$router.push('/device_profile'); 
       }else if(item=="Gateway Profile"){
         this.$router.push('/gateway_profile'); 
+      }else if(item=="Network Server"){
+        this.$router.push('/network_server'); 
       }else{
         this.$router.push('/dashboard'); 
       }

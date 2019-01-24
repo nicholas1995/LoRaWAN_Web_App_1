@@ -43,6 +43,10 @@ import Gateway_Profile from "../components/Gateway Profile/Gateway_Profile_Manag
 import Create_Gateway_Profile from "../components/Gateway Profile/Create_Gateway_Profile.vue";
 import Update_Gateway_Profile from "../components/Gateway Profile/Update_Gateway_Profile.vue";
 
+import Network_Server from '../components/Network Server/Network_Server_Management.vue'
+import Create_Network_Server from "../components/Network Server/Create_Network_Server.vue";
+import Update_Network_Server from "../components/Network Server/Update_Network_Server.vue";
+
 import User from "../components/User/User.vue"
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
@@ -224,6 +228,22 @@ export default new Router({
       path: "/gateway_profile/update/:gateway_profile_id_lora", 
       name: "gateway_profile_update", 
       component: Update_Gateway_Profile
+    },
+    //-------------------------Network Server-------------------------
+    {
+      path: "/network_server",
+      name: "network_server",
+      component: Network_Server
+    },
+    {
+      path: "/network_server/create",
+      name: "network_server_create",
+      component: Create_Network_Server
+    },
+    {
+      path: "/network_server/update/:network_server_id_lora",
+      name: "network_server_update",
+      component: Update_Network_Server
     },
 
     {

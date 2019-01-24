@@ -57,7 +57,10 @@ const ACL = {
       create: "All"
     },
     network_servers: {
-      read: "All"
+      read: "All",
+      update: "All",
+      delete: "All",
+      create: "All"
     },
     gateway_profiles: {
       read: "All",

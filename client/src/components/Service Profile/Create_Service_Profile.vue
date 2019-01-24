@@ -2,7 +2,7 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md8>
+        <v-flex xs12 sm12 md10>
           <v-toolbar light class="primary ">
             <v-toolbar-title>Create Service Profile</v-toolbar-title>
           </v-toolbar>

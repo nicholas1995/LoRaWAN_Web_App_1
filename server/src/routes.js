@@ -25,6 +25,7 @@ const gateway_policy = require("./policies/gateway_policy");
 const device_profile_policy = require("./policies/device_profile_policy");
 const service_profile_policy = require("./policies/service_profile_policy");
 const gateway_profile_policy = require("./policies/gateway_profile_policy");
+const network_server_policy = require("./policies/network_server_policy");
 const password_policy = require("./policies/UpdatePasswordPolicy")
 
 
@@ -258,7 +259,21 @@ module.exports = ((app) => {
     app.delete("/gateway_profiles/:gateway_profile_id_lora", authenticate, grant_access, gateway_profiles.delete_gateway_profile);
 
     //----------------------Network servers----------------------
+    
+    //Network servers (Read One)network_server
+    app.get("/network_servers/:network_server_id_lora", authenticate, grant_access, network_servers.get_one_network_server);
+
+    //Network servers (Read)
     app.get("/network_servers", authenticate, grant_access, network_servers.get);
+
+    //Network servers (Create)
+    app.post("/network_servers", authenticate, grant_access, network_server_policy.create, network_servers.create_network_server);
+
+    //Network servers (Update)
+    app.put("/network_servers/:network_server_id_lora", authenticate, grant_access, network_server_policy.update, network_servers.update_network_server);
+
+    //Network servers (Delete)
+    app.delete("/network_servers/:network_server_id_lora", authenticate, grant_access, network_servers.delete_network_server);
 
 
     //----------------------Device Uplink Data-----------------

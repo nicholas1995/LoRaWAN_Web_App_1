@@ -331,9 +331,25 @@ export default {
     
 
     //Network servers
+    get_network_server(network_server_id_lora) {
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`/network_servers/${network_server_id_lora}`);
+    },
     get_network_servers(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get('/network_servers');
+    },
+    create_network_servers(network_server) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.post("/network_servers", { network_server });
+    }, 
+    update_network_servers(network_server, network_server_id_lora) {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.put(`/network_servers/${network_server_id_lora}`, { network_server });
+    },
+    delete_network_servers(network_server_id_lora){
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.delete(`/network_servers/${network_server_id_lora}`);
     },
 
     //Device uplink data

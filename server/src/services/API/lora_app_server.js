@@ -216,9 +216,29 @@ module.exports = {
   },
 
   //------------------------Network Servers------------------------
+  //---------Read---------
   get_network_servers: function(data) {
     instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
     return instance.get(`/api/network-servers?limit=${data.limit}`);
   },
-
+  //---------Read One---------
+  get_network_server_one: function(network_server_id_lora) {
+    instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+    return instance.get(`/api/network-servers/${network_server_id_lora}`);
+  },
+  //---------Create---------
+  create_network_servers: function(data) {
+  instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+  return instance.post("/api/network-servers", data);
+  },
+  //---------Update---------
+  update_network_servers: function(data, network_server_id_lora) {
+  instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+  return instance.put(`/api/network-servers/${network_server_id_lora}`, data);
+  },
+  //---------Delete---------
+  delete_network_servers: function(network_server_id_lora) {
+  instance.defaults.headers.common["Grpc-Metadata-Authorization"] = token;
+  return instance.delete(`/api/network-servers/${network_server_id_lora}`);
+  },
 };  
