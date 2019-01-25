@@ -86,6 +86,22 @@ const description_gateway_profile_modulation = "gateway_profile_modulation";
 const description_gateway_profile_spreading_factors = "gateway_profile_spreading_factors";
 const description_gateway_profile_bit_rate = "description_gateway_profile_bit_rate";
 
+//Users
+const description_first_name = "description_first_name";
+const description_last_name = "description_last_name";
+const description_user_country = "description_user_country";
+const description_user_city = "description_user_city";
+const description_user_district = "description_user_district";
+const description_user_street = "description_user_street";
+const description_home_phone = "description_home_phone";
+const description_mobile_phone = "description_mobile_phone";
+const description_email = "description_email";
+const description_user_class = "description_user_class";
+const description_user_network = "description_user_network";
+const description_user_sub_network = "description_user_sub_network";
+const description_user_vessels = "description_user_vessels";
+
+
 export {
   description_network_name,//Network
   description_network_display_name,
@@ -166,4 +182,18 @@ export {
   description_gateway_profile_modulation,
   description_gateway_profile_spreading_factors,
   description_gateway_profile_bit_rate,
+
+  description_first_name,//User
+  description_last_name,
+  description_user_country,
+  description_user_city,
+  description_user_district,
+  description_user_street,
+  description_home_phone,
+  description_mobile_phone,
+  description_email,
+  description_user_class,
+  description_user_network, 
+  description_user_sub_network,
+  description_user_vessels,
 };

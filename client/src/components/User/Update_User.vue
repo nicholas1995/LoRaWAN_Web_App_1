@@ -25,7 +25,9 @@
                       label="First Name*"
                       :error-messages = "first_name_errors"
                       @keyup="$v.first_name.$touch()" 
-                    ></v-text-field>
+                    >
+                     <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_first_name"></tool_tips_forms>
+                    </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm6 md6 class = "pl-3">
                   <!--Last Name-->
@@ -34,7 +36,9 @@
                       label="Last Name*"
                       :error-messages = "last_name_errors"
                       @keyup="$v.last_name.$touch()" 
-                    ></v-text-field>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_last_name"></tool_tips_forms>
+                    </v-text-field>
                   </v-flex>
                 </v-layout>
                 <v-layout row wrap>
@@ -46,7 +50,9 @@
                       label="Home Phone*"
                       :error-messages = "home_phone_errors"
                       @keyup="$v.home_phone.$touch()" 
-                    ></v-text-field>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_home_phone"></tool_tips_forms>
+                    </v-text-field>
                   </v-flex>
                   <v-flex xs12 sm6 md6 class = "pl-3">
                   <!--Mobile Phone-->
@@ -56,7 +62,9 @@
                       label="Mobile Phone*"
                       :error-messages = "mobile_phone_errors"
                       @keyup="$v.mobile_phone.$touch()" 
-                    ></v-text-field>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_mobile_phone"></tool_tips_forms>
+                    </v-text-field>
                   </v-flex>
                 </v-layout>
                   <!--User Class-->
@@ -66,7 +74,9 @@
                       label="User Class"
                       :error-messages = "user_class_selected_errors"
                       @keyup="$v.user_class_selected.$touch()" 
-                    ></v-select>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_class"></tool_tips_forms>
+                    </v-select>
                   <!-- Message -->
                     <div div class="text">
                       {{message}}
@@ -89,28 +99,36 @@
                       label="Country*"
                       :error-messages = "user_country_errors"
                       @keyup="$v.user_country.$touch()" 
-                    ></v-text-field>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_country"></tool_tips_forms>
+                    </v-text-field>
                   <!--City-->
                     <v-text-field
                       v-model="user_city"
                       label="City*"
                       :error-messages = "user_city_errors"
                       @keyup="$v.user_city.$touch()" 
-                    ></v-text-field>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_city"></tool_tips_forms>
+                    </v-text-field>
                   <!--District-->
                     <v-text-field
                       v-model="user_district"
                       label="District*"
                       :error-messages = "user_district_errors"
                       @keyup="$v.user_district.$touch()" 
-                    ></v-text-field>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_district"></tool_tips_forms>
+                    </v-text-field>
                   <!--Street-->
                     <v-text-field
                       v-model="user_street"
                       label="Street*"
                       :error-messages = "user_street_errors"
                       @keyup="$v.user_street.$touch()" 
-                    ></v-text-field>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_street"></tool_tips_forms>
+                    </v-text-field>
                   <!-- Message -->
                     <div div class="text">
                       {{message}}
@@ -132,13 +150,17 @@
                       :items="network_names"
                       v-model="network_name_form"
                       label="Network"
-                    ></v-select>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_network"></tool_tips_forms>
+                    </v-select>
                   <!--Sub-Network-->
                     <v-select
                       :items="sub_network_names"
                       v-model="sub_network_name_form"
                       label="Sub-Network"
-                    ></v-select>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_sub_network"></tool_tips_forms>
+                    </v-select>
                   <!--Vessel-->
                     <v-combobox
                     v-model="vessel_name_form"
@@ -147,7 +169,9 @@
                     multiple
                     clearable
                     chips
-                    ></v-combobox>
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_vessels"></tool_tips_forms>
+                    </v-combobox>
                   <!-- Message -->
                     <div div class="text">
                       {{message}}
@@ -176,6 +200,10 @@
 
 <script>
 import AuthenticationService from "../../services/AuthenticationService.js";
+import tool_tips_forms from "../Tool_Tip_Forms";
+import {description_first_name, description_last_name, description_user_country, description_user_city, description_user_district,
+description_user_street, description_home_phone, description_mobile_phone, description_user_class, 
+description_user_network, description_user_sub_network, description_user_vessels} from "../../services/functions/form_descriptions_tool_tips.js";
 import { validationMixin } from 'vuelidate'
 import { required, maxLength, minLength, helpers, requiredIf} from 'vuelidate/lib/validators'
 import functions from "../../services/functions/forms_functions.js"
@@ -203,6 +231,9 @@ const required_devices= function(value){
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 
 export default {
+components:{
+  tool_tips_forms
+},
 mixins: [validationMixin],
   validations: {
       first_name: {
@@ -282,6 +313,19 @@ mixins: [validationMixin],
       vessel_ids: [],
 
       user_vessels: [], //Array that holds the devices already associated with the user account to be editied
+
+      description_first_name : description_first_name,
+      description_last_name : description_last_name,
+      description_user_country : description_user_country,
+      description_user_city : description_user_city,
+      description_user_district : description_user_district,
+      description_user_street : description_user_street,
+      description_home_phone : description_home_phone,
+      description_mobile_phone : description_mobile_phone,
+      description_user_class : description_user_class,
+      description_user_network : description_user_network,
+      description_user_sub_network : description_user_sub_network,
+      description_user_vessels : description_user_vessels,
 
       message: "",
     };
