@@ -2,100 +2,176 @@
   <v-content v-if="this.$store.state.user_class == 'Software Admin'">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+        <v-flex xs12 sm8 md10>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="grey lighten-2 ">
               <v-toolbar-title>REGISTER USER</v-toolbar-title>
             </v-toolbar>
-          </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
-            <!--First Name -->
-            <v-flex >
-              <v-text-field
-                v-model="first_name"
-                label="First Name*"
-                :error-messages = "first_name_errors"
-                @keyup="$v.first_name.$touch()" 
-              ></v-text-field>
-              </v-flex>
-            <!--Last Name-->
-              <v-text-field
-                v-model="last_name"
-                label="Last Name*"
-                :error-messages = "last_name_errors"
-                @keyup="$v.last_name.$touch()" 
-              ></v-text-field>
-            <!--Address-->
-              <v-text-field
-                v-model="address"
-                label="Address*"
-                :error-messages = "address_errors"
-                @keyup="$v.address.$touch()" 
-              ></v-text-field>
-            <!--Home Phone-->
-              <v-text-field
-                mask='phone'
-                v-model="home_phone"
-                label="Home Phone*"
-                :error-messages = "home_phone_errors"
-                @keyup="$v.home_phone.$touch()" 
-              ></v-text-field>
-            <!--Mobile Phone-->
-              <v-text-field
-                mask='phone'
-                v-model="mobile_phone"
-                label="Mobile Phone*"
-                :error-messages = "mobile_phone_errors"
-                @keyup="$v.mobile_phone.$touch()" 
-              ></v-text-field>
-            <!--Email-->
-              <v-text-field
-                v-model="email"
-                label="Email Address*"
-                :error-messages = "email_errors"
-                @keyup="$v.email.$touch()" 
-              ></v-text-field>
-            <!--User Class-->
-              <v-select
-                :items="user_class"
-                v-model="user_class_selected"
-                label="User Class"
-                :error-messages = "user_class_selected_errors"
-                @keyup="$v.user_class_selected.$touch()" 
-              ></v-select>
-              <!--Network-->
-                <v-select
-                  :items="network_names"
-                  v-model="network_name_form"
-                  label="Network"
-                ></v-select>
-                <!--Sub-Network-->
-                <v-select
-                  :items="sub_network_names"
-                  v-model="sub_network_name_form"
-                  label="Sub-Network"
-                ></v-select>
-                <!--Vessel-->
-                <v-combobox
-                v-model="vessel_name_form"
-                :items="vessel_names"
-                label="Vessel"
-                multiple
-                clearable
-                chips
-                ></v-combobox>
-              <div div class="text">
-                {{message}}
-              </div>
-              <v-btn class="grey lighten-2"
-                @click="create_user"
-              >
-                Register User
-              </v-btn>
-              <v-btn class="grey lighten-2"
-                @click.stop="$emit('user_management_no_change')">
-                Cancel
-              </v-btn>
+            <v-stepper non-linear class = "elevation-5">
+              <v-stepper-header>
+                <v-stepper-step editable step="1">Basic Information</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="2">Address</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="3">Vessel</v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items >
+<!--Stepper 1--><v-stepper-content step="1" >
+                <v-layout row wrap>
+                  <v-flex xs12 sm6 md6 class = "pr-3">
+                  <!--First Name -->
+                    <v-text-field
+                      v-model="first_name"
+                      label="First Name*"
+                      :error-messages = "first_name_errors"
+                      @keyup="$v.first_name.$touch()" 
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6 class = "pl-3">
+                  <!--Last Name-->
+                    <v-text-field
+                      v-model="last_name"
+                      label="Last Name*"
+                      :error-messages = "last_name_errors"
+                      @keyup="$v.last_name.$touch()" 
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                <v-layout row wrap>
+                  <v-flex xs12 sm6 md6 class = "pr-3">
+                    <!--Home Phone-->
+                    <v-text-field
+                      mask='phone'
+                      v-model="home_phone"
+                      label="Home Phone*"
+                      :error-messages = "home_phone_errors"
+                      @keyup="$v.home_phone.$touch()" 
+                    ></v-text-field>
+                  </v-flex>
+                  <v-flex xs12 sm6 md6 class = "pl-3">
+                  <!--Mobile Phone-->
+                    <v-text-field
+                      mask='phone'
+                      v-model="mobile_phone"
+                      label="Mobile Phone*"
+                      :error-messages = "mobile_phone_errors"
+                      @keyup="$v.mobile_phone.$touch()" 
+                    ></v-text-field>
+                  </v-flex>
+                </v-layout>
+                  <!--Email-->
+                    <v-text-field
+                      v-model="email"
+                      label="Email Address*"
+                      :error-messages = "email_errors"
+                      @keyup="$v.email.$touch()" 
+                    ></v-text-field>
+                  <!--User Class-->
+                    <v-select
+                      :items="user_class"
+                      v-model="user_class_selected"
+                      label="User Class"
+                      :error-messages = "user_class_selected_errors"
+                      @keyup="$v.user_class_selected.$touch()" 
+                    ></v-select>
+                  <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click="create_user"
+                      >
+                      Register User
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/user`) ">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+<!--Stepper 2--><v-stepper-content step="2" >
+                  <!--Country-->
+                    <v-text-field
+                      v-model="user_country"
+                      label="Country*"
+                      :error-messages = "user_country_errors"
+                      @keyup="$v.user_country.$touch()" 
+                    ></v-text-field>
+                  <!--City-->
+                    <v-text-field
+                      v-model="user_city"
+                      label="City*"
+                      :error-messages = "user_city_errors"
+                      @keyup="$v.user_city.$touch()" 
+                    ></v-text-field>
+                  <!--District-->
+                    <v-text-field
+                      v-model="user_district"
+                      label="District*"
+                      :error-messages = "user_district_errors"
+                      @keyup="$v.user_district.$touch()" 
+                    ></v-text-field>
+                  <!--Street-->
+                    <v-text-field
+                      v-model="user_street"
+                      label="Street*"
+                      :error-messages = "user_street_errors"
+                      @keyup="$v.user_street.$touch()" 
+                    ></v-text-field>
+                  <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click="create_user"
+                      >
+                      Register User
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/user`) ">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+<!--Stepper 3--><v-stepper-content step="3" >
+                  <!--Network-->
+                    <v-select
+                      :items="network_names"
+                      v-model="network_name_form"
+                      label="Network"
+                    ></v-select>
+                  <!--Sub-Network-->
+                    <v-select
+                      :items="sub_network_names"
+                      v-model="sub_network_name_form"
+                      label="Sub-Network"
+                    ></v-select>
+                  <!--Vessel-->
+                    <v-combobox
+                    v-model="vessel_name_form"
+                    :items="vessel_names"
+                    label="Vessel"
+                    multiple
+                    clearable
+                    chips
+                    ></v-combobox>
+                  <!-- Message -->
+                    <div div class="text">
+                      {{message}}
+                    </div>
+                  <!-- Buttons -->
+                    <v-btn class="grey lighten-2"
+                      @click="create_user"
+                      >
+                      Register User
+                    </v-btn>
+                    <v-btn class="grey lighten-2"
+                      @click.stop="$router.push(`/user`) ">
+                      Cancel
+                    </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
           </v-card>
         </v-flex>
       </v-layout>
@@ -114,8 +190,8 @@ import functions from "../../services/functions/forms_functions.js"
 const unique= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
-  for(i=0; i< this.users_prop.length; i++){
-    if(value ==this.users_prop[i].email){
+  for(i=0; i< this.users.length; i++){
+    if(value ==this.users[i].email){
       return 0;
     }
   } 
@@ -146,10 +222,22 @@ mixins: [validationMixin],
         required,
         maxLength: maxLength(32),
       },
-      address: {
+      user_country: {
         required,
         maxLength: maxLength(60),
       },      
+      user_city: {
+        required,
+        maxLength: maxLength(60),
+      },   
+      user_district: {
+        required,
+        maxLength: maxLength(60),
+      },   
+      user_street: {
+        required,
+        maxLength: maxLength(60),
+      },   
       home_phone: {
         required,
         minLength: minLength(10),
@@ -174,9 +262,15 @@ mixins: [validationMixin],
     },
   data() {
     return {
+      users: [],
       first_name: "",
       last_name: "",
-      address: "",
+
+      user_country: '',
+      user_city: '',
+      user_district: '',
+      user_street: '',
+
       home_phone: "",
       mobile_phone: "",
       email: "",
@@ -202,10 +296,23 @@ mixins: [validationMixin],
       message: "",
     };
   },
-  props:[
-   'users_prop'
-  ],
-  created: function(){
+  created: async function(){
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("users", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //--------------Start-------------------
+        AuthenticationService.get_users().then(result => {
+          this.users = JSON.parse(result.data.users);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
         AuthenticationService.get_networks().then(result => {
           this.networks = result.data.networks_lora;
           for(let i = 0; i < this.networks.length; i++){
@@ -227,6 +334,26 @@ mixins: [validationMixin],
           //Error getting the devices from the server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
         })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      console.log(err)
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   watch: {
     user_class_selected: function(){
@@ -264,21 +391,42 @@ mixins: [validationMixin],
       !this.$v.first_name.maxLength && errors.push('First name must be 32 characters or less.')
       return errors;
     },
-      last_name_errors(){
+    last_name_errors(){
       const errors=[];
       if (!this.$v.last_name.$error)return errors
       !this.$v.last_name.required && errors.push('Last name is required.')
       !this.$v.last_name.maxLength && errors.push('Last name must be 32 characters or less.')
       return errors;
     },
-      address_errors(){
+    user_country_errors(){
       const errors=[];
-      if (!this.$v.address.$error)return errors
-      !this.$v.address.required && errors.push('Address is required.')
-      !this.$v.address.maxLength && errors.push('Address must be 32 characters or less.')
+      if (!this.$v.user_country.$error)return errors
+      !this.$v.user_country.required && errors.push('Country is required.')
+      !this.$v.user_country.maxLength && errors.push('Country must be 32 characters or less.')
       return errors;
     },
-      home_phone_errors(){
+    user_city_errors(){
+      const errors=[];
+      if (!this.$v.user_city.$error)return errors
+      !this.$v.user_city.required && errors.push('City is required.')
+      !this.$v.user_city.maxLength && errors.push('City must be 32 characters or less.')
+      return errors;
+    },
+    user_district_errors(){
+      const errors=[];
+      if (!this.$v.user_district.$error)return errors
+      !this.$v.user_district.required && errors.push('District is required.')
+      !this.$v.user_district.maxLength && errors.push('District must be 32 characters or less.')
+      return errors;
+    },
+    user_street_errors(){
+      const errors=[];
+      if (!this.$v.user_street.$error)return errors
+      !this.$v.user_street.required && errors.push('Street is required.')
+      !this.$v.user_street.maxLength && errors.push('Street must be 32 characters or less.')
+      return errors;
+    },
+    home_phone_errors(){
       const errors=[];
       if (!this.$v.home_phone.$error)return errors
       !this.$v.home_phone.required && errors.push('Home phone is required.')
@@ -286,7 +434,7 @@ mixins: [validationMixin],
       !this.$v.home_phone.maxLength && errors.push('Invalid phone number.')
       return errors;
     },
-      mobile_phone_errors(){
+    mobile_phone_errors(){
       const errors=[];
       if (!this.$v.mobile_phone.$error)return errors
       !this.$v.mobile_phone.required && errors.push('Mobile phone is required.')
@@ -294,7 +442,7 @@ mixins: [validationMixin],
       !this.$v.mobile_phone.maxLength && errors.push('Invalid phone number.')
       return errors;
     },
-      email_errors(){
+    email_errors(){
       const errors=[];
       if (!this.$v.email.$error)return errors
       !this.$v.email.required && errors.push('Email is required.')
@@ -302,7 +450,7 @@ mixins: [validationMixin],
       !this.$v.email.u && errors.push('Email must be unique.')
       return errors;
     },
-      user_class_selected_errors(){
+    user_class_selected_errors(){
       const errors=[];
       if (!this.$v.user_class_selected.$error)return errors
       !this.$v.user_class_selected.required && errors.push('User class required.')
@@ -313,7 +461,8 @@ mixins: [validationMixin],
     create_user(){
       this.$v.$touch(); //this will ensure that if the form is submitted before any of the 
       //text fields are used it will still show an error
-      if(this.$v.first_name.$invalid || this.$v.last_name.$invalid || this.$v.address.$invalid || this.$v.home_phone.$invalid
+      if(this.$v.first_name.$invalid || this.$v.last_name.$invalid || this.$v.user_country.$invalid || this.$v.user_city.$invalid 
+      || this.$v.user_district.$invalid ||this.$v.user_street.$invalid || this.$v.home_phone.$invalid 
       || this.$v.mobile_phone.$invalid || this.$v.email.$invalid || this.$v.user_class_selected.$invalid ){
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
@@ -324,16 +473,18 @@ mixins: [validationMixin],
         AuthenticationService.create_users({
           first_name: this.first_name,
           last_name: this.last_name,
-          address: this.address,
+          user_country: this.user_country,
+          user_city: this.user_city,
+          user_district: this.user_district,
+          user_street: this.user_street,
           home_phone: this.home_phone,
           mobile_phone: this.mobile_phone,
           email: this.email,
           user_class: this.user_class_selected,
           vessels: this.vessel_ids
         }).then(result => {
-          let data = JSON.parse(result.data.users);
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
-          this.$emit('user_management', {data: data}); //passing the revecived array of networks to the parent component [Network]
+          this.$router.push(`/user`) 
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
         }) 

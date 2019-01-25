@@ -1,4 +1,3 @@
-const CreateUserPolicy = require('./policies/CreateUserPolicy');
 const user = require('./controllers/user');
 const authenticate = require('./policies/isAuthenticated');
 const grant_access = require('./services/Access Control/grant_access');
@@ -16,7 +15,7 @@ const gateway_profiles = require("./controllers/gateway_profiles");
 const device_data = require("./controllers/device_data");
 const error_logs = require("./controllers/error_logs");
 
-
+const user_policy = require('./policies/user_policy')
 const Network_Policy = require('./policies/network_policy');
 const sub_network_policy = require('./policies/sub_network_policy');
 const vessel_policy = require("./policies/vessel_policy");
@@ -45,17 +44,20 @@ module.exports = ((app) => {
 
 
     //---------------------Users---------------------
+    //Users (Read One) 
+    app.get("/users/:user_id", authenticate, grant_access, user.get_one);
+
     //Users (Read) 
     app.get("/users", authenticate, grant_access, user.get);
 
     //Users (Create)
-    app.post("/users", authenticate, grant_access,  user.create);
+    app.post("/users", authenticate, grant_access, user_policy.create, user.create);
 
     //Users (Update)
-    app.put("/users", authenticate, grant_access, user.update); 
+    app.put("/users/:user_id", authenticate, grant_access, user_policy.update, user.update); 
 
     //Users (Delete)
-    app.delete("/users/:id", authenticate, grant_access, user.delete);
+    app.delete("/users/:id", authenticate, grant_access, user.delete);  
 
     //---------------------Profile---------------------
     //Profile (Read)

@@ -47,7 +47,10 @@ import Network_Server from '../components/Network Server/Network_Server_Manageme
 import Create_Network_Server from "../components/Network Server/Create_Network_Server.vue";
 import Update_Network_Server from "../components/Network Server/Update_Network_Server.vue";
 
-import User from "../components/User/User.vue"
+import User from "../components/User/User_Management.vue"
+import Create_User from "../components/User/Create_User.vue"
+import Update_User from "../components/User/Update_User.vue"
+
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
 import Device_Data from "../components/Device Data/Device_Data.vue";
@@ -246,11 +249,23 @@ export default new Router({
       component: Update_Network_Server
     },
 
+    //-------------------------User-------------------------
     {
       path: "/user",
       name: "user",
       component: User
     },
+    {
+      path: "/user/create",
+      name: "user_create",
+      component: Create_User
+    },
+    {
+      path: "/user/update/:user_id",
+      name: "user_update",
+      component: Update_User
+    },
+
     {
       path: "/update_profile",
       name: "update_profile",

@@ -2,13 +2,19 @@ const db = require("../../db");
 
 module.exports = {
     add_user: function(user, pw_encrypt){
-        let sql = `INSERT INTO users (email,first_name,last_name,password,address,home_phone,mobile_phone,new_user,user_class)
-    VALUES ('${user.email}','${user.first_name}','${user.last_name}','${pw_encrypt}','${user.address}','${user.home_phone}','${user.mobile_phone}','1', '${user.user_class}')`;
+        let sql = `INSERT INTO users (email, first_name, last_name, password, user_country, user_city, user_district, user_street, home_phone, mobile_phone, new_user, user_class)
+    VALUES ('${user.email}','${user.first_name}','${user.last_name}','${pw_encrypt}','${user.user_country}','${user.user_city}','${user.user_district}','${user.user_street}','${user.home_phone}','${user.mobile_phone}','1', '${user.user_class}')`;
     return db.queryAsync(sql);
+    },
+    get_user: function(user_id){
+        let sql = `SELECT *
+        FROM users
+        WHERE id = '${user_id}'`;
+        return db.queryAsync(sql);
     },
     get_users: function(){
         let sql = `SELECT 
-        id, email, first_name, last_name, address, home_phone, mobile_phone, date_created, user_class 
+        id, email, first_name, last_name, user_country, user_city, user_district, user_street, home_phone, mobile_phone, date_created, user_class 
         FROM users`;
         return db.queryAsync(sql);
     },
@@ -22,11 +28,11 @@ module.exports = {
         WHERE id='${id}'`; 
         return db.queryAsync(sql);
     },
-    update_user: function(data){
+    update_user: function(data, user_id){
         let sql = `UPDATE users
-        SET first_name= '${data.first_name}', last_name= '${data.last_name}', address= '${data.address}', 
-        home_phone= '${data.home_phone}', mobile_phone= '${data.mobile_phone}', user_class = '${data.user_class}'
-        WHERE id ='${data.id}'`;
+        SET first_name= '${data.first_name}', last_name= '${data.last_name}', user_country= '${data.user_country}', user_city= '${data.user_city}', 
+        user_district= '${data.user_district}', user_street= '${data.user_street}', home_phone= '${data.home_phone}', mobile_phone= '${data.mobile_phone}', user_class = '${data.user_class}'
+        WHERE id ='${user_id}'`;
         return db.queryAsync(sql);
     },
     update_user_pw: function (encrypted_password, email){

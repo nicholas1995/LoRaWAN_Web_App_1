@@ -84,17 +84,45 @@ module.exports = {
       res.status(500).send({ message: "Failed to get users", type: 'error' });
     }
   }, 
+  get_one: async function (req, res) {
+    let users;
+    try {
+        users = await user_db.get_user(req.params.user_id)
+          .catch(err => {
+            //Error fetching user account information from database
+            throw err;
+          });
+        users = users[0];
+        users = {
+          user_id: users.id,
+          first_name: users.first_name,
+          last_name: users.last_name,
+          user_country: users.user_country,
+          user_city: users.user_city,
+          user_district: users.user_district,
+          user_street: users.user_street,
+          home_phone: users.home_phone,
+          mobile_phone: users.mobile_phone,
+          user_class: users.user_class,
+          email: users.email
+        }
+      res.status(200).send({ users: users, message: 'Users fetched', type: 'success' });
+    } catch (err) {
+      console.log(err)
+      res.status(500).send({ message: "Failed to get users", type: 'error' });
+    }
+  }, 
   //Add User
   create: async function(req, res){
     let users;
     try{
-      let data = JSON.parse(req.body.data);
+      let data = req.body.user;
       let pw = randomPasswordGenerator();
       let pw_encrypt = await encrypt(pw)
-      .catch(err => {
-        //Error encrypting pw
-        throw err;
-      });
+        .catch(err => {
+          //Error encrypting pw
+          throw err;
+        });
       await user_db.add_user(data, pw_encrypt)
         .catch((err) => {
           throw err;
@@ -119,29 +147,23 @@ module.exports = {
             })
         }
       };
-      users = await user_db.get_users()
-        .catch((err) => {
-          throw err;
-        })
-      users = JSON.stringify(users);
-      res.status(200).send({ users: users, message: 'User created.', type: 'success' });
+      res.status(200).send({message: 'User created.', type: 'success' });
     }catch(err){
       console.log(err);
     }  
   },
   //Update User
   update: async function (req, res) {
-    let users;
     try {
-      let data = JSON.parse(req.body.data);
-      await user_db.update_user(data)
+      let data = req.body.user;
+      await user_db.update_user(data, req.params.user_id)
         .catch(err => {
           //Error updating user on the database
           throw err;
         });
         if(data.vessels.deleted.length > 0){
           for (let i = 0; i < data.vessels.deleted.length ;i++){
-            await USER_VESSEL_DB.delete_user_vessel_relationship(data.id, data.vessels.deleted[i])
+            await USER_VESSEL_DB.delete_user_vessel_relationship(req.params.user_id, data.vessels.deleted[i])
               .catch(err => {
                 //Error deleting user vessel relationship
                 throw err;
@@ -150,19 +172,14 @@ module.exports = {
         }
         if (data.vessels.added.length > 0) {
           for (let i = 0; i < data.vessels.added.length; i++) {
-            await USER_VESSEL_DB.create_user_vessel_relationship(data.id, data.vessels.added[i])
+            await USER_VESSEL_DB.create_user_vessel_relationship(req.params.user_id, data.vessels.added[i])
               .catch(err => {
                 //Error deleting user vessel relationship
                 throw err;
               });
           }
       }
-      users = await user_db.get_users()
-        .catch((err) => {
-          throw err;
-        })
-      users = JSON.stringify(users);
-      res.status(200).send({ users: users, message: 'User updated.', type: 'success' });
+      res.status(200).send({ message: 'User updated.', type: 'success' });
     } catch (err) {
       console.log(err);
     }
@@ -180,7 +197,7 @@ module.exports = {
         .catch((err) => {
           throw err;
         })
-      users = JSON.stringify(users);
+      users = users;
       res.status(200).send({ users: users, message: 'User deleted.', type: 'success' });
     } catch (err) {
       console.log(err);
@@ -313,7 +330,10 @@ module.exports = {
       user_information = {
         first_name: user_information.first_name,
         last_name: user_information.last_name,
-        address: user_information.address,
+        user_country: user_information.user_country,
+        user_city: user_information.user_city,
+        user_district: user_information.user_district,
+        user_street: user_information.user_street,
         home_phone: user_information.home_phone,
         mobile_phone: user_information.mobile_phone,
         email: user_information.email

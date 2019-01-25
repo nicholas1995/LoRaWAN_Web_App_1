@@ -26,19 +26,21 @@ export default {
         return Api.post("login/new_user", {data}); 
     },
     //Users
+    get_user(user_id){
+        Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+        return Api.get(`users/${user_id}`);
+    },
     get_users(){
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get('users');
     },
-    create_users(data) {
-        data = JSON.stringify(data);
+    create_users(user) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.post('users',{data});
+        return Api.post('users',{user});
     },
-    update_users(data) {
-        data = JSON.stringify(data);
+    update_users(user, user_id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.put('users', {data});
+        return Api.put(`users/${user_id}`, {user});
     },
     delete_users(id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;

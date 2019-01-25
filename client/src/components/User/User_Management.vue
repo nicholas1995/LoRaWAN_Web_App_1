@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
       <v-tooltip bottom>
         <v-icon large slot="activator"
-              class="mr-1 mt-3" @click.stop="$emit('create_user', users)"  >
+              class="mr-1 mt-3" @click.stop="$router.push(`/user/create`)"  >
           person_add
         </v-icon>
         <span>Add User</span>
@@ -31,7 +31,7 @@
                 v-if="user_email != props.item.email"
                 small
                 class="mr-2 pt-3"
-                @click="$emit('update_user',{'user_update':props.item,'users':users})"
+                @click="$router.push(`/user/update/${props.item.id}`)"
               >
                 edit
               </v-icon>
@@ -53,11 +53,14 @@
           <td class="text-xs-left">{{ props.item.email }}</td>
           <td class="text-xs-left">{{ props.item.first_name }}</td>
           <td class="text-xs-left">{{ props.item.last_name }}</td>
-          <td class="text-xs-left">{{ props.item.address }}</td>
+          <td class="text-xs-left">{{ props.item.user_class}}</td>
+          <td class="text-xs-left">{{ props.item.user_country}}</td>
+          <td class="text-xs-left">{{ props.item.user_city}}</td>
+          <td class="text-xs-left">{{ props.item.user_district}}</td>
+          <td class="text-xs-left">{{ props.item.user_street}}</td>
           <td class="text-xs-left">{{ props.item.home_phone }}</td>
           <td class="text-xs-left">{{ props.item.mobile_phone }}</td>
           <td class="text-xs-left">{{ props.item.date_created | return_date}}</td>
-          <td class="text-xs-left">{{ props.item.user_class}}</td>
       </template>
     </v-data-table>
   </v-content>
@@ -75,24 +78,57 @@ export default {
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'ID', value: 'id' ,sortable: true},
           { text: 'Email', value: 'email' ,sortable: true},
-          { text: 'First Name', value: 'first_name' , sortable: false },
-          { text: 'Last Name', value: 'last_name' , sortable: false },
-          { text: 'Address', value: 'Address', sortable: false },
+          { text: 'First Name', value: 'first_name' , sortable: true },
+          { text: 'Last Name', value: 'last_name' , sortable: true },
+          { text: 'User Class', value: 'user_class', sortable: true },
+          { text: 'Country', value: 'user_country', sortable: true },
+          { text: 'City', value: 'user_city', sortable: false },
+          { text: 'District', value: 'user_district', sortable: false },
+          { text: 'Street', value: 'user_street', sortable: false },
           { text: 'Home Phone', value: 'home_phone', sortable: false },
           { text: 'Mobile Phone', value: 'mobile_phone', sortable: false },
           { text: 'Date Created', value: 'date_created', sortable: true },
-          { text: 'User Class', value: 'user_class', sortable: true }
         ],
         users: []
     }
   },
-  created: function () {
-    AuthenticationService.get_users().then(result => {
-      this.users = JSON.parse(result.data.users);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type})   
-    }).catch(err => {
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
-    })
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("users", "post")
+          .catch(err => {
+            console.log(err)
+            throw err;
+          });
+        this.access =1;
+        //--------------Start-------------------
+        AuthenticationService.get_users().then(result => {
+          this.users = JSON.parse(result.data.users);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      console.log(err)
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }
   },
   props:[
    'users_prop'
@@ -111,7 +147,7 @@ export default {
     delete_user(user){
       if(confirm('Are you sure you want to delete this user?') == true){
         AuthenticationService.delete_users(user.id).then(result => {
-          this.users = JSON.parse(result.data.users);
+          this.users = result.data.users;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a network on the lora app server
