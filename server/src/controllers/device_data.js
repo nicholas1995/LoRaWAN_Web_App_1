@@ -288,7 +288,52 @@ function convert_dates(data, permission){ //to ensure that when a fisher downloa
     }
     return data;
 }
+function get_min_max_id_of_uplink_data(device_data){
+    let max = 0;
+    let min = 0;
+    for(let i = 0; i< device_data.length; i++){
+        if(i == 0){
+            max = device_data[i].device_uplink_id;
+            min = device_data[i].device_uplink_id;
+        }else{
+            if(device_data[i].device_uplink_id > max){
+                max = device_data[i].device_uplink_id;
+            }
+            if(device_data[i].device_uplink_id < min){
+                min = device_data[i].device_uplink_id;
+            }
+        }
+    }
+    return{
+        min: min,
+        max: max
+    }
+}
+function filter_records_parameters(req, device_data){
+    if(req.user.user_class =="Analyst"){
+        let parameters = JSON.parse(req.params.parameters); 
+        let columns = req.params.columns
+        let x = get_min_max_id_of_uplink_data(device_data);
+        let filter_parameters = {
+            headers: JSON.stringify(columns),
+            device_uplink_id_min :x.min,
+            device_uplink_id_max :x.max,
+            sub_network: JSON.stringify(parameters.sub_network),
+            vessel: JSON.stringify(parameters.vessel),
+            device: JSON.stringify(parameters.device), 
+            start_date: parameters.start_date,
+            end_data: parameters.end_date,
+            sort_by: parameters.sort_by,
+            order: parameters.order,
+            user_id: req.user.id
+        }
+        console.log(filter_parameters)
+        return filter_records_parameters;
+    }else{
+        return null;
+    }
 
+}
 module.exports = {
     get: async function (req, res) {
         let device_data, headers;
@@ -455,6 +500,7 @@ module.exports = {
                 .catch(err => {
                     throw err; 
                 })
+                filter_records_parameters(req, device_data)
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
                 device_data = convert_dates(device_data, access);
