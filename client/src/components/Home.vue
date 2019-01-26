@@ -89,7 +89,7 @@ export default {
       markerCoordinates: [],
       map: null,
       bounds: null,
-      markers: [],
+      markers: null,
       flightPath: null,
       markerCluster: null,
       map_center: {latitude: "10.7277795", longitude: "-61.2105507"},
@@ -116,49 +116,22 @@ export default {
       timeout: 1500,
       color: "error",
       message: "blank",
-
-      heat_map_coordinates: [], //This is an array which holds the device uplink coordinates to be used to create the heatmap layer 
     }
   },
   mounted: async function () {
     try{
         //-------------------------Start----------------------
-        let device_uplink_coordinates = await AuthenticationService.get_device_coordinates()
-          .catch(err => {
-            console.log(err)
-          })
-          device_uplink_coordinates = device_uplink_coordinates.data.device_coordinates
-          for(let i = 0; i< device_uplink_coordinates.length; i ++){
-            if(i == 1){
-            }
-            this.heat_map_coordinates.push(new google.maps.LatLng(device_uplink_coordinates[i].gps_latitude, device_uplink_coordinates[i].gps_longitude))
-          }
         this.init_map();
+        this.create_heat_map()
         //Code to get the location of a point when the marker clicked 
         google.maps.event.addListener(this.map, 'click', async(event) =>{
-          let device_uplink_sensor_data = await AuthenticationService.get_sensor_data_using_coordinates({lat: event.latLng.lat(), lng: event.latLng.lng()})
-            .catch(err => {
-              console.log(err)
-            })
-          device_uplink_sensor_data = device_uplink_sensor_data.data.device_uplink_sensor_data;
-          if(device_uplink_sensor_data.length > 0) this.create_marker(device_uplink_sensor_data[0])
+          this.map_click_event_handler(event);
         });
-
     }catch(err) {
       console.log(err)
-
     }      
   },
-  destroyed: async function(){//clear device intervals
-    for(let i =0; i<this.cleartick_device_marker.length; i++){
-          let holder  = this.cleartick_device_marker[i];
-          clearInterval(holder);
-    }
-    for(let i =0; i<this.cleartick_device_polyline.length; i++){ //clear device polyline intervals
-          let holder  = this.cleartick_device_polyline[i];
-          clearInterval(holder);
-    }
-  },
+
   methods: {
     init_map: function(){
       //initiialzies the map
@@ -168,42 +141,99 @@ export default {
         zoom: 9,
         center: new google.maps.LatLng(this.map_center.latitude, this.map_center.longitude),
       });
-
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    create_heat_map: async function(){
+      let device_uplink_coordinates = await AuthenticationService.get_device_coordinates()
+        .catch(err => {
+          console.log(err)
+        })
+      device_uplink_coordinates = device_uplink_coordinates.data.device_coordinates
+      let heat_map_coordinates =[]; //This is an array which holds the device uplink coordinates to be used to create the heatmap layer 
+      for(let i = 0; i< device_uplink_coordinates.length; i ++){
+        if(i == 1){
+        }
+        heat_map_coordinates.push(new google.maps.LatLng(device_uplink_coordinates[i].gps_latitude, device_uplink_coordinates[i].gps_longitude))
+      }
       this.heat_map = new google.maps.visualization.HeatmapLayer({
-        data: this.heat_map_coordinates,
+        data: heat_map_coordinates,
         map: this.map
       });
       this.heat_map.set('opacity', this.heat_map.get('opacity') ? null : 1);
       this.heat_map.set('radius', this.heat_map.get('radius') ? null : 10);
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
-    create_marker: async function(sensor_data){
-        let position = new google.maps.LatLng(sensor_data.gps_latitude, sensor_data.gps_longitude);
+    map_click_event_handler: async function(event){
+          let coordinate = {
+            gps_latitude: event.latLng.lat(),
+            gps_longitude: event.latLng.lng()
+          }
+          let device_uplink_sensor_data = await AuthenticationService.get_sensor_data_using_coordinates({lat: coordinate.gps_latitude, lng: coordinate.gps_longitude, zoom_level: this.map.getZoom()})
+            .catch(err => {
+              console.log(err)
+            })
+          device_uplink_sensor_data = device_uplink_sensor_data.data.device_uplink_sensor_data;
+          if(device_uplink_sensor_data.length > 0) this.create_marker(device_uplink_sensor_data[0], 1)
+          else this.create_marker(coordinate, 0)
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    create_marker: async function(data, sensor_data_present){
+      //-data is an object which which stores either the most recent sensor data nearest to the selected point or either the coordinates of the selected point....
+      //which is present is determined by the value of sensor_data_present 
+      //-sensor data is a variable which says if the marker to be created at coordinate x has sensor data or not.... 1 for has sensor data.... 0 for has no sensor data
+        let position = new google.maps.LatLng(data.gps_latitude, data.gps_longitude);
         let marker;
-        marker = new google.maps.Marker({ 
-          position,
-          map: this.map,
-        });
-        this.markers.push(marker)
+        if(sensor_data_present == 1){ //To diffferenciate between the markers which have data and those that dont
+          marker = new google.maps.Marker({ 
+            position,
+            map: this.map,
+            draggable: true,
+          });
+        }else {
+          marker = new google.maps.Marker({ 
+            position,
+            map: this.map,
+            draggable: true,
+            animation: google.maps.Animation.BOUNCE,
+          });
+        }
+        if(this.markers != null ){this.markers.setMap(null)} //delete the marker from the map only after the first marker is created
+        this.markers =marker 
         var info_window = new google.maps.InfoWindow(); //creates the instance of the infowindow
-        this.set_marker_info_window(marker, info_window, sensor_data); //sets the info window
+        this.set_marker_info_window(marker, info_window, data, sensor_data_present); //sets the info window
+        this.markers.addListener('dragend', (event) => { //Create the marker dragging event listener
+          this.map_click_event_handler(event) 
+        });
     },
         //--------------------------------------------------------------------------------------------------------------------------------------------
-    set_marker_info_window: function(marker, info_window, sensor_data){
+    set_marker_info_window: function(marker, info_window, data, sensor_data_present){
+      //-data is an object which which stores either the most recent sensor data nearest to the selected point or either the coordinates of the selected point....
+      //which is present is determined by the value of sensor_data_present 
+      //-sensor data is a variable which says if the marker to be created at coordinate x has sensor data or not.... 1 for has sensor data.... 0 for has no sensor data
+      if(sensor_data_present == 1){
         var content = `<div>
                       <h3>Sensor Data</h3>
-                      <b>Time Stamp</b>: ${sensor_data.time_stamp}<br>
-                      <b>Temperature:</b>${sensor_data.temperature} <br>
-                      <b>Humidity:</b>${sensor_data.humidity} <br>
-                      <b>Accelerometer:</b>${sensor_data.accelerometer} <br>
-                      <b>GPS Latitude:</b> ${sensor_data.gps_latitude}<br>
-                      <b>GPS Longitude:</b> ${sensor_data.gps_longitude}<br>
+                      <b>Time Stamp</b>: ${data.time_stamp}<br>
+                      <b>Temperature:</b>${data.temperature} <br>
+                      <b>Humidity:</b>${data.humidity} <br>
+                      <b>Accelerometer:</b>${data.accelerometer} <br>
+                      <b>GPS Latitude:</b> ${data.gps_latitude}<br>
+                      <b>GPS Longitude:</b> ${data.gps_longitude}<br>
                   </div>`;
-        let x = 0;
+      }else{
+        var content = `<div>
+              <h3>No Sensor Data at Following Position</h3>
+              <b>GPS Latitude:</b> ${data.gps_latitude}<br>
+              <b>GPS Longitude:</b> ${data.gps_longitude}<br>
+          </div>`;
+      }
+        //Set the info window to be open on create 
+        info_window.setContent(content);
+        info_window.open(this.map,marker);
+
         //Open the infowindow for the device marker(ON MOUSE OVER)
         google.maps.event.addListener(marker,'mouseover', (function(marker,content,info_window){ 
           return function() {
-              x = 1;
               info_window.setContent(content);
               info_window.open(this.map,marker);
           };
@@ -211,10 +241,7 @@ export default {
         //Close the infowindow for the device marker(ON MOUSE OUT)
         google.maps.event.addListener(marker,'mouseout', (function(marker,content,info_window){ 
           return function() {
-            if(x == 1){
               info_window.close(this.map,marker);
-              x = 0;
-            }
           };
         })(marker,content,info_window));
     },

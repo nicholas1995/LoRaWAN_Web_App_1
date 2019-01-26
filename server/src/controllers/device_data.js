@@ -371,6 +371,54 @@ function create_sensor_data_serch_coordinate_box(coordinate, buffer){
         }
     }
 }
+function generate_buffer_using_map_zoom(map_zoom){
+    switch (map_zoom) {
+        case 0:
+          return 6;
+        case 1:
+          return 4;
+        case 2:
+          return 2;
+        case 3:
+          return 2;
+        case 4:
+          return 1;
+        case 5:
+          return 1;
+        case 6:
+          return 0.5;
+        case 7:
+          return 0.4;
+        case 8:
+          return 0.25;
+        case 9:
+          return 0.1;
+        case 10:
+          return 0.04;
+        case 11:
+          return 0.02;
+        case 12:
+          return 0.009;
+        case 13:
+          return 0.006;
+        case 14:
+          return 0.002;
+        case 15:
+          return 0.001;
+        case 16:
+          return 0.001;
+        case 17:
+          return 0.001;
+        case 18:
+          return 0.0009;
+        case 19:
+          return 0.0007; 
+        case 20:
+          return 0.0001;
+        default:
+          return 0.0001;
+      }
+}
 module.exports = {
     get: async function (req, res) {
         let device_data, headers;
@@ -673,7 +721,8 @@ module.exports = {
         //This function fetches all the device sensor data within a range givien a coordinate
         try{ 
             let coordinate = JSON.parse(req.params.coordinate); 
-            coordinate = create_sensor_data_serch_coordinate_box(coordinate, 0.01)
+            let buffer = generate_buffer_using_map_zoom(coordinate.zoom_level); //buffer is the square which is used to fetch the sensor data inside. The square is centered around the coordinate of the spot the user clicked
+            coordinate = create_sensor_data_serch_coordinate_box(coordinate, buffer)
             let device_uplink_sensor_data = await DB.get_device_uplink_sensor_data_based_on_coordinates(coordinate)
                 .catch(err => {
                     throw err;
