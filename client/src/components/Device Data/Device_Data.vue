@@ -32,6 +32,35 @@
         <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
       </v-flex>
     </v-layout>
+    <v-layout row wrap v-if="this.$store.state.user_class =='Analyst'">
+      <!-- Analyst Filter Records-->
+        <v-flex xs12 sm6 md3>
+        <!--First Name -->
+          <v-text-field
+            v-model="first_name"
+            label="Filter Record Name*"
+            :error-messages = "first_name_errors"
+            @keyup="$v.first_name.$touch()" 
+          >
+            <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_first_name"></tool_tips_forms>
+          </v-text-field>
+        </v-flex>
+      <v-flex xs12 sm6 md2>
+        <v-btn class ="grey lighten-3" v-on:click="export_device_data" >Create Filter Record</v-btn>
+      </v-flex>
+      <v-flex xs12 sm6 md3 class = "pl-4">
+      <!--Network Name-->
+        <v-select
+          v-model="network_name_form"
+          :items="this.network_names"
+          label="Network*"
+          :error-messages = "network_name_form_Errors"
+          @blur="$v.network_name_form.$touch()" 
+        >
+          <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_service_profile"></tool_tips_forms>
+        </v-select>
+      </v-flex>
+    </v-layout>
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
       <v-divider
@@ -167,6 +196,8 @@ export default {
         allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
 
         export_options: ["Local Storage", "Email"],
+
+        analyst_filter_parameters: {}, //this holds all the parameters of the filtered data for the analysts.
     }
   },
   props: [
@@ -354,8 +385,9 @@ export default {
           this.headers =  result.data.headers; 
           this.display = this.headers
           this.filter_parameters = {}; 
-          this.loading = false;
+          this.loading = false;  
           }
+          this.analyst_filter_parameters = result.data.analyst_filter_parameters;
         }).catch(err => {
             //Error getting the devices from the server
             console.log(err)

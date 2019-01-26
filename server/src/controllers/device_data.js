@@ -309,7 +309,7 @@ function get_min_max_id_of_uplink_data(device_data){
         max: max
     }
 }
-function filter_records_parameters(req, device_data){
+function create_analyst_filter_parameters(req, device_data){
     if(req.user.user_class =="Analyst"){
         let parameters = JSON.parse(req.params.parameters); 
         let columns = req.params.columns
@@ -327,8 +327,7 @@ function filter_records_parameters(req, device_data){
             order: parameters.order,
             user_id: req.user.id
         }
-        console.log(filter_parameters)
-        return filter_records_parameters;
+        return filter_parameters;
     }else{
         return null;
     }
@@ -500,13 +499,14 @@ module.exports = {
                 .catch(err => {
                     throw err; 
                 })
-                filter_records_parameters(req, device_data)
+            let analyst_filter_parameters = create_analyst_filter_parameters(req, device_data); // the filter parameters for the analysts when storing filter records
+            console.log(analyst_filter_parameters)
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
                 device_data = convert_dates(device_data, access);
-                res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+                res.status(200).send({ device_data: device_data, analyst_filter_parameters: analyst_filter_parameters, headers: headers, message: 'Device data fetched', type: 'success' });
             }else{
-                res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
+                res.status(204).send({analyst_filter_parameters: analyst_filter_parameters, message: 'No Data Available', type: 'info'});//No data retrived
             }
         }catch(err){
             console.log(err);
