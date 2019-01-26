@@ -297,4 +297,14 @@ module.exports = ((app) => {
     //----------------------Error Logs-----------------
     //Error Logs (Get)
     app.get(`/error_logs`, authenticate, grant_access, error_logs.get);
+
+    //----------------------Home Page Map-----------------
+    //Uplink Data (Get Coordinates) 
+    app.get('/device_coordinates', device_data.get_gps_coordinates)
+
+    //Uplink Data (Get sesor data) 
+    app.get('/sensor_data/coordinate/:coordinate', device_data.get_device_sensor_data_based_on_coordinates)
+
+
+    
 });      

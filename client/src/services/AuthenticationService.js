@@ -385,5 +385,14 @@ export default {
     get_error_logs(){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/error_logs`);
+    },
+
+    //Home Page (This is an unprotected route)
+    get_device_coordinates(){
+        return Api.get(`/device_coordinates`);
+    },
+    get_sensor_data_using_coordinates(coordinate){
+        coordinate = JSON.stringify(coordinate); 
+        return Api.get(`/sensor_data/coordinate/${coordinate}`);
     }
 };  

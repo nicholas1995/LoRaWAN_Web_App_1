@@ -3,6 +3,7 @@ const DB_USER_VESSEL = require ("../services/database/user_vessel_db")
 const error = require("../services/errors");
 const VError = require("verror");
 const email = require("../services/email");
+const math = require("mathjs")
 
 
 function return_date(date) {
@@ -172,7 +173,13 @@ function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers
             return "GPS Longitude";
       case "gps_altitude":
             return "GPS Altitude";
-    case "sos":
+      case "temperature":
+            return "Temperature";
+      case "accelerometer":
+            return "Accelerometer";
+      case "humidity":
+            return "Humidity";
+      case "sos":
             return "SOS";
       default:
         return "Null";
@@ -231,6 +238,12 @@ function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers
         return "gps_longitude";
       case "GPS Altitude":
         return "gps_altitude";
+      case "Temperature":
+        return "temperature";
+      case "Accelerometer":
+        return "accelerometer";
+      case "Humidity":
+        return "humidity";
     case "SOS":
         return "sos";
       default:
@@ -331,7 +344,32 @@ function create_analyst_filter_parameters(req, device_data){
     }else{
         return null;
     }
+}
+function create_sensor_data_serch_coordinate_box(coordinate, buffer){
+    //This function takes an object with the lat and lng of a coordinate and returns a min and max for both 
+    //LAT
+    let lat_min, lat_max;
+    lat_min = coordinate.lat-buffer/2
+    lat_max = coordinate.lat+buffer/2
+    lat_min = math.round(1000*lat_min)/1000
+    lat_max = math.round(1000*lat_max)/1000
 
+    //LNG
+    let lng_min, lng_max;
+    lng_min = coordinate.lng-buffer/2
+    lng_max = coordinate.lng+buffer/2
+    lng_min = math.round(1000*lng_min)/1000
+    lng_max = math.round(1000*lng_max)/1000
+    return {
+        lat: {
+            min: lat_min,
+            max: lat_max
+        },
+        lng: {
+            min: lng_min,
+            max: lng_max,
+        }
+    }
 }
 module.exports = {
     get: async function (req, res) {
@@ -500,7 +538,6 @@ module.exports = {
                     throw err; 
                 })
             let analyst_filter_parameters = create_analyst_filter_parameters(req, device_data); // the filter parameters for the analysts when storing filter records
-            console.log(analyst_filter_parameters)
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
                 device_data = convert_dates(device_data, access);
@@ -619,5 +656,31 @@ module.exports = {
         }catch(err){
             console.log(err)
         }
+    },
+    get_gps_coordinates: async function(req, res){
+        //This function fetches all the gps coordinates from the database to 
+        try{
+            let gps_device_uplink_coordinates = await DB.get_gps_coordinates()
+                .catch(err => {
+                    throw err;
+                })
+            res.status(200).send({device_coordinates: gps_device_uplink_coordinates, message: 'Device Coordinates Fetched.', type: 'success'})  
+        }catch(err){
+            console.log(err)
+        }
+    },
+    get_device_sensor_data_based_on_coordinates: async function(req, res){
+        //This function fetches all the device sensor data within a range givien a coordinate
+        try{ 
+            let coordinate = JSON.parse(req.params.coordinate); 
+            coordinate = create_sensor_data_serch_coordinate_box(coordinate, 0.01)
+            let device_uplink_sensor_data = await DB.get_device_uplink_sensor_data_based_on_coordinates(coordinate)
+                .catch(err => {
+                    throw err;
+                })
+            res.status(200).send({device_uplink_sensor_data: device_uplink_sensor_data, message: 'Sensor data fetched.', type: 'success'})  
+        }catch(err){
+            console.log(err)
+        }
     }
-}
+} 

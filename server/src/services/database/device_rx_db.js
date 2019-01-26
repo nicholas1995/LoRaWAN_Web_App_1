@@ -38,7 +38,23 @@ module.exports = {
             ORDER BY device_uplink_id DESC
             LIMIT 1`;
         return db.queryAsync(sql);
-    }
+    },
+    get_gps_coordinates(){
+        //This returns all the gps coordinates from the device uplink to create the heatmap 
+        let sql = `SELECT gps_latitude, gps_longitude
+        FROM device_uplink`;
+        return db.queryAsync(sql);
+    },
+    get_device_uplink_sensor_data_based_on_coordinates(coordinate){
+        //This function accepts a set of gps coordinates where the lat and lng are 2 values each which set a bound and returns the sensor data corresponding to that point
+        //This is used for the homepage map
+        let sql = `SELECT time_stamp, gps_latitude, gps_longitude, temperature, humidity, accelerometer
+        FROM device_uplink
+        WHERE gps_latitude > '${coordinate.lat.min}' AND gps_latitude < '${coordinate.lat.max}' 
+        AND gps_longitude > '${coordinate.lng.max}' AND gps_longitude < '${coordinate.lng.min}'
+        ORDER BY time_stamp DESC`;
+        return db.queryAsync(sql);
+    },
     /* ,
     //TO DELETE-- this is to update the locations of device data records
     update_location: function(id, lat, lng){
@@ -47,4 +63,4 @@ module.exports = {
         WHERE device_uplink_id = '${id}'`;
         return db.queryAsync(sql);
     } */
-};
+}; 
