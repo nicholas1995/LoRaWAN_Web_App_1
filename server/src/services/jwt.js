@@ -9,7 +9,7 @@ function jwtUserSignin(user){
 
 function jwt_user_reset_pw(user){
     return jwt.sign(user, config.authentication.jwtSecret, {
-        expiresIn: '24h'
+        expiresIn: '10s'
     });
 }
 

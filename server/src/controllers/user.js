@@ -7,6 +7,8 @@ const UpdatePasswordPolicy = require("../policies/UpdatePasswordPolicy");
 const user_db = require('../services/database/users_db');
 const devices_db = require("../services/database/devices_db");
 const USER_VESSEL_DB = require("../services/database/user_vessel_db");
+const db_user_reset_password_token = require("../services/database/user_reset_password_token_db");
+
 
 
 //Creates a random password of length 8 using characters 0-9 and
@@ -50,6 +52,7 @@ function compare(data, encrypted) {
     throw err;
   }
 } 
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -424,7 +427,7 @@ module.exports = {
             to: req.body.email,
             subject: 'Password Reset',
             html: `<h2>Good Day ${result[0].first_name}</h2> 
-            <p>You recently requested to reset your password for you Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
+            <p>You recently requested to reset your password for your Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
             <b>This password reset link is only valid for the next 24 hours.</b>
             </p>
             <p>Link: http://localhost:8081/#/user/reset_password/${token}</p>
@@ -441,6 +444,11 @@ module.exports = {
                 //Error setting user_reset_password flag
                 throw err;
               })
+              await db_user_reset_password_token.create_user_reset_password_token(token, req.body.email)
+              .catch(err => {
+                //Error creating token in black list
+                throw err;
+              })
           console.log('Email Sent')
           res.status(403).send({ message: "Check email for instructions to reset your password. If no email received ensure that email entered above is correct." });
         }
@@ -450,6 +458,46 @@ module.exports = {
       console.log(err)
     }
   }, 
+  resend_reset_password_request : async function(req, res, token_old, user_information){
+    //This resends the email to the user to reset their password after the initial one expired
+    try{  
+      await db_user_reset_password_token.delete_user_reset_password_token(token_old)
+      .catch(err => {
+        //Error creating token in black list
+        throw err;
+      })
+          let user_JSON = {
+            email: `${user_information.user_email}`
+          }
+          let token =  jwt.jwt_user_reset_pw(user_JSON)
+          var mailOptions = {
+            from: 'lorawanconsole@gmail.com',
+            to: user_information.user_email,
+            subject: 'Password Reset',
+            html: `<h2>Good Day</h2> 
+            <p>You recently requested to reset your password for your Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
+            <b>This password reset link is only valid for the next 24 hours.</b>
+            </p>
+            <p>Link: http://localhost:8081/#/user/reset_password/${token}</p>
+  
+            Thank You,<br>
+            The Private Marine IoT Network Web Based Console Team`,
+            };
+            let email_result = await email.transporter.sendMail(mailOptions)
+              .catch(err => {
+                throw err;
+              })
+              await db_user_reset_password_token.create_user_reset_password_token(token, user_information.user_email)
+              .catch(err => {
+                //Error creating token in black list 
+                throw err;
+              })
+          console.log('Email Sent')
+          res.status(401).send({ error: "Token previously expired. Please check email for new reset password link." });
+    }catch(err){
+      console.log(err)
+    }
+  },
   reset_password: async function(req, res){
     try{
       let error_location = null;
@@ -497,7 +545,12 @@ module.exports = {
                   message: 'Successful Login',
                   user_name: (result[0].first_name + " " + result[0].last_name)
                 }
-          data = JSON.stringify(data);
+          let token = req.headers.authorization
+          token = token.slice(7)
+          await db_user_reset_password_token.delete_user_reset_password_token(token)
+          .catch(err => {
+            throw err;
+          })
           res.status(200).send(data);
         }
       }
@@ -512,5 +565,6 @@ module.exports = {
           res.status(500).send({ message: 'Server Error', type: 'error'})
       }
     }
-  }
+  },
+
 };

@@ -128,15 +128,10 @@ export default {
           }).catch(err => {
               if(err.response.status ==403){
                 this.message = err.response.data.message;        
-              }else{
-                console.log(err);
-              }
-          })
-          .catch(err => {
-            if(err.response.status ==401){
+              }else if(err.response.status ==401){
               this.message = err.response.data.error;        
             }else{
-              console.log(err)
+                console.log(err);
             }
           })
       }
