@@ -47,6 +47,12 @@ module.exports = {
         WHERE email = '${email}'`;
         return db.queryAsync(sql);
     },
+    update_user_reset_password: function (email, value) {
+        let sql = `UPDATE users
+        SET user_reset_password = '${value}'
+        WHERE email ='${email}'`;
+        return db.queryAsync(sql);
+    },
     update_profile: function (data) {
         let sql = `UPDATE users
         SET first_name= '${data.first_name}', last_name= '${data.last_name}', address= '${data.address}', 

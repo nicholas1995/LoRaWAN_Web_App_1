@@ -177,7 +177,7 @@ export default {
           }).then(result => {
             let data = result.data;
             this.$store.commit('login',{token: data.token, user_class: data.user_class, user_name: data.user_name, email: data.user.email});
-            this.$router.push('dashboard');
+            this.$router.push('/dashboard');
           }).catch(err => {
               if(err.response.status ==403){
                 this.message = err.response.data.message;        

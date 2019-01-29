@@ -233,7 +233,10 @@ module.exports = {
         res.status(403).send({ message: "Incorrect login credentials" });
       }
       else{
-        let encryted_data = await compare(data.password, result[0].password)
+        if(result[0].user_reset_password == 1 ){//Correct email but password requested to be reset. PREVENT LOGIN
+          res.status(403).send({ message: "Password requested to be changed. Please check email for instructions." });
+        }else{
+          let encryted_data = await compare(data.password, result[0].password)
           .catch(err => {
             //Error checking to see if passwords are the same
             throw err;
@@ -258,6 +261,8 @@ module.exports = {
           //Incorrect PW;
           res.status(403).send({ message: "Incorrect login credentials" });
         }
+        }
+
       }
     }catch(err){
       console.log(err);
@@ -407,28 +412,38 @@ module.exports = {
         res.status(403).send({ message: "Check email for instructions to reset your password. If no email received ensure that email entered above is correct." });
       }
       else{
-        let user_JSON = {
-          email: `${req.body.email}`
+        if(result[0].user_reset_password == 1 ){//Correct email but password requested to be reset. PREVENT LOGIN
+          res.status(403).send({ message: "Password requested to be changed. Please check email for instructions." });
+        }else{
+          let user_JSON = {
+            email: `${req.body.email}`
+          }
+          let token =  jwt.jwt_user_reset_pw(user_JSON)
+          var mailOptions = {
+            from: 'lorawanconsole@gmail.com',
+            to: req.body.email,
+            subject: 'Password Reset',
+            html: `<h2>Good Day ${result[0].first_name}</h2> 
+            <p>You recently requested to reset your password for you Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
+            <b>This password reset link is only valid for the next 24 hours.</b>
+            </p>
+            <p>Link: http://localhost:8081/#/user/reset_password/${token}</p>
+  
+            Thank You,<br>
+            The Private Marine IoT Network Web Based Console Team`,
+            };
+            let email_result = await email.transporter.sendMail(mailOptions)
+              .catch(err => {
+                throw err;
+              })
+            await user_db.update_user_reset_password(req.body.email, 1)
+              .catch(err => {
+                //Error setting user_reset_password flag
+                throw err;
+              })
+          console.log('Email Sent')
+          res.status(403).send({ message: "Check email for instructions to reset your password. If no email received ensure that email entered above is correct." });
         }
-        let token =  jwt.jwt_user_reset_pw(user_JSON)
-        var mailOptions = {
-          from: 'lorawanconsole@gmail.com',
-          to: req.body.email,
-          subject: 'Password Reset',
-          html: `<h2>Good Day ${result[0].first_name}</h2> 
-          <p>You recently requested to reset your password for you Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
-          <b>This password reset link is only valid for the next 24 hours.</b>
-          </p>
-          <p>Link: http://localhost:8081/#/user/reset_password/${token}</p>
-
-          Thank You,<br>
-          The Private Marine IoT Network Web Based Console Team`,
-          };
-          let email_result = await email.transporter.sendMail(mailOptions)
-            .catch(err => {
-              throw err;
-            })
-        console.log('Email Sent')
       }
 
     }catch(err){
@@ -439,34 +454,53 @@ module.exports = {
     try{
       let error_location = null;
       let password = req.body.data.new_password
-      let encrypted_password = await encrypt(password)
-      .catch(err => {
-        //Error encrypting pw
-        throw err;
-      });
-      await user_db.update_user_pw(encrypted_password, req.user.email)
-          .catch(err => {
-            //Error updating user pw
-            error_location = 0;
-            throw err;
-          })
-      //Password Updated.... Now we are going to login the user
       let result = await user_db.get_profile(req.user.email)
       .catch(err => {
-        //Error getting user form database using email to find(Password updated)
-        error_location = 1;
+        //Error getting user form database using email to find
         throw err;
       })
-      let userJSON = toJSON(result);
-            let data = {
-              user: userJSON,
-              user_class: result[0].user_class,
-              token: jwt.jwtUserSignin(userJSON),
-              message: 'Successful Login',
-              user_name: (result[0].first_name + " " + result[0].last_name)
-            }
-            data = JSON.stringify(data);
-            res.status(200).send(data);
+      if (result == "") {//Email does not exists 
+
+      }
+      else{
+        if(result[0].user_reset_password == 0 ){//Correct email but password requested to be reset. PREVENT changing password again
+          res.status(403).send({ message: "Password already updated. This is an old link!" });
+        }else{
+          let encrypted_password = await encrypt(password)
+          .catch(err => {
+            //Error encrypting pw
+            throw err;
+          });
+          await user_db.update_user_pw(encrypted_password, req.user.email)
+              .catch(err => {
+                //Error updating user pw
+                error_location = 0;
+                throw err;
+              })
+              await user_db.update_user_reset_password(req.user.email, 0)
+                .catch(err => {
+                  //Error setting user_reset_password flag
+                  throw err;
+                })
+          //Password Updated.... Now we are going to login the user
+          let result = await user_db.get_profile(req.user.email)
+          .catch(err => {
+            //Error getting user form database using email to find(Password updated)
+            error_location = 1;
+            throw err;
+          })
+          let userJSON = toJSON(result);
+                let data = {
+                  user: userJSON,
+                  user_class: result[0].user_class,
+                  token: jwt.jwtUserSignin(userJSON),
+                  message: 'Successful Login',
+                  user_name: (result[0].first_name + " " + result[0].last_name)
+                }
+          data = JSON.stringify(data);
+          res.status(200).send(data);
+        }
+      }
     }catch(err){
       console.log(err)
       if(error_location ==0){
