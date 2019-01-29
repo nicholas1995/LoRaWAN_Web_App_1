@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Home from '@/components/Home.vue'
 
 import Login from '@/components/Login'
+
 import Dashboard from './../components/Dashboard/Dashboard.vue'
 
 import Device_Gateway_Map from '../components/Map/Map.vue'
@@ -52,6 +53,7 @@ import Update_Network_Server from "../components/Network Server/Update_Network_S
 import User from "../components/User/User_Management.vue"
 import Create_User from "../components/User/Create_User.vue"
 import Update_User from "../components/User/Update_User.vue"
+import Reset_Password from "../components/User/Reset_Password.vue"
 
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
@@ -267,6 +269,12 @@ export default new Router({
       name: "user_update",
       component: Update_User
     },
+    {
+      path: "/user/reset_password/:reset_password_token",
+      name: "reset_password",
+      component: Reset_Password
+    },
+
 
     {
       path: "/update_profile",

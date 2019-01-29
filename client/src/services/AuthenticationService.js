@@ -62,6 +62,17 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.put("update_password", { data });
     },
+    reset_password_request(email){
+        return Api.post("reset_password_request", { email });
+    },
+    check_reset_password_token(reset_password_token){
+        Api.defaults.headers.common['Authorization'] = `bearer ${reset_password_token}`;
+        return Api.get("check_reset_password_token");
+    },
+    reset_password(reset_password_token, data){
+        Api.defaults.headers.common['Authorization'] = `bearer ${reset_password_token}`;
+        return Api.put("reset_password", { data });
+    },
 
     get_user_vessels(user_id) {//we pick the uri this way because its a software admin ability 
         //and since in the acl they can view all users we will put users first 

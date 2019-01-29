@@ -47,6 +47,10 @@
                 @click="login"
               >Login 
               </v-btn>
+              <v-btn class="grey lighten-2"
+                @click="reset_password_request"
+              >Forgot Password 
+              </v-btn>
             </v-card>
           </v-flex>
         </v-layout>
@@ -202,6 +206,23 @@ export default {
       } catch (error) {
         this.message = error.response.data.error;
       } */
+    },
+    async reset_password_request(){
+      //This is the function called when a user forgets their password
+      this.$v.email.$touch(); 
+      if(this.$v.email.$invalid ){
+        this.message ="Error in Form. Please fix and resubmit!"
+      }else{
+        //Note we will not verify to provide feedback that the email entered is correct or wrong to prevent the user from fishing emails on the system
+        await AuthenticationService.reset_password_request(this.email)
+          .catch(err => {
+            if(err.response.status ==403){
+              this.message = err.response.data.message;        
+            }else{
+              console.log(err)
+            }
+          })
+      }
     }
   }
 };

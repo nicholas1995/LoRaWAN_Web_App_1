@@ -7,4 +7,10 @@ function jwtUserSignin(user){
         });
     }
 
-module.exports = {jwtUserSignin};
+function jwt_user_reset_pw(user){
+    return jwt.sign(user, config.authentication.jwtSecret, {
+        expiresIn: '24h'
+    });
+}
+
+module.exports = {jwtUserSignin, jwt_user_reset_pw};
