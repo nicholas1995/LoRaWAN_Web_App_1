@@ -322,23 +322,42 @@ function get_min_max_id_of_uplink_data(device_data){
         max: max
     }
 }
-function create_analyst_filter_parameters(req, device_data){
+function create_analyst_filter_parameters(req, filter_parameters_record, device_data){
+    //we also accept the old filter parameters record because we want to integrate this function with the previous. so if we call the generate function using an analsyt filter
+    //record we will already have the filter records so we will jus parse that to here
     if(req.user.user_class =="Analyst"){
-        let parameters = JSON.parse(req.params.parameters); 
-        let columns = req.params.columns
-        let x = get_min_max_id_of_uplink_data(device_data);
-        let filter_parameters = {
-            headers: JSON.stringify(columns),
-            device_uplink_id_min :x.min,
-            device_uplink_id_max :x.max,
-            sub_network: JSON.stringify(parameters.sub_network),
-            vessel: JSON.stringify(parameters.vessel),
-            device: JSON.stringify(parameters.device), 
-            start_date: parameters.start_date,
-            end_data: parameters.end_date,
-            sort_by: parameters.sort_by,
-            order: parameters.order,
-            user_id: req.user.id
+        let filter_parameters;
+        if(filter_parameters_record){//parsing the record
+            filter_parameters = {
+                headers: filter_parameters_record.analyst_filter_record_header,
+                device_uplink_id_min :filter_parameters_record.analyst_filter_record_min_device_uplink_id,
+                device_uplink_id_max :filter_parameters_record.analyst_filter_record_max_device_uplink_id,
+                network: filter_parameters_record.analyst_filter_record_network,
+                sub_network: filter_parameters_record.analyst_filter_record_sub_network,
+                vessel: filter_parameters_record.analyst_filter_record_vessel,
+                device: filter_parameters_record.analyst_filter_record_device,
+                start_date: filter_parameters_record.analyst_filter_record_start_date,
+                end_data: filter_parameters_record.analyst_filter_record_end_date,
+                user_id: filter_parameters_record.user_id,
+            }
+        }else{//Now creating the record
+            let parameters = JSON.parse(req.params.parameters); 
+            let columns = req.params.columns
+            let x = get_min_max_id_of_uplink_data(device_data);
+            filter_parameters = {
+                headers: JSON.stringify(columns),
+                device_uplink_id_min :x.min,
+                device_uplink_id_max :x.max,
+                network: JSON.stringify(parameters.network),
+                sub_network: JSON.stringify(parameters.sub_network),
+                vessel: JSON.stringify(parameters.vessel),
+                device: JSON.stringify(parameters.device), 
+                start_date: parameters.start_date,
+                end_data: parameters.end_date,
+                sort_by: parameters.sort_by,
+                order: parameters.order,
+                user_id: req.user.id
+            }
         }
         return filter_parameters;
     }else{
@@ -419,6 +438,33 @@ function generate_buffer_using_map_zoom(map_zoom){
           return 0.0001;
       }
 }
+
+function convert_analsyt_filter_record_parameters_to_general_parameters_object(parameters){
+    try{
+        let return_parameters = {};
+        if (parameters.analyst_filter_record_device != "null" ) {
+            parameters.analyst_filter_record_device = JSON.parse(parameters.analyst_filter_record_device)
+            return_parameters['device'] = parameters.analyst_filter_record_device;
+            parameters.analyst_filter_record_vessel = JSON.parse(parameters.analyst_filter_record_vessel)
+            return_parameters['vessel'] = parameters.analyst_filter_record_vessel;
+            parameters.analyst_filter_record_sub_network = JSON.parse(parameters.analyst_filter_record_sub_network)
+            return_parameters['sub_network'] = parameters.analyst_filter_record_sub_network;
+        }else if (parameters.analyst_filter_record_vessel != "null") {
+            parameters.analyst_filter_record_vessel = JSON.parse(parameters.analyst_filter_record_vessel)
+            return_parameters['vessel'] = parameters.analyst_filter_record_vessel;
+            parameters.analyst_filter_record_sub_network = JSON.parse(parameters.analyst_filter_record_sub_network) 
+            return_parameters['sub_network'] = parameters.analyst_filter_record_sub_network;
+        } else if (parameters.analyst_filter_record_sub_network != "null") {
+            parameters.analyst_filter_record_sub_network = JSON.parse(parameters.analyst_filter_record_sub_network)
+            return_parameters['sub_network'] = parameters.analyst_filter_record_sub_network;
+        }
+        if(parameters.analyst_filter_record_start_date != "null") return_parameters['start_date'] = parameters.analyst_filter_record_start_date;
+        if(parameters.analyst_filter_record_end_date != "null") return_parameters['end_date'] = parameters.analyst_filter_record_end_date;
+        return return_parameters;
+    }catch(err){
+        console.log(err)
+    }
+}
 module.exports = {
     get: async function (req, res) {
         let device_data, headers;
@@ -488,9 +534,13 @@ module.exports = {
                     .catch(err => {
                         throw err;
                     })
-                headers = convert_device_uplink_headers_database_to_table(device_data[0], 'self');
-                device_data = convert_dates(device_data, 'self');
-                res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+                if(device_data.length>0){
+                    headers = convert_device_uplink_headers_database_to_table(device_data[0], 'self');
+                    device_data = convert_dates(device_data, 'self');
+                    res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+                }else{ //Assigned to a or some vessels but no data associated with the assigned vessels
+                    res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
+                }
             }else{
                 res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
             }
@@ -585,10 +635,74 @@ module.exports = {
                 .catch(err => {
                     throw err; 
                 })
-            let analyst_filter_parameters = create_analyst_filter_parameters(req, device_data); // the filter parameters for the analysts when storing filter records
+            let analyst_filter_parameters = create_analyst_filter_parameters(req, null, device_data); // the filter parameters for the analysts when storing filter records
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
                 device_data = convert_dates(device_data, access);
+                res.status(200).send({ device_data: device_data, analyst_filter_parameters: analyst_filter_parameters, headers: headers, message: 'Device data fetched', type: 'success' });
+            }else{
+                res.status(206).send({analyst_filter_parameters: analyst_filter_parameters, message: 'No Data Available', type: 'info'});//No data retrived
+            }
+        }catch(err){ 
+            console.log(err);
+        }
+    },
+    get_filter_analyst_filter_record: async function(req, res){
+        //This is used by the analyst to get the data from an analyst filter record
+        let sql_where = []; 
+        let where = '';
+        let sql_order_by = [];
+        let sql = '';
+        try {
+            let parameters = JSON.parse(req.query.parameters); 
+            let parameters_normal = convert_analsyt_filter_record_parameters_to_general_parameters_object(parameters)
+            let columns = req.params.columns
+            if (columns) {
+                columns = convert_gateway_statistics_headers_table_to_database(columns);
+                sql = `SELECT ${columns} FROM device_uplink `;
+            }
+            if(parameters_normal.start_date){
+                sql_where.push(`time_stamp > '${parameters_normal.start_date}'`); //We use the time stamp because the rx_time will only be present if we have the receive gw metadata option enabled
+            }if(parameters_normal.end_date){
+                sql_where.push(`time_stamp < '${parameters_normal.end_date}'`);
+            }
+            if (parameters_normal.device) {
+                sql_where.push(`device_id IN (${parameters_normal.device}) AND vessel_id IN (${parameters_normal.vessel}) AND sub_network_id IN (${parameters_normal.sub_network})`);
+            }else if (parameters_normal.vessel) {
+                sql_where.push(`vessel_id IN (${parameters_normal.vessel}) AND sub_network_id IN (${parameters_normal.sub_network})`);
+            } else if (parameters_normal.sub_network) {
+                sql_where.push(`sub_network_id IN (${parameters_normal.sub_network})`);
+            }
+            sql_where.push(`device_uplink_id > (${parameters.analyst_filter_record_min_device_uplink_id})`);
+            sql_where.push(`device_uplink_id < (${parameters.analyst_filter_record_max_device_uplink_id})`);
+
+
+            if (parameters_normal.start_date || parameters_normal.end_date || parameters_normal.device || parameters_normal.vessel || parameters_normal.sub_network) {
+              for (let i = 0; i < sql_where.length; i++) {
+                if (i < sql_where.length - 1) {
+                  //will run every time but the last cause we do not want it ending with AND
+                  where = where + `${sql_where[i]} AND `;
+                } else {
+                  where = where + `${sql_where[i]}`;
+                }
+              }
+            }
+            if(where){
+                sql = ` ${sql} WHERE ${where}`
+            }
+            if(parameters.sort_by){ 
+                sql = `${sql} ORDER BY ${parameters.sort_by} ${parameters.order}, time_stamp DESC`;
+            }else{//So that no mater what the data is ordered in descending order based on the timestamp
+                sql = `${sql} ORDER BY time_stamp DESC`;
+            }
+            let device_data = await DB.get_specified_parameters(sql)
+                .catch(err => {
+                    throw err; 
+                })
+            let analyst_filter_parameters = create_analyst_filter_parameters(req, parameters, device_data); 
+            if(device_data.length>0){
+                headers = convert_device_uplink_headers_database_to_table(device_data[0], 'all');
+                device_data = convert_dates(device_data, 'all');
                 res.status(200).send({ device_data: device_data, analyst_filter_parameters: analyst_filter_parameters, headers: headers, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({analyst_filter_parameters: analyst_filter_parameters, message: 'No Data Available', type: 'info'});//No data retrived
@@ -727,6 +841,7 @@ module.exports = {
                 .catch(err => {
                     throw err;
                 })
+                device_uplink_sensor_data = convert_dates(device_uplink_sensor_data, 'self')
             res.status(200).send({device_uplink_sensor_data: device_uplink_sensor_data, message: 'Sensor data fetched.', type: 'success'})  
         }catch(err){
             console.log(err)

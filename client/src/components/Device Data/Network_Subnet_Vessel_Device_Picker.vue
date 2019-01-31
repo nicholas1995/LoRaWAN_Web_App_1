@@ -127,10 +127,19 @@ export default {
       vessel_id: [],
       device_id: [],
 
+      sub_network_prop_update_flag: 0, //this is used for the analyst filter record. When the record has a subnetwork the subnetwork prop watcher will be executed. before this
+      //the network prop watcher will be called causing the network watcher to be called which fetches the subnetworks for the networks in the analyst record. We need to wait until
+      //this is completed before we can filter the sub-networks in the record. This flag will be set high if we have a subnetwork record to place on the form. 
+      vessel_prop_update_flag: 0,
+      device_prop_update_flag: 0, 
     };
   },
    props:[
-   'type_prop',
+   'network_prop',
+   'sub_network_prop',
+   'vessel_prop',
+   'device_prop',
+
   ],
   created: function(){
     AuthenticationService.get_networks_database().then(result => {
@@ -178,7 +187,21 @@ export default {
           this.sub_network_id.push(this.sub_networks[i].sub_network_id);
         }
       }
+      this.$emit('network_id', this.network_id)//this is only being emitted so we can have the networks for the analyst filter records
       this.$emit('sub_network_id', this.sub_network_id)
+
+      if(this.sub_network_prop_update_flag  == 1){ //This is used for the analyst filter records
+        this.sub_network_name_form = []; //clear the form of any previous data
+        for(let i = 0; i < this.sub_network_prop.length; i++){
+          for(let j = 0; j< this.sub_networks.length; j++){
+            if(this.sub_network_prop[i] == this.sub_networks[j].sub_network_id){
+              this.sub_network_name_form.push(this.sub_networks[j].sub_network_id.concat(":",this.sub_networks[j].sub_network_name));
+              break;
+            }
+          }
+        }
+        this.sub_network_prop_update_flag = 0;
+      }
     },
     sub_network_name_form: async function(){
       this.vessels = [];
@@ -208,12 +231,21 @@ export default {
         }
       }
       this.$emit('sub_network_id', this.sub_network_id)
+      if(this.vessel_prop_update_flag  == 1){ //This is used for the analyst filter records
+        for(let i = 0; i < this.vessel_prop.length; i++){
+          for(let j = 0; j< this.vessels.length; j++){
+            this.vessel_prop_update_flag = 0; //this is put here to ensure that it is only blocked after the vessels has been fetched from the db and the form record updated
+            if(this.vessel_prop[i] == this.vessels[j].vessel_id){
+              this.vessel_name_form.push(this.vessels[j].vessel_id+":"+this.vessels[j].vessel_name);
+              break;
+            }
+          }
+        }
+      }
     },
     vessel_name_form: async function(){
       this.devices = [];
-
       this.device_names = [];
-
       this.device_name_form = [];
 
       this.vessel_id = [];
@@ -233,6 +265,19 @@ export default {
         }
       }
       this.$emit('vessel_id', this.vessel_id)
+      if(this.device_prop_update_flag  == 1){ //This is used for the analyst filter records
+        for(let i = 0; i < this.device_prop.length; i++){
+          for(let j = 0; j< this.devices.length; j++){
+             this.device_prop_update_flag = 0; //this is put here because vessel name form is called when the network form is updated and then this will run becauase we have a prop
+             //for the devices and it will clear the prop value. The vessel name from watcher will be called again when the sub_network name form updated with the record and this will
+             //not be able to run because if the device prop update flag is outside this for loop it would have been set to 0 altho the record would not have updated the form
+            if(this.device_prop[i] == this.devices[j].device_id){
+              this.device_name_form.push(this.devices[j].device_id+":"+this.devices[j].device_name);
+              break;
+            }
+          }
+        }
+      }
     },
     device_name_form: async function(){
       this.device_id = [];
@@ -242,7 +287,29 @@ export default {
         }
       }
       this.$emit('device_id', this.device_id)
-    }
+    },
+    network_prop: function(){
+      this.network_name_form = []; //clear the form of any previous data
+      for(let i = 0; i < this.network_prop.length; i++){
+        for(let j = 0; j< this.networks.length; j++){
+          if(this.network_prop[i] == this.networks[j].network_id){
+            this.network_name_form.push(this.networks[j].network_id.concat(":",this.networks[j].network_name));
+            break;
+          }
+        }
+      }
+    },
+    sub_network_prop: function(){
+      this.sub_network_prop_update_flag = 1;
+      //Problem... this will always be ready before the network_prop causes the sub_networks to be fetched from the database hence we will not have any sub-networks 
+      //available to filter from.. to over come this problem the flags will be used 
+    },
+    vessel_prop: function(){
+      this.vessel_prop_update_flag = 1;
+    },
+    device_prop: function(){
+      this.device_prop_update_flag = 1;
+    },
   },
   methods: {
 /*     clear_date_time: function(){

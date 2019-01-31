@@ -5,7 +5,11 @@
       <v-toolbar-side-icon  flat v-if="!this.$store.state.loginState"
         class=" mt-2" @click.stop="$emit('toggle-drawer')" >
       </v-toolbar-side-icon>
-    <v-toolbar-title>Private Marine IoT Network Console </v-toolbar-title>
+    <v-toolbar-title>
+      <v-btn  @click.stop="$router.push(`/`)" flat>
+        <h2>Private Marine IoT Network Console</h2> 
+      </v-btn>
+    </v-toolbar-title>
       <v-divider
         class="mx-2 secondary"
         inset

@@ -478,7 +478,7 @@ module.exports = {
             <p>You recently requested to reset your password for your Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
             <b>This password reset link is only valid for the next 24 hours.</b>
             </p>
-            <p>Link: http://localhost:8081/#/user/reset_password/${token}</p>
+            <p>Link: http://localhost:8081/#/user/reset_password/${token} </p>
   
             Thank You,<br>
             The Private Marine IoT Network Web Based Console Team`,
@@ -541,7 +541,7 @@ module.exports = {
                 let data = {
                   user: userJSON,
                   user_class: result[0].user_class,
-                  token: jwt.jwtUserSignin(userJSON),
+                  token: jwt.jwtUserSignin(userJSON), 
                   message: 'Successful Login',
                   user_name: (result[0].first_name + " " + result[0].last_name)
                 }

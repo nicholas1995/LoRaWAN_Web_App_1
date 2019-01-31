@@ -14,6 +14,7 @@ const network_servers = require("./controllers/network_servers");
 const gateway_profiles = require("./controllers/gateway_profiles");
 const device_data = require("./controllers/device_data");
 const error_logs = require("./controllers/error_logs");
+const analyst_filter_records = require("./controllers/analyst_filter_record");
 
 const user_policy = require('./policies/user_policy')
 const Network_Policy = require('./policies/network_policy');
@@ -296,7 +297,10 @@ module.exports = ((app) => {
     //Device (Filtered) 
     app.get("/devices/uplink/parameters/:parameters/columns/:columns", authenticate.authenticate, grant_access, device_data.get_filtered);
 
-    //Device (Filtered) 
+    //Device (Filtered using Analyst Filter Record) 
+    app.get("/devices/uplink/filter_record/columns/:columns", authenticate.authenticate, grant_access, device_data.get_filter_analyst_filter_record);
+
+    //Device (Historical Data) 
     app.get("/devices/uplink/historical/parameters/:parameters", authenticate.authenticate, grant_access, device_data.get_historical);
 
     //Device (Export via email)
@@ -312,6 +316,13 @@ module.exports = ((app) => {
 
     //Uplink Data (Get sesor data) 
     app.get('/sensor_data/coordinate/:coordinate', device_data.get_device_sensor_data_based_on_coordinates)
+
+    //----------------------Analyst Filter Record-----------------
+    //Analyst Filter Record (Get) 
+    app.get('/analyst_filter_records', authenticate.authenticate, grant_access, analyst_filter_records.get_analyst_filter_records)
+
+    //Analyst Filter Record (Create) 
+    app.post('/analyst_filter_records', authenticate.authenticate, grant_access, analyst_filter_records.create_analyst_filter_records)
 
 
     

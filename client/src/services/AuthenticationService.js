@@ -373,6 +373,11 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/devices/uplink/parameters/${parameters}/columns/${columns}`);
     },
+    device_rx_filtered_analyst_filter_record(parameters , columns){ 
+        //the parameters is too big to put in the uri so we put it in the request
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/devices/uplink/filter_record/columns/${columns}`, {params: {parameters: parameters}});
+    },
     device_historical_data(parameters){ 
         //this is used to plot the historical tracks for a device
         parameters = JSON.stringify(parameters); 
@@ -405,5 +410,13 @@ export default {
     get_sensor_data_using_coordinates(coordinate){
         coordinate = JSON.stringify(coordinate); 
         return Api.get(`/sensor_data/coordinate/${coordinate}`);
-    }
+    },
+
+    //Analyst Filter Record
+    get_analyst_filter_records(){
+        return Api.get(`/analyst_filter_records`);
+    },
+    create_analyst_filter_records(analyst_filter_parameters){
+        return Api.post(`/analyst_filter_records`, {analyst_filter_parameters});
+    },
 };  

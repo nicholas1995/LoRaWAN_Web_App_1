@@ -86,6 +86,7 @@ export default {
   },
    props:[
    'type_prop',
+   'date_time_prop',//this is passed in from the device data component... this data originates from the analyst filter records and is used to update the fields with the filter record data
   ],
   created: function(){
       if(this.type_prop ==0){
@@ -102,7 +103,12 @@ export default {
     },
     time: function(){
       this.$emit('time', this.time)
-    }
+    },
+    date_time_prop: function(){ 
+      this.date = this.date_time_prop[0];
+      if(this.date_time_prop.length > 1) this.time = this.date_time_prop[1]
+      else this.time = null
+    },
   },
   methods: {
     clear_date_time: function(){

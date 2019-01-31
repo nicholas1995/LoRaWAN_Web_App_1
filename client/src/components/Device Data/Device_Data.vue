@@ -12,6 +12,11 @@
     </v-flex>
     <div v-if="this.$store.state.user_class !='Fisher'">
       <network_subnetwork_vessel_device_picker
+        v-bind:network_prop= this.networks_analyst_filter_record_prop
+        v-bind:sub_network_prop= this.sub_networks_analyst_filter_record_prop
+        v-bind:vessel_prop= this.vessels_analyst_filter_record_prop
+        v-bind:device_prop= this.devices_analyst_filter_record_prop
+        @network_id = network_id_function($event)
         @sub_network_id = sub_network_id_function($event)
         @vessel_id = vessel_id_function($event)
         @device_id = device_id_function($event)
@@ -26,41 +31,28 @@
     <v-layout row wrap>
       <!-- Date Picker-->
       <v-flex xs12 sm6 md4>
-        <date_time_picker v-bind:type_prop ='0' @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
+        <date_time_picker v-bind:type_prop ='0' v-bind:date_time_prop= this.start_date_time_analyst_filter_record_prop @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
       </v-flex>
       <v-flex xs12 sm6 md4>
-        <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
+        <date_time_picker v-bind:type_prop = 1 v-bind:date_time_prop= this.end_date_time_analyst_filter_record_prop @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
       </v-flex>
     </v-layout>
-    <v-layout row wrap v-if="this.$store.state.user_class =='Analyst'">
+    <div v-if="this.$store.state.user_class =='Analyst'">
       <!-- Analyst Filter Records-->
-        <v-flex xs12 sm6 md3>
-        <!--First Name -->
-          <v-text-field
-            v-model="first_name"
-            label="Filter Record Name*"
-            :error-messages = "first_name_errors"
-            @keyup="$v.first_name.$touch()" 
-          >
-            <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_first_name"></tool_tips_forms>
-          </v-text-field>
-        </v-flex>
-      <v-flex xs12 sm6 md2>
-        <v-btn class ="grey lighten-3" v-on:click="export_device_data" >Create Filter Record</v-btn>
-      </v-flex>
-      <v-flex xs12 sm6 md3 class = "pl-4">
-      <!--Network Name-->
-        <v-select
-          v-model="network_name_form"
-          :items="this.network_names"
-          label="Network*"
-          :error-messages = "network_name_form_Errors"
-          @blur="$v.network_name_form.$touch()" 
-        >
-          <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_service_profile"></tool_tips_forms>
-        </v-select>
-      </v-flex>
-    </v-layout>
+      <analyst_filter_records_picker
+        v-bind:analyst_filter_parameters = this.analyst_filter_parameters
+        @headers = headers_analyst_filter_record_function($event)
+        @networks = networks_analyst_filter_record_function($event)
+        @sub_networks = sub_networks_analyst_filter_record_function($event)
+        @vessels = vessels_analyst_filter_record_function($event)
+        @devices = devices_analyst_filter_record_function($event)
+        @start_date_time = start_date_time_analyst_filter_record_function($event)
+        @end_date_time = end_date_time_analyst_filter_record_function($event)
+        @device_data = device_data_filter_record_function($event)
+        @analyst_filter_parameters = analyst_filter_parameters_filter_record_function($event)
+        @headers_returned = headers_returned_filter_parameters_filter_record_function($event)
+      ></analyst_filter_records_picker>
+    </div>
     <v-toolbar class="elevation-1" color="grey lighten-3">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
       <v-divider
@@ -120,6 +112,7 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import date_time_picker from "./../Date_Time_Picker";
 import network_subnetwork_vessel_device_picker from "./Network_Subnet_Vessel_Device_Picker";
 import vessel_device_picker from "./Vessel_Device_Picker";
+import analyst_filter_records_picker from "./Analyst_Filter_Records_Picker";
 import date_time_functions from "../../services/functions/date_time.js"
 
 
@@ -165,7 +158,8 @@ export default {
   components:{
     date_time_picker,
     network_subnetwork_vessel_device_picker,
-    vessel_device_picker
+    vessel_device_picker,
+    analyst_filter_records_picker
   },
   data(){
     return {
@@ -187,9 +181,17 @@ export default {
         end_date_time: null, //This holds the end date and time in the format of the data in the db
         filter_parameters: {},
 
+        network_id: null, 
         sub_network_id: null,
         vessel_id: null,
         device_id: null,
+
+        networks_analyst_filter_record_prop : null, //These stores the information from the analyst filter records to be passed to the pickers 
+        sub_networks_analyst_filter_record_prop : null, 
+        vessels_analyst_filter_record_prop : null, 
+        devices_analyst_filter_record_prop : null, 
+        start_date_time_analyst_filter_record_prop : null, 
+        end_date_time_analyst_filter_record_prop : null, 
 
         self: 0, //This will be set high if the data user class user wants to view vessles assigned to them 
         inital: true, //this is used to prevent the refetching of data when values is first assigned... so when value changes this will be set to false
@@ -198,6 +200,7 @@ export default {
         export_options: ["Local Storage", "Email"],
 
         analyst_filter_parameters: {}, //this holds all the parameters of the filtered data for the analysts.
+        analyst_filter_record_flag: 0, //this is a flag used to prevent the generate function from being called when the headers are updated using the analsyt filter record
     }
   },
   props: [
@@ -217,7 +220,7 @@ export default {
         if(this.$store.state.user_class !='Fisher' && this.self ==0){
           result = await AuthenticationService.get_device_data_initial()
           .catch(err => {
-            //Error getting the devices from the server
+            //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             })
@@ -225,7 +228,7 @@ export default {
           this.self =1; 
           result = await AuthenticationService.get_device_data_initial_self()
           .catch(err => {
-            //Error getting the devices from the server
+            //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             })
@@ -283,10 +286,12 @@ export default {
     },
     value: async function(){
       try{
-        if(this.inital == false){
-          this.generate_function();
+        if(this.analyst_filter_record_flag == 0){
+          if(this.inital == false){
+            this.generate_function();
+          }
+          this.inital = false;
         }
-        this.inital = false;
       }catch(err){
         console.log(err);
       }
@@ -364,19 +369,22 @@ export default {
           this.filter_parameters["device"] = this.device_id;
           this.filter_parameters["vessel"] = this.vessel_id;
           this.filter_parameters["sub_network"] = this.sub_network_id;
+          this.filter_parameters["network"] = this.network_id;
         }else if(this.device_id && this.self ==1){
           this.filter_parameters["device"] = this.device_id;
           this.filter_parameters["vessel"] = this.vessel_id;
         }else if(this.vessel_id && this.self ==0){
           this.filter_parameters["vessel"] = this.vessel_id;
           this.filter_parameters["sub_network"] = this.sub_network_id;
+          this.filter_parameters["network"] = this.network_id;
         }else if(this.vessel_id && this.self ==1){
           this.filter_parameters["vessel"] = this.vessel_id;
         }else if(this.sub_network_id){
           this.filter_parameters["sub_network"] = this.sub_network_id;
+          this.filter_parameters["network"] = this.network_id;
         }
         await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value).then(result=>{
-          if(result.status == 204){ //No Data returned 
+          if(result.status == 206){ //No Data returned 
           this.device_data = [];
           this.filter_parameters = {}; 
           this.loading = false;
@@ -396,6 +404,10 @@ export default {
             }) 
       }else this.device_data = [] //If no heading selected just set the data to empty so the message appears
     },
+    network_id_function: function(data){
+      if(data.length > 0 )this.network_id = data
+      else this.network_id = null
+    },
     sub_network_id_function: function(data){
       //The if else statements were used because in the Picker we always want to emit when the value changes not only when the array is greater than 0.
       //This is because if we clear the array in the picker it will not emit to clear the id data on the device_data component.
@@ -410,6 +422,40 @@ export default {
     device_id_function: function(data){
       if(data.length > 0 )this.device_id = data
       else this.device_id = null
+    },
+    headers_analyst_filter_record_function: function(data){
+      this.analyst_filter_record_flag = 1;
+      //This is called when an analyst selects a filter record and the record has headers. This will set the headers to the headers in the filter record
+      this.value = data
+    },
+    networks_analyst_filter_record_function: function(data){
+      this.networks_analyst_filter_record_prop = data;
+    },
+    sub_networks_analyst_filter_record_function: function(data){
+      this.sub_networks_analyst_filter_record_prop = data;
+    },
+    vessels_analyst_filter_record_function: function(data){
+      this.vessels_analyst_filter_record_prop = data;
+    },
+    devices_analyst_filter_record_function: function(data){
+      this.devices_analyst_filter_record_prop = data;
+    },
+    start_date_time_analyst_filter_record_function: function(data){
+      this.start_date_time_analyst_filter_record_prop = data;
+    },
+    end_date_time_analyst_filter_record_function: function(data){
+      this.end_date_time_analyst_filter_record_prop = data;
+    },
+    device_data_filter_record_function: function(data){
+      this.device_data = data  
+      this.analyst_filter_record_flag = 0;
+    },
+    analyst_filter_parameters_filter_record_function: function(data){
+      this.analyst_filter_parameters = data
+    },
+    headers_returned_filter_parameters_filter_record_function: function(data){
+      this.headers =  data; 
+      this.display = this.headers
     }
   }
 }

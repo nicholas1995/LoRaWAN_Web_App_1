@@ -140,7 +140,11 @@ const ACL = {
     },
     email: {
       create: "All"
-    }
+    },
+    analyst_filter_records: {
+      read: "Self",
+      create: "All"
+    },
   },
   Fisher: {
     users: {
