@@ -27,8 +27,6 @@
 <script>
 import AuthenticationService from "../services/AuthenticationService.js";
 import functions from "./../services/functions/forms_functions.js"
-import date_time_picker from "./Date_Time_Picker";
-import network_subnetwork_vessel_device_picker from "./Map/Network_Subnet_Vessel_Device_Picker";
 
 /*
 So for this page I want to have a map and where ever the use clicks it will provide them with the most recent sensor data for that particular point.
@@ -37,50 +35,8 @@ In order to give the users an idea about the places which vessels have previosul
 2)Create an array of the coordinates using the google maps heatmap documentation
 
 */
-function return_date_time(date, time){
-  let date_time = null;
-  if(date){
-    if(time){
-      date_time = date.concat(" "+ time+ ":00")
-    }else{
-      date_time = date.concat(" "+ "00:00:00")
-    }
-  }else{
-    date_time = null;
-  }
-  return date_time;
-}
-
-function convertArrayOfObjectsToCSV(args) {
-    var result, ctr, keys, columnDelimiter, lineDelimiter, data;
-    data = args.data || null;
-    if (data == null || !data.length) {
-      return null;
-    }
-    columnDelimiter = args.columnDelimiter || ',';
-    lineDelimiter = args.lineDelimiter || '\n';
-    keys = Object.keys(data[0]);
-    result = '';
-    result += keys.join(columnDelimiter);
-    result += lineDelimiter;
-    data.forEach(function(item) {
-      ctr = 0;
-      keys.forEach(function(key) {
-      if (ctr > 0) result += columnDelimiter;
-  
-      result += item[key];
-      ctr++;
-      });
-      result += lineDelimiter;
-    });
-    return result;
-  }
 
 export default {
-  components:{
-    date_time_picker,
-    network_subnetwork_vessel_device_picker,
-  },
   name: 'google',
   props: ['name'],
   data: function () {
@@ -96,21 +52,14 @@ export default {
       coordinates: [],
       contentString: [],
       heat_map: null, //variable for the heat map
-      gateways: '',
       icon_url: ["http://maps.google.com/mapfiles/ms/icons/red-dot.png","http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
       "http://maps.google.com/mapfiles/ms/icons/green-dot.png","http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
       "http://maps.google.com/mapfiles/ms/icons/orange-dot.png","http://maps.google.com/mapfiles/ms/icons/pink-dot.png",
       "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"],
-      i: 1, //Just to fetch the device locations/// to delete
-
-      initial: 1, //This is a flag which is initially set to 1... it is used to ensure that devices clearticks are only added to the array on the initail fetch of the data 
-
-      start_date: null,
-      start_time: null,
-      start_date_time: null,
-      end_date: null,
-      end_time: null,
-      end_date_time: null,
+      
+      i: 0, //this is used to track which value of the positon data returned is being displayed
+      length: 0, //this is used to hold the length of the data array
+      device_uplink_sensor_data: [],
 
       snackbar:0,
       timeout: 1500,
@@ -164,16 +113,19 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     map_click_event_handler: async function(event){
+          this.i=0;
+          this.length = 0;
           let coordinate = {
             gps_latitude: event.latLng.lat(),
             gps_longitude: event.latLng.lng()
           }
-          let device_uplink_sensor_data = await AuthenticationService.get_sensor_data_using_coordinates({lat: coordinate.gps_latitude, lng: coordinate.gps_longitude, zoom_level: this.map.getZoom()})
+          this.device_uplink_sensor_data = await AuthenticationService.get_sensor_data_using_coordinates({lat: coordinate.gps_latitude, lng: coordinate.gps_longitude, zoom_level: this.map.getZoom()})
             .catch(err => {
               console.log(err)
             })
-          device_uplink_sensor_data = device_uplink_sensor_data.data.device_uplink_sensor_data;
-          if(device_uplink_sensor_data.length > 0) this.create_marker(device_uplink_sensor_data[0], 1)
+          this.device_uplink_sensor_data = this.device_uplink_sensor_data.data.device_uplink_sensor_data;
+          this.length = this.device_uplink_sensor_data.length;
+          if(this.device_uplink_sensor_data.length > 0) this.create_marker(this.device_uplink_sensor_data[0], 1)
           else this.create_marker(coordinate, 0)
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -219,17 +171,26 @@ export default {
                       <b>Accelerometer:</b>${data.accelerometer} <br>
                       <b>GPS Latitude:</b> ${data.gps_latitude}<br>
                       <b>GPS Longitude:</b> ${data.gps_longitude}<br>
+                      <button class="button button2" id="back_button"><h2><<</h2></button>.${this.i + 1}..of..${this.length}.
+                      <button class="button button2" id="foward_button"><h2>>></h2></button>
                   </div>`;
+        info_window.setContent(content);
+        google.maps.event.addListener(info_window, 'domready', ()=> {
+            document.getElementById('back_button').addEventListener("click", this.back_button_event_handler);
+            document.getElementById('foward_button').addEventListener("click", this.foward_button_event_handler);
+
+        })
       }else{
         var content = `<div>
               <h3>No Sensor Data at Following Position</h3>
               <b>GPS Latitude:</b> ${data.gps_latitude}<br>
               <b>GPS Longitude:</b> ${data.gps_longitude}<br>
           </div>`;
-      }
-        //Set the info window to be open on create 
         info_window.setContent(content);
+
+      }
         info_window.open(this.map,marker);
+
 
         //Open the infowindow for the device marker(ON MOUSE OVER)
         google.maps.event.addListener(marker,'mouseover', (function(marker,content,info_window){ 
@@ -238,31 +199,20 @@ export default {
               info_window.open(this.map,marker);
           };
         })(marker,content,info_window));
-        //Close the infowindow for the device marker(ON MOUSE OUT)
-        google.maps.event.addListener(marker,'mouseout', (function(marker,content,info_window){ 
-          return function() {
-              info_window.close(this.map,marker);
-          };
-        })(marker,content,info_window));
     },
-    //--------------------------------------------------------------------------------------------------------------------------------------------
-    start_date_function(date){
-      this.start_date = date;
-      this.start_date_time = null;
+    back_button_event_handler: function(){
+      if((this.i) >= 0){
+        this.i = this.i -1;
+        this.create_marker(this.device_uplink_sensor_data[this.i], 1)
+      }
     },
-    start_time_function(time){
-      this.start_time = time;
-      this.start_date_time = null;
-    },    
-    end_date_function(date){
-      this.end_date = date;
-      this.end_date_time = null;
-    },
-    end_time_function(time){
-      this.end_time = time;
-      this.end_date_time = null;
-    },
+    foward_button_event_handler: function(){
+      if((this.i+1) <= this.length){
+        this.i = this.i +1;
+        this.create_marker(this.device_uplink_sensor_data[this.i], 1)
+      }
 
+    },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     message_display(data){
       this.snackbar=1;
@@ -282,5 +232,18 @@ export default {
   margin: 0 auto;
   background: gray;
 }
+.button {
+  background-color: #f44336; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
 </style>
  
