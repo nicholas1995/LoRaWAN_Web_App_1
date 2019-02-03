@@ -40,7 +40,7 @@
               <v-icon slot="activator"
                 small
                 class="pt-3"
-                @click="delete_sub_neworks(props.item)"
+                @click="delete_sub_network(props.item)"
               >
                 delete
               </v-icon>
@@ -126,18 +126,8 @@ export default {
       }
 
   },
-  destroyed: function(){
-  },
-  computed: {
-    users () {
-      return this.$store.state.users
-    },
-    user_email () {
-      return this.$store.state.user.email
-    }
-  },
   methods: {
-    delete_sub_neworks(sub_network){
+    delete_sub_network(sub_network){
       if(confirm('Are you sure you want to delete this Sub-Network?') == true){
         AuthenticationService.delete_sub_networks(sub_network.sub_network_id).then(result => {
           this.sub_networks = result.data.sub_networks_lora;

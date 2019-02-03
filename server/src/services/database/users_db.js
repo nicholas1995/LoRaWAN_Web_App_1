@@ -55,8 +55,8 @@ module.exports = {
     },
     update_profile: function (data) {
         let sql = `UPDATE users
-        SET first_name= '${data.first_name}', last_name= '${data.last_name}', address= '${data.address}', 
-        home_phone= '${data.home_phone}', mobile_phone= '${data.mobile_phone}'
+        SET first_name= '${data.first_name}', last_name= '${data.last_name}', user_country= '${data.user_country}', user_city= '${data.user_city}', 
+        user_district= '${data.user_district}', user_street= '${data.user_street}', home_phone= '${data.home_phone}', mobile_phone= '${data.mobile_phone}'
         WHERE email ='${data.email}'`;
         return db.queryAsync(sql);
     }

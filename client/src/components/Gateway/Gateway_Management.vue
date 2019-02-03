@@ -11,7 +11,7 @@
       <v-toolbar-items class="hidden-sm-and-down ">
       <v-tooltip bottom>
         <v-icon large slot="activator"
-              class="mr-1 mt-3" @click.stop="$router.push(`/gateway/create`)" >
+          class="mr-1 mt-3" @click.stop="$router.push(`/gateway/create`)" >
           add_box
         </v-icon>
         <span>Create Gateway</span>
@@ -40,7 +40,7 @@
               <v-icon slot="activator"
                 small
                 class="pt-3"
-                @click="delete_gateways(props.item)"
+                @click="delete_gateway(props.item)"
               >
                 delete
               </v-icon>
@@ -122,7 +122,7 @@ export default {
     }
   },
   methods: {
-    delete_gateways(gateway){
+    delete_gateway(gateway){
       if(confirm('Are you sure you want to delete this Gateway?') == true){
         AuthenticationService.delete_gateways(gateway.gateway_id_lora).then(result => {
           this.gateways  = result.data.gateways_lora;
