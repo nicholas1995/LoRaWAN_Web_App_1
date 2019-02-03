@@ -7,7 +7,9 @@
         label="Headings"
         multiple
         clearable
-        chips
+        small-chips
+        append-icon="select_all"
+        @click:append="select_all_headers()"
       ></v-combobox>
     </v-flex>
     <v-layout row wrap>
@@ -83,6 +85,8 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import date_time_picker from "./../Date_Time_Picker";
 import network_gateway_picker from "./Network_Gateway_Picker";
 import date_time_functions from "../../services/functions/date_time.js"
+import functions from "./../../services/functions/forms_functions.js"
+
 
 
 
@@ -344,6 +348,13 @@ export default {
       let seconds = this.add_zero(date.getUTCSeconds());
       let full_date = year + "-" + month + "-" + day + "T" + hour + ":" + minutes + ":" + seconds + "Z";
       return(full_date);
+    },
+    select_all_headers: function(){
+      let header_name_holder = []; //this is an array which the names in the header_name id:name array will be pushed onto and then this array will be set to value
+      for(let i =0; i< this.header_names.length; i++){
+        header_name_holder.push(functions.extract_name_id_name(this.header_names[i]))
+      }
+      this.value = header_name_holder;
     }
   }
 }
