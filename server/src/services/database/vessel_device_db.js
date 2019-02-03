@@ -29,7 +29,7 @@ module.exports = {
     let where = '';
     let sql = "SELECT vessel_device.*, device.device_name FROM vessel_device RIGHT JOIN device ON vessel_device.device_id = device.device_id";
     for(let i = 0; i< user_vessel_info.length; i++){
-      where = `vessel_id = '${user_vessel_info[i].vessel_id}' `
+      where = `vessel_id = '${user_vessel_info[i].vessel_id}' AND (vessel_device_deleted_at > '${user_vessel_info[i].date_created}' OR vessel_device_deleted_at IS NULL) `
       if (user_vessel_info[i].date_deleted != null){
         where= where + `AND vessel_device_created_at < '${user_vessel_info[i].date_deleted}'`; //We want to filter out devices that were added AFTER the user was removed from the vessel. 
         //Hence we check to see if the date the device was added to the boat is after the date the user was removed from the boat. These devices will not be accessable to the fisher

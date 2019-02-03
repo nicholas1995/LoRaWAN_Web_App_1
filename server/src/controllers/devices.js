@@ -2,6 +2,7 @@ const lora_app_server = require("../services/API/lora_app_server");
 const db = require("../services/database/devices_db");
 const DB_VESSEL_DEVICE = require("../services/database/vessel_device_db");
 const DB_VESSEL = require("../services/database/vessels_db");
+const DB_USER_VESSEL = require("../services/database/user_vessel_db");
 const DB_DEVICE_UPLINK = require("../services/database/device_rx_db");
 const compare = require("../services/compare");
 const error = require("../services/errors");
@@ -229,6 +230,26 @@ async function add_device_to_default_vessel(device_id, device_eui, sub_network_i
         throw err;
     }
 }
+
+function filter_uique_devices_from_device_list(devices){
+    //this accepts an array of devices with multiple of the same device and returns an array of devices with one instance of each device
+    try{
+        let unique_devices = []
+        for(let i = 0; i< devices.length; i++){
+            if(i == 0 )unique_devices.push(devices[i]);
+            for(let j = 0; j< unique_devices.length; j++){
+                if(unique_devices[j].device_id == devices[i].device_id){
+                    break;
+                }else if(j == unique_devices.length -1){
+                    unique_devices.push(devices[i]);
+                }
+            }
+        }
+        return unique_devices
+    }catch(err){
+        throw err;
+    }
+}
 module.exports = {
     get: async function(req, res){
         let error_location = null; //0=lora, 1=db
@@ -330,7 +351,7 @@ module.exports = {
     get_self: async function (req, res) {
         try {
             let user_vessel_info = JSON.parse(req.params.user_vessel_info);
-             let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info) 
+             let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info)  
                 .catch(err => {
                     //Error getting vessel device relationships currently implemented
                     error_location = 2; 
@@ -348,7 +369,7 @@ module.exports = {
         let error_location = 0;
         try {
             let device_data = [];
-            if(req.access == 'all'){
+            if(req.access == "all" || req.params.access == "all"){
                 let devices_db = await db.get()
                     .catch(err => {
                         //error getting devices from db
@@ -366,16 +387,54 @@ module.exports = {
                             throw err;
                     });                    
                 }
-            }else if(req.access == 'self'){
-
-            }
-/*             let user_vessel_info = JSON.parse(req.params.user_vessel_info);
-            let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info)
+            }else if(req.access == "self" || req.params.access == "self"){//---------------------------------------------------
+                //Fetching all the vessels that user was ever associated with 
+                let user_vessel = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null) 
+                    .catch(err => {
+                        //Error getting fishers vessels
+                        throw err;
+                    })
+                let user_vessel_info = [];
+                let place_holder;
+                for(let i = 0; i< user_vessel.length; i++){
+                    place_holder = {
+                        vessel_id: user_vessel[i].vessel_id, date_created: user_vessel[i].date_created, date_deleted: user_vessel[i].date_deleted
+                    }
+                    user_vessel_info.push(place_holder);
+                    place_holder = ''; 
+                }
+                let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info) 
                 .catch(err => {
                     //Error getting vessel device relationships currently implemented
-                    error_location = 2;
+                    error_location = 2; 
                     throw error.error_message("get devices : getting vessel devices relationships : database", err.message);
-                }); */
+                });
+                //get all the devices that are related to the vessels the user is associate with 
+                let unique_devices = filter_uique_devices_from_device_list(devices);
+                let array = [];
+                //Associate the devices with the periods over which the user was assigned to those devices
+                for(let i =0; i< unique_devices.length; i++){
+                    for(let j =0; j< user_vessel_info.length; j++){
+                        if(unique_devices[i].vessel_id == user_vessel_info[j].vessel_id){
+                            array.push(user_vessel_info[j]);
+                        }
+                    }
+                    unique_devices[i]['user_vessel_info'] = array;
+                    array = []
+                }
+                for(let i =0; i< unique_devices.length; i++){
+                    await DB_DEVICE_UPLINK.get_most_recent_specified_device_self(unique_devices[i])
+                    .then(result => {
+                        if(result.length > 0){
+                            device_data.push(result[0])
+                        }
+                    }).catch(err => {
+                            //Error getting the most recent device uplink record
+                            throw err;
+                    });                    
+                }
+                //console.log(device_data)
+            }
             res.status(200).send({ device_data: device_data, message: 'Devices fetched', type: 'success' });
         } catch (err) {
             console.log(err);
@@ -384,11 +443,71 @@ module.exports = {
     },
     get_map_refresh: async function(req, res){ 
         try{
-            let device_data = await DB_DEVICE_UPLINK.get_most_recent_specified_device(req.params.device_id)
+            let device_data = [];
+            if(req.access == "all" || req.params.access == "all"){
+                await DB_DEVICE_UPLINK.get_most_recent_specified_device(req.params.device_id)
+                .then(result => {
+                    if(result.length > 0){
+                        device_data.push(result[0])
+                    }
+                }).catch(err => {
+                        //Error getting the most recent device uplink record
+                        throw err;
+                });   
+            }else if(req.access == "self" || req.params.access == "self"){ //-------------------------
+                //we will keep on fetching the data from the database (eg the relationship between the user and the vessels ) instead of caching because if the user is removed 
+                //from the vessel we do not want him to be able to keep viewing the device tracks
+
+                //Fetching all the vessels that user was ever associated with 
+                let user_vessel = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null) 
+                    .catch(err => {
+                        //Error getting fishers vessels
+                        throw err;
+                    })
+                let user_vessel_info = [];
+                let place_holder;
+                for(let i = 0; i< user_vessel.length; i++){
+                    place_holder = {
+                        vessel_id: user_vessel[i].vessel_id, date_created: user_vessel[i].date_created, date_deleted: user_vessel[i].date_deleted
+                    }
+                    user_vessel_info.push(place_holder);
+                    place_holder = ''; 
+                }
+                //getting all the devices associated with the vessels the user is assigned to 
+                let devices = await DB_VESSEL_DEVICE.get_device_self(user_vessel_info) 
                 .catch(err => {
-                    //Error getting the most recent device uplink record
-                    throw err;
+                    //Error getting vessel device relationships currently implemented
+                    error_location = 2; 
+                    throw error.error_message("get devices : getting vessel devices relationships : database", err.message);
                 });
+                //get all the devices that are related to the vessels the user is associate with 
+                let unique_devices = filter_uique_devices_from_device_list(devices);
+                let array = [];
+                devices = [];//clear it 
+                //get the device info for the device that is requesting the updated data... we did all the previous steps to ensure that the user still is assigned to the vessel 
+                //and that the device is still assigned to the vessel the user is assigned too
+                for(let i =0; i< unique_devices.length; i++){
+                    if(unique_devices[i].device_id == req.params.device_id) {
+                        devices.push(unique_devices[i]);
+                        break;
+                    }
+                }
+                for(let j =0; j< user_vessel_info.length; j++){
+                    if(devices[0].vessel_id == user_vessel_info[j].vessel_id){
+                        array.push(user_vessel_info[j]);
+                    }
+                }
+                devices[0]['user_vessel_info'] = array; 
+                await DB_DEVICE_UPLINK.get_most_recent_specified_device_self(devices[0])
+                .then(result => {
+                    if(result.length > 0){ 
+                        device_data.push(result[0])
+                    }
+                }).catch(err => {
+                        //Error getting the most recent device uplink record
+                        throw err;
+                });                    
+            }
             res.status(200).send({ device_data: device_data, message: 'Devices data', type: 'success' }); 
         }catch(err){
             console.log(err)

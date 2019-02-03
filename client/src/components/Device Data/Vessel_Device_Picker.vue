@@ -69,7 +69,7 @@ export default {
       device_name_form: [],
 
       vessel_id: [],
-      vessel_id_date_deleted: [], //an array of objects that contain the id of the vessel and the date it was deleted from the user
+      vessel_id_date_created_date_deleted: [], //an array of objects that contain the id of the vessel, the date it was created and the date it was deleted from the user
       
       device_id: [],
 
@@ -99,7 +99,7 @@ export default {
       this.device_name_form = [];
 
       this.vessel_id = [];
-      this.vessel_id_date_deleted = [];
+      this.vessel_id_date_created_date_deleted = [];
 
       this.device_id = [];
       if(this.vessel_name_form.length > 0){//will only run if we have a selected vessel
@@ -109,11 +109,11 @@ export default {
           for(let j = 0 ; j< this.vessels.length; j++){
             if(vessel_id == this.vessels[j].vessel_id){
               this.vessel_id.push(functions.extract_id_id_name(this.vessel_name_form[i]))
-              this.vessel_id_date_deleted.push({vessel_id: functions.extract_id_id_name(this.vessel_name_form[i]), date_deleted: this.vessels[j].date_deleted})
+              this.vessel_id_date_created_date_deleted.push({vessel_id: functions.extract_id_id_name(this.vessel_name_form[i]), date_created: this.vessels[j].date_created, date_deleted: this.vessels[j].date_deleted})
             }
           }
         }
-        this.devices = await AuthenticationService.get_devices_self(this.vessel_id_date_deleted)
+        this.devices = await AuthenticationService.get_devices_self(this.vessel_id_date_created_date_deleted)
           .catch(err => {
             //Error fetching devices specified by vessel from server
             console.log(err)

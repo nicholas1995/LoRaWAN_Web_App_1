@@ -11,7 +11,7 @@ module.exports = {
     let where = "";
     let sql = "SELECT *  FROM device ";
     if (device_id != null && device_id != "null") {
-      sql_where.push(`id = '${device_id}'`);
+      sql_where.push(`device_id = '${device_id}'`);
     }
     if (device_eui != null && device_eui != "null") {
       sql_where.push(`device_eui = '${device_eui}'`);
@@ -24,7 +24,7 @@ module.exports = {
     }
     if (deleted != null && deleted != "null") {
       sql_where.push(`device_deleted = '${deleted}'`);
-    }
+    } 
     if (sql_where.length > 0) {
       for (let i = 0; i < sql_where.length; i++) {
         if (i < sql_where.length - 1) {

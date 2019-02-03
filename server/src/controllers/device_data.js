@@ -734,7 +734,7 @@ module.exports = {
                         sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
                         sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
                     }
-                    sql_where.push(`vessel_id = '${user_vessels[i].vessel_id}'`);
+                    sql_where.push(`device_uplink.vessel_id = '${user_vessels[i].vessel_id}'`);
                     where = `${where} (`;
                     for (let j = 0; j < sql_where.length; j++) {
                         if (j < sql_where.length - 1) {

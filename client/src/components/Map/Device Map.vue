@@ -451,9 +451,9 @@ export default {
         content = `<div>
                       <h3>Device Sensor Data</h3>
                       <b>Time Stamp</b>: ${device.time_stamp}<br>
-                      <b>Temperature:</b> <br>
-                      <b>Humidity:</b> <br>
-                      <b>Accelerometer:</b> <br>
+                      <b>Temperature:</b> ${device.temperature}<br>
+                      <b>Humidity:</b>${device.humidity} <br>
+                      <b>Accelerometer:</b>${device.accelerometer} <br>
                       <b>SOS:</b>${device.sos} <br>
                       <b>GPS Latitude:</b> ${device.gps_latitude}<br>
                       <b>GPS Longitude:</b> ${device.gps_longitude}<br>
@@ -628,7 +628,7 @@ export default {
           this.controller[i].historic_tracking.start_date_time = null;
           this.controller[i].historic_tracking.end_date_time = null;
           this.create_device_marker(this.device_data[i], 1)
-        }
+        } 
         else if(action == "real_time_tracking"){
           this.controller[i].action = 'real_time_tracking';
           this.controller[i].historic_tracking.start_date_time = null;

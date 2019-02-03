@@ -39,6 +39,34 @@ module.exports = {
             LIMIT 1`;
         return db.queryAsync(sql);
     },
+    get_most_recent_specified_device_self(device_data){
+            //This returns the most recent device uplink for the specified device over the period that the user was assigned to the vessel the device was on 
+            let sql = `SELECT device_uplink.*, vessel.vessel_name, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
+            FROM device_uplink
+            LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id `
+            let where = `device_id = '${device_data.device_id}' AND (`;
+            let sql_where = [];
+            let holder = ''
+            for(let i = 0; i< device_data.user_vessel_info.length; i++){
+                holder = `(device_uplink.vessel_id = '${device_data.vessel_id}' AND time_stamp > '${device_data.user_vessel_info[i].date_created}' `// AND time_stamp < ${device_data.user_vessel_info[i].date_deleted}`)
+                if(device_data.user_vessel_info[i].date_deleted != null){
+                    holder = holder + `AND time_stamp < '${device_data.user_vessel_info[i].date_deleted}')`;
+                }else holder = holder + ')'
+                sql_where.push(holder)
+                holder = '';
+            }
+            for (let i = 0; i < sql_where.length; i++) {
+            if (i < sql_where.length - 1) {
+                //will run every time but the last cause we do not want it ending with AND
+                where = where + `${sql_where[i]} OR `;
+            } else {
+                where = where + `${sql_where[i]})`;
+            } 
+            }
+            sql = ` ${sql} WHERE ${where}`;
+            sql = `${sql} ORDER BY device_uplink_id DESC LIMIT 1`;
+        return db.queryAsync(sql);
+    },
     get_gps_coordinates(){
         //This returns all the gps coordinates from the device uplink to create the heatmap 
         let sql = `SELECT gps_latitude, gps_longitude

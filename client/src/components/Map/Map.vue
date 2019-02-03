@@ -105,9 +105,13 @@ export default {
             throw err;
           });
         //-------------------------Start----------------------
-        this.init_map();
-        await this.get_gateway_data_initial();
-        this.get_device_data_initial();
+        if(this.$store.state.user_class == 'Fisher') await this.$router.push("/map/device") //so if a fisher comes here they are routed to the device only page immediately
+        else{
+          this.init_map();
+          await this.get_gateway_data_initial();
+          this.get_device_data_initial();
+        }
+
       }else{
         alert('Please login.');
         this.$router.push('/login');
@@ -290,9 +294,9 @@ export default {
         content = `<div>
                       <h3>Device Sensor Data</h3>
                       <b>Time Stamp</b>: ${device.time_stamp}<br>
-                      <b>Temperature:</b> <br>
-                      <b>Humidity:</b> <br>
-                      <b>Accelerometer:</b> <br>
+                      <b>Temperature:</b> ${device.temperature}<br>
+                      <b>Humidity:</b>${device.humidity} <br>
+                      <b>Accelerometer:</b>${device.accelerometer} <br>
                       <b>SOS:</b>${device.sos} <br>
                       <b>GPS Latitude:</b> ${device.gps_latitude}<br>
                       <b>GPS Longitude:</b> ${device.gps_longitude}<br>
