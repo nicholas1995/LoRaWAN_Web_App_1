@@ -10,7 +10,7 @@
               <v-flex >
                 <navigation_drawer ref="drawer" flat v-if="!this.$store.state.loginState"></navigation_drawer>
               </v-flex>
-              <v-flex xs12 >
+              <v-flex xs12 m12>
                  <router-view ></router-view>
               </v-flex>
             </v-layout>

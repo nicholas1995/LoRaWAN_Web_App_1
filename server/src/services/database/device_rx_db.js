@@ -76,8 +76,10 @@ module.exports = {
     get_device_uplink_sensor_data_based_on_coordinates(coordinate){
         //This function accepts a set of gps coordinates where the lat and lng are 2 values each which set a bound and returns the sensor data corresponding to that point
         //This is used for the homepage map
-        let sql = `SELECT time_stamp, gps_latitude, gps_longitude, temperature, humidity, accelerometer
+        let sql = `SELECT device_uplink.sub_network_id, sub_network.sub_network_name, sub_network.network_id, network.network_name, time_stamp, gps_latitude, gps_longitude, temperature, humidity, accelerometer
         FROM device_uplink
+        LEFT JOIN sub_network ON device_uplink.sub_network_id = sub_network.sub_network_id 
+        LEFT JOIN network ON sub_network.network_id = network.network_id 
         WHERE gps_latitude > '${coordinate.lat.min}' AND gps_latitude < '${coordinate.lat.max}' 
         AND gps_longitude > '${coordinate.lng.max}' AND gps_longitude < '${coordinate.lng.min}'
         ORDER BY time_stamp DESC`;
