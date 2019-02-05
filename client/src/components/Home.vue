@@ -108,6 +108,7 @@ export default {
   mounted: async function () {
     try{
         //-------------------------Start----------------------
+        this.isLoading = true;
         this.init_map();
         this.create_heat_map()
         //Code to get the location of a point when the marker clicked 
@@ -116,6 +117,7 @@ export default {
         });
         await google.charts.load('current', {packages: ['corechart', 'line']});
         this.chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        this.isLoading = false;
     }catch(err) {
       console.log(err)
     }      
@@ -288,7 +290,7 @@ export default {
         var options = {
           title: this.sensor_value_graph_info[sensor_array_position].graph_title,
           hAxis: {
-            title: this.sensor_value_graph_info[sensor_array_position].graph_title
+            title: 'Time'
           },
           vAxis: {
             title: this.sensor_value_graph_info[sensor_array_position].v_axis
@@ -298,8 +300,11 @@ export default {
           },
           pointSize: 5, //Sets the size of the point on the graph
           explorer: {
-             maxZoomIn: .8, 
+             maxZoomIn: .001,
+             keepInBounds: true,
+             zoomDelta: 0.9
           },
+          lineDashStyle: [4,1],
           //legend: { position: 'top' }
         };
         this.chart.draw(data, options);
