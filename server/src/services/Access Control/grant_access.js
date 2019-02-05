@@ -3,6 +3,7 @@ const VError = require("verror");
 
 module.exports = function(req, res, next){
     let path = req.route.path;
+    path = path.slice(4); //remove the api from infront of the route '/api
     if(path.lastIndexOf('/') != 0){ //so that it will only happen when there is a second /
         let x = path.indexOf('/',1); //extract the string between then first and second /
         path = path.slice(1,x);
