@@ -2,7 +2,7 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+        <v-flex xs12 sm8 md6>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary">
               <v-toolbar-title>Create Vessel</v-toolbar-title>
@@ -164,7 +164,7 @@ mixins: [validationMixin],
       vessel_name: '',
       vessel_unique_vessel_identifier: '',
       vessel_international_radio_call_sign: '',
-      vessel_type: ['Fishing', 'Commercial', 'Rental', 'Coast Guard'],
+      vessel_type: ['Artisanal Fishing', 'Commercial Fishing', 'Recreational', 'Coast Guard'],
       vessel_type_form: '',
       sub_networks_lora : [], //a list of all the subnetworks on the app server
       network_names: [],
