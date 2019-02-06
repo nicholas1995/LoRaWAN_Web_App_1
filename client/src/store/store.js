@@ -22,7 +22,10 @@ export default new Vuex.Store({
     token: "",
     loginState: 1,
     user_class: '',
-    users: []
+    users: [],
+    snackbar_message: '',//this holds the snackbar mesage
+    snackbar_type: '', //this holds the snackbar type
+
   },
   mutations: {
     login(state, data) {
@@ -60,6 +63,11 @@ export default new Vuex.Store({
     },
     update_self(state, value){
       state.update_self =value;
+    },
+    set_snackbar (state, snackbar_info) { //Used to set the snackbar values
+      this.state.snackbar_message = snackbar_info.message
+      this.state.snackbar_type = snackbar_info.type
+
     }
   },
   actions: {

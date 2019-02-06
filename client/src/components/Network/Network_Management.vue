@@ -92,8 +92,10 @@ export default {
         //--------------Start-------------------
         this.networks = await AuthenticationService.get_networks()
         .catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})      
         })
+      this.$store.commit('set_snackbar',{message: this.networks.data.message, type: this.networks.data.type});
+
         this.networks = this.networks.data.networks_lora;
       }else{
         alert('Please login.');
@@ -122,10 +124,10 @@ export default {
       if(confirm('Are you sure you want to delete this network?') == true){
         AuthenticationService.delete_networks(network.network_id).then(result => {
           this.networks = result.data.networks_lora;
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a network on the lora app server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})  
         })
       }; 
     }

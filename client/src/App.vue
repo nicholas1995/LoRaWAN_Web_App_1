@@ -4,6 +4,7 @@
     <div id="app">
       <v-app class = "app_background">
         <v-content>
+         <snackbar></snackbar>
           <v-container>
             <toolbar @toggle-drawer="$refs.drawer.drawer = !$refs.drawer.drawer" @message_display="message_display($event)"></toolbar>
             <v-layout >
@@ -25,19 +26,14 @@
 <script>
 import toolbar from './components/Toolbar'
 import navigation_drawer from './components/Navigation_Drawer'
+import snackbar from './components/Snack_Bar'
 export default {
   name: 'App',
   components:{
     toolbar,
-    navigation_drawer
+    navigation_drawer,
+    snackbar
   },
-    methods: {
-    message_display(data){
-      this.snackbar=1;
-      this.color =data.type;
-      this.message = data.message;
-    }
-  }
 }
 </script>
 
