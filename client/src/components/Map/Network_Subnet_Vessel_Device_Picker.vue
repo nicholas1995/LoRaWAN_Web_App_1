@@ -6,7 +6,6 @@
           v-model="network_name_form"
           :items="this.network_names"
           label="Network"
-          clearable
           prepend-icon="domain"
         >
         </v-select>
@@ -17,7 +16,6 @@
           v-model="sub_network_name_form"
           :items="this.sub_network_names"
           label="Sub-Network"
-          clearable
           prepend-icon="apps"
         >
         </v-select>
@@ -28,7 +26,6 @@
           v-model="vessel_name_form"
           :items="this.vessel_names"
           label="Vessel"
-          clearable
           prepend-icon="directions_boat"
         >
         </v-select>
@@ -39,7 +36,6 @@
           v-model="device_name_form"
           :items="this.device_names"
           label="Device"
-          clearable
           prepend-icon="devices"
         >
         </v-select>

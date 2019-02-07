@@ -3,22 +3,29 @@
     <div v-if="initial == 0">
       <div v-if="this.$store.state.user_class !='Fisher'">
         <v-layout row wrap>
-          <v-switch
-            v-model="display_devices_switch"
-            height=0
-            :label="`Display Devices: ${display_devices_switch.toString()}`"
-          ></v-switch>
-          <v-switch
-            v-model="display_gateways_switch"
-            height=0
-            :label="`Display Gateways: ${display_gateways_switch.toString()}`"
-          ></v-switch>
+          <v-flex xs6 sm6 md2 >
+            <v-switch
+              v-model="display_devices_switch"
+              height=0
+              :label="`Display Devices: ${display_devices_switch.toString()}`"
+            ></v-switch>
+          </v-flex>
+          <v-flex xs6 sm6 md2 >
+            <v-switch
+              v-model="display_gateways_switch"
+              height=0
+              :label="`Display Gateways: ${display_gateways_switch.toString()}`"
+            ></v-switch>
+          </v-flex>
+          <v-flex xs12 sm12 md8>
+            <div v-show="this.display_devices_switch">
+              <network_subnetwork_vessel_device_picker
+                @device_id = device_id_function($event)
+              ></network_subnetwork_vessel_device_picker>
+            </div>
+          </v-flex>
         </v-layout>
-        <div v-show="this.display_devices_switch">
-          <network_subnetwork_vessel_device_picker
-            @device_id = device_id_function($event)
-          ></network_subnetwork_vessel_device_picker>
-        </div>
+
       </div>
       <div v-if="this.display_devices_switch">
         <v-tabs
