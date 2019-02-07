@@ -123,7 +123,7 @@ mixins: [validationMixin],
         //--------------Start-------------------
         this.networks = await AuthenticationService.get_networks()
         .catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})      
         })
         this.networks = this.networks.data.networks_lora;
       }else{
@@ -179,11 +179,11 @@ mixins: [validationMixin],
           network_display_name: this.network_display_name,
           network_can_have_gateways: this.network_can_have_gateways
         }).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})  
           this.$router.push(`/network`)
         }).catch(err => {
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
         })
       }
     },

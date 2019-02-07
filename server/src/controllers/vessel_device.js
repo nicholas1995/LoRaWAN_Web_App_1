@@ -8,15 +8,6 @@ function error_message(current_error_message, previous_error){
 }
 
 module.exports = {
-    get: async function(req, res) {
-        //need to split up into two seperate fetches. One for self and another for all 
-        let error_location = null; //1=db
-        try{ 
-            
-        }catch(err){
-            
-        }
-    },
     add_device_to_default_vessel: async function (device_id, device_eui, sub_network_id){
         try{
             let default_vessel = await DB_VESSEL.get_default_vessel_specified_sub_network(sub_network_id)
@@ -34,18 +25,4 @@ module.exports = {
             throw err;
         }
     },
-    update: async function(req, res){
-        try{
-            
-        }catch(err){
-            
-        }
-    },
-    delete: async function(req, res){
-        try{
-            
-        }catch(err){
-
-        }
-    }
 }

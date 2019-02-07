@@ -94,8 +94,6 @@ export default {
         .catch(err => {
           this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})      
         })
-      this.$store.commit('set_snackbar',{message: this.networks.data.message, type: this.networks.data.type});
-
         this.networks = this.networks.data.networks_lora;
       }else{
         alert('Please login.');
