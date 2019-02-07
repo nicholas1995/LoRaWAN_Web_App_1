@@ -2,154 +2,137 @@
   <v-content>
     <div v-if="initial == 0">
       <div v-if="this.$store.state.user_class !='Fisher'">
-        <network_subnetwork_vessel_device_picker
-          @device_id = device_id_function($event)
-        ></network_subnetwork_vessel_device_picker>
+        <v-layout row wrap>
+          <v-switch
+            v-model="display_devices_switch"
+            height=0
+            :label="`Display Devices: ${display_devices_switch.toString()}`"
+          ></v-switch>
+          <v-switch
+            v-model="display_gateways_switch"
+            height=0
+            :label="`Display Gateways: ${display_gateways_switch.toString()}`"
+          ></v-switch>
+        </v-layout>
+        <div v-show="this.display_devices_switch">
+          <network_subnetwork_vessel_device_picker
+            @device_id = device_id_function($event)
+          ></network_subnetwork_vessel_device_picker>
+        </div>
       </div>
-      <v-tabs
-        v-model="active_tab"
-        dark
-        color="primary"
-        show-arrows
-        grow
-      >
-        <v-tabs-slider color="secondary"></v-tabs-slider>
-        <v-tab
-          v-for="i in device_data.length"
-          :key="i"
+      <div v-if="this.display_devices_switch">
+        <v-tabs
+          v-model="active_tab"
+          dark
+          color="primary"
+          show-arrows
+          grow
         >
-          {{device_data[(i-1)].device_id}}: {{device_data[(i-1)].device_name}} 
-        </v-tab>
-        <v-tabs-items>
-          <v-tab-item
+          <v-tabs-slider color="secondary"></v-tabs-slider>
+          <v-tab
             v-for="i in device_data.length"
             :key="i"
-            :value="'tab-' + i"
           >
-            <v-card  
-              color="grey lighten-3 "
-              max-height = "135">
-              <v-card-text>
-                <v-layout row wrap>
-                  <v-flex xs12 sm6 md2 >
-                    <v-radio-group
-                      :mandatory="false"
-                      v-on:change="update_controller_array($event, i)"
-                    >
-                      <v-radio
-                        label="Disable Tracking"
-                        value="disable_tracking"
-                      ></v-radio>
-                      <v-radio
-                        label="Realtime Tracking"
-                        value="real_time_tracking"
-                      ></v-radio>
-                      <v-radio
-                        label="Historic Tracking"
-                        value="historic_tracking"
-                      ></v-radio>
-                    </v-radio-group>
-                  </v-flex>
-                  <v-flex xs12 sm6 md10 >
-                    <div v-if=" controller[(i-1)].action == 'disable_tracking' || controller[(i-1)].action == 'null'">
+            {{device_data[(i-1)].device_id}}: {{device_data[(i-1)].device_name}} 
+          </v-tab>
+          <v-tabs-items>
+            <v-tab-item
+              v-for="i in device_data.length"
+              :key="i"
+              :value="'tab-' + i"
+            >
+              <v-card  
+                color="grey lighten-3 "
+                max-height = "135">
+                <v-card-text>
+                  <v-layout row wrap>
+                    <v-flex xs12 sm6 md2 >
+                      <v-radio-group
+                        :mandatory="false"
+                        v-on:change="update_controller_array($event, i)"
+                      >
+                        <v-radio
+                          label="Disable Tracking"
+                          value="disable_tracking"
+                        ></v-radio>
+                        <v-radio
+                          label="Realtime Tracking"
+                          value="real_time_tracking"
+                        ></v-radio>
+                        <v-radio
+                          label="Historic Tracking"
+                          value="historic_tracking"
+                        ></v-radio>
+                      </v-radio-group>
+                    </v-flex>
+                    <v-flex xs12 sm6 md10 >
+                      <div v-if=" controller[(i-1)].action == 'disable_tracking' || controller[(i-1)].action == 'null'">
+                        <v-layout row wrap>
+                        <v-flex xs12 sm6 md6 >
+                          <v-flex xs12 sm12 md12  >
+                            <v-btn class="grey lighten-2" small 
+                              @click.stop="clear_all_device_tracks(i)">
+                              Clear all device tracks
+                            </v-btn>
+                          </v-flex>  
+                          <v-flex xs12 sm12 md12  >
+                            <v-btn class="grey lighten-2" small
+                              @click.stop="clear_real_time_device_tracks(i)">
+                              Clear device realtime tracks
+                            </v-btn>
+                          </v-flex>  
+                          <v-flex xs12 sm12 md12  >
+                            <v-btn class="grey lighten-2" small
+                              @click.stop="clear_historic_device_tracks(i)">
+                              Clear device historic tracks
+                            </v-btn>
+                          </v-flex>  
+                        </v-flex>
+                        <v-flex xs12 sm6 md6 >
+                          <v-flex xs12 sm12 md12  >
+                            <v-btn class="grey lighten-2" small 
+                              @click.stop="download_csv(device_real_time_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_real_time_data.csv`)">
+                              Download device realtime tracks
+                            </v-btn>
+                          </v-flex>  
+                          <v-flex xs12 sm12 md12  >
+                            <v-btn class="grey lighten-2" small 
+                              @click.stop="download_csv(device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)">
+                              Download device historic tracks
+                            </v-btn>
+                          </v-flex>  
+                        </v-flex>
+                        </v-layout>
+                      </div>
+                      <div v-else-if=" controller[(i-1)].action == 'real_time_tracking'">
+                      </div>
+                      <div v-else-if=" controller[(i-1)].action == 'historic_tracking'">
                       <v-layout row wrap>
-                      <v-flex xs12 sm6 md6 >
-                        <v-flex xs12 sm12 md12  >
-                          <v-btn class="grey lighten-2" small 
-                            @click.stop="clear_all_device_tracks(i)">
-                            Clear all device tracks
+                          <!-- Date Picker-->
+                        <v-flex xs12 sm6 md5>
+                          <date_time_picker v-bind:type_prop ='0'  @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
+                        </v-flex>
+                        <v-flex xs12 sm6 md5>
+                          <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
+                        </v-flex>
+                        <v-flex xs12 sm6 md2>
+                          <v-btn class="grey lighten-2" 
+                            @click.stop="generate_historic_device_tracks(i)">
+                            Generate
                           </v-btn>
-                        </v-flex>  
-                        <v-flex xs12 sm12 md12  >
-                          <v-btn class="grey lighten-2" small
-                            @click.stop="clear_real_time_device_tracks(i)">
-                            Clear device realtime tracks
-                          </v-btn>
-                        </v-flex>  
-                        <v-flex xs12 sm12 md12  >
-                          <v-btn class="grey lighten-2" small
-                            @click.stop="clear_historic_device_tracks(i)">
-                            Clear device historic tracks
-                          </v-btn>
-                        </v-flex>  
-                      </v-flex>
-                      <v-flex xs12 sm6 md6 >
-                        <v-flex xs12 sm12 md12  >
-                          <v-btn class="grey lighten-2" small 
-                            @click.stop="download_csv(device_real_time_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_real_time_data.csv`)">
-                            Download device realtime tracks
-                          </v-btn>
-                        </v-flex>  
-                        <v-flex xs12 sm12 md12  >
-                          <v-btn class="grey lighten-2" small 
-                            @click.stop="download_csv(device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)">
-                            Download device historic tracks
-                          </v-btn>
-                        </v-flex>  
-                      </v-flex>
+                        </v-flex>
                       </v-layout>
-                    </div>
-                    <div v-else-if=" controller[(i-1)].action == 'real_time_tracking'">
-                    </div>
-                    <div v-else-if=" controller[(i-1)].action == 'historic_tracking'">
-                    <v-layout row wrap>
-                        <!-- Date Picker-->
-                      <v-flex xs12 sm6 md5>
-                        <date_time_picker v-bind:type_prop ='0'  @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
-                      </v-flex>
-                      <v-flex xs12 sm6 md5>
-                        <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
-                      </v-flex>
-                      <v-flex xs12 sm6 md2>
-                        <v-btn class="grey lighten-2" 
-                          @click.stop="generate_historic_device_tracks(i)">
-                          Generate
-                        </v-btn>
-                      </v-flex>
-                    </v-layout>
-                    </div>
-                  </v-flex>
-                </v-layout>
-              </v-card-text>
-            </v-card>
-          </v-tab-item>
-        </v-tabs-items>
-      </v-tabs>
-        <v-layout row wrap>
-        <v-flex xs12 sm6 md3 class="pr-4" >
-          <v-btn class="grey lighten-2" small
-            @click.stop="$router.push(`/map`)">
-            View Gateways and Devices
-          </v-btn>
-        </v-flex>      
-        <v-flex xs12 sm6 md3 class="pr-4">
-          <v-btn class="grey lighten-2" small
-            @click.stop="$router.push(`/map/gateway`)">
-            View Gateways Only
-          </v-btn>
-        </v-flex>
-      </v-layout>
+                      </div>
+                    </v-flex>
+                  </v-layout>
+                </v-card-text>
+              </v-card>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-tabs>
+      </div>
     </div>
-    <v-flex xs12 sm6 md3 class="pr-4">
-      <div class="google-map" :id="map_name" ></div>
-    </v-flex>
-    <v-snackbar
-      v-model="snackbar"
-      bottom="bottom"
-      left="left"
-      multi-line="multi-line"
-      right="right"
-      :timeout="this.timeout"
-      auto-height="auto-height"
-      :color ="this.color"
-    >
-      {{ this.message }}
-      <v-btn
-        flat
-        @click="snackbar = 0"
-      >        Close
-      </v-btn>
-    </v-snackbar>
+    <div class="google-map" :id="map_name" ></div>
   </v-content>
 </template>
   
@@ -212,7 +195,8 @@ export default {
       markerCoordinates: [],
       map: null,
       bounds: null,
-      markers: [],
+      device_markers: [],
+      gateway_markers: [],
       flightPath: null,
       markerCluster: null,
       map_center: {latitude: "10.7277795", longitude: "-61.2105507"},
@@ -226,6 +210,8 @@ export default {
       i: 1, //Just to fetch the device locations/// to delete
 
       device_marker_refresh_interval: 5000,
+      gateway_marker_refresh_interval: 10000,
+
 
       device_data: [], //am array of all the returned devices to be plotted
 
@@ -235,6 +221,8 @@ export default {
 
       cleartick_device_marker: [], //arrary that holds all the clearticks to stop the set interval for a device
       cleartick_device_polyline: [], //arrary that holds all the clearticks to stop the set interval for a device polyline
+      cleartick_gateway: [], //arrary that holds all the clearticks to stop the setinterval for a gateways
+
 
       device_marker_tracker: [], //this is a 2d array which will be used to keep track of which marker is related to which device
       device_real_time_marker_tracker: [], //this is a 2d array which will be used to keep track of the realtime markers for a device
@@ -266,10 +254,8 @@ export default {
       device_id: '', //the device id of the device selected to control
       active_tab: '', //the tab postion to be opened. the number will be based on the device position in the device_data array
 
-      snackbar:0,
-      timeout: 1500,
-      color: "error",
-      message: "blank",
+      display_gateways_switch: true,
+      display_devices_switch: true,
     }
   },
   mounted: async function () {
@@ -284,6 +270,7 @@ export default {
         //-------------------------Start----------------------
         this.init_map();
         this.get_device_data_initial();
+        this.get_gateway_data_initial();
       }else{
         alert('Please login.');
         this.$router.push('/login');
@@ -313,6 +300,28 @@ export default {
     for(let i =0; i<this.cleartick_device_polyline.length; i++){ //clear device polyline intervals
           let holder  = this.cleartick_device_polyline[i];
           clearInterval(holder);
+    }
+    for(let i =0; i<this.cleartick_gateway.length; i++){ //clear gateway intervals
+        let holder  = this.cleartick_gateway[i];
+        clearInterval(holder);
+    }
+  },
+  watch: {
+    display_gateways_switch: function(){
+      if(this.display_gateways_switch == true){
+        this.get_gateway_data_initial();
+
+      }else if(this.display_gateways_switch == false){
+        this.clear_all_gateway_data();
+      }
+    },
+    display_devices_switch: function(){
+      if(this.display_devices_switch == true){
+        this.get_device_data_initial();
+
+      }else if(this.display_devices_switch == false){
+        this.clear_all_device_data()
+      }
     }
   },
   methods: {
@@ -364,6 +373,18 @@ export default {
       this.initial = 0;
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
+    get_gateway_data_initial: async function(){
+      let result = await AuthenticationService.get_gateways_map()
+      .catch(err => {
+        //Error getting gateway information from server
+        console.log(err);
+      })
+      let gateway_data = result.data.gateways
+      for(let i =0; i< gateway_data.length; i++){
+        this.create_gateway_marker(gateway_data[i])
+      }
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
     create_device_marker: async function(device, refresh_marker){
         let position = new google.maps.LatLng(device.gps_latitude, device.gps_longitude);
         let marker;
@@ -382,8 +403,8 @@ export default {
           });
         }
         let i = this.find_device_array_position(device.device_id);
-        this.markers.push(marker)
-        let position_in_marker_array = (this.markers.length -1);
+        this.device_markers.push(marker)
+        let position_in_marker_array = (this.device_markers.length -1);
 
         //set device trackers
         this.device_marker_tracker[i].push(position_in_marker_array);
@@ -408,6 +429,21 @@ export default {
         }
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
+    create_gateway_marker: async function(gateway){
+      let position = new google.maps.LatLng(gateway.gateway_latitude, gateway.gateway_longitude);
+      let marker = new google.maps.Marker({ 
+        position,
+        map: this.map,
+        label: `${gateway.gateway_id}`
+      });
+      this.gateway_markers.push(marker)
+      this.map.fitBounds(this.bounds.extend(position))
+      let info_window = new google.maps.InfoWindow();
+      this.set_gateway_info_window(marker, info_window, gateway)
+      var x = setInterval(this.refresh_gateway_marker, this.gateway_marker_refresh_interval, marker, info_window, gateway);//this is the syntax for it to work
+      this.cleartick_gateway.push(x); //adds the variable returned to the array in the same order as the gateway_data.. so the value returned in i will refer to the ith gateway in gateway_data
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
     refresh_device_marker:  async function(marker, info_window, device){
       device = await AuthenticationService.refresh_device_data_map(device.device_id)
         .catch(err => {
@@ -420,6 +456,18 @@ export default {
       let position = new google.maps.LatLng(device.gps_latitude, device.gps_longitude);
       marker.setPosition(position)
       this.set_device_info_window(marker, info_window, device);
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    refresh_gateway_marker: async function(marker,info_window,gateway){
+      gateway = await AuthenticationService.refresh_gateway_data_map(gateway.gateway_id, gateway.gateway_id_lora)
+        .catch(err => {
+          //Error gettin most recent 
+          console.log(err)
+        })
+      gateway = gateway.data.gateway_data;
+      let position = new google.maps.LatLng(gateway.gateway_latitude, gateway.gateway_longitude);
+      marker.setPosition(position)
+      this.set_gateway_info_window(marker, info_window, gateway);
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     set_device_info_window: function(marker, info_window, device){
@@ -458,6 +506,62 @@ export default {
                       <b>GPS Latitude:</b> ${device.gps_latitude}<br>
                       <b>GPS Longitude:</b> ${device.gps_longitude}<br>
                   </div>`;
+      google.maps.event.addListener(marker,'rightclick', (function(marker,content,info_window){ 
+        return function() {
+         x = 0
+            info_window.setContent(content);
+            info_window.open(this.map,marker);
+        };
+      })(marker,content,info_window));
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    set_gateway_info_window: function(marker, info_window, gateway){
+      var content;
+        content = `<div>
+                    <h3>Basic Gateway Information</h3>
+                      <b>Gateway Name:</b> ${gateway.gateway_name} <br>
+                      <b>Gateway ID LoRa:</b> ${gateway.gateway_id_lora} <br>
+                      <b>Gateway Description:</b> ${gateway.gateway_description} <br>
+                      <b>Network ID:</b> ${gateway.network_id}<br>
+                      <b>Gateway Latitude:</b> ${gateway.gateway_latitude}<br>
+                      <b>Gateway Longitude:</b> ${gateway.gateway_longitude}<br>
+                      <b>Gateway Altitude:</b> ${gateway.gateway_altitude}<br>
+                    </div>`;
+      //Open the infowindow for the gateway marker(ON MOUSE OVER)
+      let x = 0;
+      google.maps.event.addListener(marker,'mouseover', (function(marker,content,info_window){ 
+        return function() {
+            x = 1;
+            info_window.setContent(content);
+            info_window.open(this.map,marker);
+        };
+      })(marker,content,info_window));
+      //Close the infowindow for the gateway marker(ON MOUSE OUT)
+      google.maps.event.addListener(marker,'mouseout', (function(marker,content,info_window){ 
+          return function() {
+            if(x == 1){
+              info_window.close(this.map,marker);
+              x = 0;
+            }
+          };
+      })(marker,content,info_window));
+      //Right click
+      //Open the infowindow for the gateway marker(ON RIGHT CLICK)
+      if(gateway.time_stamp){
+        content = `<div>
+                      <h3>Gateway Statistics</h3>
+                        <b>Time Stamp</b>: ${gateway.time_stamp}<br>
+                        <b>Uplink Packets Received</b>: ${gateway.rx_packets_received}<br>
+                        <b>Uplink Packets Received Ok</b>: ${gateway.rx_packets_received_ok}<br>
+                        <b>Downlink Packets Received</b>: ${gateway.tx_packets_received}<br>
+                        <b>Downlink Packets Received Ok</b>: ${gateway.tx_packets_emitted}<br>
+                  </div>`;
+      }else{
+        content = `<div>
+                    <h3>Gateway Statistics</h3>
+                      No gateway stats available
+                  </div>`;
+      }
       google.maps.event.addListener(marker,'rightclick', (function(marker,content,info_window){ 
         return function() {
          x = 0
@@ -614,7 +718,7 @@ export default {
             this.cleartick_device_marker[i] = null ; 
             let length = this.device_marker_tracker[i].length; //anytime we switch to another option we delete the no tracking marker 
             let position = this.device_marker_tracker[i][(length-1)];
-            this.markers[(position)].setMap(null)
+            this.device_markers[(position)].setMap(null)
           }else if(previous_action == "real_time_tracking"){ //stops the polyline set interval of the device
             let holder  = this.cleartick_device_polyline[i];
             clearInterval(holder);
@@ -661,17 +765,27 @@ export default {
         })
     },
   //--------------------------------------------------------------------------------------------------------------------------------------------
-    clear_all_device_tracks: function(i){
+    clear_all_device_tracks: function(i, clear_all){
+      //if clear_all is set high (1) then this will clear all the makers associated with that deivce. Hence there will be no markers associated with that device again
+      //if it is set to 0 or null then it will leave the most recent marker for that device (jus remove the tracks)
       i = i-1
       for(let j = 0; j< (this.device_polyline_tracker[i].length); j++){
           this.device_polyline_tracker[i][j].setMap(null)
           this.device_polyline_tracker[i][j] = null;
       }
       let holder;
-      for(let j = 0; j< (this.device_marker_tracker[i].length - 1); j++){
-        holder = this.device_marker_tracker[i][j];
-        this.markers[holder].setMap(null)
+      if(clear_all ==1){
+        for(let j = 0; j< (this.device_marker_tracker[i].length); j++){
+          holder = this.device_marker_tracker[i][j];
+          this.device_markers[holder].setMap(null)
+        }
+      }else{
+        for(let j = 0; j< (this.device_marker_tracker[i].length - 1); j++){
+          holder = this.device_marker_tracker[i][j];
+          this.device_markers[holder].setMap(null)
+        }
       }
+
       this.device_polyline_tracker[i] = [];
       this.device_real_time_polyline_tracker[i] = [];
       this.device_real_time_marker_tracker[i] = [];
@@ -694,7 +808,7 @@ export default {
       for(let j = 0; j< (this.device_real_time_marker_tracker[i].length); j++){
         if(this.device_real_time_marker_tracker[i][j] || this.device_real_time_marker_tracker[i][j] == 0){
           holder = this.device_real_time_marker_tracker[i][j];
-          this.markers[holder].setMap(null)
+          this.device_markers[holder].setMap(null)
         }
       }
       this.device_real_time_tracking_data[i] = [];
@@ -713,7 +827,7 @@ export default {
       for(let j = 0; j< (this.device_historic_marker_tracker[i].length); j++){
         if(this.device_historic_marker_tracker[i][j]){
           holder = this.device_historic_marker_tracker[i][j];
-          this.markers[holder].setMap(null)
+          this.device_markers[holder].setMap(null)
         }
       }
       this.device_historic_tracking_data[i] = [];
@@ -755,10 +869,46 @@ export default {
       }
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
-    message_display(data){
-      this.snackbar=1;
-      this.color =data.type;
-      this.message = data.message;
+    clear_all_device_data: function(){
+      //This function clears all the information about all the devices being displayed on the map. It is used when the display device data is set to false
+      for(let i =0; i<this.cleartick_device_marker.length; i++){
+        let holder  = this.cleartick_device_marker[i];
+        clearInterval(holder);
+      }
+      for(let i =0; i<this.cleartick_device_polyline.length; i++){ //clear device polyline intervals
+        let holder  = this.cleartick_device_polyline[i];
+        clearInterval(holder);
+      }
+      for(let i =0; i< this.device_data.length; i++){
+        //Clear all the tracks associated with all the devices
+        this.clear_all_device_tracks(i+1, 1);
+      }
+        this.cleartick_device_marker = [];
+        this.cleartick_device_polyline = [];
+
+        this.device_marker_tracker = [];
+        this.device_real_time_marker_tracker = [];
+        this.device_historic_marker_tracker = [];
+
+        this.device_polyline_tracker = [];
+        this.device_real_time_polyline_tracker = [];
+        this.device_historic_polyline_tracker = [];
+
+        this.device_real_time_tracking_data = [];
+        this.device_historic_tracking_data = [];
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    clear_all_gateway_data: function(){
+      //This function clears all the information about all the gateways being displayed on the map. It is used when the display gateway data is set to false
+      for(let i = 0; i< (this.gateway_markers.length); i++){
+        this.gateway_markers[i].setMap(null)
+      }
+      for(let i =0; i<this.cleartick_gateway.length; i++){ //clear gateway intervals
+        let holder  = this.cleartick_gateway[i];
+        clearInterval(holder);
+      }
+      this.gateway_markers = [];
+      this.cleartick_gateway = [];
     }
   }
 };
@@ -768,8 +918,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .google-map {
-  width: 1200px;
-  height: 500px;
+  width: 100%;
+  height: 55vh;
   margin: 0 auto;
   background: gray;
 }

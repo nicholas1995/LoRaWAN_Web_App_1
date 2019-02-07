@@ -48,9 +48,6 @@ export default {
 
       gateway_marker_refresh_interval: 10000,
 
-      device_tracking_form: [], //an array of all the selected devices (id:name) that tracking should be enabled for 
-      device_tracking_form_old: [], //an array of all the previous selected devices (id:name) that tracking should be enabled for 
-
       cleartick_gateway: [], //arrary that holds all the clearticks to stop the setinterval for a gateways
 
       
