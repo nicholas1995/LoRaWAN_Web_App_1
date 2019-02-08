@@ -172,7 +172,7 @@ mixins: [validationMixin],
             break;
           }
         }
-        this.device_activation = await AuthenticationService.get_devices_activation(this.device_activate.device_eui)
+        this.device_activation = await AuthenticationService.get_device_activation(this.device_activate.device_eui)
           .catch(err => {
               //Error getting network to be updated information
               this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
@@ -255,7 +255,7 @@ mixins: [validationMixin],
         this.message ="Error in Form. Please fix and resubmit!"
       }else{
         this.message = "";
-        let result = await AuthenticationService.create_devices_activation({
+        let result = await AuthenticationService.create_device_activation({
           device_eui : this.device_activate.device_eui, 
           dev_addr : this.dev_addr,
           nwk_s_enc_key : this.nwk_s_enc_key,

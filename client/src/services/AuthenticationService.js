@@ -208,15 +208,15 @@ export default {
         return Api.delete(`/api/devices/${device_eui}`);
     },
     //Device Activation
-    get_devices_activation(device_eui) {
+    get_device_activation(device_eui) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.get(`/api/devices/activation/${device_eui}`);
     }, 
-    create_devices_activation(device_activation, device_eui) {
+    create_device_activation(device_activation, device_eui) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.post(`/api/devices/activation/${device_eui}`, { device_activation });
     }, 
-    delete_devices_activation() {
+    delete_device_activation() {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.delete(`/api/devices/activation/${device_eui}`);
     }, 
