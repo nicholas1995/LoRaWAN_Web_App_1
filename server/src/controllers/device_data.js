@@ -465,6 +465,23 @@ function convert_analsyt_filter_record_parameters_to_general_parameters_object(p
         console.log(err)
     }
 }
+function get_distance_km_from_lat_lng(lat1,lng1,lat2,lng2) {
+    var R = 6371; // Radius of the earth in km
+    var dstance_lat = deg_to_rad(lat2-lat1);  // deg_to_rad below
+    var distance_lng = deg_to_rad(lng2-lng1); 
+    var a = 
+      Math.sin(dstance_lat/2) * Math.sin(dstance_lat/2) +
+      Math.cos(deg_to_rad(lat1)) * Math.cos(deg_to_rad(lat2)) * 
+      Math.sin(distance_lng/2) * Math.sin(distance_lng/2)
+      ; 
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    var d = R * c; // Distance in km
+    return d;
+  }
+  
+  function deg_to_rad(deg) {
+    return deg * (Math.PI/180) 
+  }
 module.exports = {
     get: async function (req, res) {
         let device_data, headers;
@@ -837,6 +854,7 @@ module.exports = {
             let coordinate = JSON.parse(req.params.coordinate); 
             let buffer = generate_buffer_using_map_zoom(coordinate.zoom_level); //buffer is the square which is used to fetch the sensor data inside. The square is centered around the coordinate of the spot the user clicked
             coordinate = create_sensor_data_serch_coordinate_box(coordinate, buffer)
+            console.log(get_distance_km_from_lat_lng(coordinate.lat.min, coordinate.lng.min, coordinate.lat.max, coordinate.lng.max))
             let device_uplink_sensor_data = await DB.get_device_uplink_sensor_data_based_on_coordinates(coordinate)
                 .catch(err => {
                     throw err;
