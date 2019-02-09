@@ -6,6 +6,7 @@ const DEVICE_UPLINK_DB = require('../services/database/device_rx_db')
 const error_handler = require('./error_logs');
 
 
+
 function network_api_request_data(data, type) {
     let request;
     if (type == 0) {//get form 
@@ -73,15 +74,14 @@ async function get_networks(){
         let networks_lora = await lora_app_server.get_organizations(request_body) //error here
         .catch(err => {
             let error;
-             if(err.errno =="ECONNREFUSED"){
-                //Error connecting to the lora app server
-                 error = new VError('%s', err.message)
-             }else if (err.response.data.message != null){
-                 //Error returned from lora app server
-                error = new VError('%s' ,err.message);  
+            if(typeof err.response !== 'undefined') //if we got back a error response from the lora app server this will run
+            {
+                //Some error returned from the lora app server
+                error = error_handler.error_message(err)
             }else{
-                error = new VError('Unknown problem coneccting to lora app server')
-            }
+                //error connecting to the lora app server
+                error = error_handler.error_message(err);
+            }      
             throw error;  
         });  
     networks_lora = convert_names_networks(networks_lora.data.result);
@@ -89,10 +89,6 @@ async function get_networks(){
     }catch(err){
         throw err;
     }
-}
-function error_message(current_error_message, previous_error){
-    let error = new VError("%s : %s", current_error_message, previous_error);  
-    return error;
 }
 
 module.exports = {
@@ -104,22 +100,23 @@ module.exports = {
                 .catch(err => {
                     //Error getting networks from lora app server
                     error_location =0;
-                    throw error_message("get networks : lora app server", err.message);
+                    throw error_handler.error_message("from lora app server", err);
                 })
             let networks_db = await db.get_networks_not_deleted()
                 .catch(err => {
                     //error getting networks from db
                     error_location = 1;
-                    throw error_message("get networks : database", err.message);
+                    throw error_handler.error_message("from database", err.message);
                 }); 
             await compare.compare_networks(networks_lora, networks_db)
                 .catch(err => {
                     //Error comparing networks 
                     error_location = 1;
-                    throw error_message("get networks", err.message);
+                    throw error_handler.error_message("get networks", err.message);
                 });
             res.status(200).send({networks_lora: networks_lora, message: 'Networks fetched', type: 'success'});
         }catch(err){
+            err = error_handler.error_message("Error getting networks", err);
             error_handler.error_logger(req, err);
             if(error_location ==0){
                 res.status(500).send({ message: "Failed to get networks" , type: 'error'});
@@ -136,7 +133,7 @@ module.exports = {
             let networks_db = await db.get_networks().catch(err => {
               //error getting networks from db
               error_location = 1;
-              throw error_message("get networks : database", err.message);
+              throw error_handler.error_message("get networks : database", err.message);
             });
             res.status(200).send({ networks_db: networks_db, message: 'Networks fetched', type: 'success' });
             //console.log('Networks fetched from database')
@@ -155,13 +152,13 @@ module.exports = {
                 .catch(err => {
                     //error creating network on lora app server
                     error_location =0;
-                    throw error_message("create network : lora app server", err.message) ;
+                    throw error_handler.error_message("create network : lora app server", err.message) ;
                 });
             await db.create_network(result.data.id, data.network_name, data.network_display_name, data.network_can_have_gateways)
                 .catch(err => { 
                     //error creating network on db
                     error_location = 1;
-                    throw error_message("create network : database", err.message);
+                    throw error_handler.error_message("create network : database", err.message);
                 });
             res.status(201).send({ message: 'Network created', type: 'success' });
         }catch(err){
@@ -191,13 +188,13 @@ module.exports = {
                 .catch(err => {
                     //error updating network on lora app server
                     error_location = 0;
-                    throw error_message("update network : lora app server", err.message);
+                    throw error_handler.error_message("update network : lora app server", err.message);
                 });
             await db.update_networks_all_parameters(data, req.params.network_id)
                 .catch(err => {
                     //error updating network on database
                     error_location = 1;
-                    throw error_message("update network : database", err.message);
+                    throw error_handler.error_message("update network : database", err.message);
                 })
             res.status(200).send({ message: 'Network updated', type: 'success' });
         }catch(err){
@@ -225,19 +222,19 @@ module.exports = {
                 .catch(err => {
                     //error deleting network from lora app server
                     error_location = 0;
-                    throw error_message("delete network : lora app server", err.message);
+                    throw error_handler.error_message("delete network : lora app server", err.message);
                 });
             networks_lora = await get_networks()
                 .catch(err => {
                     //error getting networks from lora app server
                     error_location = 1;
-                    throw error_message("delete network : lora app server", err.message);
+                    throw error_handler.error_message("delete network : lora app server", err.message);
                 });
             await db.update_network("network_deleted", 1, req.params.network_id)
                 .catch(err => {
                     //error updating delete coloum from db
                     error_location = 2;
-                    throw error_message("delete network : lora app server", err.message);
+                    throw error_handler.error_message("delete network : lora app server", err.message);
                 });
             res.status(200).send({ networks_lora: networks_lora, message: 'Network deleted', type: 'success' });
         }catch(err){
