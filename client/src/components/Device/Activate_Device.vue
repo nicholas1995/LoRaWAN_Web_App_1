@@ -164,7 +164,7 @@ mixins: [validationMixin],
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         })
         for(let i = 0; i < this.devices.length; i++){
           if(this.devices[i].device_id == this.$route.params.device_id){
@@ -175,7 +175,7 @@ mixins: [validationMixin],
         this.device_activation = await AuthenticationService.get_device_activation(this.device_activate.device_eui)
           .catch(err => {
               //Error getting network to be updated information
-              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+              this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
             });
         this.device_activation = this.device_activation.data.device_activation;
         this.dev_addr = this.device_activation.dev_addr;
@@ -264,7 +264,7 @@ mixins: [validationMixin],
           n_f_cnt_down : this.n_f_cnt_down,
         }, this.device_activate.device_eui)
           .catch(err => {
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})       
           })
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$router.push(`/device`)

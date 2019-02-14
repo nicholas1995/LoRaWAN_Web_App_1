@@ -1,22 +1,12 @@
 <template>
   <v-content>
     <v-toolbar class="elevation-1" color="grey lighten-3">
-      <v-toolbar-title>Error Logs</v-toolbar-title>
+      <v-toolbar-title>ERROR LOGS</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
         vertical
       ></v-divider>
-      <v-spacer></v-spacer>
-      <v-toolbar-items class="hidden-sm-and-down ">
-        <v-tooltip bottom>
-          <v-icon large slot="activator"
-            class="mr-1 mt-3" @click.stop="$emit('create_network', networks)" >
-            add_box
-          </v-icon>
-          <span>Create Network</span>
-        </v-tooltip>
-    </v-toolbar-items>
     </v-toolbar>
     <v-data-table
       :headers="headers"

@@ -95,7 +95,7 @@ export default {
         //Get service profiles
         this.service_profiles = await AuthenticationService.get_service_profiles()
         .catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})     
         })
         this.service_profiles = this.service_profiles.data.service_profiles;
       }else{
@@ -128,7 +128,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a service_profile on the lora app server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         })
       }; 
     }

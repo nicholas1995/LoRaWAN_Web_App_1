@@ -233,7 +233,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         })
         for(let i = 0; i < this.devices.length; i++){
           if(this.devices[i].device_id == this.$route.params.device_id){
@@ -261,7 +261,7 @@ export default {
             }
           }).catch(err => {
             //Error getting network to be updated information
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
           });
         await AuthenticationService.get_device(this.device_update.device_eui).then(result =>{
             device = result.data.device;
@@ -271,7 +271,7 @@ export default {
             this.skip_frame_counter = device.skip_frame_counter
           }).catch(err => {
             //Error getting network to be updated information
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
           });
         this.device_profile_name_form = this.device_update.device_profile_name.concat(":",this.device_update.device_profile_id);
         for(let i =0; i<this.devices.length; i++){ //get the devices under the same sub_network
@@ -291,7 +291,7 @@ export default {
           }
         }).catch(err => {
           //Error getting networks from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         })
       }else{
         alert('Please login.');
@@ -348,7 +348,7 @@ export default {
         }).catch(err => {
           //Error trying to update device
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         })
       } 
     }

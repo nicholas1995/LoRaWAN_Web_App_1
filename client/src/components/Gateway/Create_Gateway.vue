@@ -539,7 +539,7 @@ export default {
             };
           }
         }).catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         });
         //Get Networks
         AuthenticationService.get_networks().then(result => {
@@ -556,7 +556,7 @@ export default {
             };
           }
         }).catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         })
         //Get Gateway Profiles
         AuthenticationService.get_gateway_profiles()
@@ -564,7 +564,7 @@ export default {
           this.gateway_profiles = result.data.gateway_profiles_lora;
         }).catch(err=> {
           //Error requesting service profiles from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         })
       }else{
         alert('Please login.');
@@ -626,7 +626,7 @@ export default {
         }).catch(err => {
           //Error trying to create subnetwork
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         }) 
       } 
     }

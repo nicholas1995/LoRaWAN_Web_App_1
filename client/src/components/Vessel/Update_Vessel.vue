@@ -93,7 +93,7 @@ export default {
             this.vessels = result.data.vessels_db;
             this.$emit('message_display',{message:result.data.message, type:result.data.type})   
           }).catch(err => {
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})       
           })
           for(let i = 0; i< this.vessels.length; i++){
             if(this.vessels[i].vessel_id == this.$route.params.vessel_id){
@@ -144,7 +144,7 @@ export default {
           this.$router.push(`/vessel`)
       }).catch(err => {
           this.message = err.response.data.error; 
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
       })
       }
     } 

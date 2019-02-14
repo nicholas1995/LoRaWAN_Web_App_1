@@ -155,7 +155,7 @@ export default {
                   this.$emit('message_display',{message:result.data.message, type:result.data.type})  
                 }).catch(err => {
                   //Error requesting the subnetworks from the server
-                  this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+                  this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})  
                 })
                 //Get Subnetwork to update
               this.sub_network = AuthenticationService.get_sub_network_one(this.$route.params.sub_network_id).then(result => {
@@ -173,7 +173,7 @@ export default {
               })
                   .catch(err => {
                     //Error getting network to be updated information
-                    this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+                    this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})  
                   });
 
             }else{
@@ -218,7 +218,7 @@ export default {
             this.$router.push(`/subnetwork`)
           }).catch(err => {
             this.message = err.response.data.error;
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})  
           })
       }
     }

@@ -453,7 +453,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type})   
         }).catch(err => {
           //Error requesting the gateways from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         })
         for(let i = 0; i< this.gateways.length; i++){
           if(this.$route.params.gateway_id == this.gateways[i].gateway_id){
@@ -479,7 +479,7 @@ export default {
               this.fpga_id = gateway.fpga_id;
             }).catch(err => {
               //Error getting gateway to be updated information
-              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+              this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
             });
         for(let i = 0; i< this.gateways.length; i++){
           if(this.gateways[i].network_id == this.network_id){
@@ -497,7 +497,7 @@ export default {
           }
         }).catch(err => {
           //Error getting network servers from lora app server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         });
         AuthenticationService.get_gateway_profiles().then(result => {
           this.gateway_profiles = result.data.gateway_profiles_lora;
@@ -514,7 +514,7 @@ export default {
           }
         }).catch(err=> {
           //Error requesting service profiles from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         })
       }else{
         alert('Please login.');
@@ -577,7 +577,7 @@ export default {
         }).catch(err => {
           //Error trying to create subnetwork
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         }) 
       } 
     }

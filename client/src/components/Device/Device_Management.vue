@@ -132,7 +132,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         })
       }else{
         alert('Please login.');
@@ -162,7 +162,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error deleting device 
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         })
       };
     }, 

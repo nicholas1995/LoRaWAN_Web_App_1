@@ -84,13 +84,13 @@ export default {
       }
     }).catch(err => {
       //Error getting networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+      this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
     })
     AuthenticationService.get_gateways_database().then(result => {
       this.gateways = result.data.gateways;
     }).catch(err => {
       //Error getting networks from server
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+      this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
     })
   },
   watch: {

@@ -158,7 +158,7 @@
                     <v-select
                       :items="network_names"
                       v-model="network_name_form"
-                      label="Network"
+                      label="Organization"
                     >
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_network"></tool_tips_forms>
                     </v-select>
@@ -166,7 +166,7 @@
                     <v-select
                       :items="sub_network_names"
                       v-model="sub_network_name_form"
-                      label="Sub-Network"
+                      label="Application"
                     >
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_sub_network"></tool_tips_forms>
                     </v-select>

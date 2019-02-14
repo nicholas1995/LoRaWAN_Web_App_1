@@ -391,7 +391,7 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
         }).catch(err => {
           //Error getting the devices from the server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    
         })
         //Get Networks
         AuthenticationService.get_networks().then(result => {
@@ -407,27 +407,27 @@ export default {
           }
         }).catch(err => {
           //Error getting networks from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         })
         //Get Subnetworks
         AuthenticationService.get_sub_networks().then(result => {
           this.sub_networks_lora = result.data.sub_networks_lora;
         }).catch(err => {
           //Error getting sub-networks from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})     
         })
         //Get Device Profiles
         AuthenticationService.get_device_profiles().then(result => { //Fetch Device Profiles
           this.device_profiles = result.data.device_profiles_lora;
         }).catch(err=> {
           //Error requesting device profiles from server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})     
         })
         //Get Vessels
         AuthenticationService.get_vessels(null, 0).then(result => { //Fetch Vessels
           this.vessels = result.data.vessels_db; 
         }).catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})         
         })
       }else{
         alert('Please login.');
@@ -484,7 +484,7 @@ export default {
         }).catch(err => {
           //Error trying to create device
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})     
         })
       } 
     }

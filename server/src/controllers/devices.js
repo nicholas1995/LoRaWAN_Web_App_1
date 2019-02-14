@@ -281,7 +281,7 @@ module.exports = {
                         //error getting devices from db
                         error_location = 1;
                         throw error.error_message("get devices : database", err.message);
-                    });
+                    }); 
                 for(let i = 0; i< devices_added.length; i++){
                     for(let j = 0; j< devices_db.length; j++){
                         if(devices_added[i] == devices_db[j].device_eui){

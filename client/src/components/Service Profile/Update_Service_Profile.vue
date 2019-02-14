@@ -250,7 +250,7 @@ mixins: [validationMixin],
         //Get Service Profiles
         this.service_profile_update = await AuthenticationService.get_service_profile(this.$route.params.service_profile_id_lora)
         .catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})       
         })
         this.service_profile_update = this.service_profile_update.data.service_profiles;
         this.service_profile_name = this.service_profile_update.service_profile_name
@@ -349,7 +349,7 @@ mixins: [validationMixin],
           this.$router.push(`/service_profile`)
         }).catch(err => {
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})     
         })
       }
     }

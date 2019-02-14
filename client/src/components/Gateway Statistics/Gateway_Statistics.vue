@@ -176,7 +176,7 @@ export default {
         this.data = await AuthenticationService.get_gateway_statistics_initial()
           .catch(err => {
             //Error getting the gateway stats from the server
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
             throw err;
             })
         if(this.data.status == 204){ //No data returned
@@ -313,7 +313,7 @@ export default {
         let result = await AuthenticationService.gateway_statistics_filtered(this.filter_parameters, this.value)
             .catch(err => {
               //Error getting the gateway statistics from the server
-              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+              this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
               throw err;
               }) 
         this.gateway_statistics = result.data.gateway_statistics;
