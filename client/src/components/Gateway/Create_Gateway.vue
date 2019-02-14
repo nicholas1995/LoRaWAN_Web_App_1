@@ -389,10 +389,10 @@ export default {
       const errors=[];
       if (!this.$v.gateway_altitude.$error)return errors
       !this.$v.gateway_altitude.required && errors.push('Gateway altitude is required.')  
-      !this.$v.gateway_altitude.numeric && errors.push('Gateway altitude must be a number.')     
+      !this.$v.gateway_altitude.numeric && errors.push('Gateway altitudez must be a number.')     
       !this.$v.gateway_altitude.num && errors.push('Reference altitude cannot start with 0.')     
       return errors;
-    },
+    }, 
     gateway_latitude_Errors(){
       const errors=[];
       if (!this.$v.gateway_latitude.$error)return errors

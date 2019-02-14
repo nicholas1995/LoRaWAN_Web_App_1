@@ -160,7 +160,7 @@ module.exports = {
                     error_location = 1;
                     throw error_handler.error_message("create network : database", err.message);
                 });
-            res.status(201).send({ message: 'Network created', type: 'success' });
+            res.status(201).send({ message: 'Organization created', type: 'success' });
         }catch(err){
             error_handler.error_logger(req, err);
             //e_l =0 (problem creating network)
@@ -196,7 +196,7 @@ module.exports = {
                     error_location = 1;
                     throw error_handler.error_message("update network : database", err.message);
                 })
-            res.status(200).send({ message: 'Organizations updated', type: 'success' });
+            res.status(200).send({ message: 'Organization updated', type: 'success' });
         }catch(err){
             error_handler.error_logger(req, err);
             //e_l =0 (problem updating network)
