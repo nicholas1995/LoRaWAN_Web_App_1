@@ -53,6 +53,13 @@ module.exports = {
         WHERE email ='${email}'`;
         return db.queryAsync(sql);
     },
+    activate_user_account: function (email) {
+        //This is used to set the activate flag for a given users account high. (highs activated.. low means not)
+        let sql = `UPDATE users
+        SET user_account_activation = '1'
+        WHERE email ='${email}'`;
+        return db.queryAsync(sql);
+    },
     update_profile: function (data) {
         let sql = `UPDATE users
         SET first_name= '${data.first_name}', last_name= '${data.last_name}', user_country= '${data.user_country}', user_city= '${data.user_city}', 

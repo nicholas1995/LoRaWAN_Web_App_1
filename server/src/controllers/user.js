@@ -8,6 +8,8 @@ const user_db = require('../services/database/users_db');
 const devices_db = require("../services/database/devices_db");
 const USER_VESSEL_DB = require("../services/database/user_vessel_db");
 const db_user_reset_password_token = require("../services/database/user_reset_password_token_db");
+const db_activate_user_account_token = require("../services/database/activate_user_account_token_db");
+
 
 
 
@@ -155,6 +157,171 @@ module.exports = {
       console.log(err);
     }  
   },
+  //This is the new create user which uses the token instead of the random pw
+  create_new: async function(req, res){
+    try{
+      let data = req.body.user;
+      await user_db.add_user(data, 'null')
+      .catch((err) => {
+        throw err;
+      }); 
+      let user = await user_db.get_profile(data.email)
+        .catch(err => {
+          //Error fetching the user account information of the previously created account
+          //We do this to get the id of the associated account.
+          throw err;
+        })
+      let user_JSON = {
+        email: `${data.email}`,
+        user_id:  `${user[0].id}`
+      }
+      let token =  jwt.jwt_activate_account(user_JSON);
+      var mailOptions = {
+        from: 'lorawanconsole@gmail.com',
+        to: data.email,
+        subject: 'Activate Account',
+        html: `<h2>Good Day ${data.first_name},</h2> 
+        <p>An account has been created using your email address for the Private Marine IoT Network Web Based Console.<br> 
+        You have been granted ${data.user_class} privilages. Click <b><a href="http://localhost:8081/#/user/activate/${token}">here</a></b> to activate your account and create a password.<br>
+        <b>This link is only valid for the next 48 hours.</b>
+        </p>
+        
+        Thank You,<br>
+        The Private Marine IoT Network Web Based Console Team`,
+        };
+        await email.transporter.sendMail(mailOptions)
+        .catch(err => {
+          throw err;
+        })
+        console.log('email sent')
+        await db_activate_user_account_token.create_activate_user_account_token(token, user[0].id)
+        .catch(err => {
+          //Error creating token in black list
+          throw err;
+        })
+      if (data.vessels.length > 0 ){
+        for(let i =0; i< data.vessels.length; i++){
+          await USER_VESSEL_DB.create_user_vessel_relationship(user[0].id, data.vessels[i])
+            .catch(err => {
+              //Error adding a user device eui to the database
+              throw err;
+            })
+        }
+      };  
+      res.status(200).send({message: 'User created.', type: 'success' });
+    }catch(err){
+      console.log(err);
+    }  
+  },
+  resend_activate_account_request : async function(req, res, token_old, user_information){
+    //This resends the email to the user to activate their acount after the initial link expired
+    try{  
+        await db_activate_user_account_token.delete_activate_user_account_token(token_old)
+        .catch(err => {
+          //Error deleting token in black list
+          throw err;
+        })
+        let user_JSON = {
+          email: `${user_information.email}`,
+          user_id: `${user_information.user_id}`,
+        }
+        let token =  jwt.jwt_activate_account(user_JSON)
+        var mailOptions = {
+          from: 'lorawanconsole@gmail.com',
+          to: user_information.email, 
+          subject: 'Activate Account',
+          html: `<h2>Good Day,</h2> 
+          <p>An account has been created using your email address for the Private Marine IoT Network Web Based Console.<br> 
+          However, the previous link expired. Please click <b><a href="http://localhost:8081/#/user/activate/${token}">here</a></b> to activate your account and create a password.<br>
+          <b>This link is only valid for the next 48 hours.</b>
+          </p>
+          
+          Thank You,<br>
+          The Private Marine IoT Network Web Based Console Team`,
+          };
+          await email.transporter.sendMail(mailOptions)
+            .catch(err => {
+              throw err;
+            })
+          await db_activate_user_account_token.create_activate_user_account_token(token, user_information.user_id)
+          .catch(err => {
+            //Error creating token in black list
+            throw err;
+          })
+          console.log('Email Sent')
+          res.status(401).send({ error: "Token previously expired. Please check email for new account activation link." });
+    }catch(err){
+      console.log(err)
+    }
+  },
+  activate_account: async function(req, res){
+    try{
+      let error_location = null;
+      let password = req.body.data.password
+      let result = await user_db.get_profile(req.user.email)
+      .catch(err => {
+        //Error getting user form database using email to find
+        throw err;
+      })
+      if (result == "") {//Email does not exists 
+
+      }
+      else{
+        if(result[0].user_account_activation == 1 ){//Correct email but account already activated
+          res.status(403).send({ message: "Account already activated. This is an old link." });
+        }else{
+          let encrypted_password = await encrypt(password)
+          .catch(err => {
+            //Error encrypting pw
+            throw err;
+          });
+          await user_db.update_user_pw(encrypted_password, req.user.email)
+              .catch(err => {
+                //Error updating user pw
+                error_location = 0;
+                throw err;
+              })
+              await user_db.activate_user_account(req.user.email)
+                .catch(err => {
+                  //Error setting user_account_activation flag
+                  throw err;
+                })
+           //Password Updated.... Now we are going to login the user
+          let result = await user_db.get_profile(req.user.email)
+          .catch(err => {
+            //Error getting user form database using email to find(Password updated)
+            error_location = 1;
+            throw err;
+          })
+          let userJSON = toJSON(result);
+                let data = {
+                  user: userJSON,
+                  user_class: result[0].user_class,
+                  token: jwt.jwtUserSignin(userJSON), 
+                  message: 'Successful Login',
+                  user_name: (result[0].first_name + " " + result[0].last_name)
+                }
+          let token = req.headers.authorization
+          token = token.slice(7)
+          await db_activate_user_account_token.delete_activate_user_account_token(token)
+          .catch(err => {
+            throw err;
+          })
+          res.status(200).send(data); 
+        }
+      }
+    }catch(err){
+      console.log(err)
+      if(error_location ==0){
+          res.status(500).send({ message: "Failed update password" , type: 'error'});
+      }
+      else if(error_location ==1){
+          res.status(200).send({ message: "Password Updated. Failed to login", type: 'info'})
+      }else{
+          res.status(500).send({ message: 'Server Error', type: 'error'})
+      }
+    }
+  },
   //Update User
   update: async function (req, res) {
     try {
@@ -238,6 +405,8 @@ module.exports = {
       else{
         if(result[0].user_reset_password == 1 ){//Correct email but password requested to be reset. PREVENT LOGIN
           res.status(403).send({ message: "Password requested to be changed. Please check email for instructions." });
+        }else if(result[0].user_account_activation == 0 ){//Correct email but account not activated
+          res.status(403).send({ message: "Please check email address for link to activte your account. Once activated you can login." });
         }else{
           let encryted_data = await compare(data.password, result[0].password)
           .catch(err => {
@@ -324,7 +493,6 @@ module.exports = {
 
     }
   }, 
-
   //Get Profile Information
   profile_get: async function(req,res){
     let user_information;
@@ -413,29 +581,31 @@ module.exports = {
         })
       if (result == "") {//Email does not exists (sends this message so they user will not be able to fish for emails)
         res.status(403).send({ message: "Check email for instructions to reset your password. If no email received ensure that email entered above is correct." });
-      }
-      else{
+      }else if(result[0].user_account_activation == 0 ){//Correct email but account not activated
+        res.status(403).send({ message: "Account not activated. Please check email for activation link." });
+      }else{
         if(result[0].user_reset_password == 1 ){//Correct email but password requested to be reset. PREVENT LOGIN
-          res.status(403).send({ message: "Password requested to be changed. Please check email for instructions." });
+          res.status(403).send({ message: "Password previously requested to be changed. Please check email for instructions." });
         }else{
           let user_JSON = {
-            email: `${req.body.email}`
+            email: `${req.body.email}`,
+            user_id: `${result[0].id}`
           }
           let token =  jwt.jwt_user_reset_pw(user_JSON)
           var mailOptions = {
             from: 'lorawanconsole@gmail.com',
             to: req.body.email,
             subject: 'Password Reset',
-            html: `<h2>Good Day ${result[0].first_name}</h2> 
-            <p>You recently requested to reset your password for your Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
+            html: `<h2>Good Day ${result[0].first_name},</h2> 
+            <p>You recently requested to reset your password for your Private Marine IoT Network Web Based Console account.
+            <br> Click <b><a href="http://localhost:8081/#/user/reset_password/${token}">here</a></b> to reset it. 
             <b>This password reset link is only valid for the next 24 hours.</b>
             </p>
-            <p>Link: http://localhost:8081/#/user/reset_password/${token}</p>
   
             Thank You,<br>
             The Private Marine IoT Network Web Based Console Team`,
             };
-            let email_result = await email.transporter.sendMail(mailOptions)
+            await email.transporter.sendMail(mailOptions)
               .catch(err => {
                 throw err;
               })
@@ -444,7 +614,7 @@ module.exports = {
                 //Error setting user_reset_password flag
                 throw err;
               })
-              await db_user_reset_password_token.create_user_reset_password_token(token, req.body.email)
+              await db_user_reset_password_token.create_user_reset_password_token(token, result[0].id)
               .catch(err => {
                 //Error creating token in black list
                 throw err;
@@ -467,18 +637,19 @@ module.exports = {
         throw err;
       })
           let user_JSON = {
-            email: `${user_information.user_email}`
+            email: `${user_information.email}`,
+            user_id: `${user_information.user_id}`
           }
           let token =  jwt.jwt_user_reset_pw(user_JSON)
           var mailOptions = {
             from: 'lorawanconsole@gmail.com',
-            to: user_information.user_email,
+            to: user_information.email,
             subject: 'Password Reset',
-            html: `<h2>Good Day</h2> 
-            <p>You recently requested to reset your password for your Private Marine IoT Network Web Based Console account.<br> Click the link below to reset it. 
+            html: `<h2>Good Day,</h2> 
+            <p>You recently requested to reset your password for your Private Marine IoT Network Web Based Console account.
+            <br>Click <b><a href="http://localhost:8081/#/user/reset_password/${token}">here</a></b> to reset it. 
             <b>This password reset link is only valid for the next 24 hours.</b>
             </p>
-            <p>Link: http://localhost:8081/#/user/reset_password/${token} </p>
   
             Thank You,<br>
             The Private Marine IoT Network Web Based Console Team`,
@@ -487,7 +658,7 @@ module.exports = {
               .catch(err => {
                 throw err;
               })
-              await db_user_reset_password_token.create_user_reset_password_token(token, user_information.user_email)
+              await db_user_reset_password_token.create_user_reset_password_token(token, user_information.user_id)
               .catch(err => {
                 //Error creating token in black list 
                 throw err;

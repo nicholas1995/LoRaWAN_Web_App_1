@@ -42,9 +42,9 @@ export default {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
         return Api.put(`/api/users/${user_id}`, {user});
     },
-    delete_users(id) {
+    delete_users(user_id) {
         Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-        return Api.delete(`/api/users/${id}`);
+        return Api.delete(`/api/users/${user_id}`);
     },
 
     //Profile
@@ -66,13 +66,24 @@ export default {
         return Api.post("/api/reset_password_request", { email });
     },
     check_reset_password_token(reset_password_token){
+        //This checks to ensure that the reset password link token is valid
         Api.defaults.headers.common['Authorization'] = `bearer ${reset_password_token}`;
         return Api.get("/api/check_reset_password_token");
+    },
+    check_activate_account_token(activate_account_token){
+        //This checks to ensure that the activate user account link token is valid
+        Api.defaults.headers.common['Authorization'] = `bearer ${activate_account_token}`;
+        return Api.get("/api/check_activate_account_token");
     },
     reset_password(reset_password_token, data){
         Api.defaults.headers.common['Authorization'] = `bearer ${reset_password_token}`;
         return Api.put("/api/reset_password", { data });
     },
+    activate_account(activate_account_token, data){
+        Api.defaults.headers.common['Authorization'] = `bearer ${activate_account_token}`;
+        return Api.put("/api/user/activate_account", { data });
+    },
+    
 
     get_user_vessels(user_id) {//we pick the uri this way because its a software admin ability 
         //and since in the acl they can view all users we will put users first 

@@ -139,6 +139,7 @@
         </v-tabs>
       </div>
     </div>
+    <br>
     <div class="google-map" :id="map_name" ></div>
   </v-content>
 </template>

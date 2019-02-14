@@ -51,7 +51,7 @@ module.exports = ((app) => {
     app.get("/api/users", authenticate.authenticate, grant_access, user.get);
 
     //Users (Create)
-    app.post("/api/users", authenticate.authenticate, grant_access, user_policy.create, user.create);
+    app.post("/api/users", authenticate.authenticate, grant_access, user_policy.create, user.create_new);
 
     //Users (Update)
     app.put("/api/users/:user_id", authenticate.authenticate, grant_access, user_policy.update, user.update); 
@@ -75,8 +75,16 @@ module.exports = ((app) => {
     //This checks to ensure that the reset password link token is valid
     app.get("/api/check_reset_password_token", authenticate.authenticate_reset_password_token)
 
+    //This checks to ensure that the activate users account link token is valid
+    app.get("/api/check_activate_account_token", authenticate.authenticate_activate_account_token)
+
     //This resets the user password
     app.put("/api/reset_password",authenticate.authenticate_reset_password_token, user.reset_password)
+
+    //This resets the user password
+    app.put("/api/user/activate_account",authenticate.authenticate_activate_account_token, user.activate_account)
+
+    
 
     //Users (Get vessels for an individual user)
     app.get("/api/users/vessels/:user_id", authenticate.authenticate, grant_access, user.get_user_vessels);

@@ -13,4 +13,10 @@ function jwt_user_reset_pw(user){
     });
 }
 
-module.exports = {jwtUserSignin, jwt_user_reset_pw};
+function jwt_activate_account(user){
+    return jwt.sign(user, config.authentication.jwtSecret, {
+        expiresIn: '48h'
+    });
+}
+
+module.exports = {jwtUserSignin, jwt_user_reset_pw,jwt_activate_account};

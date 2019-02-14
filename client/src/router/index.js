@@ -54,6 +54,7 @@ import User from "../components/User/User_Management.vue"
 import Create_User from "../components/User/Create_User.vue"
 import Update_User from "../components/User/Update_User.vue"
 import Reset_Password from "../components/User/Reset_Password.vue"
+import Activate_Account from "../components/User/Activate_Account.vue"
 
 import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
@@ -273,6 +274,11 @@ export default new Router({
       path: "/user/reset_password/:reset_password_token",
       name: "reset_password",
       component: Reset_Password
+    },
+    {
+      path: "/user/activate/:activate_account_token",
+      name: "activate_account",
+      component: Activate_Account
     },
 
 
