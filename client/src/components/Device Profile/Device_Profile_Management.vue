@@ -73,7 +73,7 @@ export default {
           { text: 'Device Profile ID LoRa', value: 'device_profile_id_lora' ,sortable: true},
           { text: 'Device Profile Name', value: 'device_profile_name' , sortable: false },
           { text: 'Network Server ID', value: 'network_server_id' , sortable: false },
-          { text: 'Network ID', value: 'network_id', sortable: false },
+          { text: 'Organization ID', value: 'network_id', sortable: false },
           { text: 'Created At', value: 'device_profile_created_at', sortable: true },
           { text: 'Updated At', value: 'device_profile_updated_at', sortable: true },
         ],

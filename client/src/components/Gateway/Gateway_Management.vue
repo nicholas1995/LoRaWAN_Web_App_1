@@ -1,7 +1,7 @@
 <template>
   <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1 primary" >
-      <v-toolbar-title>Gateways</v-toolbar-title>
+      <v-toolbar-title>GATEWAYS</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -74,7 +74,7 @@ export default {
           { text: 'Gateway ID LoRa', value: 'gateway_id_lora' , sortable: false },
           { text: 'Gateway Name', value: 'gateway_name' , sortable: false },
           { text: 'Description', value: 'gateway_description' ,sortable: false},
-          { text: 'Network ID', value: 'network_id' , sortable: true },
+          { text: 'Organization ID', value: 'network_id' , sortable: true },
           { text: 'Network Server ID', value: 'network_server_id' , sortable: true },
           { text: 'Created At', value: 'created_at_time_stamp', sortable: true },
           { text: 'Updated At', value: 'updated_at_time_stamp', sortable: true },

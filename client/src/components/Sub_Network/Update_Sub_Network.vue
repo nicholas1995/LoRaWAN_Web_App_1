@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary ">
-              <v-toolbar-title>Update Sub-Network</v-toolbar-title>
+              <v-toolbar-title>Update Application</v-toolbar-title>
             </v-toolbar>
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="sub_network_name"
-                label= 'Sub-Network Name*'
+                label= 'Application Name*'
                 :error-messages = "sub_network_name_Errors"
                 @keyup="$v.sub_network_name.$touch() && $v.u.$touch()" 
               >
@@ -46,7 +46,7 @@
             <!-- Buttons -->
               <v-btn class="button"
                 @click.stop="update_sub_network()">
-                Update Sub-Network
+                Update Application
               </v-btn>
              <v-btn class="button"
                 @click.stop="$router.push(`/subnetwork`)">
@@ -105,10 +105,10 @@ export default {
     sub_network_name_Errors(){
       const errors=[];
       if (!this.$v.sub_network_name.$error)return errors
-      !this.$v.sub_network_name.u && errors.push('Sub-Network name must be unique')
+      !this.$v.sub_network_name.u && errors.push('Name must be unique')
       !this.$v.sub_network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
-      !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer.')
-      !this.$v.sub_network_name.required && errors.push('Sub-Network name is required.')
+      !this.$v.sub_network_name.maxLength && errors.push('Name must be 20 characters or longer.')
+      !this.$v.sub_network_name.required && errors.push('Name is required.')
       return errors;
     },
     sub_network_description_Errors(){

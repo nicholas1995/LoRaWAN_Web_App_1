@@ -1,7 +1,7 @@
 <template>
   <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1 primary" >
-      <v-toolbar-title>NETWORKS</v-toolbar-title>
+      <v-toolbar-title>ORGANIZATIONS</v-toolbar-title>
       <v-divider
         class="mx-2 secondary"
         inset
@@ -14,7 +14,7 @@
             class="mr-1 mt-3" @click.stop="$router.push(`/network/create`)" >
             add_box
           </v-icon>
-          <span>Create Network</span>
+          <span>Create Organization</span>
         </v-tooltip>
     </v-toolbar-items>
     </v-toolbar>
@@ -68,8 +68,8 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
-          { text: 'Network ID', value: 'network_id' ,sortable: true},
-          { text: 'Network Name', value: 'network_name' , sortable: false },
+          { text: 'Organization ID', value: 'network_id' ,sortable: true},
+          { text: 'Organization Name', value: 'network_name' , sortable: false },
           { text: 'Display Name', value: 'network_display_name' , sortable: false },
           { text: 'Can Have Gateways', value: 'network_can_have_gateways', sortable: false },
           { text: 'Created At', value: 'network_created_at', sortable: true },

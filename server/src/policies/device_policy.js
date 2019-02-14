@@ -37,7 +37,7 @@ module.exports = {
                 case 'sub_network_id':
                     console.log("error in device form : sub_network_id");
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid sub-network ID.', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Application ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'vessel_id':
                     console.log("error in device form : vessel id");
@@ -107,7 +107,7 @@ module.exports = {
                 case 'sub_network_id':
                     console.log("error in device form : sub_network_id");
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid sub-network ID.', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Application ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'vessel_id':
                     console.log("error in device form : vessel_id");

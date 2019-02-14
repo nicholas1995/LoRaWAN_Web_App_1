@@ -15,12 +15,12 @@ module.exports = {
                 case 'network_name':
                     console.log('error in network form: network_name')
                     error_logger.error_logger(req, error)
-                    res.status(422).send({error:'Invalid Network Name', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({error:'Invalid Organization Name', message: 'Error in form.', type: 'error'});
                     break;
                 case 'network_display_name':
                     console.log('error in network form: display name')
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Network Display Name', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization Display Name', message: 'Error in form.', type: 'error'});
                     break;
                 case 'network_can_have_gateways':
                     console.log('error in network form: can_have_gateways')

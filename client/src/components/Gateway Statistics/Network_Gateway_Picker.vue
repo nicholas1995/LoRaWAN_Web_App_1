@@ -5,7 +5,7 @@
         <v-select
           v-model="network_name_form"
           :items="this.network_names"
-          label="Network"
+          label="Organization"
           clearable
           multiple
           prepend-icon="domain"

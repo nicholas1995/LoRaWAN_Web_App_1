@@ -27,7 +27,7 @@ module.exports = {
                 case 'network_id':
                     console.log('network_id')
                     error_logger.error_logger(req, error)
-                    res.status(422).send({ error: 'Invalid Network ID', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization ID', message: 'Error in form.', type: 'error'});
                     break;
                 case 'network_server_id':
                     console.log("network_server_id");

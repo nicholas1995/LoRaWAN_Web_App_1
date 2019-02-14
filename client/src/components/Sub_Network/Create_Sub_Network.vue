@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary ">
-              <v-toolbar-title>Create Sub-Network</v-toolbar-title>
+              <v-toolbar-title>Create Application</v-toolbar-title>
             </v-toolbar>
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="sub_network_name"
-                label="Sub-Network Name*"
+                label="Application Name*"
                 :error-messages = "sub_network_name_Errors"
                 @keyup="$v.sub_network_name.$touch() && $v.u.$touch()" 
               >
@@ -37,7 +37,7 @@
               <v-select
                 v-model="network_name_form"
                 :items="this.network_names"
-                label="Network*"
+                label="Organization*"
                 :error-messages = "network_name_form_Errors"
                 @blur="$v.network_name_form.$touch()" 
               >
@@ -70,7 +70,7 @@
               <!-- Buttons -->
               <v-btn class="button"
                 @click.stop="create_sub_network()">
-                Create Sub-Network
+                Create Application
               </v-btn>
               <v-btn class="button"
                 @click.stop="$router.push(`/subnetwork`)">
@@ -141,10 +141,10 @@ export default {
     sub_network_name_Errors(){
       const errors=[];
       if (!this.$v.sub_network_name.$error)return errors
-      !this.$v.sub_network_name.u && errors.push('Sub-Network name must be unique')
+      !this.$v.sub_network_name.u && errors.push('Name must be unique')
       !this.$v.sub_network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
-      !this.$v.sub_network_name.maxLength && errors.push('Sub-Network name must be 20 characters or longer.')
-      !this.$v.sub_network_name.required && errors.push('Sub-Network name is required.')
+      !this.$v.sub_network_name.maxLength && errors.push('Name must be 20 characters or longer.')
+      !this.$v.sub_network_name.required && errors.push('Name is required.')
       return errors;
     },
     sub_network_description_Errors(){
@@ -157,7 +157,7 @@ export default {
     network_name_form_Errors(){
       const errors=[];
       if (!this.$v.network_name_form.$error)return errors
-      !this.$v.network_name_form.required && errors.push('Network is required.')
+      !this.$v.network_name_form.required && errors.push('Organization is required.')
       return errors;
     },
     service_profile_form_Errors(){
@@ -222,7 +222,7 @@ export default {
       }
       if(this.service_profile_names.length == 0){
         //This will route the user to the create service profile page if no service profiles exists under selected network
-        if(confirm('No Service Profiles under selected Network. Route to Create Service Profile Page?') == true){
+        if(confirm('No Service Profiles under selected Organization. Route to Create Service Profile Page?') == true){
           this.$router.push(`/service_profile/create`)
         };
       }
@@ -247,7 +247,7 @@ export default {
             }
             if(this.network_names.length == 0){
               //This will route the user to the create network page if no networks exists 
-              if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+              if(confirm('There are no created Organizations. Route to the Create Organization Page?') == true){
                 this.$router.push(`/network/create`)
               };
             }

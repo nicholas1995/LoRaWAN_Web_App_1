@@ -36,7 +36,7 @@ module.exports = {
                 case 'network_id':
                     console.log('error in device profile form: network_id')
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Network', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_profile_name':
                     console.log('error in device profile form: device_profile_name')
@@ -167,7 +167,7 @@ module.exports = {
                 case 'network_id':
                     console.log('error in device profile form: network_id')
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Network', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization', message: 'Error in form.', type: 'error'});
                     break;
                 case 'device_profile_name':
                     console.log('error in device profile form: device_profile_name')

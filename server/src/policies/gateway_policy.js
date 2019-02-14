@@ -42,7 +42,7 @@ module.exports = {
                 case 'network_id':
                     console.log("error in gateway form :network_id");
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid network ID.', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'network_server_id':
                     console.log("error in gateway form :network_server_id");
@@ -148,7 +148,7 @@ module.exports = {
                 case 'network_id':
                     console.log("error in gateway form :network_id");
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid network ID.', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization ID.', message: 'Error in form.', type: 'error'});
                     break;
                 case 'network_server_id':
                     console.log("error in gateway form :network_server_id");

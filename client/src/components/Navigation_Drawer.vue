@@ -49,8 +49,8 @@ export default {
     return {
       drawer: null,
             items_all: [
-          { title: 'Network', icon: 'domain'}, //0
-          { title: 'Sub-Network', icon: 'apps'}, //1
+          { title: 'Organization', icon: 'domain'}, //0
+          { title: 'Application', icon: 'apps'}, //1
           { title: 'Service Profile', icon: 'error'}, //2
           { title: 'Vessel', icon: 'directions_boat'}, //3
           { title: 'Gateway', icon: 'settings_input_antenna'}, //4
@@ -83,9 +83,9 @@ export default {
     login(item){
       if(item=="Account Management"){
         this.$router.push('/user'); 
-      }else if(item=="Network"){
+      }else if(item=="Organization"){
         this.$router.push('/network'); 
-      }else if(item=="Sub-Network"){
+      }else if(item=="Application"){
         this.$router.push('/subnetwork'); 
       }else if(item=="Service Profile"){
         this.$router.push('/service_profile'); 

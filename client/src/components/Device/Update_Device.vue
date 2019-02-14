@@ -254,8 +254,8 @@ export default {
               }
             }
             if(this.vessel_names.length == 0){
-              //This will route the user to the create vessel page if no vessel is associated with the selected sub-network 
-              if(confirm('There are no associated Vessels with the selected Sub-Network. Route to the Create Vessel Page?') == true){
+              //This will route the user to the create vessel page if no vessel is associated with the selected application 
+              if(confirm('There are no associated Vessels with the selected Application. Route to the Create Vessel Page?') == true){
                 this.$router.push(`/vessel/create`)
               };
             }

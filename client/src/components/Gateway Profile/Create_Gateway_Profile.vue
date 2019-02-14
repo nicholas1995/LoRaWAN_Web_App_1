@@ -19,7 +19,7 @@
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
             <v-form>
-              <!--Network Name -->
+              <!--Gateway Profile Name -->
                 <v-flex >
                   <v-text-field
                     v-model="gateway_profile_name"

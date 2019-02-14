@@ -2,10 +2,10 @@
   <v-content v-if="this.access == 1" >
     <v-container fluid fill-height >
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+        <v-flex xs12 sm8 md6>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary">
-              <v-toolbar-title>Create Network</v-toolbar-title>
+              <v-toolbar-title>Create Organization</v-toolbar-title>
             </v-toolbar>
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
@@ -17,7 +17,7 @@
                 <v-text-field
                   v-model="network_name"
                   :error-messages = "network_nameErrors"
-                  label="Network Name*"
+                  label="Organization Name*"
                   @keyup="$v.network_name.$touch()">
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
             </v-text-field>
@@ -43,7 +43,7 @@
               </div>
               <v-btn class="button"
                 @click.stop="create_network()">
-                Create Network
+                Create Organization
               </v-btn>
               <v-btn class="button"
                 @click.stop="$router.push(`/network`)">

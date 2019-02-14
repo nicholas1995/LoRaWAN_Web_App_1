@@ -37,7 +37,7 @@ module.exports = {
                 case 'sub_network_id':
                     console.log('error in vessel form : sub-network id')
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Sub-Network ID', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Application ID', message: 'Error in form.', type: 'error'});
                     break; 
 
                 default: 

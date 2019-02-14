@@ -18,17 +18,17 @@ module.exports = {
                 case 'sub_network_name':
                     console.log('sub_network_name')
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Sub-Network Name', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Application Name', message: 'Error in form.', type: 'error'});
                     break;
                 case 'sub_network_description':
                     console.log('description')
                     error_logger.error_logger(req, error)
-                    res.status(422).send({ error: 'Invalid Sub-Network Description', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Application Description', message: 'Error in form.', type: 'error'});
                     break;
                 case 'network_id':
                     console.log('network_id')
                     error_logger.error_logger(req, error)
-                    res.status(422).send({ error: 'Invalid Network ID', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization ID', message: 'Error in form.', type: 'error'});
                     break;
                 case 'service_profile_id':
                     console.log('service_profile_id')
@@ -65,17 +65,17 @@ module.exports = {
                 case 'sub_network_name':
                     console.log("sub_network_name");
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Sub-Network Name', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Application Name', message: 'Error in form.', type: 'error'});
                     break;
                 case 'sub_network_description':
                     console.log('description')
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Sub-Network Description', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Application Description', message: 'Error in form.', type: 'error'});
                     break;
                 case 'network_id':
                     console.log('network_id')
                     error_logger.error_logger(req, error);
-                    res.status(422).send({ error: 'Invalid Network ID', message: 'Error in form.', type: 'error'});
+                    res.status(422).send({ error: 'Invalid Organization ID', message: 'Error in form.', type: 'error'});
                     break;
                 case 'service_profile_id':
                     console.log('service_profile_id')

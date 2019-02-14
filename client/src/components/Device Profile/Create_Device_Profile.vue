@@ -52,7 +52,7 @@
                       <v-select
                         v-model="network_name_form"
                         :items="this.network_names"
-                        label="Network*"
+                        label="Organization*"
                         :error-messages = "network_name_form_errors"
                         @blur="$v.network_name_form.$touch()" 
                       >
@@ -470,8 +470,8 @@ mixins: [validationMixin],
               this.network_names.push(networks[i].network_id.concat(":",networks[i].network_name));
           }
          if(this.network_names.length == 0){
-            //This will route the user to the create network page if no networks exists 
-            if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+            //This will route the user to the create organization page if no organizations exists 
+            if(confirm('There are no created Organizations. Route to the Create Organization Page?') == true){
               this.$router.push(`/network/create`)
             };
           }
@@ -522,7 +522,7 @@ mixins: [validationMixin],
     network_name_form_errors(){
       const errors=[];
       if (!this.$v.network_name_form.$error)return errors
-      !this.$v.network_name_form.required && errors.push('Network is required.')
+      !this.$v.network_name_form.required && errors.push('Organization is required.')
       return errors;
     },
     network_server_name_form_errors(){

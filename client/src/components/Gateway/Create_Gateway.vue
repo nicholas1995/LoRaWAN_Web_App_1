@@ -55,7 +55,7 @@
                     <v-select
                       v-model="network_name_form"
                       :items="this.networks_can_have_gateways"
-                      label="Network*"
+                      label="Organization*"
                       :error-messages = "network_name_form_Errors"
                       @blur="$v.network_name_form.$touch()" 
                     >
@@ -362,7 +362,7 @@ export default {
     network_name_form_Errors(){
       const errors=[];
       if (!this.$v.network_name_form.$error)return errors
-      !this.$v.network_name_form.required && errors.push('Network is required.')
+      !this.$v.network_name_form.required && errors.push('Organization is required.')
       return errors;
     },
     network_server_name_form_Errors(){
@@ -551,7 +551,7 @@ export default {
           }
           if(this.networks_can_have_gateways.length == 0){
             //This will route the user to the create network page if no network exists 
-            if(confirm('There are no created Networks which can own gateways. Route to the Create Network Page?') == true){
+            if(confirm('There are no created Organizations which can own gateways. Route to the Create Organization Page?') == true){
               this.$router.push(`/network/create`)
             };
           }

@@ -5,7 +5,7 @@
         <v-flex xs12 sm8 md4>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary">
-              <v-toolbar-title>Update Network</v-toolbar-title>
+              <v-toolbar-title>Update Organization</v-toolbar-title>
             </v-toolbar>
           </v-card>
           <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
@@ -13,7 +13,7 @@
             <v-flex >
               <v-text-field
                 v-model="network_name"
-                label= 'Network Name*'
+                label= 'Organization Name*'
                 :error-messages = "network_nameErrors"
                 @keyup="$v.network_name.$touch()" 
               >
@@ -41,7 +41,7 @@
               </div>
               <v-btn class="button"
                 @click.stop="update_network()">
-                Update Network
+                Update Organization
               </v-btn>
               <v-btn class="button"
                 @click.stop="$router.push(`/network`)">
@@ -131,7 +131,7 @@ export default {
             this.network_update = this.networks[i];
             break;
           }if(i == (this.networks.length -1)){
-            if(confirm('Invalid Network ID') == true){
+            if(confirm('Invalid Organization ID') == true){
               this.$router.push(`/network`)
             }
           }

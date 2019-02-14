@@ -114,17 +114,17 @@ module.exports = {
                     error_location = 1;
                     throw error_handler.error_message("get networks", err.message);
                 });
-            res.status(200).send({networks_lora: networks_lora, message: 'Networks fetched', type: 'success'});
+            res.status(200).send({networks_lora: networks_lora, message: 'Organizations fetched', type: 'success'});
         }catch(err){
-            err = error_handler.error_message("Error getting networks", err);
+            err = error_handler.error_message("Error getting organizations", err);
             error_handler.error_logger(req, err);
             if(error_location ==0){
-                res.status(500).send({ message: "Failed to get networks" , type: 'error'});
+                res.status(500).send({ message: "Failed to get organizations" , type: 'error'});
             }
             else if(error_location ==1){
-                res.status(200).send({networks_lora: networks_lora, message: "Error updating networks in database", type: 'info'})
+                res.status(200).send({networks_lora: networks_lora, message: "Error updating organizations in database", type: 'info'})
             }else{
-                res.status(500).send({ message: 'Failed to get networks', type: 'error'})
+                res.status(500).send({ message: 'Failed to get organizations', type: 'error'})
             }
         }
     }, 
@@ -139,7 +139,7 @@ module.exports = {
             //console.log('Networks fetched from database')
         }catch(err){
             error_handler.error_logger(req, err);
-            res.status(500).send({ message: "Failed to get networks", type: 'error' });
+            res.status(500).send({ message: "Failed to get organizations", type: 'error' });
         }
     },
     create_networks: async function(req, res){
@@ -169,10 +169,10 @@ module.exports = {
             //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to create network", type: 'error' });
+                res.status(500).send({ message: "Failed to create organization", type: 'error' });
             } else if (error_location == 1) {
                 networks_lora = JSON.stringify(networks_lora);
-                res.status(200).send({ networks_lora: networks_lora, message: "Network Created. Error creating network in database", type: 'info' })
+                res.status(200).send({ networks_lora: networks_lora, message: "Organization created on LoRa app server. Error creating organization in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -196,7 +196,7 @@ module.exports = {
                     error_location = 1;
                     throw error_handler.error_message("update network : database", err.message);
                 })
-            res.status(200).send({ message: 'Network updated', type: 'success' });
+            res.status(200).send({ message: 'Organizations updated', type: 'success' });
         }catch(err){
             error_handler.error_logger(req, err);
             //e_l =0 (problem updating network)
@@ -205,10 +205,10 @@ module.exports = {
             //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to update network", type: 'error' });
+                res.status(500).send({ message: "Failed to update organization", type: 'error' });
             } else if (error_location == 1) {
                 networks_lora = JSON.stringify(networks_lora);
-                res.status(200).send({ networks_lora: networks_lora, message: "Network updated. Error updating network in database", type: 'info' })
+                res.status(200).send({ networks_lora: networks_lora, message: "Organizations updated on LoRa app server. Error updating organization in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -236,7 +236,7 @@ module.exports = {
                     error_location = 2;
                     throw error_handler.error_message("delete network : lora app server", err.message);
                 });
-            res.status(200).send({ networks_lora: networks_lora, message: 'Network deleted', type: 'success' });
+            res.status(200).send({ networks_lora: networks_lora, message: 'Organization deleted', type: 'success' });
         }catch(err){
             error_handler.error_logger(req, err);
             //e_l =0 (problem deleteing network)
@@ -245,12 +245,12 @@ module.exports = {
             //other = (unknown error/exception)
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to delete network", type: 'error' });
+                res.status(500).send({ message: "Failed to delete organization", type: 'error' });
             } else if (error_location == 1) {
-                res.status(200).send({ networks_lora: networks_lora, message: "Network deleted. Failed to fetch networks", type: 'info' })
+                res.status(200).send({ networks_lora: networks_lora, message: "Organization deleted. Failed to fetch organizations", type: 'info' })
             }
             else if (error_location == 2) {
-                res.status(200).send({ networks_lora: networks_lora, message: "Network deleted. Error updating network in database", type: 'info' })
+                res.status(200).send({ networks_lora: networks_lora, message: "Organization deleted. Error updating organization in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }

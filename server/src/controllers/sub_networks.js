@@ -131,15 +131,15 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("get sub-networks : database", err.message);
                 });
-            res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Networks fetched', type: 'success' });
+            res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Applications fetched', type: 'success' });
         }
         catch(err){
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to get sub-networks", type: 'error' });
+                res.status(500).send({ message: "Failed to get applications", type: 'error' });
             }
             else if (error_location == 1) {
-                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Error updating sub-networks in database", type: 'info' })
+                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Error updating applications in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -157,7 +157,7 @@ module.exports = {
             res.status(200).send({ sub_network });
         } catch (err) {
             console.log(err);
-            res.status(500).send({ message: "Failed to get sub-network", type: 'error' });
+            res.status(500).send({ message: "Failed to get application", type: 'error' });
         }
     },
     get_sub_subnetworks_database: async function(req, res){
@@ -176,10 +176,10 @@ module.exports = {
                         throw error.error_message("get sub-networks : database", err.message);
                     })
             }
-            res.status(200).send({ sub_networks: sub_networks, message: 'Sub-Networks fetched', type: 'success' });
+            res.status(200).send({ sub_networks: sub_networks, message: 'Applications fetched', type: 'success' });
         }catch(err){
             console.log(err);
-            res.status(500).send({ message: "Failed to fetch sub-networks", type: 'error' });
+            res.status(500).send({ message: "Failed to fetch applications", type: 'error' });
         }
     },
     create: async function(req, res){
@@ -205,15 +205,15 @@ module.exports = {
                     error_location = 2;
                     throw error.error_message("create default vessel : database", err.message);
                 });
-            res.status(201).send({ message: 'Sub-Network created', type: 'success' });
+            res.status(201).send({ message: 'Application created', type: 'success' });
         }catch (err) {
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to create sub-network", type: 'error' });
+                res.status(500).send({ message: "Failed to create application", type: 'error' });
             } else if (error_location == 1) {
-                res.status(200).send({ message: "Sub-Network Created. Error creating sub-network in database", type: 'info' })
+                res.status(200).send({ message: "Application Created. Error creating application in database", type: 'info' })
             } else if (error_location == 2) {
-                res.status(200).send({ message: "Sub-Network Created. Error creating default vessel in database", type: 'info' })
+                res.status(200).send({ message: "Application Created. Error creating default vessel in database", type: 'info' })
             }  else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -237,13 +237,13 @@ module.exports = {
                     error_location = 1;
                     throw error.error_message("update sub-network : database", err.message);                
                 });
-            res.status(200).send({ message: 'Sub-Network updated.', type: 'success' });
+            res.status(200).send({ message: 'Application updated.', type: 'success' });
         }catch(err){
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to update sub-network", type: 'error' });
+                res.status(500).send({ message: "Failed to update application", type: 'error' });
             } else if (error_location == 1) {
-                res.status(200).send({ message: "Sub-Network updated. Error updating sub-network in database", type: 'info' })
+                res.status(200).send({ message: "Application updated. Error updating application in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }
@@ -276,15 +276,15 @@ module.exports = {
                     //Error deleting vessels under selected subnetwork
                     throw error.error_message("delete sub-network : delete vessel ", err.message);
                 });
-            res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Sub-Network deleted.', type: 'success' });
+            res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Application deleted.', type: 'success' });
         } catch (err) {
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to delete sub-network", type: 'error' });
+                res.status(500).send({ message: "Failed to delete application", type: 'error' });
             } else if (error_location == 1) {
-                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network deleted. Failed to fetch sub-networks", type: 'info' })
+                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Application deleted. Failed to fetch applications", type: 'info' })
             } else if (error_location == 2) {
-                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Sub-Network deleted. Error deleting sub-network in database", type: 'info' })
+                res.status(200).send({ sub_networks_lora: sub_networks_lora, message: "Application deleted. Error deleting application in database", type: 'info' })
             } else {
                 res.status(500).send({ message: 'Error', type: 'error' })
             }

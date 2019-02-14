@@ -1,7 +1,7 @@
 <template>
   <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1 primary" >
-      <v-toolbar-title>SUB-NETWORKS</v-toolbar-title>
+      <v-toolbar-title>APPLICATION</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -14,7 +14,7 @@
                 class="mr-1 mt-3" @click.stop="$router.push(`/subnetwork/create`)" >
             add_box
           </v-icon>
-          <span>Create Sub-Network</span>
+          <span>Create Application</span>
         </v-tooltip>
       </v-toolbar-items>
     </v-toolbar>
@@ -68,10 +68,10 @@ export default {
     return {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
-          { text: 'Sub-Network ID', value: 'sub_network_id' , sortable: true },
-          { text: 'Sub-Network Name', value: 'sub_network_name' , sortable: true },
+          { text: 'Application ID', value: 'sub_network_id' , sortable: true },
+          { text: 'Application Name', value: 'sub_network_name' , sortable: true },
           { text: 'Description', value: 'sub_network_description' ,sortable: false},
-          { text: 'Network ID', value: 'network_id' , sortable: true },
+          { text: 'Organization ID', value: 'network_id' , sortable: true },
           { text: 'Service Profile ID', value: 'service_profile_id', sortable: true },
           { text: 'Service Profile Name', value: 'service_profile_name', sortable: false },
         ],

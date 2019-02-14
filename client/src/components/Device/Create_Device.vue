@@ -85,7 +85,7 @@
                     <v-select
                       v-model="network_name_form"
                       :items="this.network_names"
-                      label="Network*"
+                      label="Organization*"
                       :error-messages = "network_name_form_Errors"
                       @blur="$v.network_name_form.$touch()" 
                     >
@@ -95,7 +95,7 @@
                     <v-select
                       v-model="sub_network_name_form"
                       :items="this.sub_network_names"
-                      label="Sub-Network*"
+                      label="Application*"
                       :error-messages = "sub_network_name_form_Errors"
                       @blur="$v.sub_network_name_form.$touch()" 
                     >
@@ -229,10 +229,10 @@ export default {
     device_name_Errors(){
       const errors=[];
       if (!this.$v.device_name.$error)return errors
-      !this.$v.device_name.u && errors.push('Sub-Network name must be unique')
+      !this.$v.device_name.u && errors.push('Device name must be unique')
       !this.$v.device_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes')
-      !this.$v.device_name.maxLength && errors.push('Sub-Network name must be 80 characters or less')
-      !this.$v.device_name.required && errors.push('Sub-Network name is required.')
+      !this.$v.device_name.maxLength && errors.push('Device name must be 80 characters or less')
+      !this.$v.device_name.required && errors.push('Device name is required.')
       return errors;
     }, 
     device_eui_Errors(){
@@ -255,13 +255,13 @@ export default {
     network_name_form_Errors(){
       const errors=[];
       if (!this.$v.network_name_form.$error)return errors
-      !this.$v.network_name_form.required && errors.push('Network is required.')
+      !this.$v.network_name_form.required && errors.push('Organization is required.')
       return errors;
     },
     sub_network_name_form_Errors(){
       const errors=[];
       if (!this.$v.sub_network_name_form.$error)return errors
-      !this.$v.sub_network_name_form.required && errors.push('Sub-Network is required.')
+      !this.$v.sub_network_name_form.required && errors.push('Application is required.')
       return errors;
     },
     device_profile_name_form_Errors(){
@@ -329,8 +329,8 @@ export default {
         }
       }
       if(this.sub_network_names.length == 0){
-        //This will route the user to the create sub-network page if no sub-networks exists under selected network 
-        if(confirm('There are no associated Sub-Networks under selected Network. Route to the Create Sub-Network Page?') == true){
+        //This will route the user to the create application page if no applications exists under selected application 
+        if(confirm('There are no associated Applications under selected Organization. Route to the Create Application Page?') == true){
           this.$router.push(`/subnetwork/create`)
         };
       }
@@ -340,8 +340,8 @@ export default {
         }
       }
       if(this.device_profile_names.length == 0){
-        //This will route the user to the create device profile page if no device profile is associated with the selected network 
-        if(confirm('There are no associated Device Profiles with the selected Network. Route to the Create Device Profile Page?') == true){
+        //This will route the user to the create device profile page if no device profile is associated with the selected organization 
+        if(confirm('There are no associated Device Profiles with the selected Organization. Route to the Create Device Profile Page?') == true){
           this.$router.push(`/device_profile/create`)
         };
       }
@@ -367,8 +367,8 @@ export default {
         }
       }
       if(this.vessel_names.length == 0){
-        //This will route the user to the create vessel page if no vessel is associated with the selected sub-network 
-        if(confirm('There are no associated Vessels with the selected Sub-Network. Route to the Create Vessel Page?') == true){
+        //This will route the user to the create vessel page if no vessel is associated with the selected application
+        if(confirm('There are no associated Vessels with the selected Application. Route to the Create Vessel Page?') == true){
           this.$router.push(`/vessel/create`)
         };
       }
@@ -400,8 +400,8 @@ export default {
             this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
           }
           if(this.network_names.length == 0){
-            //This will route the user to the create network page if no networks exists 
-            if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+            //This will route the user to the create organization page if no networks exists 
+            if(confirm('There are no created Organizations. Route to the Create Organization Page?') == true){
               this.$router.push(`/network/create`)
             };
           }

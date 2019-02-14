@@ -1,7 +1,7 @@
 <template>
   <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1 primary" >
-      <v-toolbar-title>Devices</v-toolbar-title>
+      <v-toolbar-title>DEVICES</v-toolbar-title>
       <v-divider
         class="mx-2"
         inset
@@ -93,7 +93,7 @@ export default {
           { text: 'Device Name', value: 'device_name' , sortable: true },
           { text: 'Device EUI', value: 'device_eui' , sortable: true },
           { text: 'Description', value: 'device_description' ,sortable: false},
-          { text: 'Sub-Network ID', value: 'sub_network_id' , sortable: true },
+          { text: 'Application ID', value: 'sub_network_id' , sortable: true },
           { text: 'Vessel ID', value: 'vessel_id' , sortable: true },
           { text: 'Last Seen', value: 'last_seen_at' , sortable: true },
           { text: 'Device Profile ID', value: 'device_profile_id_lora', sortable: true },

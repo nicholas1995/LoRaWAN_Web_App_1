@@ -52,7 +52,7 @@
               <v-select
                 v-model="network_name_form"
                 :items="this.network_names"
-                label="Network*"
+                label="Organization*"
                 :error-messages = "network_name_form_Errors"
                 @blur="$v.network_name_form.$touch()" 
               >
@@ -61,7 +61,7 @@
               <v-select
                 v-model="sub_network_name_form"
                 :items="this.sub_network_names"
-                label="Sub-Network*"
+                label="Application*"
                 :error-messages = "sub_network_name_form_Errors"
                 @blur="$v.sub_network_name_form.$touch()" 
               >
@@ -201,8 +201,8 @@ mixins: [validationMixin],
             this.network_names.push(networks_lora[i].network_id.concat(":",networks_lora[i].network_name));
           }
           if(this.network_names.length == 0){
-            //This will route the user to the create network page if no network exists 
-            if(confirm('There are no created Networks. Route to the Create Network Page?') == true){
+            //This will route the user to the create organization page if no organizations exists 
+            if(confirm('There are no created Organizations. Route to the Create Organization Page?') == true){
               this.$router.push(`/network/create`)
             };
           }
@@ -249,7 +249,7 @@ mixins: [validationMixin],
       }
       if(this.sub_network_names.length == 0){
         //This will route the user to the create sub-network page if no sub-network exists under selected network 
-        if(confirm('There are no Sub-Networks associated with the selected Network. Route to the Create Sub-Network Page?') == true){
+        if(confirm('There are no Applications associated with the selected Organization. Route to the Create Application Page?') == true){
           this.$router.push(`/subnetwork/create`)
         };
       }
@@ -288,13 +288,13 @@ mixins: [validationMixin],
     network_name_form_Errors(){
       const errors=[];
       if (!this.$v.network_name_form.$error)return errors
-      !this.$v.network_name_form.required && errors.push('Network is required.')
+      !this.$v.network_name_form.required && errors.push('Organization is required.')
       return errors;
     },
       sub_network_name_form_Errors(){
       const errors=[];
       if (!this.$v.sub_network_name_form.$error)return errors
-      !this.$v.sub_network_name_form.required && errors.push('Sub-Network is required.')
+      !this.$v.sub_network_name_form.required && errors.push('Application is required.')
       return errors;
     },
   },
