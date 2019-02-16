@@ -793,8 +793,6 @@ module.exports = {
             let coordinate = JSON.parse(req.params.coordinate); 
             let buffer = generate_buffer_using_map_zoom(coordinate.zoom_level); //buffer is the square which is used to fetch the sensor data inside. The square is centered around the coordinate of the spot the user clicked
             coordinate = create_sensor_data_search_coordinate_box(coordinate, buffer)
-            console.log(coordinate)
-            console.log(get_distance_km_from_lat_lng(coordinate.lat.min, coordinate.lng.min, coordinate.lat.max, coordinate.lng.max))
             let device_uplink_sensor_data = await DB.get_device_uplink_sensor_data_based_on_coordinates(coordinate)
                 .catch(err => {
                     throw err;

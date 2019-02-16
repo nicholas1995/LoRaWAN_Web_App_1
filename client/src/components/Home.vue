@@ -345,7 +345,8 @@ export default {
           explorer: {
              maxZoomIn: .001,
              keepInBounds: true,
-             zoomDelta: 0.9
+             zoomDelta: 0.9,
+             axis: 'horizontal',
           },
           lineDashStyle: [4,1],
           curveType: 'function',
