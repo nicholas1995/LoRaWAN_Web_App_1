@@ -119,46 +119,6 @@ module.exports = {
   }, 
   //Add User
   create: async function(req, res){
-    let users;
-    try{
-      let data = req.body.user;
-      let pw = randomPasswordGenerator();
-      let pw_encrypt = await encrypt(pw)
-        .catch(err => {
-          //Error encrypting pw
-          throw err;
-        });
-      await user_db.add_user(data, pw_encrypt)
-        .catch((err) => {
-          throw err;
-        });
-      await email.transporter.sendMail(email.mailOptions(data, pw))
-        .catch(err => {
-          //Error sending email
-          throw err;
-        })
-        console.log('email sent')
-      if (data.vessels.length > 0 ){
-        let user = await user_db.get_profile(data.email)
-          .catch(err => {
-            //Error getting profile information for user created
-            throw err;
-          });
-        for(let i =0; i< data.vessels.length; i++){
-          await USER_VESSEL_DB.create_user_vessel_relationship(user[0].id, data.vessels[i])
-            .catch(err => {
-              //Error adding a user device eui to the database
-              throw err;
-            })
-        }
-      };
-      res.status(200).send({message: 'User created.', type: 'success' });
-    }catch(err){
-      console.log(err);
-    }  
-  },
-  //This is the new create user which uses the token instead of the random pw
-  create_new: async function(req, res){
     try{
       let data = req.body.user;
       await user_db.add_user(data, 'null')

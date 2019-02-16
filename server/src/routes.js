@@ -51,7 +51,7 @@ module.exports = ((app) => {
     app.get("/api/users", authenticate.authenticate, grant_access, user.get);
 
     //Users (Create)
-    app.post("/api/users", authenticate.authenticate, grant_access, user_policy.create, user.create_new);
+    app.post("/api/users", authenticate.authenticate, grant_access, user_policy.create, user.create);
 
     //Users (Update)
     app.put("/api/users/:user_id", authenticate.authenticate, grant_access, user_policy.update, user.update); 
