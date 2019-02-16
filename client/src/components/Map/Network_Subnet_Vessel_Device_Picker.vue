@@ -5,7 +5,7 @@
         <v-select
           v-model="network_name_form"
           :items="this.network_names"
-          label="Network"
+          label="Organization"
           prepend-icon="domain"
         >
         </v-select>
@@ -15,7 +15,7 @@
         <v-select
           v-model="sub_network_name_form"
           :items="this.sub_network_names"
-          label="Sub-Network"
+          label="Application"
           prepend-icon="apps"
         >
         </v-select>

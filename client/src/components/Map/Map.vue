@@ -27,6 +27,15 @@
         </v-layout>
 
       </div>
+      <div v-if="this.$store.state.user_class =='Fisher'"><!--Vessel device picker for fisher -->
+        <v-flex xs12 sm12 md12>
+          <div v-show="this.display_devices_switch">
+            <vessel_device_picker
+              @device_id = device_id_function($event)
+            ></vessel_device_picker>
+          </div>
+        </v-flex>
+      </div>
       <div v-if="this.display_devices_switch">
         <v-tabs
           v-model="active_tab"
@@ -150,6 +159,8 @@ import AuthenticationService from "../../services/AuthenticationService.js";
 import functions from "./../../services/functions/forms_functions.js"
 import date_time_picker from "./../Date_Time_Picker";
 import network_subnetwork_vessel_device_picker from "./Network_Subnet_Vessel_Device_Picker";
+import vessel_device_picker from "./Vessel_Device_Picker";
+
 
 function return_date_time(date, time){
   let date_time = null;
@@ -194,6 +205,7 @@ export default {
   components:{
     date_time_picker,
     network_subnetwork_vessel_device_picker,
+    vessel_device_picker,
   },
   name: 'google',
   props: ['name'],
