@@ -8,8 +8,6 @@ import Login from '@/components/Login'
 import Dashboard from './../components/Dashboard/Dashboard.vue'
 
 import Device_Gateway_Map from '../components/Map/Map.vue'
-import Gateway_Map from '../components/Map/Gateway Map.vue'
-import Device_Map from '../components/Map/Device Map.vue'
 
 
 import Network from '../components/Network/Network_Management.vue'
@@ -89,16 +87,6 @@ export default new Router({
       name: "map",
       component: Device_Gateway_Map
     }, 
-    {
-      path: "/map/gateway",
-      name: "map_gateway",
-      component: Gateway_Map
-    },
-    {
-      path: "/map/device",
-      name: "map_device",
-      component: Device_Map
-    },
     //-------------------------Network-------------------------
     {
       path: "/network",

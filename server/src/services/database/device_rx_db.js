@@ -40,8 +40,10 @@ module.exports = {
         return db.queryAsync(sql);
     },
     get_most_recent_specified_device_self(device_data){
-            //This returns the most recent device uplink for the specified device over the period that the user was assigned to the vessel the device was on 
-            let sql = `SELECT device_uplink.*, vessel.vessel_name, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
+            //This returns the most recent device uplink for the specified device over the period that the user was assigned to the vessel the device was on. It also only returns the data that the fisher has access too.
+            let sql = `SELECT device_uplink.device_uplink_id, device_uplink.sub_network_id, device_uplink.vessel_id, vessel.vessel_name,  device_uplink.device_id, device_uplink.device_name,
+            device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer, device_uplink.sos,
+            DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
             FROM device_uplink
             LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id `
             let where = `device_id = '${device_data.device_id}' AND (`;
@@ -64,7 +66,7 @@ module.exports = {
             } 
             }
             sql = ` ${sql} WHERE ${where}`;
-            sql = `${sql} ORDER BY device_uplink_id DESC LIMIT 1`;
+            sql = `${sql} ORDER BY device_uplink_id DESC LIMIT 1`; 
         return db.queryAsync(sql);
     },
     get_gps_coordinates(){

@@ -167,10 +167,10 @@ module.exports = ((app) => {
     app.get("/api/devices/database/:vessels", authenticate.authenticate, grant_access, devices.get_database);
 
     //Device (Read the initial device data for the map)
-    app.get("/api/devices/map/initial", authenticate.authenticate, grant_access, devices.get_map_initial);
+    app.get("/api/devices/map/initial", authenticate.authenticate, grant_access, device_data.get_map_initial);
 
     //Device (Read the refresh device data for the map)
-    app.get("/api/devices/map/refresh/:device_id", authenticate.authenticate, grant_access, devices.get_map_refresh);
+    app.get("/api/devices/map/refresh/:device_id", authenticate.authenticate, grant_access, device_data.get_map_refresh);
 
     //Devices (Create)
     app.post("/api/devices", authenticate.authenticate, grant_access, device_policy.create, devices.create); //need to add in device validation
