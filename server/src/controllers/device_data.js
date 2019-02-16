@@ -366,21 +366,21 @@ function create_analyst_filter_parameters(req, filter_parameters_record, device_
         return null;
     }
 }
-function create_sensor_data_serch_coordinate_box(coordinate, buffer){
+function create_sensor_data_search_coordinate_box(coordinate, buffer){
     //This function takes an object with the lat and lng of a coordinate and returns a min and max for both 
     //LAT
     let lat_min, lat_max;
     lat_min = coordinate.lat-buffer/2
     lat_max = coordinate.lat+buffer/2
-    lat_min = math.round(1000*lat_min)/1000
-    lat_max = math.round(1000*lat_max)/1000
+    lat_min = math.round(10000*lat_min)/10000
+    lat_max = math.round(10000*lat_max)/10000
 
     //LNG
     let lng_min, lng_max;
     lng_min = coordinate.lng-buffer/2
     lng_max = coordinate.lng+buffer/2
-    lng_min = math.round(1000*lng_min)/1000
-    lng_max = math.round(1000*lng_max)/1000
+    lng_min = math.round(10000*lng_min)/10000
+    lng_max = math.round(10000*lng_max)/10000
     return {
         lat: {
             min: lat_min,
@@ -751,95 +751,6 @@ module.exports = {
             console.log(err);
         }
     },
-    get_historical: async function(req, res){
-        let sql_where = [];
-        let where = '';
-        let sql_order_by = [];
-        let sql = `SELECT device_uplink.*, vessel.vessel_name, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
-        FROM device_uplink
-        LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id`;
-        let access = 'all';// This will be set to 1 if the data is being fetched for the users vessels
-        try {
-            if(req.access == "self" || req.params.access == "self"){
-                access = 'self';
-                sql = `SELECT device_uplink.device_uplink_id, device_uplink.sub_network_id, device_uplink.vessel_id, vessel.vessel_name,  device_uplink.device_id, device_uplink.device_name,
-                        device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer, device_uplink.sos,
-                        DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
-                        FROM device_uplink
-                        LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id `;
-                let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
-                    .catch(err => {
-                        //Error fetching vessels for user
-                        throw err;
-                    });
-                for (let i = 0; i < user_vessels.length; i++) {
-                    if (user_vessels[i].date_deleted == null) {
-                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
-                    } else {
-                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
-                        sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
-                    }
-                    sql_where.push(`device_uplink.vessel_id = '${user_vessels[i].vessel_id}'`);
-                    where = `${where} (`;
-                    for (let j = 0; j < sql_where.length; j++) {
-                        if (j < sql_where.length - 1) {
-                            //will run every time but the last cause we do not want it ending with AND
-                            where = where + `${sql_where[j]} AND `;
-                        } else {
-                            where = where + `${sql_where[j]}`;
-                        }
-                    }
-                    if (i != user_vessels.length - 1) { where = `${where}) OR` }
-                    else { where = `${where})` }
-                    sql_where = [];
-                }
-                where = `(${where}) ` //Puts the user filter data in brackets 
-            }
-            let parameters = JSON.parse(req.params.parameters); 
-            if(parameters.start_date){
-                sql_where.push(`time_stamp > '${parameters.start_date}'`); //We use the time stamp because the rx_time will only be present if we have the receive gw metadata option enabled
-            }if(parameters.end_date){
-                sql_where.push(`time_stamp < '${parameters.end_date}'`);
-            }
-            //We need to add the access check because if it is self the user can only filter the data based on the vessel and the device
-            if (parameters.device && access == 'all') {
-                sql_where.push(`device_id IN (${parameters.device})`);
-            }
-            if (parameters.start_date || parameters.end_date || parameters.device ) {
-                if (req.access == "self" || req.params.access == "self") {
-                  where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
-                }
-              for (let i = 0; i < sql_where.length; i++) {
-                if (i < sql_where.length - 1) {
-                  //will run every time but the last cause we do not want it ending with AND
-                  where = where + `${sql_where[i]} AND `;
-                } else {
-                  where = where + `${sql_where[i]}`;
-                }
-              }
-            }
-            if(where){
-                sql = ` ${sql} WHERE ${where}`
-            }
-            if(parameters.sort_by){ 
-                sql = `${sql} ORDER BY ${parameters.sort_by} ${parameters.order}, time_stamp DESC`;
-            }else{//So that no mater what the data is ordered in descending order based on the timestamp
-                sql = `${sql} ORDER BY time_stamp DESC`;
-            }
-            let device_data = await DB.get_specified_parameters(sql)
-                .catch(err => {
-                    throw err; 
-                })
-            if(device_data.length>0){
-                device_data = convert_dates(device_data, access);
-                res.status(200).send({ device_data: device_data, message: 'Device data fetched', type: 'success' });
-            }else{
-                res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
-            }
-        }catch(err){
-            console.log(err);
-        }
-    },
     export_via_email: async function(req, res){
         try{ ///NEED TO ADD IN EXCEPTION HANDLER FOR WHEN THE DATA IS TO LARGER TO SEND OVER EMAIL
             let device_uplink_data_csv = req.body.device_uplink_data_csv;
@@ -881,7 +792,8 @@ module.exports = {
         try{ 
             let coordinate = JSON.parse(req.params.coordinate); 
             let buffer = generate_buffer_using_map_zoom(coordinate.zoom_level); //buffer is the square which is used to fetch the sensor data inside. The square is centered around the coordinate of the spot the user clicked
-            coordinate = create_sensor_data_serch_coordinate_box(coordinate, buffer)
+            coordinate = create_sensor_data_search_coordinate_box(coordinate, buffer)
+            console.log(coordinate)
             console.log(get_distance_km_from_lat_lng(coordinate.lat.min, coordinate.lng.min, coordinate.lat.max, coordinate.lng.max))
             let device_uplink_sensor_data = await DB.get_device_uplink_sensor_data_based_on_coordinates(coordinate)
                 .catch(err => {
@@ -1056,6 +968,96 @@ module.exports = {
             res.status(200).send({ device_data: device_data, message: 'Devices data', type: 'success' }); 
         }catch(err){
             console.log(err)
+        }
+    },
+    get_historical: async function(req, res){
+        let sql_where = [];
+        let where = '';
+        let sql_order_by = [];
+        let sql = `SELECT device_uplink.*, vessel.vessel_name, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
+        FROM device_uplink
+        LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id`;
+        let access = 'all';// This will be set to 1 if the data is being fetched for the users vessels
+        try {
+            if(req.access == "self" || req.params.access == "self"){
+                access = 'self';
+                //We set this over so we can ensure the fisher only gets access to the data to have available to them
+                sql = `SELECT device_uplink.device_uplink_id, device_uplink.sub_network_id, device_uplink.vessel_id, vessel.vessel_name,  device_uplink.device_id, device_uplink.device_name,
+                        device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer, device_uplink.sos,
+                        DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
+                        FROM device_uplink
+                        LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id `;
+                let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
+                    .catch(err => {
+                        //Error fetching vessels for user
+                        throw err;
+                    });
+                for (let i = 0; i < user_vessels.length; i++) {
+                    if (user_vessels[i].date_deleted == null) {
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                    } else {
+                        sql_where.push(`time_stamp > '${user_vessels[i].date_created}'`);
+                        sql_where.push(`time_stamp < '${user_vessels[i].date_deleted}'`);
+                    }
+                    sql_where.push(`device_uplink.vessel_id = '${user_vessels[i].vessel_id}'`);
+                    where = `${where} (`;
+                    for (let j = 0; j < sql_where.length; j++) {
+                        if (j < sql_where.length - 1) {
+                            //will run every time but the last cause we do not want it ending with AND
+                            where = where + `${sql_where[j]} AND `;
+                        } else {
+                            where = where + `${sql_where[j]}`;
+                        }
+                    }
+                    if (i != user_vessels.length - 1) { where = `${where}) OR` }
+                    else { where = `${where})` }
+                    sql_where = [];
+                }
+                where = `(${where}) ` //Puts the user filter data in brackets 
+            }
+            let parameters = JSON.parse(req.params.parameters); 
+            if(parameters.start_date){
+                sql_where.push(`time_stamp > '${parameters.start_date}'`); //We use the time stamp because the rx_time will only be present if we have the receive gw metadata option enabled
+            }if(parameters.end_date){
+                sql_where.push(`time_stamp < '${parameters.end_date}'`);
+            }
+            //We need to add the access check because if it is self the user can only filter the data based on the vessel and the device
+            if (parameters.device && access == 'all') {
+                sql_where.push(`device_id IN (${parameters.device})`);
+            }
+            if (parameters.start_date || parameters.end_date || parameters.device ) {
+                if (req.access == "self" || req.params.access == "self") {
+                  where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
+                }
+              for (let i = 0; i < sql_where.length; i++) {
+                if (i < sql_where.length - 1) {
+                  //will run every time but the last cause we do not want it ending with AND
+                  where = where + `${sql_where[i]} AND `;
+                } else {
+                  where = where + `${sql_where[i]}`;
+                }
+              }
+            }
+            if(where){
+                sql = ` ${sql} WHERE ${where}`
+            }
+            if(parameters.sort_by){ 
+                sql = `${sql} ORDER BY ${parameters.sort_by} ${parameters.order}, time_stamp DESC`;
+            }else{//So that no mater what the data is ordered in descending order based on the timestamp
+                sql = `${sql} ORDER BY time_stamp DESC`;
+            }
+            let device_data = await DB.get_specified_parameters(sql)
+                .catch(err => {
+                    throw err; 
+                })
+            if(device_data.length>0){
+                device_data = convert_dates(device_data, access);
+                res.status(200).send({ device_data: device_data, message: 'Device data fetched', type: 'success' });
+            }else{
+                res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived
+            }
+        }catch(err){
+            console.log(err);
         }
     },
 } 
