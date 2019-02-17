@@ -12,7 +12,7 @@
         @click:append="select_all_headers()"
       ></v-combobox>
     </v-flex>
-    <div v-if="this.$store.state.user_class !='Fisher'">
+    <div v-if="this.$store.state.user_class !='Fisher' && this.self ==false ">
       <network_subnetwork_vessel_device_picker
         v-bind:network_prop= this.networks_analyst_filter_record_prop
         v-bind:sub_network_prop= this.sub_networks_analyst_filter_record_prop
@@ -24,7 +24,7 @@
         @device_id = device_id_function($event)
       ></network_subnetwork_vessel_device_picker>
     </div>
-    <div v-else-if="this.$store.state.user_class =='Fisher'">
+    <div v-else-if="this.$store.state.user_class =='Fisher' || this.self ==true">
       <vessel_device_picker
         @vessel_id = vessel_id_function($event)
         @device_id = device_id_function($event)
@@ -38,8 +38,14 @@
       <v-flex xs12 sm6 md4>
         <date_time_picker v-bind:type_prop = 1 v-bind:date_time_prop= this.end_date_time_analyst_filter_record_prop @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
       </v-flex>
+      <v-flex xs6 sm6 md4 v-if="this.$store.state.user_class !='Fisher'">
+        <v-switch
+          v-model="self"
+          :label="`Display Data From Assigned Vessels Only: ${this.self.toString()}`"
+        ></v-switch>
+      </v-flex>
     </v-layout>
-    <div v-if="this.$store.state.user_class =='Analyst'">
+    <div v-if="this.$store.state.user_class =='Analyst' && this.self ==false ">
       <!-- Analyst Filter Records-->
       <analyst_filter_records_picker
         v-bind:analyst_filter_parameters = this.analyst_filter_parameters
@@ -196,7 +202,7 @@ export default {
         start_date_time_analyst_filter_record_prop : null, 
         end_date_time_analyst_filter_record_prop : null, 
 
-        self: 0, //This will be set high if the data user class user wants to view vessles assigned to them 
+        self: false, //This will be set high if the data user class user wants to view vessles assigned to them 
         inital: true, //this is used to prevent the refetching of data when values is first assigned... so when value changes this will be set to false
         allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
 
@@ -204,6 +210,7 @@ export default {
 
         analyst_filter_parameters: {}, //this holds all the parameters of the filtered data for the analysts.
         analyst_filter_record_flag: 0, //this is a flag used to prevent the generate function from being called when the headers are updated using the analsyt filter record
+
     }
   },
   props: [
@@ -220,7 +227,7 @@ export default {
         this.access =1;
         //-------------------------Start-------------------------
         let result;
-        if(this.$store.state.user_class !='Fisher' && this.self ==0){
+        if(this.$store.state.user_class !='Fisher' && this.self ==false){
           result = await AuthenticationService.get_device_data_initial()
           .catch(err => {
             //Error getting the device data from the server
@@ -228,7 +235,6 @@ export default {
             throw err;
             })
         }else{
-          this.self =1; 
           result = await AuthenticationService.get_device_data_initial_self()
           .catch(err => {
             //Error getting the device data from the server
@@ -297,6 +303,59 @@ export default {
         }
       }catch(err){
         console.log(err);
+      }
+    },
+    self: async function(){
+      let result;
+      this.header_names = [];
+      this.value = [];
+      this.display = [];
+      if(this.self == false){
+          result = await AuthenticationService.get_device_data_initial()
+          .catch(err => {
+            //Error getting the device data from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            })
+          if(result.status == 204){ //No Data returned 
+            this.allow_no_data = true;
+            this.device_data = [];
+            this.filter_parameters = {}; 
+            this.loading = false;
+         }else{ //Data returned
+            this.allow_no_data = true;
+            this.device_data = result.data.device_data;
+            this.headers =  result.data.headers;
+            for(let i =0; i< this.headers.length; i++){
+              this.header_names.push(this.headers[i].text);
+              this.value.push(this.headers[i].text);
+            }
+            this.display = this.headers
+            this.loading = false;
+         }
+      }else if(this.self ==true){
+        result = await AuthenticationService.get_device_data_initial_self()
+          .catch(err => {
+            //Error getting the device data from the server
+            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+            throw err;
+            })
+          if(result.status == 204){ //No Data returned 
+            this.allow_no_data = true;
+            this.device_data = [];
+            this.filter_parameters = {}; 
+            this.loading = false;
+         }else{ //Data returned
+            this.allow_no_data = true;
+            this.device_data = result.data.device_data;
+            this.headers =  result.data.headers;
+            for(let i =0; i< this.headers.length; i++){
+              this.header_names.push(this.headers[i].text);
+              this.value.push(this.headers[i].text);
+            }
+            this.display = this.headers
+            this.loading = false;
+         }
       }
     }
   },
@@ -368,25 +427,25 @@ export default {
           if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
           else this.filter_parameters["order"] = 'DESC';
         }
-        if(this.device_id && this.self ==0){
+        if(this.device_id && this.self ==false){
           this.filter_parameters["device"] = this.device_id;
           this.filter_parameters["vessel"] = this.vessel_id;
           this.filter_parameters["sub_network"] = this.sub_network_id;
           this.filter_parameters["network"] = this.network_id;
-        }else if(this.device_id && this.self ==1){
+        }else if(this.device_id && this.self ==true){
           this.filter_parameters["device"] = this.device_id;
           this.filter_parameters["vessel"] = this.vessel_id;
-        }else if(this.vessel_id && this.self ==0){
+        }else if(this.vessel_id && this.self ==false){
           this.filter_parameters["vessel"] = this.vessel_id;
           this.filter_parameters["sub_network"] = this.sub_network_id;
           this.filter_parameters["network"] = this.network_id;
-        }else if(this.vessel_id && this.self ==1){
+        }else if(this.vessel_id && this.self ==true){
           this.filter_parameters["vessel"] = this.vessel_id;
         }else if(this.sub_network_id){
           this.filter_parameters["sub_network"] = this.sub_network_id;
           this.filter_parameters["network"] = this.network_id;
         }
-        await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value).then(result=>{
+        await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value, this.self).then(result=>{
           if(result.status == 206){ //No Data returned 
           this.device_data = [];
           this.filter_parameters = {}; 

@@ -597,6 +597,7 @@ module.exports = {
         try {
             if(req.access == "self" || req.params.access == "self"){
                 access = 'self';
+                console.log('here')
                 let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
                     .catch(err => {
                         //Error fetching vessels for user

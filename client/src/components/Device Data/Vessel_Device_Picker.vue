@@ -80,7 +80,7 @@ export default {
   ],
   created: function(){
     //Note that if a user is assigned to a vessel then removed then reassigened some time after two records will be returned for the same vessel
-    AuthenticationService.get_vessels(null, null).then(result => {
+    AuthenticationService.get_vessels(null, null, 'self').then(result => {
       this.vessels = result.data.vessels_db;
       for(let i = 0; i < this.vessels.length; i++){
         this.vessel_names.push(`${this.vessels[i].vessel_id}`.concat(":",this.vessels[i].vessel_name));

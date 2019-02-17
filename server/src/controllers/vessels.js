@@ -54,7 +54,9 @@ module.exports = {
         let error_location = null; //1=db
         try{ 
             let vessels_db; 
-            if (req.access == "all") {
+            let access = 'all';
+            if(req.params.access ) access = req.params.access; //This is used to only set access to self if it is specified in the url... If not it is default to all and we rely on the access that is specified in the token
+            if (req.access == "all" && access != 'self') {
                 if (req.params.sub_network_id) {
                     if (req.params.deleted) {
                         //Sub-Network and Deleted specified
@@ -84,7 +86,7 @@ module.exports = {
                         });
                 }
             } 
-            else if(req.access == 'self'){
+            else if(req.access == 'self' || access == 'self'){
                 vessels_db = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
                     .catch(err => {
                         //Error fetching vessels for user

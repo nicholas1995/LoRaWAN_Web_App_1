@@ -129,6 +129,18 @@ module.exports = ((app) => {
     app.delete("/api/sub_networks/:sub_network_id", authenticate.authenticate, grant_access, sub_networks.delete);
 
     //----------------------Vessels-----------------
+    //Vessels (Read Self)
+    app.get("/api/vessels/sub_network/:sub_network_id/deleted/:deleted/access/:access", authenticate.authenticate, grant_access, vessels.get);
+
+    //Vessels (Read Self)
+    app.get("/api/vessels/sub_network/:sub_network_id/access/:access", authenticate.authenticate, grant_access, vessels.get);
+
+    //Vessels (Read Self)
+    app.get("/api/vessels/deleted/:deleted/access/:access", authenticate.authenticate, grant_access, vessels.get);
+
+    //Vessels (Read Self)
+    app.get("/api/vessels/access/:access", authenticate.authenticate, grant_access, vessels.get);
+
     //Vessels (Read)
     app.get("/api/vessels/sub_network/:sub_network_id/deleted/:deleted", authenticate.authenticate, grant_access, vessels.get);
 
@@ -302,6 +314,9 @@ module.exports = ((app) => {
     //Device (Initial fetch self) 
     app.get("/api/devices/uplink/initial/self", authenticate.authenticate, grant_access, device_data.get_self);
 
+    //Device (Filtered Self) //This is used for example in the device data vue when an analsyst only wants to see their data from their vessels
+    app.get("/api/devices/uplink/parameters/:parameters/columns/:columns/access/:access", authenticate.authenticate, grant_access, device_data.get_filtered);
+ 
     //Device (Filtered) 
     app.get("/api/devices/uplink/parameters/:parameters/columns/:columns", authenticate.authenticate, grant_access, device_data.get_filtered);
 

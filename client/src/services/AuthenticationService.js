@@ -145,22 +145,41 @@ export default {
     },
 
     //Vessels
-    get_vessels(sub_network_id, deleted) {//This returns vessels. set sub_net to null to leave open ended.. deleted to null for both.... deleted to 0 for not deleted.. deleted to 1 for deleted
-        if(sub_network_id){
-            if(deleted || deleted == 0){
+    get_vessels(sub_network_id, deleted, access) {//This returns vessels. set sub_net to null to leave open ended.. deleted to null for both.... deleted to 0 for not deleted.. deleted to 1 for deleted
+        if(access && access =='self'){ //This is used to view only the vessels assigned to a user which has access to all the vessels for example the device data page
+            if(sub_network_id){
+                if(deleted || deleted == 0){
+                    Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                    return Api.get(`/api/vessels/sub_network/${sub_network_id}/deleted/${deleted}/access/${access}`);
+                }else{
+                    Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                    return Api.get(`/api/vessels/sub_network/${sub_network_id}/access/${access}`);
+                }
+            }else if(deleted || deleted == 0){ //if 0 not specify they treat it as a null value
                 Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-                return Api.get(`/api/vessels/sub_network/${sub_network_id}/deleted/${deleted}`);
+                return Api.get(`/api/vessels/deleted/${deleted}/access/${access}`);
             }else{
                 Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-                return Api.get(`/api/vessels/sub_network/${sub_network_id}`);
+                return Api.get(`/api/vessels/access/${access}`);
             }
-        }else if(deleted || deleted == 0){ //if 0 not specify they treat it as a null value
-            Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-            return Api.get(`/api/vessels/deleted/${deleted}`);
         }else{
-            Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
-            return Api.get(`/api/vessels`);
+            if(sub_network_id){
+                if(deleted || deleted == 0){
+                    Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                    return Api.get(`/api/vessels/sub_network/${sub_network_id}/deleted/${deleted}`);
+                }else{
+                    Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                    return Api.get(`/api/vessels/sub_network/${sub_network_id}`);
+                }
+            }else if(deleted || deleted == 0){ //if 0 not specify they treat it as a null value
+                Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                return Api.get(`/api/vessels/deleted/${deleted}`);
+            }else{
+                Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
+                return Api.get(`/api/vessels`);
+            }
         }
+
     },
     get_vessels_db_given_sub_networks(sub_network_id) {//This returns deleted and not deleted vessels in the database under the specified subnet
         //NEED TO REMOVE
@@ -377,12 +396,15 @@ export default {
     },
 
     //Device uplink data
-    device_rx_filtered(parameters , columns){ 
+    device_rx_filtered(parameters , columns, access){ 
         //the reason we do no stringify the columns is becasue when it arrives at the server
         //it is already converted to commar seperated format
+        if(access == true) access = 'self' //This is used to set access for the device data vue when anayst for eg want to see only their data
+        else if(access == false) access = 'all'
         parameters = JSON.stringify(parameters); 
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/api/devices/uplink/parameters/${parameters}/columns/${columns}`);
+        if(access) return Api.get(`/api/devices/uplink/parameters/${parameters}/columns/${columns}/access/${access}`);
+        else return Api.get(`/api/devices/uplink/parameters/${parameters}/columns/${columns}`);
     },
     device_rx_filtered_analyst_filter_record(parameters , columns){ 
         //the parameters is too big to put in the uri so we put it in the request
