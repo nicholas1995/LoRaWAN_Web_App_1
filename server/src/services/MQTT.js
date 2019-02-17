@@ -3,6 +3,7 @@ const mqtt = require("mqtt");
 const client = mqtt.connect("mqtt://localhost:1883");
 const VESSEL_DEVICE_DB = require("./database/vessel_device_db");
 const DEVICE_RX = require("./database/device_rx_db");
+const DB_SECONDARY = require("../db_secondary");
 const simulation = require("./sample_device_tracks");
 
 client.on('connect', () => {
@@ -42,6 +43,11 @@ client.on('message', async function (topic, message) {
                             //Error adding rx device data to the database
                             console.log(err);
                         })
+                    DB_SECONDARY.device_uplink.save(message, function(err){
+                            if(err){
+                                console.log(err)
+                            }
+                        });
                 } else {
                     await DEVICE_RX.create_no_rxInfo(message).catch(
                       err => {
@@ -49,6 +55,11 @@ client.on('message', async function (topic, message) {
                         console.log(err);
                       }
                     );
+                    DB_SECONDARY.device_uplink.save(message, function(err){
+                        if(err){
+                            console.log(err)
+                        }
+                    });
                 }
             }
         }else{
