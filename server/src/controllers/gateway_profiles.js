@@ -3,6 +3,8 @@ const db_gateway_profile = require("../services/database/gateway_profile_db");
 const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
+const error_handler = require('./error_logs');
+
 
 function gateway_profiles_request_data(data, type) {
     let request;
@@ -166,7 +168,7 @@ async function get_gateway_profiles(req) { //We fetch from the db twice because 
         let gateway_profiles_lora = await lora_app_server.get_gateway_profiles(request_body)
             .catch(err => {
                 //Error getting gateway profiles from lora app server
-                throw new VError("%s", err.message);
+                throw error_handler.error_message(err) ;
             });
         gateway_profiles_lora = convert_names_gateway_profiles(gateway_profiles_lora.data.result);
         let gateway_profiles_db = await db_gateway_profile.get_gateway_profile()
@@ -198,7 +200,9 @@ module.exports = {
                 });
             res.status(200).send({ gateway_profiles_lora: gateway_profiles_lora, message: 'Gateway profiles fetched', type: 'success' });
         } catch (err) {
-            console.log(err);[0]
+            console.log(err);
+            err = error_handler.error_message("Error getting gateway profiles", err);
+            error_handler.error_logger(req, err);
             res.status(500).send({ message: "Failed to get gateway profiles", type: 'error' });
         }
     },
@@ -207,12 +211,14 @@ module.exports = {
             let gateway_profiles = await lora_app_server.get_gateway_profile_one(req.params.gateway_profile_id_lora)
                 .catch(err => {
                     //Error getting gateway profile from lora app server
-                    throw new VError("%s", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             gateway_profiles = convert_names_gateway_profiles_single(gateway_profiles.data.gatewayProfile);
             res.status(200).send({ gateway_profiles: gateway_profiles, message: 'Gateway Profile fetched', type: 'success' });
         } catch (err) {
             console.log(err);
+            err = error_handler.error_message("Error getting gateway profile", err);
+            error_handler.error_logger(req, err);
             //Error trying to request gateway profile from lora app server
             res.status(500).send({ message: "Failed to get gateway profile", type: 'error' });
         }
@@ -226,7 +232,7 @@ module.exports = {
                 .catch(err => {
                     //error creating service profile on lora app server
                     error_location = 0;
-                    throw error_message("create gateway profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db_gateway_profile.create_gateway_profile(result.data.id, data.gateway_profile_name, data.network_server_id_lora, 'data.network_can_have_gateways')
                 .catch(err => {
@@ -241,6 +247,8 @@ module.exports = {
             //e_l =1 (problem creating service profile in database)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error creating gateway profile", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create gateway profile on LoRa App Server", type: 'error' });
             } else if (error_location == 1) {
@@ -259,7 +267,7 @@ module.exports = {
                 .catch(err => {
                     //error updating gateway profile on lora app server
                     error_location = 0;
-                    throw error_message("update gateway profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db_gateway_profile.update_gateway_profile_all_parameters(data, req.params.gateway_profile_id_lora)
                 .catch(err => {
@@ -274,6 +282,8 @@ module.exports = {
             //e_l =2 (problem updating gateway profile on db)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error updating gateway profile", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update gateway profile", type: 'error' });
             } else if (error_location == 1) {
@@ -291,14 +301,14 @@ module.exports = {
                 .catch(err => {
                     //error deleting gateway_profile from lora app server
                     error_location = 0;
-                    throw error_message("delete gateway profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             let request_body = gateway_profiles_request_data(null, 0);
             gateway_profiles_lora = await lora_app_server.get_gateway_profiles(request_body)
                 .catch(err => {
                     //Error getting gateway profiles from lora app server
                     error_location = 1;
-                    throw error_message("get service profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             gateway_profiles_lora = convert_names_gateway_profiles(gateway_profiles_lora.data.result);
             await db_gateway_profile.update_gateway_profile("gateway_profile_deleted", 1, req.params.gateway_profile_id_lora)
@@ -321,6 +331,8 @@ module.exports = {
             //e_l =2 (gateway profile deleted.. gateway profile fetched.. failed to delete gateway profile on db)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error deleting gateway profile", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete gateway profile", type: 'error' });
             }else if (error_location == 1) {

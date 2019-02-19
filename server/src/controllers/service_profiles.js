@@ -2,6 +2,8 @@ const lora_app_server = require('../services/API/lora_app_server');
 const db_service_profile = require("../services/database/service_profile_db");
 const compare = require("../services/compare");
 const VError = require("verror");
+const error_handler = require('./error_logs');
+
 
 const error = require("../services/errors");
 
@@ -118,7 +120,7 @@ async function get_service_profiles(req) {
     let service_profiles_lora = await lora_app_server.get_service_profiles(request_body)
       .catch(err => {
         //Error getting service profiles from lora app server
-          throw new VError("%s", err.message);
+        throw error_handler.error_message(err) ;
       });
     service_profiles_lora = convert_names_service_profiles(service_profiles_lora.data.result);
     let service_profiles_db = await db_service_profile.get_service_profile()
@@ -155,6 +157,8 @@ module.exports = {
             res.status(200).send({ service_profiles: service_profiles, message: 'Service Profiles fetched', type: 'success'});
         }catch(err) {
             console.log(err);
+            err = error_handler.error_message("Error getting service profiles", err);
+            error_handler.error_logger(req, err);
             //Error trying to request service profiles from lora app server
             res.status(500).send({ message: "Failed to get service profiles", type: 'error' });
         }
@@ -164,12 +168,14 @@ module.exports = {
             let service_profiles = await lora_app_server.get_service_profile_one(req.params.service_profile_id_lora)
                 .catch(err => {
                     //Error getting service profile from lora app server
-                    throw new VError("%s", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             service_profiles = convert_names_service_profiles_single(service_profiles.data.serviceProfile);
             res.status(200).send({ service_profiles: service_profiles, message: 'Service Profile fetched', type: 'success' });
         } catch (err) {
             console.log(err);
+            err = error_handler.error_message("Error getting service profile", err);
+            error_handler.error_logger(req, err);
             //Error trying to request service profile from lora app server
             res.status(500).send({ message: "Failed to get service profile", type: 'error' });
         }
@@ -183,7 +189,7 @@ module.exports = {
                 .catch(err => {
                     //error creating service profile on lora app server
                     error_location = 0;
-                    throw error_message("create service profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db_service_profile.create_service_profile(result.data.id, data.service_profile_name, data.network_server_id, 'data.network_can_have_gateways')
                 .catch(err => {
@@ -198,6 +204,8 @@ module.exports = {
             //e_l =1 (problem creating service profile in database)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error creating service profiles", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create service profile on LoRa App Server", type: 'error' });
             } else if (error_location == 1) {
@@ -216,7 +224,7 @@ module.exports = {
                 .catch(err => {
                     //error updating service profile on lora app server
                     error_location = 0;
-                    throw error_message("update service profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db_service_profile.update_service_profile_all_parameters(data, req.params.service_profile_id_lora)
                 .catch(err => {
@@ -231,6 +239,8 @@ module.exports = {
             //e_l =2 (problem updating service profile on db)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error updating service profiles", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update service profile", type: 'error' });
             } else if (error_location == 1) {
@@ -251,14 +261,14 @@ module.exports = {
                     if (err.message == 'Request failed with status code 412'){
                         error_location = 1;
                     }
-                    throw error_message("delete service profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             let request_body = service_profile_api_request_data(null, 0);
             service_profiles = await lora_app_server.get_service_profiles(request_body)
                 .catch(err => {
                     //Error getting service profiles from lora app server
                     error_location = 2;
-                    throw error_message("get service profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             service_profiles = convert_names_service_profiles(service_profiles.data.result);
             await db_service_profile.update_service_profile("service_profile_deleted", 1, req.params.service_profile_id_lora)
@@ -281,6 +291,8 @@ module.exports = {
             //e_l =2 (service profile deleted.. service profile fetched.. failed to delete service profile on db)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error deleting service profiles", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete service profile", type: 'error' });
             } else if (error_location == 1) {

@@ -566,7 +566,7 @@ module.exports = {
                         }
                     }
                     if (i != user_vessels.length - 1) { where = `${where}) OR` }
-                    else { where = `${where})` }
+                    else { where = `${where})` } 
                     sql_where = [];
                 }
                 sql = ` ${sql} WHERE ${where} ORDER BY time_stamp DESC`

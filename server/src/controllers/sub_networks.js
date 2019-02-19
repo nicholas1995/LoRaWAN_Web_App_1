@@ -5,6 +5,8 @@ const VESSEL_CONTROLLER = require('./vessels')
 const compare = require('../services/compare');
 const error = require('../services/errors');
 const VError = require("verror");
+const error_handler = require('./error_logs');
+
 
 
 function sub_network_api_request_data(data, type) {
@@ -52,8 +54,7 @@ async function get_sub_networks(){
         sub_networks_lora = await lora_app_server.get_applications(request)
         .catch(err => {
             //Error getting sub-networks from lora app server
-            let error = new VError("%s", err.message);
-            throw error;
+            throw error_handler.error_message(err) ;
         });
         sub_networks_lora= convert_names_sub_networks(sub_networks_lora.data.result);
         return sub_networks_lora;
@@ -135,6 +136,8 @@ module.exports = {
         }
         catch(err){
             console.log(err);
+            err = error_handler.error_message("Error getting applications", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to get applications", type: 'error' });
             }
@@ -150,7 +153,7 @@ module.exports = {
             let sub_network = await lora_app_server.get_application_one(req.params.sub_network_id)
                 .catch(err => {
                     //Error getting sub-network from lora app server
-                    throw error.error_message("get sub-network : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 }
                 );
             sub_network = convert_name_sub_network_single(sub_network.data);
@@ -191,7 +194,7 @@ module.exports = {
                 .catch(err => {
                     //Error updating application on lora app server
                     error_location = 0;
-                    throw error.error_message("create sub-network : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db.create_sub_network(result.data.id, data.network_id, data.service_profile_id, data.sub_network_name, data.sub_network_description)
                 .catch(err => {
@@ -208,6 +211,8 @@ module.exports = {
             res.status(201).send({ message: 'Application created', type: 'success' });
         }catch (err) {
             console.log(err);
+            err = error_handler.error_message("Error creating applications", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create application", type: 'error' });
             } else if (error_location == 1) {
@@ -229,7 +234,7 @@ module.exports = {
                 .catch(err => {
                     //Error updating sub network on the lora app server 
                     error_location = 0;
-                    throw error.error_message("update sub-network : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db.update_sub_networks_all_parameters(data, req.params.sub_network_id)
                 .catch(err => {
@@ -240,6 +245,8 @@ module.exports = {
             res.status(200).send({ message: 'Application updated.', type: 'success' });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error updating application", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update application", type: 'error' });
             } else if (error_location == 1) {
@@ -257,7 +264,7 @@ module.exports = {
                 .catch(err => {
                     //Error delete subnetwork form lora app server
                     error_location = 0;
-                    throw error.error_message("delete sub-network : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             sub_networks_lora = await get_sub_networks()
                 .catch(err => {
@@ -279,6 +286,8 @@ module.exports = {
             res.status(200).send({ sub_networks_lora: sub_networks_lora, message: 'Application deleted.', type: 'success' });
         } catch (err) {
             console.log(err);
+            err = error_handler.error_message("Error deleting application", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete application", type: 'error' });
             } else if (error_location == 1) {

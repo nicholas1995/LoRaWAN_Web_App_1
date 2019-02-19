@@ -49,8 +49,11 @@ module.exports = {
     },
     error_message: function(current_error, previous_error){
         let error = '';
+        console.log(current_error.errno)
         if(typeof current_error.response !== 'undefined'){//an error returned from the lora app server
+            console.log(1)
             if(previous_error == null){//this is the lowest level error
+                console.log(1.1)
                 error = new VError({
                     'name': current_error.errno,
                     'info': {
@@ -61,6 +64,7 @@ module.exports = {
                     }
                 }, '"%s" {Path: "%s", Method: "%s", Status: "%s"}', current_error.response.data.error, current_error.response.request.path, current_error.response.request.method, current_error.response.status)
             }else{//Not the lowest error
+                console.log(1.2)
                 error = new VError({
                     'name': current_error.response.statusText,
                     'cause': previous_error,
@@ -73,37 +77,41 @@ module.exports = {
                 }, "%s", current_error)
             }
         }else{//Not an error returned from the lora app server
+            console.log(2)
             if(previous_error == null){
+                console.log(2.1)
                 //current error will be an object in this case
                 error = new VError({
                     'name' : current_error.errno,
                 },"%s", current_error.message);
             }else{
+                console.log(2.2)
                 //Current error will be a string in this case
                 error = new VError({
                     'cause' : previous_error
                 },"%s", current_error);
             }
         }
+        console.log(error.name)
         return error;
     },
     error_logger: async function (req, err) {
         try { 
-            if(err.message.search("character")){//THis is done because the lora app server somethimes returns error messages with invalid charactes hence we need to remove them
+/*             if(err.message.search("character") >= 0){//THis is done because the lora app server somethimes returns error messages with invalid charactes hence we need to remove them
                 //Example --- character '\b'... we need to remove '\b'
                 let string_positon_message = err.message.search("character") + 9;
                 err.message = err.message.substr(0, string_positon_message) + err.message.substr(string_positon_message+5)
                 let string_positon_stack = err.stack.search("character") + 9;
 
                 err.stack = err.stack.substr(0, string_positon_stack) + err.stack.substr(string_positon_stack+5)
-
-            }
+                console.log('TRUEEEe')
+            } */
             let user_id = req.user.id;
             let error_user_class = req.user.user_class;
             let error_path = req.route.path;
             let error_user_action = create_action(req);
             let error_method = req.route.stack[0].method;
-            let error_name= err.name;
+            //let error_name= err.name;
             let error_message = err.message;
             let error_user_ip_address = req.headers['x-forwarded-for'] ||
                 req.connection.remoteAddress ||
@@ -111,7 +119,7 @@ module.exports = {
                 (req.connection.socket ? req.connection.socket.remoteAddress : null);
             let error_user_device = req.headers["user-agent"];
             let error_stack = err.stack;
-            DB_ERROR_LOG.create_log(user_id, error_user_class, error_user_action, error_user_device, error_user_ip_address, error_name, error_message, error_stack).catch(
+            DB_ERROR_LOG.create_log(user_id, error_user_class, error_user_action, error_user_device, error_user_ip_address, error_message, error_stack).catch(
               err => {
                 throw err;
               }

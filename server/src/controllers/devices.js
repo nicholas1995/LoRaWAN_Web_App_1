@@ -7,6 +7,8 @@ const DB_DEVICE_UPLINK = require("../services/database/device_rx_db");
 const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
+const error_handler = require('./error_logs');
+
 
 function device_api_request_data(data, type) {
     let request;
@@ -163,8 +165,7 @@ async function get_devices(){
         let devices_lora = await lora_app_server.get_devices(request_params)
             .catch(err => {
                 //Error getting devices from lora app server
-                let error = new VError("%s", err.message);
-                throw error;
+                throw error_handler.error_message(err) ;
             });
         devices_lora = convert_names_devices(devices_lora.data.result);
         return devices_lora;
@@ -177,8 +178,7 @@ async function get_device_activation(device_eui) {
         let device_activation = await lora_app_server.get_devices_activation(device_eui)
             .catch(err => {
                 //Error getting device activation from lora app server
-                let error = new VError("%s", err.message);
-                throw error;
+                throw error_handler.error_message(err) ;
             });
         device_activation = convert_names_device_activation(device_activation.data);
         return device_activation;
@@ -288,6 +288,8 @@ module.exports = {
             res.status(200).send({ devices_lora: devices_lora, message: 'Devices fetched', type: 'success' });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error getting devices", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to get devices", type: 'error' });
             } else if (error_location == 1) {
@@ -304,13 +306,15 @@ module.exports = {
             let device = await lora_app_server.get_device_one(req.params.device_eui)
             .catch(err => {
                 //Error getting device from lora app server
-                throw error.error_message("get device : lora app server", err.message);
+                throw error_handler.error_message(err) ;
               }
             );
             device = convert_name_device_single(device.data);
             res.status(200).send({ device });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error getting device", err);
+            error_handler.error_logger(req, err);
             res.status(500).send({ message: "Failed to get device", type: 'error' });
         }
     },
@@ -354,7 +358,7 @@ module.exports = {
                 .catch(err => {
                     //Error creating device on lora app server
                     error_location = 0;
-                    throw error.error_message("create device : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             //console.log('Device created on lora app server')
             await db.create(data.sub_network_id, data.device_profile_id_lora, data.device_eui, data.device_name, data.device_description)
@@ -388,6 +392,8 @@ module.exports = {
             res.status(201).send({ message: 'Device created', type: 'success' });
         }catch(err){
             console.log(err); 
+            err = error_handler.error_message("Error creating device", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create device", type: 'error' });
             } else if (error_location == 1) {
@@ -414,7 +420,7 @@ module.exports = {
                 .catch(err => {
                     //Error updating device on lora app server 
                     error_location = 0;
-                    throw error.error_message("update device : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             console.log('Device updated on lora app server');
             await DB_VESSEL_DEVICE.delete_given_deivce_eui(data.device_eui)
@@ -449,6 +455,8 @@ module.exports = {
             res.status(201).send({ message: 'Device updated.', type: 'success' });
         }catch(err){
             console.log(err)
+            err = error_handler.error_message("Error updating device", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update device", type: 'error' });
             } else if (error_location == 1) {
@@ -468,7 +476,7 @@ module.exports = {
                 .catch(err => {
                     //Error delete device form lora app server
                     error_location = 0;
-                    throw error.error_message("delete device : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             //console.log('Device deleted from lora app server. Device_EUI: ' + req.params.device_eui)
             devices_lora = await get_devices()
@@ -511,6 +519,8 @@ module.exports = {
             res.status(200).send({ devices_lora: devices_lora, message: 'Device deleted.', type: 'success' });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error deleting device", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete device", type: 'error' });
             } else if (error_location == 1) {
@@ -542,6 +552,8 @@ module.exports = {
                 res.status(403).send({ error: "Forbidden" });
             }
         }catch(err){
+            err = error_handler.error_message("Error getting device activation", err);
+            error_handler.error_logger(req, err);
             console.log(err);
         }
 
@@ -555,7 +567,7 @@ module.exports = {
                 await lora_app_server.create_devices_activation(request_data, req.params.device_eui)
                     .catch(err => {
                         //Error creating device activation on lora app server
-                        throw error.error_message("create device activation : lora app server", err.message);
+                        throw error_handler.error_message(err) ;
                     })
                 res.status(200).send({ message: 'Device activated.', type: 'success' });
             } else {
@@ -563,6 +575,8 @@ module.exports = {
             }
 
         }catch(err){
+            err = error_handler.error_message("Error creating device activation", err);
+            error_handler.error_logger(req, err);
             res.status(200).send({message: "Device activation failed.", type: 'error' })
         }
     },

@@ -3,6 +3,8 @@ const db_device_profile = require("../services/database/device_profile_db");
 const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
+const error_handler = require('./error_logs');
+
 
 function device_profile_api_request_data(data, type) {
     let request;
@@ -156,7 +158,7 @@ async function get_device_profiles(req) { //We fetch from the db twice because i
         let device_profiles_lora = await lora_app_server.get_device_profiles(request_body)
             .catch(err => {
                 //Error getting device profiles from lora app server
-                throw new VError("%s", err.message);
+                throw error_handler.error_message(err) ;
             });
         device_profiles_lora = convert_names_device_profiles(device_profiles_lora.data.result);
         let device_profiles_db = await db_device_profile.get_device_profile()
@@ -190,6 +192,8 @@ module.exports = {
             res.status(200).send({ device_profiles_lora: device_profiles_lora, message: 'Device profiles fetched', type: 'success' });
         } catch (err) {
             //console.log(err);
+            err = error_handler.error_message("Error getting device profiles", err);
+            error_handler.error_logger(req, err);
             res.status(500).send({ message: "Failed to get device profiles", type: 'error' });
         }
     },
@@ -198,12 +202,14 @@ module.exports = {
             let device_profiles = await lora_app_server.get_device_profile_one(req.params.device_profile_id_lora)
                 .catch(err => {
                     //Error getting device profile from lora app server
-                    throw new VError("%s", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             device_profiles = convert_names_device_profiles_single(device_profiles.data.deviceProfile);
             res.status(200).send({ device_profiles: device_profiles, message: 'Device Profile fetched', type: 'success' });
         } catch (err) {
             console.log(err);
+            err = error_handler.error_message("Error getting device profile", err);
+            error_handler.error_logger(req, err);
             //Error trying to request device profile from lora app server
             res.status(500).send({ message: "Failed to get device profile", type: 'error' });
         }
@@ -214,7 +220,7 @@ module.exports = {
             let device_profiles_lora = await lora_app_server.get_device_profiles_specified_sub_network(request_body, req.params.sub_network_id)
                 .catch(err => {
                     //Error getting device profiles from lora app server
-                    throw new VError("%s", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             device_profiles_lora = convert_names_device_profiles(device_profiles_lora.data.result);
             let device_profiles_db = await db_device_profile.get_device_profile()
@@ -238,7 +244,7 @@ module.exports = {
                 .catch(err => {
                     //error creating device profile on lora app server
                     error_location = 0;
-                    throw error_message("create device profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db_device_profile.create_device_profile(data.network_id, result.data.id, data.device_profile_name, data.network_server_id,  'null')
                 .catch(err => {
@@ -253,6 +259,8 @@ module.exports = {
             //e_l =1 (problem creating device profile in database)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error creating device profile", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create device profile on LoRa App Server", type: 'error' });
             } else if (error_location == 1) {
@@ -271,7 +279,7 @@ module.exports = {
                 .catch(err => {
                     //error updating device profile on lora app server
                     error_location = 0; 
-                    throw error_message("update device profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db_device_profile.update_device_profile_all_parameters(data, req.params.device_profile_id_lora)
                 .catch(err => {
@@ -286,6 +294,8 @@ module.exports = {
             //e_l =2 (problem updating device profile on db)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error updating device profile", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update device profile", type: 'error' });
             } else if (error_location == 1) {
@@ -303,14 +313,14 @@ module.exports = {
                 .catch(err => {
                     //error deleting device_profile from lora app server
                     error_location = 0;
-                    throw error_message("delete device profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             let request_body = device_profile_api_request_data(null, 0);
             device_profiles = await lora_app_server.get_device_profiles(request_body)
                 .catch(err => {
                     //Error getting device profiles from lora app server
                     error_location = 1;
-                    throw error_message("get device profile : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             device_profiles = convert_names_device_profiles(device_profiles.data.result);
             await db_device_profile.update_device_profile("device_profile_deleted", 1, req.params.device_profile_id_lora)
@@ -333,6 +343,8 @@ module.exports = {
             //e_l =2 (device profile deleted.. device profile fetched.. failed to delete device profile on db)
             //other = (unknown error/exception)
             console.log(err);
+            err = error_handler.error_message("Error deleting device profile", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete device profile", type: 'error' });
             }else if (error_location == 1) {

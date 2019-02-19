@@ -4,6 +4,8 @@ const db_gateway_statistics = require("../services/database/gateway_statistics_d
 const compare = require("../services/compare");
 const error = require("../services/errors");
 const VError = require("verror");
+const error_handler = require('./error_logs');
+
 
 function gateway_api_request_data(data, type) {
     let request;
@@ -130,7 +132,7 @@ async function get_gateways() {
         let request_params = gateway_api_request_data(null, 0);
         let gateways_lora = await lora_app_server.get_gateways(request_params)
             .catch(err => {
-                throw new VError("%s", err.message);
+                throw error_handler.error_message(err) ;
             });
         gateways_lora = convert_names_gateways(gateways_lora.data.result);
         let gateways_db = await db_gateway.get_gateway()
@@ -201,6 +203,8 @@ module.exports = {
             res.status(200).send({ gateways_lora: gateways_lora, message: 'Gateways fetched', type: 'success' });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error getting gateways", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to get gateways", type: 'error' });
             }else {
@@ -213,12 +217,14 @@ module.exports = {
             let gateway = await lora_app_server.get_gateway_one(req.params.gateway_id) //check to see if its the id or id_lora
                 .catch(err => {
                     //Error getting gateways from lora app server
-                    throw error.error_message("get gateway : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             gateway = gateway.data.gateway;
             gateway = convert_name_gateway_single(gateway);
             res.status(200).send({ gateway });
         } catch (err) {
+            err = error_handler.error_message("Error getting gateway", err);
+            error_handler.error_logger(req, err);
             console.log(err);
             res.status(500).send({ message: "Failed to get gateway", type: 'error' });
         }
@@ -238,14 +244,14 @@ module.exports = {
             let request_params = gateway_api_request_data(null, 0);
             gateways_lora = await lora_app_server.get_gateways(request_params)
                 .catch(err => {
-                    throw new VError("%s", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             gateways_lora = convert_names_gateways(gateways_lora.data.result);
             for(let i = 0; i < gateways_lora.length; i++){
                 gateways_lora_individual = await lora_app_server.get_gateway_one(gateways_lora[i].gateway_id_lora)
                     .catch(err => {
                         //Error getting gateways from lora app server
-                        throw error.error_message("get gateway : lora app server", err.message);
+                        throw error_handler.error_message(err) ;
                     });
                 gateways_lora_individual = convert_name_gateway_single(gateways_lora_individual.data.gateway);
                 gateways_full_data_lora.push(gateways_lora_individual);
@@ -280,7 +286,7 @@ module.exports = {
             gateways_lora_individual = await lora_app_server.get_gateway_one(req.params.gateway_id_lora)
                 .catch(err => {
                     //Error getting gateways from lora app server
-                    throw error.error_message("get gateway : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             gateways_lora_individual = convert_name_gateway_single(gateways_lora_individual.data.gateway);
             gateways_lora_individual["gateway_id"] = req.params.gateway_id; //this is the equivalent to parsing
@@ -323,7 +329,7 @@ module.exports = {
             .catch(err => {
                 //Error creating gateway 
                 error_location = 0;
-                throw error.error_message("create gateways : lora app server", err.message);
+                throw error_handler.error_message(err) ;
             });
             await db_gateway.create_gateway(data.network_id, data.gateway_name, data.gateway_id_lora, data.gateway_description, data.network_server_id)
                 .catch(err => {
@@ -334,6 +340,8 @@ module.exports = {
             res.status(201).send({ message: 'Gateway created', type: 'success' });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error creating gateway", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create gateway", type: 'error' });
             } else if (error_location == 1) {
@@ -352,7 +360,7 @@ module.exports = {
                 .catch(err => {
                     //Error updating gateway
                     error_location = 0;
-                    throw error.error_message("update gateways : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             await db_gateway.update_gateway_all_parameters(data, req.params.gateway_id)
                 .catch(err => {
@@ -363,6 +371,8 @@ module.exports = {
             res.status(201).send({ message: 'Gateway updated', type: 'success' });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error updating gateway", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to update gateway", type: 'error' });
             } else if (error_location == 1) {
@@ -380,12 +390,12 @@ module.exports = {
                 .catch(err => {
                     //Error delete gateway form lora app server
                     error_location = 0;
-                    throw error.error_message("delete gateway : lora app server", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             let request_params = gateway_api_request_data(null, 0);
             gateways_lora = await lora_app_server.get_gateways(request_params)
                 .catch(err => {
-                    throw new VError("%s", err.message);
+                    throw error_handler.error_message(err) ;
                 });
             gateways_lora = convert_names_gateways(gateways_lora.data.result);
             await db_gateway.update_gateway('gateway_deleted', 1, req.params.gateway_id_lora)
@@ -402,6 +412,8 @@ module.exports = {
             res.status(200).send({ gateways_lora: gateways_lora, message: 'Gateway deleted', type: 'success' });
         }catch(err){
             console.log(err);
+            err = error_handler.error_message("Error deleting gateway", err);
+            error_handler.error_logger(req, err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete gateway", type: 'error' });
             } else if (error_location == 1) {

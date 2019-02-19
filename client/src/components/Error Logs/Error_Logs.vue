@@ -16,13 +16,12 @@
     >
       <template slot="items" slot-scope="props">
           <td class="text-xs-left">{{ props.item.error_log_id }}</td>
+          <td class="text-xs-left">{{ props.item.error_time_stamp | return_date}}</td>
           <td class="text-xs-left">{{ props.item.user_id }}</td>
           <td class="text-xs-left">{{ props.item.error_user_class }}</td>
           <td class="text-xs-left">{{ props.item.error_user_action }}</td>
           <td class="text-xs-left">{{ props.item.error_user_device }}</td>
           <td class="text-xs-left">{{ props.item.error_user_ip_address }}</td>
-          <td class="text-xs-left">{{ props.item.error_time_stamp | return_date}}</td>
-          <td class="text-xs-left">{{ props.item.error_name }}</td>
           <td class="text-xs-left">{{ props.item.error_message}}</td>
           <td class="text-xs-left">{{ props.item.error_stack }}</td>
       </template>
@@ -40,13 +39,12 @@ export default {
     return {
       headers: [
           { text: 'Error ID', value: 'error_log_id' ,sortable: true},
+          { text: 'Error Time Stamp', value: 'error_time_stamp', sortable: true },
           { text: 'User ID', value: 'user_id' , sortable: true },
           { text: 'User Class', value: 'error_user_class' , sortable: true },
           { text: 'Action', value: 'error_user_action', sortable: true },
           { text: 'User Device', value: 'error_user_device', sortable: true },
           { text: 'User IP Address', value: 'error_user_ip_address', sortable: true },
-          { text: 'Error Time Stamp', value: 'error_time_stamp', sortable: true },
-          { text: 'Error Name', value: 'error_name', sortable: true },
           { text: 'Error Message', value: 'error_message', sortable: false },
           { text: 'Stack', value: 'error_stack', sortable: false },
         ],

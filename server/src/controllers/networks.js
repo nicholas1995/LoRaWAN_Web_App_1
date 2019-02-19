@@ -112,7 +112,7 @@ module.exports = {
                 .catch(err => {
                     //Error comparing networks 
                     error_location = 1;
-                    throw error_handler.error_message("get networks", err.message);
+                    throw error_handler.error_message("get organizations", err.message);
                 });
             res.status(200).send({networks_lora: networks_lora, message: 'Organizations fetched', type: 'success'});
         }catch(err){
@@ -152,7 +152,7 @@ module.exports = {
                 .catch(err => {
                     //error creating network on lora app server
                     error_location =0;
-                    throw error_handler.error_message("create network : lora app server", err.message) ;
+                    throw error_handler.error_message(err) ;
                 });
             await db.create_network(result.data.id, data.network_name, data.network_display_name, data.network_can_have_gateways)
                 .catch(err => { 
@@ -162,12 +162,13 @@ module.exports = {
                 });
             res.status(201).send({ message: 'Organization created', type: 'success' });
         }catch(err){
+            err = error_handler.error_message("Error creating organization", err);
             error_handler.error_logger(req, err);
             //e_l =0 (problem creating network)
             //e_l =1 (network created.. failed to fetch networks)
             //e_l =2 (network created.. networks fetched.. failed to create network on db)
             //other = (unknown error/exception)
-            console.log(err);
+            //console.log(err);
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to create organization", type: 'error' });
             } else if (error_location == 1) {
@@ -188,7 +189,7 @@ module.exports = {
                 .catch(err => {
                     //error updating network on lora app server
                     error_location = 0;
-                    throw error_handler.error_message("update network : lora app server", err.message);
+                    throw error_handler.error_message(err);
                 });
             await db.update_networks_all_parameters(data, req.params.network_id)
                 .catch(err => {
@@ -198,6 +199,7 @@ module.exports = {
                 })
             res.status(200).send({ message: 'Organization updated', type: 'success' });
         }catch(err){
+            err = error_handler.error_message("Error updating organization", err);
             error_handler.error_logger(req, err);
             //e_l =0 (problem updating network)
             //e_l =1 (network updated.. failed to fetch networks)
@@ -222,7 +224,7 @@ module.exports = {
                 .catch(err => {
                     //error deleting network from lora app server
                     error_location = 0;
-                    throw error_handler.error_message("delete network : lora app server", err.message);
+                    throw error_handler.error_message(err);
                 });
             networks_lora = await get_networks()
                 .catch(err => {
@@ -238,6 +240,7 @@ module.exports = {
                 });
             res.status(200).send({ networks_lora: networks_lora, message: 'Organization deleted', type: 'success' });
         }catch(err){
+            err = error_handler.error_message("Error deleting organization", err);
             error_handler.error_logger(req, err);
             //e_l =0 (problem deleteing network)
             //e_l =1 (network deleted.. failed to fetch networks)
