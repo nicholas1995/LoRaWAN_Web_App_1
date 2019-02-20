@@ -34,9 +34,19 @@ client.on('message', async function (topic, message) {
             message["vessel_id"] = data[0].vessel_id;
             message["device_id"] = data[0].device_id;
             if (topic_information.event == 'rx') {
-                if (message.rxInfo) {
-                    message.object.gpsLocation["1"]["latitude"] = simulation.track_1[message.txInfo.frequency].lat;
-                    message.object.gpsLocation["1"]["longitude"] = simulation.track_1[message.txInfo.frequency].lng;
+                if (message.rxInfo) { 
+                    //--------THIS IS JUST FOR THE SIMILATION
+                    if(message.rxInfo[0].rssi ==1){//Trinidad north west
+                        message.object.gpsLocation["1"]["latitude"] = simulation.track_1[message.txInfo.frequency].lat;
+                        message.object.gpsLocation["1"]["longitude"] = simulation.track_1[message.txInfo.frequency].lng;
+                    }else if(message.rxInfo[0].rssi ==2){//Tobago north west
+                        message.object.gpsLocation["1"]["latitude"] = simulation.tobago_tracks_1[message.txInfo.frequency].lat;
+                        message.object.gpsLocation["1"]["longitude"] = simulation.tobago_tracks_1[message.txInfo.frequency].lng;
+                    }else if(message.rxInfo[0].rssi ==3){//Grenada
+                        message.object.gpsLocation["1"]["latitude"] = simulation.grenada_track_1[message.txInfo.frequency].lat;
+                        message.object.gpsLocation["1"]["longitude"] = simulation.grenada_track_1[message.txInfo.frequency].lng;
+                    }
+
                     message.object.temperatureSensor["3"] = simulation.random_temperatue();
                     await DEVICE_RX.create(message)
                         .catch(err => {
