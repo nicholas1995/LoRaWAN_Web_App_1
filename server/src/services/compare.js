@@ -389,7 +389,7 @@ module.exports = {
             }
             for (let k = 0; k < added_lora.length; k++) {
                 await service_profile_db.create_service_profile(lora[added_lora[k]].service_profile_id_lora, lora[added_lora[k]].service_profile_name, lora[added_lora[k]].network_server_id,
-                    lora[added_lora[k]].service_profile_created_at)
+                    lora[added_lora[k]].network_id, lora[added_lora[k]].service_profile_created_at)
                     .catch(err => {
                         throw error.error_message(`create: ID-${lora[added_lora[k]].service_profile_id_lora}`, err.message);
                     });

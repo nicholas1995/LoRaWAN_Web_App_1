@@ -85,7 +85,6 @@ module.exports = {
                     //Error getting network_servers from lora app server
                     throw error.error_message("network servers : lora app server", err.message);
                 });
-                console.log(network_servers_lora)
             res.status(200).send({ network_servers_lora: network_servers_lora, message: 'Network Servers fetched', type: 'success' });
         } catch (err) {
             console.log(err);

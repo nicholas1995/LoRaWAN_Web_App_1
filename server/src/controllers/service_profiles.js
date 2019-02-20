@@ -191,7 +191,7 @@ module.exports = {
                     error_location = 0;
                     throw error_handler.error_message(err) ;
                 });
-            await db_service_profile.create_service_profile(result.data.id, data.service_profile_name, data.network_server_id, 'data.network_can_have_gateways')
+            await db_service_profile.create_service_profile(result.data.id, data.service_profile_name, data.network_server_id, data.network_id, 'data.network_can_have_gateways')
                 .catch(err => {
                     //error creating service_profile on db
                     error_location = 1;

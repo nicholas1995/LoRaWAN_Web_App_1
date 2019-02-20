@@ -7,10 +7,10 @@ module.exports = {
         WHERE service_profile_deleted = '0'`;
     return db.queryAsync(sql);
   },
-  create_service_profile: function (service_profile_id_lora, service_profile_name, network_server_id, created_at_time_stamp) {
+  create_service_profile: function (service_profile_id_lora, service_profile_name, network_server_id, network_id, created_at_time_stamp) {
     let sql = `INSERT INTO service_profile
-        (service_profile_id_lora, service_profile_name, network_server_id, service_profile_created_at)
-        VALUES ('${service_profile_id_lora}', '${service_profile_name}', '${network_server_id}', '${created_at_time_stamp}')`;
+        (service_profile_id_lora, service_profile_name, network_server_id, network_id, service_profile_created_at)
+        VALUES ('${service_profile_id_lora}', '${service_profile_name}', '${network_server_id}', '${network_id}', '${created_at_time_stamp}')`;
     return db.queryAsync(sql);
   },
   update_service_profile: function (col, value, condition) {
