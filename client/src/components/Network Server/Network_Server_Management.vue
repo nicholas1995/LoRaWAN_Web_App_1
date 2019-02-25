@@ -8,10 +8,11 @@
         vertical
       ></v-divider>
       <v-spacer></v-spacer>
-      <v-toolbar-items class="hidden-sm-and-down ">
+      <v-toolbar-items >
         <v-tooltip bottom>
           <v-icon large slot="activator"
-            class="mr-1 mt-3" @click.stop="$router.push(`/network_server/create`)" >
+            :class="{'mr-1 mt-2': $vuetify.breakpoint.smAndDown, 'mr-1 pt-3': $vuetify.breakpoint.mdAndUp}" 
+            @click.stop="$router.push(`/network_server/create`)" >
             add_box
           </v-icon>
           <span>Create Network Server</span>
