@@ -1,6 +1,8 @@
 const lora_app_server = require("../services/API/lora_app_server");
 const error = require("../services/errors");
 const VError = require("verror");
+const DB_NETWORK_SERVER = require("../services/database/network_server_db")
+const compare = require('../services/compare');
 
 function network_server_api_request_data(data, type) {
   let request;
@@ -40,21 +42,21 @@ function convert_names_network_servers(network_servers) {
         network_server_created_at: null,
         network_server_id: null,
         network_server_name: null,
-        network_server_server: null,
+        network_server: null,
         network_server_updated_at: null
     };
     for (let i = 0; i < network_servers.length; i++) {
         network_server.network_server_created_at = network_servers[i].createdAt;
         network_server.network_server_id = network_servers[i].id;
         network_server.network_server_name = network_servers[i].name;
-        network_server.network_server_server = network_servers[i].server;
+        network_server.network_server = network_servers[i].server;
         network_server.network_server_updated_at = network_servers[i].updatedAt;
         network_servers_return[i] = network_server;
         network_server = {
             network_server_created_at: null,
             network_server_id: null,
             network_server_name: null,
-            network_server_server: null,
+            network_server: null,
             network_server_updated_at: null
         };
     }
@@ -64,14 +66,24 @@ function convert_names_network_servers(network_servers) {
 async function get_network_servers(){
     try {
         let request_body = network_server_api_request_data(null, 0);
-        let network_servers = await lora_app_server.get_network_servers(request_body)
+        let network_servers_lora = await lora_app_server.get_network_servers(request_body)
             .catch(err => {
                 //Error getting network servers from lora app server
                 let error = new VError("%s", err.message);
                 throw error;
             });
-        network_servers = convert_names_network_servers(network_servers.data.result);
-        return network_servers;
+            network_servers_lora = convert_names_network_servers(network_servers_lora.data.result);
+            let network_servers_db = await DB_NETWORK_SERVER.get_network_server()
+            .catch(err => {
+                //Error getting gateways from database
+                throw new VError("%s", err.message);
+            }); 
+        await compare.compare_network_server(network_servers_lora, network_servers_db)
+            .catch(err => {
+                //Error comparing
+                throw new VError("%s", err.message);
+            })
+        return network_servers_lora;
     } catch (err) {
         throw err;
         //Error getting network servers from lora app server

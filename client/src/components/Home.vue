@@ -245,8 +245,8 @@ export default {
         var content = `<div>
                       <h3>Sensor Data</h3>
                       <b>Time Stamp</b>: ${data.time_stamp}<br>
-                      <b>Network Name</b>: ${data.network_name}<br>
-                      <b>Sub-Network Name</b>: ${data.sub_network_name}<br>
+                      <b>Organization Name</b>: ${data.network_name}<br>
+                      <b>Application Name</b>: ${data.sub_network_name}<br>
 
                       <b>Temperature:</b>${data.temperature} <br>
                       <b>Humidity:</b>${data.humidity} <br>

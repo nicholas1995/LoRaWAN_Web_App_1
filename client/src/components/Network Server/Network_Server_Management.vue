@@ -49,9 +49,8 @@
             </v-tooltip>
           </td>
           <td class="text-xs-left">{{ props.item.network_server_id }}</td>
-          <td class="text-xs-left">{{ props.item.network_server_id_lora }}</td>
           <td class="text-xs-left">{{ props.item.network_server_name }}</td>
-          <td class="text-xs-left">{{ props.item.network_server_server }}</td>
+          <td class="text-xs-left">{{ props.item.network_server }}</td>
           <td class="text-xs-left">{{ props.item.network_server_created_at | return_date}}</td>
           <td class="text-xs-left">{{ props.item.network_server_updated_at | return_date}}</td>
       </template>
@@ -70,9 +69,8 @@ export default {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Network Server ID', value: 'network_server_id' ,sortable: true},
-          { text: 'Network Server ID LoRa', value: 'network_server_id_lora' ,sortable: true},
           { text: 'Network Server Name', value: 'network_server_name' , sortable: false },
-          { text: 'Server', value: 'network_server_server' , sortable: false },
+          { text: 'Server', value: 'network_server' , sortable: false },
           { text: 'Created At', value: 'network_server_created_at', sortable: true },
           { text: 'Updated At', value: 'network_server_updated_at', sortable: true },
         ],

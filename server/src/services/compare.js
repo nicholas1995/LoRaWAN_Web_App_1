@@ -7,6 +7,7 @@ const service_profile_db = require("../services/database/service_profile_db");
 const gateway_db = require("../services/database/gateway_db");
 const device_profile_db = require("../services/database/device_profile_db");
 const DB_VESSEL_DEVICE = require("./database/vessel_device_db");
+const DB_NETWORK_SERVER = require("./database/network_server_db");
 const VESSEL_CONTROLLER = require('../controllers/vessels')
 
 const VError = require("verror");
@@ -462,6 +463,64 @@ module.exports = {
                             throw error.error_message(`delete: ID-${db[l].device_profile_id_lora}`, err.message);
                         })
                     //console.log("Device Profile deletd on lora app server. Device Profile ID Lora: " + db[l].device_profile_id_lora);
+                }
+            }
+        } catch (err) {
+            throw error.error_message("compare", err.message);
+        }
+    },
+    compare_network_server: async function (lora, db) {
+        let accounted_for = [];
+        let added_lora = [];
+        let network_server_added = [];
+        try {
+            for (let i = 0; i < lora.length; i++) {
+                if (db.length == 0) {
+                    added_lora.push(i);
+                    //console.log('Network Server Added');
+                }
+                for (let j = 0; j < db.length; j++) {
+                    if (lora[i].network_server_id == db[j].network_server_id) {
+                        if (lora[i].network_server_name != db[j].network_server_name) {
+                            DB_NETWORK_SERVER.update_network_server('network_server_name', lora[i].network_server_name, lora[i].network_server_id)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].network_server_id}`, err.message);
+                                })
+                            //console.log('Different name');
+                        } else if (lora[i].network_server_created_at != db[j].network_server_created_at) {
+                            DB_NETWORK_SERVER.update_network_server('network_server_created_at', lora[i].network_server_created_at, lora[i].network_server_id)
+                                .catch(err => {
+                                    throw error.error_message(`update: ID-${lora[i].network_server_id}`, err.message);
+                                })
+                            //console.log('Update the date created at');
+                        }
+                        accounted_for.push(j);
+                        break;
+                    }
+                    else if (j == (db.length - 1)) {
+                        added_lora.push(i);
+                        //console.log('Device Profile Added');
+                    } else if (lora[i].network_server_id != db[j].network_server_id) {
+                    }
+                }
+            }
+            for (let k = 0; k < added_lora.length; k++) {
+                await DB_NETWORK_SERVER.create_network_server(lora[added_lora[k]].network_server_id, lora[added_lora[k]].network_server_name, lora[added_lora[k]].network_server, 
+                    lora[added_lora[k]].network_server_created_at)
+                    .catch(err => {
+                        throw error.error_message(`create: ID-${lora[added_lora[k]].network_server_id}`, err.message);
+                    });
+                    network_server_added.push(lora[added_lora[k]].network_server_id);
+                //console.log('Inserted Added Network Server');
+            }
+            for (let l = 0; l < db.length; l++) {
+                let index = accounted_for.indexOf(l);
+                if (index == -1) {
+                    await DB_NETWORK_SERVER.update_network_server('network_server_deleted', 1, db[l].network_server_id)
+                        .catch(err => {
+                            throw error.error_message(`delete: ID-${db[l].network_server_id}`, err.message);
+                        })
+                    //console.log("Network Server deletd on lora app server. Network Server ID: " + db[l].network_server_id);
                 }
             }
         } catch (err) {

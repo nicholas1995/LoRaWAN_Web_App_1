@@ -1,55 +1,151 @@
-<template >
-  <v-content v-if="this.access == 1" >
-    <v-container fluid fill-height >
+<template>
+  <v-content v-if="this.access == 1">
+    <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
-          <v-card class=" elevation-10 ">
-            <v-toolbar light class="primary">
-              <v-toolbar-title>Create Network</v-toolbar-title>
-            </v-toolbar>
-          </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
-            <v-form>
-              <!--$touch is used to manually set dirty when the event occurs
-              and dirty is used to validate the data field--> 
-              <!--Network Name -->
-              <v-flex >
-                <v-text-field
-                  v-model="network_name"
-                  :error-messages = "network_nameErrors"
-                  label="Network Name*"
-                  @keyup="$v.network_name.$touch()">
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_name"></tool_tips_forms>
-            </v-text-field>
-                </v-flex>
-              <!--Display Name-->
-                <v-text-field
-                  v-model="network_display_name"
-                  :error-messages = "network_display_nameErrors"
-                  label="Display Name*"
-                  @keyup="$v.network_display_name.$touch()">
-                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_display_name"></tool_tips_forms>
-              </v-text-field>
-              <!--Can Have Gateways-->
-                <v-checkbox
-                  v-model="network_can_have_gateways"
-                  label="Can Have Gateways"
-                  required
-                >
-                </v-checkbox>
-              </v-form>
-              <div div class="text">
-                {{message}} 
-              </div>
-              <v-btn class="button"
-                @click.stop="create_network()">
-                Create Network
-              </v-btn>
-              <v-btn class="button"
-                @click.stop="$router.push(`/network`)">
-                Cancel
-              </v-btn>
-          </v-card>
+        <v-flex xs12 sm12 md10>
+          <v-toolbar light class="primary ">
+            <v-toolbar-title>Create Service Profile</v-toolbar-title>
+          </v-toolbar>
+            <v-stepper non-linear class = "elevation-5">
+              <v-stepper-header>
+                <v-stepper-step editable step="1">Basic Information</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="2">Gateway Discovery</v-stepper-step>
+                <v-divider></v-divider>
+                <v-stepper-step editable step="3">TLS Certificates</v-stepper-step>
+              </v-stepper-header>
+              <v-stepper-items>
+<!--Stepper 1--><v-stepper-content step ="1">
+                <!--Network Server Name -->
+                  <v-flex >
+                    <v-text-field
+                      v-model="service_profile_name"
+                      :error-messages = "service_profile_name_Errors"
+                      label="Network Server Name*"
+                      @blur="$v.service_profile_name.$touch()">
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_service_profile_name"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                <!--Network Server Server-->
+                  <v-select
+                    v-model="network_name_form"
+                    :items="this.network_names"
+                    label="Network Server Server*"
+                    :error-messages = "network_name_form_Errors"
+                    @blur="$v.network_name_form.$touch()" 
+                  >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_service_profile"></tool_tips_forms>
+                  </v-select>
+                <!--Message -->
+                  <div div class="text">
+                    {{message}} 
+                  </div>
+                <!--Button -->
+                  <v-btn class="grey lighten-2"
+                    @click.stop="create_service_profile()">
+                    Create Network Server
+                  </v-btn>
+                  <v-btn class="grey lighten-2"
+                    @click.stop="$router.push(`/network_server`)">
+                    Cancel
+                  </v-btn>
+                </v-stepper-content>
+<!--Stepper 2--><v-stepper-content step ="2">
+                <!--Enable gateway discovery-->
+                  <v-checkbox
+                    v-model="enable_gateway_discovery"
+                    label="Enable gateway discovery"
+                    required
+                  >
+                  </v-checkbox>
+                <div v-if = "this.enable_gateway_discovery == true">
+                <!--Device Status Request Frequency-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="device_status_req_frequency"
+                      label="Interval Per Day*"
+                      :error-messages = "device_status_req_frequency_Errors"
+                      @blur="$v.device_status_req_frequency.$touch()" 
+                    >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_status_req_frequency"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                <!--Tx Frequency-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="device_status_req_frequency"
+                      label="Interval Per Day*"
+                      :error-messages = "device_status_req_frequency_Errors"
+                      @blur="$v.device_status_req_frequency.$touch()" 
+                    >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_status_req_frequency"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                <!--Tx data rate-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="device_status_req_frequency"
+                      label="Tx Data Rate*"
+                      :error-messages = "device_status_req_frequency_Errors"
+                      @blur="$v.device_status_req_frequency.$touch()" 
+                    >
+                    <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_status_req_frequency"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                </div>
+                <!--Message -->
+                  <div div class="text">
+                    {{message}} 
+                  </div>
+                <!--Button -->
+                  <v-btn class="grey lighten-2"
+                    @click.stop="create_service_profile()">
+                    Create Service Profile
+                  </v-btn>
+                  <v-btn class="grey lighten-2"
+                    @click.stop="$router.push(`/network_server`)">
+                    Cancel
+                  </v-btn>
+                </v-stepper-content>
+<!--Stepper 3--><v-stepper-content step ="3">
+                <!--Data Rate Min-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="dr_min"
+                      label="Minimum Data Rate*"
+                      :error-messages = "dr_min_Errors"
+                      @blur="$v.dr_min.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_dr_min"></tool_tips_forms>
+                    </v-text-field>
+                  </v-flex>
+                <!--Data Rate Max-->
+                  <v-flex >
+                    <v-text-field
+                      v-model="dr_max"
+                      label="Maximum Data Rate*"
+                      :error-messages = "dr_max_Errors"
+                      @blur="$v.dr_max.$touch()" 
+                    >
+                      <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_dr_max"></tool_tips_forms>                    
+                    </v-text-field>
+                  </v-flex>
+                <!--Message -->
+                  <div div class="text">
+                    {{message}} 
+                  </div>
+                <!--Button -->
+                  <v-btn class="grey lighten-2"
+                    @click.stop="create_service_profile()">
+                    Create Service Profile
+                  </v-btn>
+                  <v-btn class="grey lighten-2"
+                    @click.stop="$router.push(`/network_server`)">
+                    Cancel
+                  </v-btn>
+                </v-stepper-content>
+              </v-stepper-items>
+            </v-stepper>
         </v-flex>
       </v-layout>
     </v-container>
@@ -104,7 +200,9 @@ mixins: [validationMixin],
       network_can_have_gateways: "",
       description_network_name : description_network_name,
       description_network_display_name : description_network_display_name,
-      message: ""
+      message: "",
+
+      enable_gateway_discovery: false,
     };
   },
   props:[
