@@ -32,6 +32,7 @@
                     <v-text-field
                       v-model="gateway_id_lora"
                       label="Gateway ID*"
+                      maxlength="16"
                       :error-messages = "gateway_id_Errors"
                       @keyup="$v.gateway_id_lora.$touch()" 
                     >
@@ -75,9 +76,8 @@
                     <v-select
                       v-model="gateway_profile_name_form"
                       :items="this.gateway_profile_names"
-                      label="Gateway Profile*"
-                      :error-messages = "gateway_profile_name_form_Errors"
-                      @blur="$v.gateway_profile_name_form.$touch()" 
+                      label="Gateway Profile"
+                      clearable
                     >
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_profile"></tool_tips_forms>
                     </v-select>
@@ -296,10 +296,7 @@ export default {
     },      
     network_server_name_form: {
       required,
-    },      
-    gateway_profile_name_form: {
-      required,
-    },      
+    },       
     gateway_accuracy: {
       required,
       numeric,
@@ -369,12 +366,6 @@ export default {
       const errors=[];
       if (!this.$v.network_server_name_form.$error)return errors
       !this.$v.network_server_name_form.required && errors.push('Network Server is required.')
-      return errors;
-    },
-    gateway_profile_name_form_Errors(){
-      const errors=[];
-      if (!this.$v.gateway_profile_name_form.$error)return errors
-      !this.$v.gateway_profile_name_form.required && errors.push('Gateway Profile is required.')     
       return errors;
     },
     gateway_accuracy_Errors(){
@@ -492,7 +483,7 @@ export default {
     },
     network_server_name_form: function(){
         this.gateway_profile_names =[];
-        this.gateway_profile_name_form =[];
+        this.gateway_profile_name_form ='';
         this.network_server_id=functions.extract_id_id_name(this.network_server_name_form); //extract id of network_server
         for(let i =0; i< this.gateway_profiles.length; i++){
           if(this.network_server_id == this.gateway_profiles[i].network_server_id){
@@ -590,7 +581,7 @@ export default {
     create_gateway(){
       this.$v.$touch();
       if(this.$v.gateway_name.$invalid || this.$v.gateway_id_lora.$invalid || this.$v.description.$invalid 
-      || this.$v.network_name_form.$invalid || this.$v.network_server_name_form.$invalid || this.$v.gateway_profile_name_form.$invalid 
+      || this.$v.network_name_form.$invalid || this.$v.network_server_name_form.$invalid 
       || this.$v.gateway_accuracy.$invalid || this.$v.gateway_altitude.$invalid || this.$v.gateway_latitude.$invalid
       || this.$v.gateway_longitude.$invalid || this.$v.gateway_location_source_form.$invalid || this.$v.fine_time_stamp_key.$invalid
       || this.$v.fpga_id.$invalid ){
@@ -598,11 +589,13 @@ export default {
       }else{
         if(this.discovery_enabled ==null)this.discovery_enabled =false; //needed to set empty radio to false
         this.message = "";
-        this.gateway_profile_id=functions.extract_id_id_name(this.gateway_profile_name_form);//Extract id of gateway profile
-        for(let i = 0; i < this.gateway_profiles.length; i++){
-          if(this.gateway_profiles[i].gateway_profile_id == this.gateway_profile_id){
-            this.gateway_profile_id = this.gateway_profiles[i].gateway_profile_id_lora;
-            break;
+        if(this.gateway_profile_name_form){ //Only do this if a gateway profile is selected
+          this.gateway_profile_id=functions.extract_id_id_name(this.gateway_profile_name_form);//Extract id of gateway profile
+          for(let i = 0; i < this.gateway_profiles.length; i++){
+            if(this.gateway_profiles[i].gateway_profile_id == this.gateway_profile_id){
+              this.gateway_profile_id = this.gateway_profiles[i].gateway_profile_id_lora;
+              break;
+            }
           }
         }
          AuthenticationService.create_gateways({
