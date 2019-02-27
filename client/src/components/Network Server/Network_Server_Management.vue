@@ -69,7 +69,7 @@ export default {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Network Server ID', value: 'network_server_id' ,sortable: true},
-          { text: 'Network Server Name', value: 'network_server_name' , sortable: false },
+          { text: 'Network Server Name', value: 'network_server_name' , sortable: true },
           { text: 'Server', value: 'network_server' , sortable: false },
           { text: 'Created At', value: 'network_server_created_at', sortable: true },
           { text: 'Updated At', value: 'network_server_updated_at', sortable: true },

@@ -296,7 +296,7 @@ module.exports = {
             if (error_location == 0) {
                 res.status(500).send({ message: "Failed to delete service profile", type: 'error' });
             } else if (error_location == 1) {
-                res.status(412).send({ message: "Delete Sub-Network that uses Service Profile to be deleted", type: 'info' })
+                res.status(412).send({ message: "Delete Application associated with Service Profile to be deleted", type: 'info' })
             }else if (error_location == 2) {
                 res.status(200).send({ service_profiles: service_profiles, message: "Service Profile deleted. Failed to fetch service_profiles", type: 'info' })
             }

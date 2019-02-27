@@ -360,7 +360,7 @@ module.exports = {
           throw err;
         })
       if (result == "") {//Email does not exists
-        res.status(403).send({ message: "Incorrect login credentials" });
+        res.status(401).send({ message: "Incorrect login credentials" });
       }
       else{
         if(result[0].user_reset_password == 1 ){//Correct email but password requested to be reset. PREVENT LOGIN
@@ -391,7 +391,7 @@ module.exports = {
           }
         }else{
           //Incorrect PW;
-          res.status(403).send({ message: "Incorrect login credentials" });
+          res.status(401).send({ message: "Incorrect login credentials" });
         }
         }
 

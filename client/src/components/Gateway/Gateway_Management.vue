@@ -73,7 +73,7 @@ export default {
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Gateway ID', value: 'gateway_id' , sortable: true },
           { text: 'Gateway ID LoRa', value: 'gateway_id_lora' , sortable: false },
-          { text: 'Gateway Name', value: 'gateway_name' , sortable: false },
+          { text: 'Gateway Name', value: 'gateway_name' , sortable: true },
           { text: 'Description', value: 'gateway_description' ,sortable: false},
           { text: 'Organization ID', value: 'network_id' , sortable: true },
           { text: 'Network Server ID', value: 'network_server_id' , sortable: true },

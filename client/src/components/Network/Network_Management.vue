@@ -70,7 +70,7 @@ export default {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Organization ID', value: 'network_id' ,sortable: true},
-          { text: 'Organization Name', value: 'network_name' , sortable: false },
+          { text: 'Organization Name', value: 'network_name' , sortable: true },
           { text: 'Display Name', value: 'network_display_name' , sortable: false },
           { text: 'Can Have Gateways', value: 'network_can_have_gateways', sortable: false },
           { text: 'Created At', value: 'network_created_at', sortable: true },
