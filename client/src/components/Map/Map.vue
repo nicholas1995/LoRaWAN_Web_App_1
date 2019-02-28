@@ -37,14 +37,17 @@
         </v-flex>
       </div>
       <div v-if="this.display_devices_switch">
+        <!--TAB 1 -->
         <v-tabs
+        
           v-model="active_tab"
           dark
           color="primary"
           show-arrows
           grow
+          height=40
         >
-          <v-tabs-slider color="secondary"></v-tabs-slider>
+          <v-tabs-slider color=red></v-tabs-slider>
           <v-tab
             v-for="i in device_data.length"
             :key="i"
@@ -57,30 +60,36 @@
               :key="i"
               :value="'tab-' + i"
             >
+          <v-divider></v-divider>
+
+
+        <v-tabs
+          @input="update_controller_array($event, i)"
+          v-model="active_tab_2[i]"
+          dark
+          color="primary"
+          show-arrows
+          grow
+          height=30
+        >
+          <v-tabs-slider color="red"></v-tabs-slider>
+          <v-tab
+            v-for="j in controller_array_heading_text.length"
+            :key="j"
+          >
+            {{controller_array_heading_text[(j-1)]}}
+          </v-tab>
+          <v-tabs-items>
+            <v-tab-item
+              v-for="j in controller_array_heading_text.length"
+              :key="j"
+              :value="'tab-' + j"
+            >
               <v-card  
                 color="grey lighten-3 "
                 max-height = "135">
                 <v-card-text>
                   <v-layout row wrap>
-                    <v-flex xs12 sm6 md2 >
-                      <v-radio-group
-                        :mandatory="false"
-                        v-on:change="update_controller_array($event, i)"
-                      >
-                        <v-radio
-                          label="Disable Tracking"
-                          value="disable_tracking"
-                        ></v-radio>
-                        <v-radio
-                          label="Realtime Tracking"
-                          value="real_time_tracking"
-                        ></v-radio>
-                        <v-radio
-                          label="Historic Tracking"
-                          value="historic_tracking"
-                        ></v-radio>
-                      </v-radio-group>
-                    </v-flex>
                     <v-flex xs12 sm6 md10 >
                       <div v-if=" controller[(i-1)].action == 'disable_tracking' || controller[(i-1)].action == 'null'">
                         <v-layout row wrap>
@@ -124,7 +133,7 @@
                       </div>
                       <div v-else-if=" controller[(i-1)].action == 'historic_tracking'">
                       <v-layout row wrap>
-                          <!-- Date Picker-->
+ 
                         <v-flex xs12 sm6 md5>
                           <date_time_picker v-bind:type_prop ='0'  @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
                         </v-flex>
@@ -134,15 +143,29 @@
                         <v-flex xs12 sm6 md2>
                           <v-btn class="grey lighten-2" 
                             @click.stop="generate_historic_device_tracks(i)">
-                            Generate
+                            Generate Historic Tracks
                           </v-btn>
                         </v-flex>
                       </v-layout>
+                        <v-switch
+                          v-model="device_historic_marker_visibility[i-1]"
+                          height=0
+                          :label="`Display all historic markers: ${device_historic_marker_visibility[i-1].toString()}`"
+                          @change="toggle_historic_device_tracks(i)">
+                        ></v-switch>
                       </div>
                     </v-flex>
                   </v-layout>
                 </v-card-text>
               </v-card>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-tabs>
+
+
+
+
+
             </v-tab-item>
           </v-tabs-items>
         </v-tabs>
@@ -274,8 +297,13 @@ export default {
       device_id: '', //the device id of the device selected to control
       active_tab: '', //the tab postion to be opened. the number will be based on the device position in the device_data array
 
+      active_tab_2: [],//the secondary tab positon opened. 
+
       display_gateways_switch: true,
       display_devices_switch: true,
+
+      device_historic_marker_visibility: [], //this is a 2D array which stores the toggle state of the historic device markers
+      controller_array_heading_text: ['Real Time Location', 'Real Time Tracking', 'Historic Tracking'],
     }
   },
   mounted: async function () {
@@ -342,6 +370,9 @@ export default {
       }else if(this.display_devices_switch == false){
         this.clear_all_device_data()
       }
+    },
+    active_tab: function(){
+      this.center_map_around_device(this.active_tab)
     }
   },
   methods: {
@@ -385,6 +416,9 @@ export default {
 
         this.device_real_time_tracking_data.push([]);
         this.device_historic_tracking_data.push([]);
+
+        this.device_historic_marker_visibility.push(true); //Set all the historic track markers to visable (true) initially
+        this.active_tab_2.push(0); //This creates the amount of secondary tabs needed for the system
 
         this.controller.push({
           action: 'null',
@@ -503,7 +537,7 @@ export default {
                           <b>Device Name:</b> ${device.device_name} <br>
                           <b>Vessel Name:</b> ${device.vessel_name} <br>
                           <b>Vessel ID:</b> ${device.vessel_id}<br>
-                          <b>Sub-Network ID:</b> ${device.sub_network_id}<br>
+                          <b>Application ID:</b> ${device.sub_network_id}<br>
                         </div>`;
         let x = 0;
         //Open the infowindow for the device marker(ON MOUSE OVER)
@@ -708,6 +742,7 @@ export default {
     generate_function: async function(device_id){
       this.start_date_time = return_date_time(this.start_date, this.start_time);
       this.end_date_time =return_date_time(this.end_date, this.end_time);
+      this.filter_parameters = {}; //need to clear or else the old parameters will be stuck if we do not reset
       if(this.start_date_time){
         this.filter_parameters["start_date"] = this.start_date_time;
       }
@@ -737,6 +772,19 @@ export default {
     update_controller_array: function(action, i){
       //action refers to the action to what type of plotting is required for that device.... they relate to the radio buttons
       i = i-1; //this is done because the counter in the tabs starts at 1 and not 0 
+      switch(action){//This is to jus map the old method (radio buttons) to the new method (tabs)
+        case 0: 
+          action = 'disable_tracking'
+          break;
+        case 1:
+          action = 'real_time_tracking'
+          break;
+        case 2:
+          action = 'historic_tracking'
+          break;
+        default : break;
+      }
+      console.log(i, action)
       let previous_action = this.controller[i].action;
       if(previous_action != action && !(previous_action == 'null' && action =='disable_tracking')){ //to prevent it from updating if they keep pressing the button and from allowing the first press to be disable_tracking which is already the default value
           if(previous_action == "disable_tracking" || previous_action == 'null'){ //stops the marker set interval for the device
@@ -771,6 +819,13 @@ export default {
       }
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------  
+    center_map_around_device: function(i){
+      //This method is used to recenter a map around the most recent device marker when the tab for the device is opened
+      console.log(i)
+      var latLng = new google.maps.LatLng(this.device_data[i].gps_latitude, this.device_data[i].gps_longitude);
+      this.map.panTo(latLng);
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------  
     generate_historic_device_tracks: async function(i){
       i=i-1;
       this.controller[i].historic_tracking.start_date_time = return_date_time(this.start_date, this.start_time);
@@ -784,6 +839,10 @@ export default {
             }else{//append to the previously created polyline 
               this.append_device_polyline(i, result[j], 'historic_tracking')
             }
+        }
+        if(this.device_historic_marker_tracker[i].length > 1000){
+          alert(`Device- ${this.device_data[(i)].device_id}: ${this.device_data[(i)].device_name} has a more than 1000 historic track markers associated with it. 
+          This will decrease the responsiveness of the map. Delete the device historic markers or toggle them to off to increase responsiveness.`); //Inform the user that 
         }
       })
         .catch(err => {
@@ -862,6 +921,20 @@ export default {
       this.device_historic_marker_tracker[i] = [];
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
+    toggle_historic_device_tracks: function(i){
+      i = i-1 
+      let holder;
+      //this.device_historic_marker_visibility[i] = !this.device_historic_marker_visibility[i];
+      console.log(this.device_historic_marker_visibility[i])
+
+      for(let j = 1; j< (this.device_historic_marker_tracker[i].length); j++){
+        if(this.device_historic_marker_tracker[i][j]){
+          holder = this.device_historic_marker_tracker[i][j];
+          this.device_markers[holder].setVisible(this.device_historic_marker_visibility[i])
+        }
+      }
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
     download_csv: function(download_data, name) {
       if(download_data.length >0){
         var data, filename, link;
@@ -879,6 +952,9 @@ export default {
         link.setAttribute('href', data);
         link.setAttribute('download', filename);
         link.click();
+      }
+      else{
+        alert(`No data to be exported.`)
       }
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
