@@ -417,7 +417,7 @@ export default {
         this.device_real_time_tracking_data.push([]);
         this.device_historic_tracking_data.push([]);
 
-        this.device_historic_marker_visibility.push(true); //Set all the historic track markers to visable (true) initially
+        this.device_historic_marker_visibility.push(false); //Set all the historic track markers to not visable (false) initially
         this.active_tab_2.push(0); //This creates the amount of secondary tabs needed for the system
 
         this.controller.push({
@@ -840,9 +840,9 @@ export default {
               this.append_device_polyline(i, result[j], 'historic_tracking')
             }
         }
+        this.toggle_historic_device_tracks(i+1);//we add one because in the toggle function we minus one already
         if(this.device_historic_marker_tracker[i].length > 1000){
-          alert(`Device- ${this.device_data[(i)].device_id}: ${this.device_data[(i)].device_name} has a more than 1000 historic track markers associated with it. 
-          This will decrease the responsiveness of the map. Delete the device historic markers or toggle them to off to increase responsiveness.`); //Inform the user that 
+          alert(`Device- ${this.device_data[(i)].device_id}: ${this.device_data[(i)].device_name} has a more than 1000 historic track markers associated with it. This will decrease the responsiveness of the map. Delete the device historic markers or toggle them to off to increase responsiveness.`); //Inform the user that 
         }
       })
         .catch(err => {
@@ -924,9 +924,6 @@ export default {
     toggle_historic_device_tracks: function(i){
       i = i-1 
       let holder;
-      //this.device_historic_marker_visibility[i] = !this.device_historic_marker_visibility[i];
-      console.log(this.device_historic_marker_visibility[i])
-
       for(let j = 1; j< (this.device_historic_marker_tracker[i].length); j++){
         if(this.device_historic_marker_tracker[i][j]){
           holder = this.device_historic_marker_tracker[i][j];
