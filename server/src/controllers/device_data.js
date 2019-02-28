@@ -503,7 +503,25 @@ function get_distance_km_from_lat_lng(lat1,lng1,lat2,lng2) {
   }
   
 function deg_to_rad(deg) {
-return deg * (Math.PI/180) 
+    return deg * (Math.PI/180) 
+}
+
+function reduce_return_record_amount(device_data, limit){
+    if(limit == null || limit == 'Unlimited') return device_data
+    else{
+        let amount = device_data.length
+        if(amount < limit) return device_data; //The amount of device data records is less than the limit set by the user (Return all)
+        else{
+            let n = (amount)/(limit-1);
+            let return_data = [];
+            n = Math.ceil(n); //This rounds the number UP. Hence the amount of records will always be less than the stipulated amount
+            for(let i =0; i< amount; i=i+n){
+                return_data.push(device_data[i])
+            }
+            return_data.push(device_data[amount-1])
+            return return_data;
+        }
+    }
 }
 module.exports = {
     get: async function (req, res) {
@@ -1050,6 +1068,7 @@ module.exports = {
                 })
             if(device_data.length>0){
                 device_data = convert_dates(device_data, access);
+                device_data = reduce_return_record_amount(device_data, parameters.max_record_amt); //this limites the amount of records returned based on the limit set by the user
                 res.status(200).send({ device_data: device_data, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({message: 'No Data Available', type: 'info'});//No data retrived

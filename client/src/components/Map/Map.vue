@@ -133,7 +133,6 @@
                       </div>
                       <div v-else-if=" controller[(i-1)].action == 'historic_tracking'">
                       <v-layout row wrap>
- 
                         <v-flex xs12 sm6 md5>
                           <date_time_picker v-bind:type_prop ='0'  @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
                         </v-flex>
@@ -147,12 +146,24 @@
                           </v-btn>
                         </v-flex>
                       </v-layout>
-                        <v-switch
-                          v-model="device_historic_marker_visibility[i-1]"
-                          height=0
-                          :label="`Display all historic markers: ${device_historic_marker_visibility[i-1].toString()}`"
-                          @change="toggle_historic_device_tracks(i)">
-                        ></v-switch>
+                      <v-layout row wrap>
+                        <v-flex xs12 sm6 md4>
+                          <v-switch
+                            v-model="device_historic_marker_visibility[i-1]"
+                            height=0
+                            :label="`Display all historic markers: ${device_historic_marker_visibility[i-1].toString()}`"
+                            @change="toggle_historic_device_tracks(i)">
+                          ></v-switch>
+                          </v-flex>
+                        <v-flex xs12 sm6 md4>
+                          <v-select
+                            v-model="historic_device_track_max_record_amt_form[i-1]"
+                            :items="historic_device_track_max_record_amt"
+                            label="Max Amount of Records Returned"
+                          > 
+                          </v-select>
+                        </v-flex>
+                      </v-layout>
                       </div>
                     </v-flex>
                   </v-layout>
@@ -246,7 +257,7 @@ export default {
       coordinates: [],
       contentString: [],
       gateways: '',
-      icon_url: ["http://maps.google.com/mapfiles/ms/icons/red-dot.png","http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+      icon_url: ["http://maps.google.com/mapfiles/ms/icons/red-dot.png","http://maps.google.com/mapfiles/ms/icons/blue.png",
       "http://maps.google.com/mapfiles/ms/icons/green-dot.png","http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
       "http://maps.google.com/mapfiles/ms/icons/orange-dot.png","http://maps.google.com/mapfiles/ms/icons/pink-dot.png",
       "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"],
@@ -304,6 +315,8 @@ export default {
 
       device_historic_marker_visibility: [], //this is a 2D array which stores the toggle state of the historic device markers
       controller_array_heading_text: ['Real Time Location', 'Real Time Tracking', 'Historic Tracking'],
+      historic_device_track_max_record_amt: [5,10,20,50,100,150,200,400, 'Unlimited'], //This is used to limit the amount of records which will be returned for a historic device track
+      historic_device_track_max_record_amt_form: []//this will be a 2d array which holds the actual amount selected by the user
     }
   },
   mounted: async function () {
@@ -419,6 +432,7 @@ export default {
 
         this.device_historic_marker_visibility.push(false); //Set all the historic track markers to not visable (false) initially
         this.active_tab_2.push(0); //This creates the amount of secondary tabs needed for the system
+        this.historic_device_track_max_record_amt_form.push(null); //this sets the amount of values which can be selected for the 2d array
 
         this.controller.push({
           action: 'null',
@@ -495,7 +509,8 @@ export default {
       let marker = new google.maps.Marker({ 
         position,
         map: this.map,
-        label: `${gateway.gateway_id}`
+        label: `${gateway.gateway_id}`,
+        icon: this.icon_url[1]
       });
       this.gateway_markers.push(marker)
       this.map.fitBounds(this.bounds.extend(position))
@@ -583,7 +598,7 @@ export default {
                       <b>Gateway Name:</b> ${gateway.gateway_name} <br>
                       <b>Gateway ID LoRa:</b> ${gateway.gateway_id_lora} <br>
                       <b>Gateway Description:</b> ${gateway.gateway_description} <br>
-                      <b>Network ID:</b> ${gateway.network_id}<br>
+                      <b>Organization ID:</b> ${gateway.network_id}<br>
                       <b>Gateway Latitude:</b> ${gateway.gateway_latitude}<br>
                       <b>Gateway Longitude:</b> ${gateway.gateway_longitude}<br>
                       <b>Gateway Altitude:</b> ${gateway.gateway_altitude}<br>
@@ -754,6 +769,10 @@ export default {
       }else if(device_id && this.self ==1){
         this.filter_parameters["device"] = device_id;
       }
+      let i =this.find_device_array_position(device_id);
+      if(this.historic_device_track_max_record_amt_form[i]){ //This is used to specify the filter parameter to limit the amount of records returned
+        this.filter_parameters["max_record_amt"] = this.historic_device_track_max_record_amt_form[i];
+      }
       let data;
       await AuthenticationService.device_historical_data(this.filter_parameters).then(result=>{
         if(result.status == 204){ //No Data returned 
@@ -828,6 +847,7 @@ export default {
     //--------------------------------------------------------------------------------------------------------------------------------------------  
     generate_historic_device_tracks: async function(i){
       i=i-1;
+      console.log(this.historic_device_track_max_record_amt_form[i])
       this.controller[i].historic_tracking.start_date_time = return_date_time(this.start_date, this.start_time);
       this.controller[i].historic_tracking.end_date_time = return_date_time(this.end_date, this.end_time);
       let device_id = this.find_device_id(i);
