@@ -1074,18 +1074,19 @@ module.exports = {
             }
             if (parameters.start_date || parameters.end_date || parameters.device ) {
                 if (req.access == "self" || req.params.access == "self") {
-                  where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
+                    if(sql_where.length >0 ) where = `${where} AND `; //If we have filter parameters AND it with the user fetch filter
+                    else  where = `${where} `; //If we do not have filter parameters we do not need to AND anything
                 }
-              for (let i = 0; i < sql_where.length; i++) {
-                if (i < sql_where.length - 1) {
-                  //will run every time but the last cause we do not want it ending with AND
-                  where = where + `${sql_where[i]} AND `;
-                } else {
-                  where = where + `${sql_where[i]}`;
+                for (let i = 0; i < sql_where.length; i++) {
+                    if (i < sql_where.length - 1) {
+                    //will run every time but the last cause we do not want it ending with AND
+                    where = where + `${sql_where[i]} AND `;
+                    } else {
+                    where = where + `${sql_where[i]}`;
+                    }
                 }
-              }
             }
-            if(where){
+            if(where){ 
                 sql = ` ${sql} WHERE ${where}`
             }
             if(parameters.sort_by){ 
@@ -1093,6 +1094,7 @@ module.exports = {
             }else{//So that no mater what the data is ordered in descending order based on the timestamp
                 sql = `${sql} ORDER BY time_stamp DESC`;
             }
+            console.log(sql)
             let device_data = await DB.get_specified_parameters(sql)
                 .catch(err => {
                     throw err; 
