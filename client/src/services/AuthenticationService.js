@@ -396,15 +396,15 @@ export default {
     },
 
     //Device uplink data
-    device_rx_filtered(parameters , columns, access){ 
+    device_rx_filtered(parameters , columns, access, return_all_records){ 
         //the reason we do no stringify the columns is becasue when it arrives at the server
         //it is already converted to commar seperated format
         if(access == true) access = 'self' //This is used to set access for the device data vue when anayst for eg want to see only their data
         else if(access == false) access = 'all'
         parameters = JSON.stringify(parameters); 
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        if(access) return Api.get(`/api/devices/uplink/parameters/${parameters}/columns/${columns}/access/${access}`);
-        else return Api.get(`/api/devices/uplink/parameters/${parameters}/columns/${columns}`);
+        if(access) return Api.get(`/api/devices/uplink/parameters/${parameters}/columns/${columns}/return_all_records/${return_all_records}/access/${access}`);
+        else return Api.get(`/api/devices/uplink/parameters/${parameters}/columns/${columns}/return_all_records/${return_all_records}`);
     },
     device_rx_filtered_analyst_filter_record(parameters , columns){ 
         //the parameters is too big to put in the uri so we put it in the request
@@ -417,13 +417,13 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/api/devices/uplink/historical/parameters/${parameters}`);
     },
-    get_device_data_initial(){
+    get_device_data_initial(page, rows_per_page){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/api/devices/uplink/initial`);
+        return Api.get(`/api/devices/uplink/initial/page/${page}/rows_per_page/${rows_per_page}`);
     },
-    get_device_data_initial_self() {
+    get_device_data_initial_self(page, rows_per_page) {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.get(`/api/devices/uplink/initial/self`);
+        return Api.get(`/api/devices/uplink/initial/page/${page}/rows_per_page/${rows_per_page}/self`);
     }, 
     device_uplink_export_via_email(device_uplink_data_csv){
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;

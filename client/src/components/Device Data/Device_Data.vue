@@ -49,6 +49,8 @@
       <!-- Analyst Filter Records-->
       <analyst_filter_records_picker
         v-bind:analyst_filter_parameters = this.analyst_filter_parameters
+        v-bind:page = this.pagination.page
+        v-bind:rows_per_page = this.pagination.rowsPerPage
         @headers = headers_analyst_filter_record_function($event)
         @networks = networks_analyst_filter_record_function($event)
         @sub_networks = sub_networks_analyst_filter_record_function($event)
@@ -59,6 +61,7 @@
         @device_data = device_data_filter_record_function($event)
         @analyst_filter_parameters = analyst_filter_parameters_filter_record_function($event)
         @headers_returned = headers_returned_filter_parameters_filter_record_function($event)
+        @number_of_records = number_of_records_analyst_filter_record_function($event)
       ></analyst_filter_records_picker>
     </div>
     <v-toolbar class="elevation-1" color="grey lighten-3">
@@ -84,7 +87,7 @@
             </v-list-tile>
           </v-list>
         </v-menu>
-        <v-btn flat class ="grey lighten-3" v-on:click="generate_function()">Generate Filtered Device Uplink Data</v-btn>
+        <v-btn flat class ="grey lighten-3" v-on:click="generate_function(0)">Generate Filtered Device Uplink Data</v-btn>
       </v-toolbar-items>
     </v-toolbar>
       <v-data-table
@@ -95,6 +98,7 @@
             :rows-per-page-items= "rows_per_page_items"
             class="elevation-1"
             style="max-height: 700px; overflow-y: auto"
+            :total-items="number_of_records"
           >
           <template slot="no-data" >
             <v-alert :value="this.allow_no_data" color="info" icon="warning" >
@@ -211,6 +215,9 @@ export default {
         analyst_filter_parameters: {}, //this holds all the parameters of the filtered data for the analysts.
         analyst_filter_record_flag: 0, //this is a flag used to prevent the generate function from being called when the headers are updated using the analsyt filter record
 
+        number_of_records: 0, //this is a variable which holds the total amount of records returned from the fetch on the database before pagnation (it is not the amount of records returned to the server)
+        export_data: [], //This is an array which holds the data to be exported 
+
     }
   },
   props: [
@@ -228,14 +235,14 @@ export default {
         //-------------------------Start-------------------------
         let result;
         if(this.$store.state.user_class !='Fisher' && this.self ==false){
-          result = await AuthenticationService.get_device_data_initial()
+          result = await AuthenticationService.get_device_data_initial(1, 50) //Set them initially because the variable is not generated as yet
           .catch(err => {
             //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             })
         }else{
-          result = await AuthenticationService.get_device_data_initial_self()
+          result = await AuthenticationService.get_device_data_initial_self(1, 50) //Set them initially because the variable is not generated as yet
           .catch(err => {
             //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
@@ -286,7 +293,7 @@ export default {
     pagination: async function(){
       try{
         if(this.inital ==false){
-          this.generate_function();
+          this.generate_function(0);
         }   
         this.inital = false;
       }catch(err){
@@ -297,7 +304,7 @@ export default {
       try{
         if(this.analyst_filter_record_flag == 0){
           if(this.inital == false){
-            this.generate_function();
+            this.generate_function(0);
           }
           this.inital = false;
         }
@@ -311,7 +318,7 @@ export default {
       this.value = [];
       this.display = [];
       if(this.self == false){
-          result = await AuthenticationService.get_device_data_initial()
+          result = await AuthenticationService.get_device_data_initial(this.pagination.page, this.pagination.rowsPerPage)
           .catch(err => {
             //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
@@ -334,7 +341,7 @@ export default {
             this.loading = false;
          }
       }else if(this.self ==true){
-        result = await AuthenticationService.get_device_data_initial_self()
+        result = await AuthenticationService.get_device_data_initial_self(this.pagination.page, this.pagination.rowsPerPage)
           .catch(err => {
             //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
@@ -379,7 +386,7 @@ export default {
     download_csv: function(name) {
       var data, filename, link;
       var csv = convertArrayOfObjectsToCSV({
-        data: this.device_data
+        data: this.export_data
       });
       if (csv == null) return;
       filename = name || 'export.csv';
@@ -395,15 +402,16 @@ export default {
     },
     download_email: async function(){
       let device_uplink_data_csv = convertArrayOfObjectsToCSV({
-        data: this.device_data
+        data: this.export_data
       });
       await AuthenticationService.device_uplink_export_via_email(device_uplink_data_csv)
         .catch(err => {
           console.log(err);
         })
     },
-    export_device_data: function(option){
-      if(this.device_data.length > 0){
+    export_device_data: async function(option){
+      await this.generate_function(1);
+      if(this.export_data.length > 0){
         if(option =="Local Storage"){
           this.download_csv("device_uplink_data.csv")
         }else if(option == 'Email'){
@@ -411,9 +419,10 @@ export default {
         }
       }
     },
-    generate_function: async function(){
+    generate_function: async function(return_all_records){
+      //return_all_records is a flag which tells the server if to return ALL the records or just those speciifed by the pagemenation..... we return all only if we want to export the data
       if(this.value.length > 0){ //So we do not try to fetch data from the database unless we have a specified heading or else a 404 error will occur
-        this.loading = true;
+        if (return_all_records ==0 )this.loading = true;//Only load if we are not getting all (ie fetching to download)
         this.start_date_time = return_date_time(this.start_date, this.start_time);
         this.end_date_time =return_date_time(this.end_date, this.end_time);
         if(this.start_date_time){
@@ -427,6 +436,8 @@ export default {
           if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
           else this.filter_parameters["order"] = 'DESC';
         }
+        if(this.pagination.rowsPerPage) this.filter_parameters["rows_per_page"] = this.pagination.rowsPerPage;
+        if(this.pagination.page) this.filter_parameters["page"] = this.pagination.page;
         if(this.device_id && this.self ==false){
           this.filter_parameters["device"] = this.device_id;
           this.filter_parameters["vessel"] = this.vessel_id;
@@ -445,26 +456,47 @@ export default {
           this.filter_parameters["sub_network"] = this.sub_network_id;
           this.filter_parameters["network"] = this.network_id;
         }
-        await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value, this.self).then(result=>{
-          if(result.status == 206){ //No Data returned 
-          this.device_data = [];
-          this.filter_parameters = {}; 
-          this.loading = false;
-          }else{
-          this.device_data = result.data.device_data;
-          this.headers =  result.data.headers; 
-          this.display = this.headers
-          this.filter_parameters = {}; 
-          this.loading = false;  
-          }
-          this.analyst_filter_parameters = result.data.analyst_filter_parameters;
-        }).catch(err => {
-            //Error getting the devices from the server
-            console.log(err)
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
-            throw err;
-            }) 
-      }else this.device_data = [] //If no heading selected just set the data to empty so the message appears
+        if(return_all_records == 0){//Return how much specified by the pagenation
+          await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value, this.self, return_all_records).then(result=>{
+            if(result.status == 206){ //No Data returned 
+            this.device_data = [];
+            this.filter_parameters = {}; 
+            this.loading = false;
+            this.number_of_records = 0; //sets to 0 if no records to display
+            }else{
+            this.device_data = result.data.device_data;
+            this.headers =  result.data.headers; 
+            this.display = this.headers
+            this.filter_parameters = {}; 
+            this.loading = false;  
+            this.number_of_records = result.data.number_of_records;
+            }
+            this.analyst_filter_parameters = result.data.analyst_filter_parameters;
+          }).catch(err => {
+              //Error getting the devices from the server
+              console.log(err)
+              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+              throw err;
+              }) 
+        }else if (return_all_records ==1){ //Return all reocrds (IF we want to export)
+          await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value, this.self, return_all_records).then(result=>{
+            if(result.status == 206){ //No Data returned 
+            this.export_data = [];
+            }else{
+            this.export_data = result.data.device_data;
+            this.number_of_records = result.data.number_of_records;
+            }
+          }).catch(err => {
+              //Error getting the devices from the server
+              console.log(err)
+              this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+              throw err;
+              }) 
+        }
+      }else {
+        this.device_data = [] //If no heading selected just set the data to empty so the message appears
+        this.number_of_records = 0;
+      }
     },
     network_id_function: function(data){
       if(data.length > 0 )this.network_id = data
@@ -518,6 +550,9 @@ export default {
     headers_returned_filter_parameters_filter_record_function: function(data){
       this.headers =  data; 
       this.display = this.headers
+    },
+    number_of_records_analyst_filter_record_function: function(data){
+      this.number_of_records = data;
     },
     select_all_headers: function(){
       let header_name_holder = []; //this is an array which the names in the header_name id:name array will be pushed onto and then this array will be set to value

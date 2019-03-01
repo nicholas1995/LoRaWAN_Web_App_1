@@ -309,16 +309,16 @@ module.exports = ((app) => {
 
     //----------------------Device Uplink Data-----------------
     //Device (Initial fetch) 
-    app.get("/api/devices/uplink/initial", authenticate.authenticate, grant_access, device_data.get);
+    app.get("/api/devices/uplink/initial/page/:page/rows_per_page/:rows_per_page", authenticate.authenticate, grant_access, device_data.get);
 
     //Device (Initial fetch self) 
-    app.get("/api/devices/uplink/initial/self", authenticate.authenticate, grant_access, device_data.get_self);
+    app.get("/api/devices/uplink/initial/page/:page/rows_per_page/:rows_per_page/self", authenticate.authenticate, grant_access, device_data.get_self);
 
     //Device (Filtered Self) //This is used for example in the device data vue when an analsyst only wants to see their data from their vessels
-    app.get("/api/devices/uplink/parameters/:parameters/columns/:columns/access/:access", authenticate.authenticate, grant_access, device_data.get_filtered);
+    app.get("/api/devices/uplink/parameters/:parameters/columns/:columns/return_all_records/:retrun_all_records/access/:access", authenticate.authenticate, grant_access, device_data.get_filtered);
  
     //Device (Filtered) 
-    app.get("/api/devices/uplink/parameters/:parameters/columns/:columns", authenticate.authenticate, grant_access, device_data.get_filtered);
+    app.get("/api/devices/uplink/parameters/:parameters/columns/:columns/return_all_records/:retrun_all_records", authenticate.authenticate, grant_access, device_data.get_filtered);
 
     //Device (Filtered using Analyst Filter Record) 
     app.get("/api/devices/uplink/filter_record/columns/:columns", authenticate.authenticate, grant_access, device_data.get_filter_analyst_filter_record);

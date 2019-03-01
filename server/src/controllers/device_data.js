@@ -295,10 +295,10 @@ function add_zero(i) {
 function convert_dates(data, permission){ //to ensure that when a fisher downloads the data it does not have any info about rx_time
     for(let i =0; i< data.length; i++){
         if(permission =='self'){
-            data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
+            if(data[i].time_stamp) data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
         }else if(permission =='all'){
-            data[i]["rx_time"] = return_date(data[i]["rx_time"]);
-            data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
+            if(data[i].rx_time) data[i]["rx_time"] = return_date(data[i]["rx_time"]);
+            if(data[i].time_stamp) data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
         }
     }
     return data;
@@ -462,6 +462,8 @@ function convert_analsyt_filter_record_parameters_to_general_parameters_object(p
         }
         if(parameters.analyst_filter_record_start_date != "null") return_parameters['start_date'] = parameters.analyst_filter_record_start_date;
         if(parameters.analyst_filter_record_end_date != "null") return_parameters['end_date'] = parameters.analyst_filter_record_end_date;
+        return_parameters["page"] = parameters.page; //Added for pagenation
+        return_parameters["rows_per_page"] = parameters.rows_per_page;
         return return_parameters;
     }catch(err){
         console.log(err)
@@ -507,6 +509,7 @@ function deg_to_rad(deg) {
 }
 
 function reduce_return_record_amount(device_data, limit){
+    //This is used for the histroric device tracks to limit the amount of records to the input parameter limit. It ensures that the first and last record is returned and evenly distributes the remaing data to be returnred 
     if(limit == null || limit == 'Unlimited') return device_data
     else{
         let amount = device_data.length
@@ -523,6 +526,22 @@ function reduce_return_record_amount(device_data, limit){
         }
     }
 }
+
+function device_data_pagnation(device_data, page, rows_per_page){
+    page = page-1; //this is done because the first page is set to 1... We want the first page to be 0 so that initially a will be 0 and b will be 50 so it will return records 0 - 49 (if rows per page is 50 and it is the first page)
+    if(device_data.length < rows_per_page || rows_per_page == -1) return device_data
+    else {
+        let a = page*rows_per_page;
+        let b = a+rows_per_page;
+        if(b < device_data.length) return device_data.slice(a,b);
+        else if(b > device_data.length) return device_data.slice(a)
+        let return_data = device_data.slice(a,b);
+        return return_data
+
+        //return device_data.slice(a,b);
+    }
+}
+
 module.exports = {
     get: async function (req, res) {
         let device_data, headers;
@@ -543,10 +562,12 @@ module.exports = {
                     //Error getting device data from DB
                     throw error.error_message("get device data : database", err.message);
                 });
+            let number_of_records = device_data.length; //this is used in the client side pagnation (manually sets the amount of records)
+            device_data = device_data_pagnation(device_data, req.params.page, req.params.rows_per_page)
             if (device_data.length > 0) {
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], 'all');
                 device_data = convert_dates(device_data, 'all');
-                res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+                res.status(200).send({ device_data: device_data, headers: headers, number_of_records : number_of_records, message: 'Device data fetched', type: 'success' });
             } else {
                 res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
             }
@@ -592,10 +613,12 @@ module.exports = {
                     .catch(err => {
                         throw err;
                     })
+                let number_of_records = device_data.length; //this is used in the client side pagnation (manually sets the amount of records)
+                device_data = device_data_pagnation(device_data, req.params.page, req.params.rows_per_page)
                 if(device_data.length>0){
                     headers = convert_device_uplink_headers_database_to_table(device_data[0], 'self');
                     device_data = convert_dates(device_data, 'self');
-                    res.status(200).send({ device_data: device_data, headers: headers, message: 'Device data fetched', type: 'success' });
+                    res.status(200).send({ device_data: device_data, headers: headers, number_of_records : number_of_records, message: 'Device data fetched', type: 'success' });
                 }else{ //Assigned to a or some vessels but no data associated with the assigned vessels
                     res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
                 }
@@ -694,10 +717,14 @@ module.exports = {
                     throw err; 
                 })
             let analyst_filter_parameters = create_analyst_filter_parameters(req, null, device_data); // the filter parameters for the analysts when storing filter records
+            let number_of_records = device_data.length; //this is used in the client side pagnation (manually sets the amount of records)
+            if(req.params.retrun_all_records == 0){
+                device_data = device_data_pagnation(device_data, parameters.page, parameters.rows_per_page)
+            }
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], access);
                 device_data = convert_dates(device_data, access);
-                res.status(200).send({ device_data: device_data, analyst_filter_parameters: analyst_filter_parameters, headers: headers, message: 'Device data fetched', type: 'success' });
+                res.status(200).send({ device_data: device_data, analyst_filter_parameters: analyst_filter_parameters, headers: headers, number_of_records: number_of_records, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(206).send({analyst_filter_parameters: analyst_filter_parameters, message: 'No Data Available', type: 'info'});//No data retrived
             }
@@ -731,8 +758,9 @@ module.exports = {
             } else if (parameters_normal.sub_network) {
                 sql_where.push(`sub_network_id IN (${parameters_normal.sub_network})`);
             }
-            sql_where.push(`device_uplink_id > (${parameters.analyst_filter_record_min_device_uplink_id})`);
-            sql_where.push(`device_uplink_id < (${parameters.analyst_filter_record_max_device_uplink_id})`);
+            //This was removed becuase with the pagenation it would not be feasable to keep the limit within the old parameters if they change pagnation parameters
+/*             sql_where.push(`device_uplink_id > (${parameters.analyst_filter_record_min_device_uplink_id})`);
+            sql_where.push(`device_uplink_id < (${parameters.analyst_filter_record_max_device_uplink_id})`); */
 
 
             if (parameters_normal.start_date || parameters_normal.end_date || parameters_normal.device || parameters_normal.vessel || parameters_normal.sub_network) {
@@ -758,10 +786,13 @@ module.exports = {
                     throw err; 
                 })
             let analyst_filter_parameters = create_analyst_filter_parameters(req, parameters, device_data); 
+            let number_of_records = device_data.length; //this is used in the client side pagnation (manually sets the amount of records)
+            device_data = device_data_pagnation(device_data, parameters.page, parameters.rows_per_page)
+            console.log(device_data.length, parameters.page, parameters.rows_per_page, number_of_records)
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], 'all');
                 device_data = convert_dates(device_data, 'all');
-                res.status(200).send({ device_data: device_data, analyst_filter_parameters: analyst_filter_parameters, headers: headers, message: 'Device data fetched', type: 'success' });
+                res.status(200).send({ device_data: device_data, analyst_filter_parameters: analyst_filter_parameters, headers: headers, number_of_records : number_of_records, message: 'Device data fetched', type: 'success' });
             }else{
                 res.status(204).send({analyst_filter_parameters: analyst_filter_parameters, message: 'No Data Available', type: 'info'});//No data retrived
             }

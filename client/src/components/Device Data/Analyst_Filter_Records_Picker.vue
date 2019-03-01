@@ -53,6 +53,8 @@ export default {
   },
    props:[
    'analyst_filter_parameters',
+   'page', 
+   'rows_per_page'
   ],
   created: async function(){
     this.initizize_analyst_filter_records();
@@ -112,12 +114,15 @@ export default {
         else end_date_time[1] = end_date_time[1].slice(0,5) //remove the seconds from the time 
         this.$emit('end_date_time', end_date_time)
       }else this.$emit('end_date_time', '')
+      analyst_filter_record["page"] = this.page //Added for pagenation
+      analyst_filter_record["rows_per_page"] = this.rows_per_page
       let analsyst_filter_record_device_data = await AuthenticationService.device_rx_filtered_analyst_filter_record(analyst_filter_record, headers)
         .catch(err => {
           //Error getting the device data based on the parameters in an analyst filter record
           console.log(err)
         })
         this.$emit('device_data', analsyst_filter_record_device_data.data.device_data)
+        this.$emit('number_of_records', analsyst_filter_record_device_data.data.number_of_records)
         this.$emit('analyst_filter_parameters', analsyst_filter_record_device_data.data.analyst_filter_parameters)
         this.$emit('headers_returned', analsyst_filter_record_device_data.data.headers)//this is the headers returned from the generate data fetch
     },
