@@ -17,6 +17,13 @@
       ></v-divider>
     <v-spacer></v-spacer>
     <v-toolbar-items>
+      <v-tooltip bottom :class="{ 'pt-2': $vuetify.breakpoint.mdAndUp}" >
+      <v-btn icon class="pr-3" slot="activator" >
+        <v-icon large @click.stop="$emit('help_dialog')" >help_outline</v-icon>
+      </v-btn>
+        <span>Help</span>
+      </v-tooltip>
+
       <v-btn class="primary" @click="login" flat v-if="this.$store.state.loginState">
         Login
       </v-btn>
@@ -92,7 +99,7 @@ export default {
       this.$store.commit('logout');
       this.$router.push('/login');
     }
-}
+  }
 }
 </script>
 

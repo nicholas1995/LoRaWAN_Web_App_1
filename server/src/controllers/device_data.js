@@ -788,7 +788,6 @@ module.exports = {
             let analyst_filter_parameters = create_analyst_filter_parameters(req, parameters, device_data); 
             let number_of_records = device_data.length; //this is used in the client side pagnation (manually sets the amount of records)
             device_data = device_data_pagnation(device_data, parameters.page, parameters.rows_per_page)
-            console.log(device_data.length, parameters.page, parameters.rows_per_page, number_of_records)
             if(device_data.length>0){
                 headers = convert_device_uplink_headers_database_to_table(device_data[0], 'all');
                 device_data = convert_dates(device_data, 'all');
