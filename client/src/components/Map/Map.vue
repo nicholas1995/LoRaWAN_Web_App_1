@@ -130,6 +130,14 @@
                         </v-layout>
                       </div>
                       <div v-else-if=" controller[(i-1)].action == 'real_time_tracking'">
+                        <v-flex xs12 sm6 md4>
+                          <v-select
+                            v-model="device_real_time_tracking_interval_form[i-1]"
+                            :items="device_real_time_tracking_interval"
+                            label="Device Track Interval"
+                          > 
+                        </v-select>
+                        </v-flex>
                       </div>
                       <div v-else-if=" controller[(i-1)].action == 'historic_tracking'">
                       <v-layout row wrap>
@@ -306,7 +314,7 @@ export default {
       device_historic_tracking_data: [], //a 2d array which stores the device historic tracking data
 
       device_id: '', //the device id of the device selected to control
-      active_tab: '', //the tab postion to be opened. the number will be based on the device position in the device_data array
+      active_tab: null, //the tab postion to be opened. the number will be based on the device position in the device_data array
 
       active_tab_2: [],//the secondary tab positon opened. 
 
@@ -316,7 +324,10 @@ export default {
       device_historic_marker_visibility: [], //this is a 2D array which stores the toggle state of the historic device markers
       controller_array_heading_text: ['Real Time Location', 'Real Time Tracking', 'Historic Tracking'],
       historic_device_track_max_record_amt: [5,10,20,50,100,150,200,400, 'Unlimited'], //This is used to limit the amount of records which will be returned for a historic device track
-      historic_device_track_max_record_amt_form: []//this will be a 2d array which holds the actual amount selected by the user
+      historic_device_track_max_record_amt_form: [],//this will be a 2d array which holds the actual amount selected by the user
+
+      device_real_time_tracking_interval: [500,1000,2000,5000,10000,20000], //This is used to set the interval to set the real time tracking of the devices
+      device_real_time_tracking_interval_form: [], //2d array which holds the values in the 2d array for the real time tracking
     }
   },
   mounted: async function () {
@@ -386,6 +397,25 @@ export default {
     },
     active_tab: function(){
       this.center_map_around_device(this.active_tab)
+    },
+    device_real_time_tracking_interval_form: async function(){ //This allows for the dynamic updating of the marker refreshing interval
+    //To update the refresh rate we need to first cancel the previous interval... fetch the latest data and then recreate a new interval with the new rate
+      if(this.initial == 0 && this.active_tab != null){ //This ensures that it is only executed when the user updates the field and not when the console initally sets the values
+        let i = this.active_tab; //set the active tab before we initate the async function because if the request takes long to process the active tab can change
+        let device_id = this.find_device_id(i);
+        let holder  = this.cleartick_device_polyline[i];
+        clearInterval(holder); //We first clear the prviously set intwerval that was set to the old rate
+        this.cleartick_device_polyline[i] = null ; 
+        let device_data_update = await AuthenticationService.refresh_device_data_map(device_id) //Refresh the data to get the latest device uplink record
+          .catch(err => {
+            //Error gettin most recent 
+            console.log(err)
+          })
+        device_data_update = device_data_update.data.device_data[0]; //Update the latest record
+        this.device_data[i] = device_data_update;
+        var x = setInterval(this.refresh_device_polyline, this.device_real_time_tracking_interval_form[i], this.device_data[i], i);//create the new interval with the new rate
+        this.cleartick_device_polyline[i]  = x; 
+      }
     }
   },
   methods: {
@@ -433,6 +463,7 @@ export default {
         this.device_historic_marker_visibility.push(false); //Set all the historic track markers to not visable (false) initially
         this.active_tab_2.push(0); //This creates the amount of secondary tabs needed for the system
         this.historic_device_track_max_record_amt_form.push(null); //this sets the amount of values which can be selected for the 2d array
+        this.device_real_time_tracking_interval_form.push(5000); //this sets the amount of values which can be selected for the 2d array for the real time tracking interval (set to initially update every 5 seconds)
 
         this.controller.push({
           action: 'null',
@@ -659,7 +690,7 @@ export default {
       this.device_data[i] = device_data_update;
       this.create_device_marker(device_data_update, 0)  
       this.create_device_polyline(this.device_data[i]);
-      var x = setInterval(this.refresh_device_polyline, 5000, this.device_data[i], i);//this is the syntax for it to work
+      var x = setInterval(this.refresh_device_polyline, this.device_real_time_tracking_interval_form[i], this.device_data[i], i);//this is the syntax for it to work
       this.cleartick_device_polyline[i]  = null; 
       this.cleartick_device_polyline[i]  = x; 
     },
