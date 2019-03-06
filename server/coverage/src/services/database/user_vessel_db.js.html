@@ -20,31 +20,31 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">61.54% </span>
+        <span class="strong">7.69% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>16/26</span>
+        <span class='fraction'>2/26</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">55% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>11/20</span>
+        <span class='fraction'>0/20</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">25% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/4</span>
+        <span class='fraction'>0/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">61.54% </span>
+        <span class="strong">7.69% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>16/26</span>
+        <span class='fraction'>2/26</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line low'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -103,35 +103,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,36 +155,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const db = require("../../db");
 &nbsp;
 module.exports = {
-  get_user_vessel: function(id, user_id, vessel_id, deleted){
-    let sql_where = [];
-    let where = '';
-    let sql = `SELECT user_vessel.*, DATE_FORMAT(user_vessel.date_created, GET_FORMAT(DATETIME, 'JIS')) AS date_created, 
+  get_user_vessel: <span class="fstat-no" title="function not covered" >fu</span>nction(id, user_id, vessel_id, deleted){
+    let sql_where = <span class="cstat-no" title="statement not covered" >[];</span>
+    let where = <span class="cstat-no" title="statement not covered" >'';</span>
+    let sql = <span class="cstat-no" title="statement not covered" >`SELECT user_vessel.*, DATE_FORMAT(user_vessel.date_created, GET_FORMAT(DATETIME, 'JIS')) AS date_created, </span>
     DATE_FORMAT(user_vessel.date_deleted, GET_FORMAT(DATETIME, 'JIS')) AS date_deleted, 
     vessel.vessel_name FROM user_vessel INNER JOIN vessel ON user_vessel.vessel_id=vessel.vessel_id`;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (id != null &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >id != 'null')</span> {
+<span class="cstat-no" title="statement not covered" >    if (id != null &amp;&amp; id != 'null') {</span>
 <span class="cstat-no" title="statement not covered" >      sql_where.push(`id = '${id}'`);</span>
     }
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (user_id != null &amp;&amp; user_id != "null") {
-      sql_where.push(`user_id = '${user_id}'`);
+<span class="cstat-no" title="statement not covered" >    if (user_id != null &amp;&amp; user_id != "null") {</span>
+<span class="cstat-no" title="statement not covered" >      sql_where.push(`user_id = '${user_id}'`);</span>
     }
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (vessel_id != null &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >vessel_id != "null")</span> {
+<span class="cstat-no" title="statement not covered" >    if (vessel_id != null &amp;&amp; vessel_id != "null") {</span>
 <span class="cstat-no" title="statement not covered" >      sql_where.push(`vessel_id = '${vessel_id}'`);</span>
     }
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (deleted != null &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >deleted != "null")</span> {
+<span class="cstat-no" title="statement not covered" >    if (deleted != null &amp;&amp; deleted != "null") {</span>
 <span class="cstat-no" title="statement not covered" >      sql_where.push(`deleted = '${deleted}'`);</span>
     }
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (sql_where.length &gt; 0) {
-      for (let i = 0; i &lt; sql_where.length; i++) {
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (i &lt; sql_where.length - 1) {
+<span class="cstat-no" title="statement not covered" >    if (sql_where.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >      for (let i = 0; i &lt; sql_where.length; i++) {</span>
+<span class="cstat-no" title="statement not covered" >        if (i &lt; sql_where.length - 1) {</span>
           //will run every time but the last cause we do not want it ending with AND
 <span class="cstat-no" title="statement not covered" >          where = where + `${sql_where[i]} AND `;</span>
         } else {
-          where = where + `${sql_where[i]}`;
+<span class="cstat-no" title="statement not covered" >          where = where + `${sql_where[i]}`;</span>
         }
       }
-      sql = ` ${sql} WHERE ${where}`;
+<span class="cstat-no" title="statement not covered" >      sql = ` ${sql} WHERE ${where}`;</span>
     }
-    return db.queryAsync(sql);
+<span class="cstat-no" title="statement not covered" >    return db.queryAsync(sql);</span>
   },
   //This returns all the not deleted vessel ids associated with a givien user id
   get_user_vessels_not_deleted: <span class="fstat-no" title="function not covered" >fu</span>nction(user_id) {
@@ -211,7 +211,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 13:36:20 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Mar 03 2019 20:51:09 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

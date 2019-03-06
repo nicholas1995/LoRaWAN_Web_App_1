@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">11.76% </span>
+        <span class="strong">5.88% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>4/34</span>
+        <span class='fraction'>2/34</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/24</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">14.29% </span>
+        <span class="strong">0% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>1/7</span>
+        <span class='fraction'>0/7</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">11.76% </span>
+        <span class="strong">5.88% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>4/34</span>
+        <span class='fraction'>2/34</span>
       </div>
     </div>
     <p class="quiet">
@@ -118,14 +118,12 @@
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,10 +159,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -196,8 +194,7 @@
 &nbsp;
 module.exports = {
   get: <span class="fstat-no" title="function not covered" >fu</span>nction() {
-    let sql = <span class="cstat-no" title="statement not covered" >`SELECT </span>
-        device_eui, device_name, sub_network_id, device_deleted
+    let sql = <span class="cstat-no" title="statement not covered" >`SELECT *</span>
         FROM device`;
 <span class="cstat-no" title="statement not covered" >    return db.queryAsync(sql);</span>
   },
@@ -206,7 +203,7 @@ module.exports = {
     let where = <span class="cstat-no" title="statement not covered" >"";</span>
     let sql = <span class="cstat-no" title="statement not covered" >"SELECT *  FROM device ";</span>
 <span class="cstat-no" title="statement not covered" >    if (device_id != null &amp;&amp; device_id != "null") {</span>
-<span class="cstat-no" title="statement not covered" >      sql_where.push(`id = '${device_id}'`);</span>
+<span class="cstat-no" title="statement not covered" >      sql_where.push(`device_id = '${device_id}'`);</span>
     }
 <span class="cstat-no" title="statement not covered" >    if (device_eui != null &amp;&amp; device_eui != "null") {</span>
 <span class="cstat-no" title="statement not covered" >      sql_where.push(`device_eui = '${device_eui}'`);</span>
@@ -219,7 +216,7 @@ module.exports = {
     }
 <span class="cstat-no" title="statement not covered" >    if (deleted != null &amp;&amp; deleted != "null") {</span>
 <span class="cstat-no" title="statement not covered" >      sql_where.push(`device_deleted = '${deleted}'`);</span>
-    }
+    } 
 <span class="cstat-no" title="statement not covered" >    if (sql_where.length &gt; 0) {</span>
 <span class="cstat-no" title="statement not covered" >      for (let i = 0; i &lt; sql_where.length; i++) {</span>
 <span class="cstat-no" title="statement not covered" >        if (i &lt; sql_where.length - 1) {</span>
@@ -233,11 +230,11 @@ module.exports = {
     }
 <span class="cstat-no" title="statement not covered" >    return db.queryAsync(sql);</span>
   },
-  get_not_deleted: function() {
-    let sql = `SELECT *
+  get_not_deleted: <span class="fstat-no" title="function not covered" >fu</span>nction() {
+    let sql = <span class="cstat-no" title="statement not covered" >`SELECT *</span>
         FROM device
         WHERE device_deleted = 0`;
-    return db.queryAsync(sql);
+<span class="cstat-no" title="statement not covered" >    return db.queryAsync(sql);</span>
   },
   get_newest: <span class="fstat-no" title="function not covered" >fu</span>nction() {
     //this returns the most recently added deivce
@@ -271,7 +268,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Jan 11 2019 13:36:20 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Mar 03 2019 20:51:09 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

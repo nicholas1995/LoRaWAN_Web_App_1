@@ -325,6 +325,8 @@ module.exports = {
         try{
             let data = req.body.gateway;
             let request_body = gateway_api_request_data(data, 1);
+            console.log(request_body)
+
             result = await lora_app_server.create_gateways(request_body)
             .catch(err => {
                 //Error creating gateway 
