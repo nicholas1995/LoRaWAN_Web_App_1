@@ -92,32 +92,39 @@
                   <v-layout row wrap>
                     <v-flex xs12 sm12 md12 >
                       <div v-if=" controller[(i-1)].action == 'disable_tracking' || controller[(i-1)].action == 'null'"> <!-- //////////////////////////////////////-->
-                        <v-layout row wrap>
-                        <v-flex xs12 sm6 md6 >
-                          <v-flex xs12 sm12 md12  >
-                            <v-btn class="grey lighten-2" small 
+                        <v-layout row wrap align-center justify-space-between>
+                          <v-flex xs12 sm12 md6 lg3>
+                            <v-select
+                              v-model="device_real_time_location_interval_form[i-1]"
+                              :items="device_real_time_location_interval"
+                              label="Real Time Location Refresh Interval"
+                              suffix= 'seconds'
+                            > 
+                            </v-select>
+                          </v-flex>
+                          <v-flex xs12 sm12 md6 lg3>
+                            <v-btn class="grey lighten-2"  
                               @click.stop="clear_all_device_tracks(i)">
                               Clear all device tracks
                             </v-btn>
                           </v-flex>  
-                        </v-flex>
-                        <v-flex xs12 sm6 md6 >
-
-                            <v-flex xs12 sm6 md12>
-                            <v-select
-                              v-model="device_real_time_tracking_interval_form[i-1]"
-                              :items="device_real_time_tracking_interval"
-                              label="Tracking Refresh Interval"
-                              suffix= 'seconds'
-                            > 
-                          </v-select>
-                          </v-flex>
-                        </v-flex>
+                          <v-flex xs12 sm12 md6 lg3>
+                            <v-btn class="grey lighten-2" 
+                              @click.stop="clear_real_time_device_tracks(i)">
+                              Clear device realtime tracks
+                            </v-btn>
+                          </v-flex> 
+                          <v-flex xs12 sm12 md6 lg3>
+                            <v-btn class="grey lighten-2"
+                              @click.stop="clear_historic_device_tracks(i)">
+                              Clear device historic tracks
+                            </v-btn>
+                          </v-flex>   
                         </v-layout>
                       </div>
                       <div v-else-if=" controller[(i-1)].action == 'real_time_tracking'"> <!-- //////////////////////////////////////-->
                         <v-layout row wrap align-center justify-space-between>
-                          <v-flex xs12 sm12 md6 lg4>
+                          <v-flex xs12 sm12 md6 lg6>
                             <v-select
                               v-model="device_real_time_tracking_interval_form[i-1]"
                               :items="device_real_time_tracking_interval"
@@ -126,16 +133,10 @@
                             > 
                             </v-select>
                           </v-flex>
-                          <v-flex xs12 sm12 md6 lg4>
+                          <v-flex xs12 sm12 md6 lg6>
                             <v-btn class="grey lighten-2"  
                               @click.stop="download_csv(device_real_time_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_real_time_data.csv`)">
                               Download device realtime tracks
-                            </v-btn>
-                          </v-flex>  
-                          <v-flex xs12 sm12 md12 lg4>
-                            <v-btn class="grey lighten-2" 
-                              @click.stop="clear_real_time_device_tracks(i)">
-                              Clear device realtime tracks
                             </v-btn>
                           </v-flex>  
                         </v-layout>
@@ -158,34 +159,26 @@
                         </v-flex>
                       </v-layout>
                       <v-layout row wrap align-center justify-space-between>
-                        <v-flex xs12 sm6 md6 lg6>
+                        <v-flex xs12 sm12 md6 lg4>
                           <v-switch
                             v-model="device_historic_marker_visibility[i-1]"
                             height=0
                             :label="`Display all historic markers: ${device_historic_marker_visibility[i-1].toString()}`"
                             @change="toggle_historic_device_tracks(i)">
                           ></v-switch>
-                          </v-flex>
-                          <v-flex xs12 sm6 md6 lg6>
-                            <v-btn class="grey lighten-2" 
-                              @click.stop="generate_historic_device_tracks(i)">
-                              Generate Historic Tracks
-                            </v-btn>
-                          </v-flex>
-                      </v-layout>
-                      <v-layout row wrap align-center justify-space-between>
-                          <v-flex xs12 sm6 md6 lg6>
-                            <v-btn class="grey lighten-2"  
-                              @click.stop="download_csv(device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)">
-                              Download device historic tracks
-                            </v-btn>
-                          </v-flex>  
-                          <v-flex xs12 sm6 md6 lg6>
-                            <v-btn class="grey lighten-2"
-                              @click.stop="clear_historic_device_tracks(i)">
-                              Clear device historic tracks
-                            </v-btn>
-                          </v-flex>  
+                        </v-flex>
+                        <v-flex xs12 sm6 md6 lg4>
+                          <v-btn class="grey lighten-2" 
+                            @click.stop="generate_historic_device_tracks(i)">
+                            Generate Historic Tracks
+                          </v-btn>
+                        </v-flex>
+                        <v-flex xs12 sm6 md12 lg4>
+                          <v-btn class="grey lighten-2"  
+                            @click.stop="download_csv(device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)">
+                            Download device historic tracks
+                          </v-btn>
+                        </v-flex>  
                       </v-layout>
                       </div>
                     </v-flex>
@@ -343,6 +336,9 @@ export default {
 
       device_real_time_tracking_interval: [0.5,1,2,5,10,20], //This is used to set the interval to set the real time tracking of the devices
       device_real_time_tracking_interval_form: [], //2d array which holds the values in the 2d array for the real time tracking
+
+      device_real_time_location_interval: [0.5,1,2,5,10,20], //This is used to set the interval to set the real time location of the devices
+      device_real_time_location_interval_form: [], //2d array which holds the values in the 2d array for the real time location
     }
   },
   mounted: async function () {
@@ -413,8 +409,8 @@ export default {
     active_tab: function(){
       this.center_map_around_device(this.active_tab)
     },
-    device_real_time_tracking_interval_form: async function(){ //This allows for the dynamic updating of the marker refreshing interval
-    //To update the refresh rate we need to first cancel the previous interval... fetch the latest data and then recreate a new interval with the new rate
+    device_real_time_tracking_interval_form: async function(){ //This allows for the dynamic updating of the marker tracking refreshing interval
+    //To update the refresh rate for the real time tracking we need to first cancel the previous interval... fetch the latest data and then recreate a new interval with the new rate
       if(this.initial == 0 && this.active_tab != null){ //This ensures that it is only executed when the user updates the field and not when the console initally sets the values
         let i = this.active_tab; //set the active tab before we initate the async function because if the request takes long to process the active tab can change
         let device_id = this.find_device_id(i);
@@ -430,6 +426,19 @@ export default {
         this.device_data[i] = device_data_update;
         var x = setInterval(this.refresh_device_polyline, (this.device_real_time_tracking_interval_form[i]*1000), this.device_data[i], i);//create the new interval with the new rate
         this.cleartick_device_polyline[i]  = x; 
+      }
+    },
+    device_real_time_location_interval_form: async function(){ //This allows for the dynamic updating of the real time marker refreshing interval
+    //To update the refresh rate for the real time location we need to first cancel the previous interval... fetch the latest data and then recreate a new interval with the new rate
+      if(this.initial == 0 && this.active_tab != null){ //This ensures that it is only executed when the user updates the field and not when the console initally sets the values
+        let i = this.active_tab; //set the active tab before we initate the async function because if the request takes long to process the active tab can change
+        let holder  = this.cleartick_device_marker[i];
+        clearInterval(holder);
+        this.cleartick_device_marker[i] = null ; 
+        let length = this.device_marker_tracker[i].length; //anytime we switch to another option we delete the no tracking marker 
+        let position = this.device_marker_tracker[i][(length-1)];
+        this.device_markers[(position)].setMap(null);
+        this.create_device_marker(this.device_data[i], 1)
       }
     }
   },
@@ -479,6 +488,7 @@ export default {
         this.active_tab_2.push(0); //This creates the amount of secondary tabs needed for the system
         this.historic_device_track_max_record_amt_form.push(20); //this sets the amount of values which can be selected for the 2d array
         this.device_real_time_tracking_interval_form.push(5); //this sets the amount of values which can be selected for the 2d array for the real time tracking interval (set to initially update every 5 seconds)
+        this.device_real_time_location_interval_form.push(5); //this sets the amount of values which can be selected for the 2d array for the real time location interval (set to initially update every 5 seconds)
 
         this.controller.push({
           action: 'null',
@@ -540,7 +550,7 @@ export default {
         var info_window = new google.maps.InfoWindow(); //creates the instance of the infowindow
         this.set_device_info_window(marker, info_window, device); //sets the info window
         if(refresh_marker == 1){
-          let x = (setInterval(this.refresh_device_marker, this.device_marker_refresh_interval, marker, info_window, device));//this is the syntax for it to work
+          let x = (setInterval(this.refresh_device_marker, (this.device_real_time_location_interval_form[i]*1000), marker, info_window, device));//this is the syntax for it to work
           if(this.initial ==1){
             this.map.fitBounds(this.bounds.extend(position))
             this.cleartick_device_marker[i]= x; //adds the variable returned to the array in the same order as the device_data.. so the value returned in i will refer to the ith device in device_data
@@ -567,6 +577,7 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     refresh_device_marker:  async function(marker, info_window, device){
+      console.log('Refresh marker')
       device = await AuthenticationService.refresh_device_data_map(device.device_id)
         .catch(err => {
           //Error gettin most recent 
