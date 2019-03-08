@@ -7,6 +7,70 @@ function error_message(current_error_message, previous_error) {
     let error = new VError("%s : %s", current_error_message, previous_error);
     return error;
 }
+function return_date(date) {
+    try{
+        if (date == "" || date == null) {
+            full_date = "N/A"
+        } else {
+            date = new Date(date);
+            let month = return_month(date.getMonth()); //returns the month in 3 letters
+            let day = add_zero(date.getDate());
+            let year = date.getFullYear() - 2000; //converts the full year to 2 digits 
+            let hour = date.getHours(); ;
+            let minutes = add_zero(date.getMinutes());
+            let seconds = add_zero(date.getSeconds());
+            full_date = day + "-" + month + "-" + year + " " + hour + ":" + minutes + ":" + seconds;
+        }
+        return full_date;
+    }catch(err){
+        console.log(err)
+    }
+} 
+    //This function takes the month in numerical form from 0:11 and reutrn the first 3 letters of the month
+function return_month(month) {
+    switch (month) {
+        case 0:
+            return 'Jan';
+        case 1:
+            return 'Feb';
+        case 2:
+            return 'Mar';
+        case 3:
+            return 'Apr';
+        case 4:
+            return 'May';
+        case 5:
+            return 'Jun';
+        case 6:
+            return 'Jul';
+        case 7:
+            return 'Aug';
+        case 8:
+            return 'Sep';
+        case 9:
+            return 'Oct';
+        case 10:
+            return 'Nov';
+        case 11:
+            return 'Dec';
+        default:
+            return 'NA';
+    }
+}
+
+function add_zero(i) {
+    if (i < 10) {
+        i = "0" + i;
+    }
+    return i;
+}
+
+function convert_dates(data){ //to ensure that when a fisher downloads the data it does not have any info about rx_time
+    for(let i =0; i< data.length; i++){
+        if(data[i].time_stamp) data[i]["time_stamp"] = return_date(data[i]["time_stamp"]);
+    }
+    return data;
+}
 
 function gateway_statistics_headers_database_to_table_LUT(gateway_statistics_table_headers_database){ //takes in the headers of the database and returns the table version
     switch (gateway_statistics_table_headers_database) {
@@ -16,20 +80,12 @@ function gateway_statistics_headers_database_to_table_LUT(gateway_statistics_tab
         return "Gateway ID";
       case "gateway_id_lora":
         return "Gateway ID LoRa";
-      case "gateway_ip":
-        return "Gateway IP Address";
+      case "gateway_name":
+        return "Gateway Name";
       case "time_stamp":
         return "Time Stamp";
-      case "gateway_latitude":
-        return "Gateway Latitude";
-      case "gateway_longitude":
-        return "Gateway Longitude";
-      case "gateway_altitude":
-        return "Gateway Altitude";
-      case "location_source":
-        return "Location Source";
-      case "configeration_version":
-        return "Configeration Version";
+      case "network_id":
+        return "Organization ID";
       case "rx_packets_received":
         return "Rx Packets Received";
       case "rx_packets_received_ok":
@@ -50,20 +106,12 @@ function gateway_statistics_headers_table_to_database_LUT(gateway_statistics_tab
             return "gateway_id";
         case "Gateway ID LoRa":
             return "gateway_id_lora";
-        case "Gateway IP Address":
-            return "gateway_ip";
+        case "Gateway Name":
+            return "gateway_name";
         case "Time Stamp":
             return "time_stamp";
-        case "Gateway Latitude":
-            return " gateway_latitude";
-        case "Gateway Longitude":
-            return "gateway_longitude";
-        case "Gateway Altitude":
-            return "gateway_altitude";
-        case "Location Source":
-            return "location_source";
-        case "Configeration Version":
-            return "configeration_version";
+        case "Organization ID":
+            return "network_id";
         case "Rx Packets Received":
             return "rx_packets_received";
         case "Rx Packets Received Ok":
@@ -115,6 +163,7 @@ module.exports = {
                 })
             if(gateway_statistics.length > 0){
                 let headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
+                gateway_statistics = convert_dates(gateway_statistics);
                 res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
             }else{
                 res.status(204).send({ message: 'No Data Available', type: 'info' });//No data retrived
@@ -137,6 +186,7 @@ module.exports = {
             if(gateway_statistics.length > 0){
                 headers = convert_gateway_statistics_headers_database_to_table(gateway_statistics[0]);
             }
+            gateway_statistics = convert_dates(gateway_statistics);
             res.status(200).send({ headers: headers, gateway_statistics: gateway_statistics, message: 'Gateway Statistics Fetched', type: 'success' });
         }catch(err){
             console.log(err)
