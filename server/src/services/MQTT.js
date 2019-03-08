@@ -89,6 +89,7 @@ client.on('message', async function (topic, message) {
                     message = JSON.parse(message)
                     message['gateway_id'] = gateway_information[0].gateway_id;
                     message['gateway_id_lora'] = topic_information.gateway_id_lora;
+                    message['gateway_name'] = gateway_information[0].gateway_name;
                     message['network_id'] = gateway_information[0].network_id;
                     await GATEWAY_STATS.create_gateway_statistics(message)
                         .catch(err => {

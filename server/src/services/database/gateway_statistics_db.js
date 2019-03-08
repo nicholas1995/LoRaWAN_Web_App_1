@@ -58,8 +58,8 @@ module.exports = {
     }, 
     create_gateway_statistics: function (gateway_statistic) {
         let sql = `INSERT INTO gateway_statistics
-        (gateway_id, gateway_id_lora, network_id, time_stamp, rx_packets_received, rx_packets_received_ok, tx_packets_received, tx_packets_emitted)
-        VALUES ('${gateway_statistic.gateway_id}', '${gateway_statistic.gateway_id_lora}', '${gateway_statistic.network_id}', '${gateway_statistic.timestamp}', '${gateway_statistic.rxPacketsReceived}', 
+        (gateway_id, gateway_id_lora, gateway_name, network_id, time_stamp, rx_packets_received, rx_packets_received_ok, tx_packets_received, tx_packets_emitted)
+        VALUES ('${gateway_statistic.gateway_id}', '${gateway_statistic.gateway_id_lora}', '${gateway_statistic.gateway_name}','${gateway_statistic.network_id}', '${gateway_statistic.timestamp}', '${gateway_statistic.rxPacketsReceived}', 
         '${gateway_statistic.rxPacketsReceivedOk}', '${gateway_statistic.txPacketsReceived}', '${gateway_statistic.txPacketsEmitted}') `;
         return db.queryAsync(sql);
     },
