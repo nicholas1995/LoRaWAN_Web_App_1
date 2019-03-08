@@ -174,11 +174,6 @@ function parse_gateway_stats(gateway, gateway_stats) {
     try {
         gateway["gateway_statistics_id"] = gateway_stats.gateway_statistics_id;
         gateway["time_stamp"] = gateway_stats.time_stamp;
-        gateway.gateway_latitude = gateway_stats.gateway_latitude;
-        gateway.gateway_longitude = gateway_stats.gateway_longitude;
-        gateway.gateway_altitude = gateway_stats.gateway_altitude;
-        gateway.gateway_location_source_form = gateway_stats.location_source;
-        gateway["configeration_version"] = gateway_stats.configeration_version;
         gateway["rx_packets_received"] = gateway_stats.rx_packets_received;
         gateway["rx_packets_received_ok"] = gateway_stats.rx_packets_received_ok;
         gateway["tx_packets_received"] = gateway_stats.tx_packets_received;
