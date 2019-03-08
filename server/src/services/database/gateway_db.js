@@ -7,6 +7,12 @@ module.exports = {
         WHERE gateway_deleted ='0'`;
         return db.queryAsync(sql);
     },
+    get_gateway_specified: function (gateway_id_lora) {
+        let sql = `SELECT *
+        FROM gateway
+        WHERE gateway_id_lora ='${gateway_id_lora}'`;
+        return db.queryAsync(sql);
+    },
     get_gateway_all: function () {
         let sql = `SELECT *
         FROM gateway`;

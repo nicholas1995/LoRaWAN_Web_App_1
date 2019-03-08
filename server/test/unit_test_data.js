@@ -27,9 +27,9 @@ let DUR = { applicationID: '156',
                                 vessel_id: 3,
                                 device_id: 2 }
 let GSR = {
-    gatewayID: '2222222222222222', 
-    rxPacketsReceived: 5, 
-    rxPacketsReceivedOk: 5, 
-    txPacketsReceived: 5, 
-    txPacketsEmitted: 5
+    "timestamp": "2019-02-08T00:00:00Z",
+    "rxPacketsReceived": 5, 
+    "rxPacketsReceivedOk": 5, 
+    "txPacketsReceived": 5, 
+    "txPacketsEmitted": 5
 }
