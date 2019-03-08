@@ -1,0 +1,12 @@
+let AFR_1 = { headers: '"Device Uplink ID,Device ID,Sub-Network ID"',
+            device_uplink_id_min: 8183,
+            device_uplink_id_max: 8728,
+            network: '[342]',
+            sub_network: '[156]',
+            vessel: '[2]',
+            device: '[7]',
+            start_date: null,
+            end_data: null,
+            sort_by: null,
+            order: null,
+            user_id: 68 };

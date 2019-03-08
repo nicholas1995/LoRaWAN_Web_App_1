@@ -648,6 +648,7 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     set_gateway_info_window: function(marker, info_window, gateway){
+      console.log(gateway)
       var content;
         content = `<div>
                     <h3>Basic Gateway Information</h3>

@@ -181,7 +181,7 @@ export default {
         device_data: [],
         loading: true,
         pagination: {},
-        rows_per_page_items: [ 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
+        rows_per_page_items: [ 25, 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
         header_names: [], //Array holding the headings
         value: [],
         display: [],

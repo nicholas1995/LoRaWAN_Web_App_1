@@ -4,7 +4,7 @@
     <v-progress-linear  color="primary" height="1" :indeterminate="isLoading" ></v-progress-linear>
     <v-layout row wrap >
       <v-flex xs12 sm6 md2 class="pt-5">
-        <div v-if="this.device_uplink_sensor_data.length>0">
+        <div v-show="this.device_uplink_sensor_data.length>0">
         <v-select
           v-model="sensor_value_to_plot"
           :items="this.sensor_values"
