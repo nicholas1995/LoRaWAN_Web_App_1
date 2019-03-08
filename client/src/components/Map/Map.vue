@@ -91,7 +91,7 @@
                 <v-card-text>
                   <v-layout row wrap>
                     <v-flex xs12 sm12 md12 >
-                      <div v-if=" controller[(i-1)].action == 'disable_tracking' || controller[(i-1)].action == 'null'"> <!-- //////////////////////////////////////-->
+                      <div v-if=" controller[(i-1)].action == 'disable_tracking' || controller[(i-1)].action == 'null'"> <!-- ////////////REAL TIME LOCATION//////////////////////////-->
                         <v-layout row wrap align-center justify-space-between>
                           <v-flex xs12 sm12 md6 lg3>
                             <v-select
@@ -122,7 +122,7 @@
                           </v-flex>   
                         </v-layout>
                       </div>
-                      <div v-else-if=" controller[(i-1)].action == 'real_time_tracking'"> <!-- //////////////////////////////////////-->
+                      <div v-else-if=" controller[(i-1)].action == 'real_time_tracking'"> <!-- ////////////////REAL TIME TRACKING//////////////////////-->
                         <v-layout row wrap align-center justify-space-between>
                           <v-flex xs12 sm12 md6 lg6>
                             <v-select
@@ -141,7 +141,7 @@
                           </v-flex>  
                         </v-layout>
                       </div>
-                      <div v-else-if=" controller[(i-1)].action == 'historic_tracking'"> <!-- //////////////////////////////////////-->
+                      <div v-else-if=" controller[(i-1)].action == 'historic_tracking'"> <!-- ////////////////HISTORIC TRACKING//////////////////////-->
                       <v-layout row wrap>
                         <v-flex xs12 sm6 md5 lg4>
                           <date_time_picker v-bind:type_prop ='0'  @date= start_date_function($event) @time= start_time_function($event)></date_time_picker>
@@ -279,7 +279,6 @@ export default {
       "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"],
       i: 1, //Just to fetch the device locations/// to delete
 
-      device_marker_refresh_interval: 5000,
       gateway_marker_refresh_interval: 10000,
 
 
@@ -433,12 +432,12 @@ export default {
       if(this.initial == 0 && this.active_tab != null){ //This ensures that it is only executed when the user updates the field and not when the console initally sets the values
         let i = this.active_tab; //set the active tab before we initate the async function because if the request takes long to process the active tab can change
         let holder  = this.cleartick_device_marker[i];
-        clearInterval(holder);
+        clearInterval(holder); //Clear the interval of the previous device marker
         this.cleartick_device_marker[i] = null ; 
         let length = this.device_marker_tracker[i].length; //anytime we switch to another option we delete the no tracking marker 
         let position = this.device_marker_tracker[i][(length-1)];
-        this.device_markers[(position)].setMap(null);
-        this.create_device_marker(this.device_data[i], 1)
+        this.device_markers[(position)].setMap(null); //delete the previous marker from the map
+        this.create_device_marker(this.device_data[i], 1) //generate the new marker and enable refreshing
       }
     }
   },
