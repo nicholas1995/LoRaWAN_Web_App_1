@@ -546,6 +546,70 @@ let update_user_2 ={
 let update_user_3 ={
     email: "nicholas.jmitchell@outlook.com", 
 }
+//User Vessel----------------------------------------------------------------------------------------------------------------
+let get_user_vessel_1 = {
+    id: 6,
+    user_id: null,
+    vessel_id: null,
+    deleted: null
+}
+
+let get_user_vessel_2 = {
+    id: null,
+    user_id: 68,
+    vessel_id: null,
+    deleted: null
+}
+
+let get_user_vessel_3 = {
+    id: null,
+    user_id: null,
+    vessel_id: 2,
+    deleted: null
+}
+
+let get_user_vessel_4 = {
+    id: null,
+    user_id: null,
+    vessel_id: null,
+    deleted: 0
+}
+
+let create_user_vessel = {
+    user_id: 68,
+    vessel_id: 3
+}
+
+let delete_user_vessel = {
+    user_id: 68,
+    vessel_id: 3
+}
+
+//Vessel Device ----------------------------------------------------------------------------------------------------------------
+let get_vessel_device_2 = {
+
+}
+
+let get_vessel_device_3 = {
+    user_vessel_info: [ { vessel_id: 2,
+        date_created: '2019-02-16 22:44:18',
+        date_deleted: null } ]
+}
+
+let get_vessel_device_4 = {
+    device_eui: "8888888888888888"
+}
+
+let create_vessel_device = {
+    device_id: 8,
+    device_eui: "8888888888888888",
+    vessel_id: 2
+}
+
+let delete_vessel_device_1 = {
+    device_eui: "6666666666666666"
+}
+
 
 //Device Uplink Data----------------------------------------------------------------------------------------------------------------
 let create_devie_uplink = { applicationID: '156',
@@ -643,3 +707,33 @@ let get_device_uplink_7 = "SELECT device_uplink_id,device_id,sub_network_id,vess
 let get_device_uplink_8 = "SELECT device_uplink_id,device_id,vessel_id,time_stamp,device_eui,device_name,gps_latitude,gps_longitude,gps_altitude,temperature,humidity,accelerometer,sos FROM device_uplink  WHERE ( (time_stamp > '2019-03-09 22:36:33' AND vessel_id = '2'))  ORDER BY time_stamp DESC"
 
 let get_device_uplink_9 = "SELECT device_uplink.device_uplink_id, device_uplink.sub_network_id, device_uplink.vessel_id, vessel.vessel_name,  device_uplink.device_id, device_uplink.device_name,device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer, device_uplink.sos, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp FROM device_uplink LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id  WHERE ( (time_stamp > '2019-03-09 22:36:33' AND device_uplink.vessel_id = '2'))   ORDER BY time_stamp DESC"
+
+//Gateway Stats----------------------------------------------------------------------------------------------------------------
+let get_gateway_stats_2 = {
+    parameters: { start_date: '2019-02-05T15:56:00Z', gateway_id: [ 11, 1 ] }, 
+    columns:   [ 'gateway_statistics_id',
+    'gateway_id',
+    'gateway_id_lora',
+    'gateway_name',
+    'rx_packets_received_ok',
+    'tx_packets_received',
+    'tx_packets_emitted' ]
+}
+
+let get_gateway_stats_3 = {
+    gateway_id: 1
+}
+
+let create_gateway_stat = {
+    gateway_statistic: {
+        gateway_id: 1,
+        gateway_id_lora: "2222222222222222",
+        gateway_name: "Gateway_1",
+        network_id: 342, 
+        timestamp: "2019-02-08T00:00:00Z",
+        rxPacketsReceived: 5,
+        rxPacketsReceivedOk: 5,
+        txPacketsReceived: 5,
+        txPacketsEmitted: 5,
+    }
+}

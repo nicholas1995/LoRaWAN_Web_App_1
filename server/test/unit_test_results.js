@@ -1445,6 +1445,310 @@ let update_user_3 = {
 		}
 	]
 }
+
+//User Vessel----------------------------------------------------------------------------------------------------------------
+let get_user_vessel_1 = {
+	"data":
+	[
+		{
+			"id": 6,
+			"user_id": 65,
+			"vessel_id": 2,
+			"date_created": "2019-02-16 00:11:10",
+			"date_deleted": "2019-02-16 00:11:49",
+			"deleted": 1
+		}
+	]
+}
+
+let get_user_vessel_2 = {
+	"data":
+	[
+		{
+			"id": 9,
+			"user_id": 68,
+			"vessel_id": 2,
+			"date_created": "2019-03-09 22:36:33",
+			"date_deleted": null,
+			"deleted": 0
+		}
+	]
+}
+
+let get_user_vessel_3 = {
+	"data":
+	[
+		{
+			"id": 6,
+			"user_id": 65,
+			"vessel_id": 2,
+			"date_created": "2019-02-16 00:11:10",
+			"date_deleted": "2019-02-16 00:11:49",
+			"deleted": 1
+		},
+		{
+			"id": 7,
+			"user_id": 65,
+			"vessel_id": 2,
+			"date_created": "2019-02-16 00:12:33",
+			"date_deleted": "2019-02-28 21:02:15",
+			"deleted": 1
+		},
+		{
+			"id": 8,
+			"user_id": 64,
+			"vessel_id": 2,
+			"date_created": "2019-02-16 22:44:18",
+			"date_deleted": null,
+			"deleted": 0
+		},
+		{
+			"id": 9,
+			"user_id": 68,
+			"vessel_id": 2,
+			"date_created": "2019-03-09 22:36:33",
+			"date_deleted": null,
+			"deleted": 0
+		}
+	]
+}
+
+let get_user_vessel_4 = {
+	"data":
+	[
+		{
+			"id": 8,
+			"user_id": 64,
+			"vessel_id": 2,
+			"date_created": "2019-02-16 22:44:18",
+			"date_deleted": null,
+			"deleted": 0
+		},
+		{
+			"id": 9,
+			"user_id": 68,
+			"vessel_id": 2,
+			"date_created": "2019-03-09 22:36:33",
+			"date_deleted": null,
+			"deleted": 0
+		}
+	]
+}
+
+let create_user_vessel = {
+	"data":
+	[
+		{
+			"id": 10,
+			"user_id": 68,
+			"vessel_id": 3,
+			"date_created": "2019-03-10 14:18:53",
+			"date_deleted": null,
+			"deleted": 0
+		}
+	]
+}
+
+let delete_user_vessel = {
+	"data":
+	[
+		{
+			"id": 10,
+			"user_id": 68,
+			"vessel_id": 3,
+			"date_created": "2019-03-10 14:18:53",
+			"date_deleted": "2019-03-10 14:19:40",
+			"deleted": 1
+		}
+	]
+}
+
+//Vessel Device ----------------------------------------------------------------------------------------------------------------
+let get_vessel_device_1 = {
+	"data":
+	[
+		{
+			"vessel_device_id": 7,
+			"device_id": 2,
+			"device_eui": "2222222222222222",
+			"vessel_id": 3,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-02-20 14:16:52",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 9,
+			"device_id": 4,
+			"device_eui": "4444444444444444",
+			"vessel_id": 1,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-07 19:53:21",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 10,
+			"device_id": 5,
+			"device_eui": "5555555555555555",
+			"vessel_id": 1,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-07 19:54:32",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 11,
+			"device_id": 6,
+			"device_eui": "6666666666666666",
+			"vessel_id": 2,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-07 19:59:23",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 13,
+			"device_id": 8,
+			"device_eui": "8888888888888888",
+			"vessel_id": 1,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-07 20:02:14",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 14,
+			"device_id": 9,
+			"device_eui": "9999999999999999",
+			"vessel_id": 1,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-07 20:03:26",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 15,
+			"device_id": 10,
+			"device_eui": "1000000000000000",
+			"vessel_id": 1,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-07 20:04:28",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 21,
+			"device_id": 14,
+			"device_eui": "1111111123332433",
+			"vessel_id": 1,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-09 21:34:24",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 22,
+			"device_id": 3,
+			"device_eui": "3333333333333333",
+			"vessel_id": 1,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-10 00:02:06",
+			"vessel_device_deleted_at": null
+		},
+		{
+			"vessel_device_id": 24,
+			"device_id": 1,
+			"device_eui": "1111111111111111",
+			"vessel_id": 2,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-10 11:28:36",
+			"vessel_device_deleted_at": null
+		}
+	]
+}
+
+
+let get_vessel_device_3 = {
+	"data":
+	[
+		{
+			"vessel_device_id": 3,
+			"device_id": 1,
+			"device_eui": "1111111111111111",
+			"vessel_id": 2,
+			"vessel_device_deleted": 1,
+			"vessel_device_created_at": "2019-02-14 01:45:43",
+			"vessel_device_deleted_at": "2019-03-10 11:28:28",
+			"device_name": "Device_1"
+		},
+		{
+			"vessel_device_id": 11,
+			"device_id": 6,
+			"device_eui": "6666666666666666",
+			"vessel_id": 2,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-07 19:59:23",
+			"vessel_device_deleted_at": null,
+			"device_name": "Device_6"
+		},
+		{
+			"vessel_device_id": 23,
+			"device_id": 1,
+			"device_eui": "1111111111111111",
+			"vessel_id": 2,
+			"vessel_device_deleted": 1,
+			"vessel_device_created_at": "2019-03-10 11:28:28",
+			"vessel_device_deleted_at": "2019-03-10 11:28:36",
+			"device_name": "Device_1"
+		},
+		{
+			"vessel_device_id": 24,
+			"device_id": 1,
+			"device_eui": "1111111111111111",
+			"vessel_id": 2,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-10 11:28:36",
+			"vessel_device_deleted_at": null,
+			"device_name": "Device_1"
+		}
+	]
+}
+
+let get_vessel_device_4 = {
+	"data":
+	[
+		{
+			"device_id": 8,
+			"vessel_id": 1
+		}
+	]
+}
+
+let create_vessel_device = {
+	"data":
+	[
+		{
+			"vessel_device_id": 25,
+			"device_id": 8,
+			"device_eui": "8888888888888888",
+			"vessel_id": 2,
+			"vessel_device_deleted": 0,
+			"vessel_device_created_at": "2019-03-10 14:55:08",
+			"vessel_device_deleted_at": null
+		}
+	]
+}
+
+let delete_vessel_device_1 = {
+	"data":
+	[
+		{
+			"vessel_device_id": 11,
+			"device_id": 6,
+			"device_eui": "6666666666666666",
+			"vessel_id": 2,
+			"vessel_device_deleted": 1,
+			"vessel_device_created_at": "2019-03-07 19:59:23",
+			"vessel_device_deleted_at": "2019-03-10 14:57:07"
+		}
+	]
+}
+
+
+
 //Device Uplink Data Tests ----------------------------------------------------------------------------------------------------------------
 
 create_device_uplink = {
@@ -6662,6 +6966,497 @@ let get_device_uplink_records_8 = {
 			"accelerometer": "30",
 			"sos": 0,
 			"time_stamp": "2019-03-09 22:41:05"
+		}
+	]
+}
+
+//Gateway Stats----------------------------------------------------------------------------------------------------------------
+let get_gateway_stats_1 = {
+	"data":
+	[
+		{
+			"gateway_statistics_id": 1,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "4",
+			"rx_packets_received_ok": "1",
+			"tx_packets_received": "0",
+			"tx_packets_emitted": "1"
+		},
+		{
+			"gateway_statistics_id": 2,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "4",
+			"rx_packets_received_ok": "1",
+			"tx_packets_received": "0",
+			"tx_packets_emitted": "1"
+		},
+		{
+			"gateway_statistics_id": 5,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 6,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 7,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 8,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 9,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 10,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 11,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 12,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 13,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 14,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 15,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 16,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 17,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 18,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 19,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 20,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 21,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 22,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 23,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		}
+	]
+}
+
+let get_gateway_stats_2 = {
+	"data":
+	[
+		{
+			"gateway_statistics_id": 1,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "1",
+			"tx_packets_received": "0",
+			"tx_packets_emitted": "1"
+		},
+		{
+			"gateway_statistics_id": 2,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "1",
+			"tx_packets_received": "0",
+			"tx_packets_emitted": "1"
+		},
+		{
+			"gateway_statistics_id": 5,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 6,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 7,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 8,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 9,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 10,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 11,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 12,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 13,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 14,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 15,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 16,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 17,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 18,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 19,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 20,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 21,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 22,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		},
+		{
+			"gateway_statistics_id": 23,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
+		}
+	]
+}
+
+let get_gateway_stats_3 = {
+	"data":
+	[
+		{
+			"gateway_statistics_id": 23,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5",
+			"time_stamp": "2019-02-08 00:00:00"
+		}
+	]
+}
+
+let create_gateway_stat = {
+	"data":
+	[
+		{
+			"gateway_statistics_id": 23,
+			"gateway_id": 1,
+			"gateway_id_lora": "2222222222222222",
+			"gateway_name": "Gateway_1",
+			"network_id": "342",
+			"time_stamp": "2019-02-08T00:00:00Z",
+			"rx_packets_received": "5",
+			"rx_packets_received_ok": "5",
+			"tx_packets_received": "5",
+			"tx_packets_emitted": "5"
 		}
 	]
 }

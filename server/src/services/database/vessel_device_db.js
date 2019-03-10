@@ -58,7 +58,6 @@ module.exports = {
     return db.queryAsync(sql);
   },
   create: function(device_id, device_eui, vessel_id) {
-    console.log(device_id, device_eui, vessel_id);
     //Creates a relationship between a device and a vessel
     let sql = `INSERT INTO vessel_device
         (device_id, device_eui, vessel_id)
@@ -87,7 +86,7 @@ module.exports = {
           WHERE vessel_id = '${vessel_id}'`;
     return db.queryAsync(sql);
   },
-  update_networks_all_parameters: function(data, device_eui) {
+  update_networks_all_parameters: function(data, device_eui) { //--------------------------------
     let sql = `UPDATE devices
         SET device_name = '${data.device_name}'
         WHERE device_eui = '${device_eui}'`;
