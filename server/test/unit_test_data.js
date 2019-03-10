@@ -158,3 +158,31 @@ let gateway_marker_information_1 = {
                                         network_id: "342",
                                         network_server_id: "8",
                                     }
+
+let non_sensitive_create_marker_data = {
+                                            gps_latitude: 10.864022744157063,
+                                            gps_longitude: -61.27371711563518,
+                                        }
+
+let non_sensitive_create_marker_data_1 = {
+                                            accelerometer: "30",
+                                            gps_latitude: "10.704360987772956",
+                                            gps_longitude: "-61.73192560672761",
+                                            humidity: "25",
+                                            network_id: "342",
+                                            network_name: "CIRP",
+                                            sub_network_id: "156",
+                                            sub_network_name: "Marine_IoT",
+                                            temperature: "26.25",
+                                            time_stamp: "06-Mar-19 0:55:38",
+                                        }
+
+let non_sensitive_polyline_data = {
+                                    gps_latitude: 10.7191,
+                                    gps_longitude: -61.7238
+                                }
+
+let non_sensitive_polyline_data_1 = {
+                                    gps_latitude: 10.7557,
+                                    gps_longitude: -61.6987
+                                }

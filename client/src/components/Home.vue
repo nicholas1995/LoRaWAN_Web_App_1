@@ -283,7 +283,7 @@ export default {
         })(marker,content,info_window));
     },
   //--------------------------------------------------------------------------------------------------------------------------------------------
-    create_device_polyline: function(coordinate){
+    create_polyline: function(coordinate){
       let path = [];
       path.push({lat: parseFloat(coordinate.gps_latitude),lng: parseFloat(coordinate.gps_longitude)})
       let polyline = new google.maps.Polyline({
@@ -297,7 +297,7 @@ export default {
       polyline.setOptions({strokeColor: `#00FF88`});
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
-    append_device_polyline: function(coordinate){
+    append_polyline: function(coordinate){
       //takes in an int i which represents the device position in arrays and the device data with the coordinates to append and also the action which can be either... real_time_tracking or historic_tracking
       let position = new google.maps.LatLng(coordinate.gps_latitude, coordinate.gps_longitude); //create the updated position of the coordinate
       let length = this.polyline_tracker.length;
@@ -373,7 +373,6 @@ export default {
           value = Math.round(value * 10) / 10;
           return_data.push([new Date(device_uplink_sensor_data[i].time_stamp), value]);
       }
-      console.log(return_data)
       return return_data;
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -398,10 +397,10 @@ export default {
       {gps_latitude: coordinate.lat.min,gps_longitude: coordinate.lng.min},{gps_latitude: coordinate.lat.max,gps_longitude: coordinate.lng.min}];
       for (let i =0; i<box_coordinates.length; i++){
         //this.create_marker_square(box_coordinates[i])
-        if(i ==0) this.create_device_polyline(box_coordinates[i])
-        else this.append_device_polyline(box_coordinates[i])
+        if(i ==0) this.create_polyline(box_coordinates[i])
+        else this.append_polyline(box_coordinates[i])
       }
-      this.append_device_polyline(box_coordinates[0])
+      this.append_polyline(box_coordinates[0])
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     create_sensor_data_search_coordinate_box: function(coordinate, buffer){
