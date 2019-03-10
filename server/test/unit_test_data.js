@@ -13,7 +13,7 @@ let DUR = { applicationID: '156',
                                     time: '2019-03-07T20:43:02Z',
                                     rssi: 3,
                                     loRaSNR: 0.8193636,
-                                    location: [{ latitude: 10.248639, longitude: -61.496259, altitude: 0 }] } ],
+                                    location: [{ latitude: 10.248639, longitude: 10.248639, altitude: 0 }] } ],
                                 txInfo: { frequency: 0, dr: 4 },
                                 adr: false,
                                 fCnt: 0,
@@ -186,3 +186,381 @@ let non_sensitive_polyline_data_1 = {
                                     gps_latitude: 10.7557,
                                     gps_longitude: -61.6987
                                 }
+
+//----------------------------------------------------------------------------------------------------------------Database test data ----------------------------------------------------------------------------------------------------------------
+
+//Organization----------------------------------------------------------------------------------------------------------------
+
+let create_organization_2 = {
+    network_id: 376, 
+    network_name: "Test_Organization", 
+    network_display_name: "This is just for testing", 
+    network_can_have_gateways: true
+}
+
+let update_organization_1 = {
+    col: "network_deleted",
+    value: 1, 
+    condition: 376
+}
+
+let update_organization_2 = { 
+    network_name: 'CIRP_S',
+    network_display_name: 'Caribbean ICT Research Program',
+    network_can_have_gateways: true 
+}
+
+//Application----------------------------------------------------------------------------------------------------------------
+
+let get_application_2 = {
+    organization_id = 342
+}
+    
+let create_application_1 = {
+    sub_network_id: 161,
+    network_id: 342,
+    service_profile_id: "ae2ed918-d653-4a14-b638-b52236d2d0ae",
+    sub_network_name: "Test_Application", 
+    sub_network_description: "Test"
+}
+
+let update_application_1 = {
+    col: "sub_network_deleted",
+    value: 1, 
+    condition: 161
+}
+
+let update_application_2 = { 
+    sub_network_name: 'Marine_IoT_1',
+    sub_network_description: 'This application encompasses all of the vessels and devices which are part of the Marine IoT application which falls under the CIRP organization.',
+    network_id: '342',
+    service_profile_id: 'ae2ed918-d653-4a14-b638-b52236d2d0ae',
+    payload_codec: 'CAYENNE_LPP' 
+}
+
+//Vessels----------------------------------------------------------------------------------------------------------------
+let get_vessel_1 = {
+    id: 2, 
+    name: null, 
+    deleted: null, 
+    sub_network_id: null
+}
+
+let get_vessel_2 = {
+    id: null, 
+    name: 'Sunset', 
+    deleted: null, 
+    sub_network_id: null
+}
+
+let get_vessel_3 = {
+    id: null, 
+    name: null, 
+    deleted: 0, 
+    sub_network_id: null
+}
+
+let get_vessel_4 = {
+    id: null, 
+    name: null, 
+    deleted: 1, 
+    sub_network_id: null
+}
+
+let get_vessel_5 = {
+    id: null, 
+    name: null, 
+    deleted: null, 
+    sub_network_id: 156
+}
+
+let get_vessel_6 = {
+    sub_network_id: 156
+}
+
+let create_vessel_1 = {
+        vessel_name: "Time Chaser",
+        vessel_unique_vessel_identifier: "11111",
+        vessel_international_radio_call_sign: "111",
+        vessel_type: "Artisanal Fishing",
+        sub_network_id: 156
+}
+
+let create_vessel_2 = {
+    sub_network_id: 156
+}
+
+let update_vessel_1 = {
+    col: "vessel_name",
+    value: "Time Chaser 1",
+    condition: 2
+}
+
+//Devices----------------------------------------------------------------------------------------------------------------
+
+let get_devices_1 = {
+    device_id : 3, 
+    device_eui: null, 
+    device_name: null, 
+    sub_network_id: null,  
+    deleted: null, 
+}
+let get_devices_2 = {
+    device_id : null, 
+    device_eui: "111111111111111", 
+    device_name: null, 
+    sub_network_id: null,  
+    deleted: null, 
+}
+let get_devices_3 = {
+    device_id : null, 
+    device_eui: null, 
+    device_name: "Device_10", 
+    sub_network_id: null,  
+    deleted: null, 
+}
+let get_devices_4 = {
+    device_id : null, 
+    device_eui: null, 
+    device_name: null, 
+    sub_network_id: 156,  
+    deleted: null, 
+}
+let get_devices_5 = {
+    device_id : null, 
+    device_eui: null, 
+    device_name: null, 
+    sub_network_id: null,  
+    deleted: 0, 
+}
+let get_devices_6 = {
+    device_id : null, 
+    device_eui: null, 
+    device_name: null, 
+    sub_network_id: null,  
+    deleted: 1, 
+}
+
+let create_device_data = {
+                            device_name: 'Device_11',
+                            device_eui: '1111111123332433',
+                            device_description: 'This is a test device',
+                            sub_network_id: '156',
+                            vessel_id: '',
+                            device_profile_id_lora: 'f7963621-76d3-4f9b-bd5b-858468a14b8b',
+                            reference_altitude: '0',
+                            skip_frame_counter: true 
+                        }
+
+let update_device = {
+    col: "device_deleted",
+    value: 1,
+    condition: "777777777777777"
+}
+let update_device_data = {
+                            device_id: 14,
+                            device_name: 'Device_1123',
+                            device_eui: '1111111123332433',
+                            device_description: 'This is a test',
+                            sub_network_id: '156',
+                            vessel_id: '',
+                            device_profile_id_lora: 'f7963621-76d3-4f9b-bd5b-858468a14b8b',
+                            reference_altitude: '10',
+                            skip_frame_counter: true 
+                        }
+
+                        
+//Gateways----------------------------------------------------------------------------------------------------------------  
+
+let get_gateway_2 = {
+    gateway_id = 342
+}
+
+let create_gateway_1 = {
+    network_id: 342, 
+    gateway_name: "Test_Gateway", 
+    gateway_id_lora: "6545674567456745", 
+    gateway_description: "This is a test Gateway", 
+    network_server_id: 8
+}
+
+let update_gateway_1 = {
+    col: "gateway_deleted",
+    value: 1, 
+    condition: 11
+}
+
+let update_gateway_2 = { 
+    gateway_name: 'Gateway_1995',
+    gateway_id: 1,
+    gateway_id_lora: '2222222222222222',
+    gateway_description: 'First Gateway 1',
+    network_id: '342',
+    network_server_id: 8,
+}       
+
+//Service Profile----------------------------------------------------------------------------------------------------------------  
+let create_service_profile = {
+    service_profile_id_lora: "fe592498-6c54-4f41-ac53-ef0e3088e7fe", 
+    service_profile_name: "Test Service Profile", 
+    network_server_id: 8, 
+    network_id: 342, 
+    created_at_time_stamp: "2019-03-10T05:31:11.471296Z"
+}
+
+let update_service_profie_1 = {
+    col: "service_profile_deleted",
+    value: 1, 
+    condition: 2
+}
+
+let update_service_profie_2 = { 
+    service_profile_name: 'Service Profile 1995',
+    add_gw_metadata: true,
+    report_device_status_battery: true,
+    report_device_status_margin: true,
+    network_geo_location: true,
+    device_status_req_frequency: 2,
+    dr_min: 0,
+    dr_max: 10 
+}
+//Device Profile----------------------------------------------------------------------------------------------------------------  
+let create_device_profile = {
+    network_id: 342, 
+    device_profile_id_lora: 'd0a189e2-21fa-476b-87f1-05607eb3ed30', 
+    device_profile_name: 'Test Device Profile', 
+    network_server_id: 8, 
+    device_profile_created_at: "2019-03-10T05:50:14.784612Z"
+}
+
+let update_device_profie_1 = {
+    col: "device_profile_deleted",
+    value: 1, 
+    condition: 2
+}
+
+let update_device_profie_2 = { 
+    device_profile_name: 'ABP 1995',
+    network_id: '342',
+    network_server_id: '8',
+}
+//Gateway Profile----------------------------------------------------------------------------------------------------------------  
+let create_gateway_profile = {
+    gateway_profile_id_lora: "e26cad40-ab4b-406f-8958-0eb94ce41bc8", 
+    gateway_profile_name: "Test Gateway Profile", 
+    network_server_id: 8, 
+    gateway_profile_created_at: "2019-03-10T06:01:45.329760Z"
+}
+
+let update_gateway_profie_1 = {
+    col: "gateway_profile_deleted",
+    value: 1, 
+    condition: 7
+}
+
+let update_gateway_profie_2 = { 
+    gateway_profile_name: 'Gateway Profile 1995asdf',
+    gateway_profile_channels: [ 45 ],
+    network_server_id_lora: '8',
+    gateway_profile_modulation: 'LORA',
+    gateway_profile_bandwidth: 125,
+    gateway_profile_frequency: 3456,
+    gateway_profile_spreading_factors: [ 0 ],
+    gateway_profile_bit_rate: 0 
+}
+//Device Uplink Data----------------------------------------------------------------------------------------------------------------
+let create_devie_uplink = { applicationID: '156',
+                                applicationName: 'Marine_IoT',
+                                deviceName: 'Device_2',
+                                devEUI: '2222222222222222',
+                                rxInfo:
+                                [ { gatewayID: '2222222222222222',
+                                    name: 'Gateway_1',
+                                    time: '2019-03-07T20:43:02Z',
+                                    rssi: 3,
+                                    loRaSNR: 0.8193636,
+                                    location: [{ latitude: 10.248639, longitude: 10.248639, altitude: 0 }] } ],
+                                txInfo: { frequency: 0, dr: 4 },
+                                adr: false,
+                                fCnt: 0,
+                                fPort: 1,
+                                data: 'BGYAA2cKAAGIAaKx9pYIAANi',
+                                object:
+                                { humiditySensor: { '1': 30 },
+                                accelerometerSensor: { '1': 25.67 },
+                                temperatureSensor: { '1': 28.85 },
+                                gpsLocation: { '1': [{ latitude: '12.088338683329036',longitude: '-61.83998107910156',altitude: 8.66 }] } },
+                                vessel_id: 3,
+                                device_id: 2 }
+
+let create_devie_uplink_no_rx = { 
+                                    applicationID: '156',
+                                    applicationName: 'Marine_IoT',
+                                    deviceName: 'Device_2',
+                                    devEUI: '2222222222222222',
+                                    txInfo: { frequency: 0, dr: 4 },
+                                    adr: false,
+                                    fCnt: 0,
+                                    fPort: 1,
+                                    data: 'BGYAA2cKAAGIAaKx9pYIAANi',
+                                    object:
+                                    { humiditySensor: { '1': 30 },
+                                    accelerometerSensor: { '1': 25.67 },
+                                    temperatureSensor: { '1': 28.85 },
+                                    gpsLocation: { '1': [{ latitude: '12.088338683329036',longitude: '-61.83998107910156',altitude: 8.66 }] } },
+                                    vessel_id: 3,
+                                    device_id: 2 
+                                }
+
+let get_device_uplink_1 = {
+    order_by: 'device_uplink_id',
+    order: 'ASC'
+}
+
+let get_device_uplink_2 = {
+        vessel_device_id: 3,
+        device_id: 1,
+        device_eui: '1111111111111111',
+        vessel_id: 2,
+        vessel_device_deleted: 0,
+        vessel_device_created_at: "2019-02-14T05:45:43.000Z",
+        vessel_device_deleted_at: null,
+        device_name: 'Device_1',
+        user_vessel_info:
+         [ { vessel_id: 2,
+             date_created: '2019-03-09 22:36:33',
+             date_deleted: null } ] 
+    }
+
+let get_device_uplink_3 =  {
+    vessel_device_id: 3,
+    device_id: 1,
+    device_eui: '1111111111111111',
+    vessel_id: 2,
+    vessel_device_deleted: 0,
+    vessel_device_created_at: "2019-02-14T05:45:43.000Z",
+    vessel_device_deleted_at: null,
+    device_name: 'Device_1',
+    user_vessel_info:
+     [ { vessel_id: 2,
+         date_created: '2019-03-09 22:36:33',
+         date_deleted: null } ] }
+
+let get_device_uplink_4 = { 
+    lat: { min: 10.7931, max: 10.8131 },
+    lng: { min: -61.5707, max: -61.5507 } 
+}
+
+let get_device_uplink_5 = { 
+    lat: { min: 10.7066, max: 10.7086 },
+    lng: { min: -61.6857, max: -61.6837 } 
+}
+
+
+let get_device_uplink_6 = "SELECT device_uplink_id,device_id,sub_network_id,vessel_id,time_stamp,sub_network_name,device_eui,device_name,gateway_id_lora,gateway_name,rx_time,rx_rssi,rx_lora_snr,gateway_latitude,gateway_longitude,gateway_altitude,tx_frequency,tx_data_rate,adr,frame_counter,fport,encoded_data,gps_latitude,gps_longitude,gps_altitude,temperature,humidity,accelerometer,sos FROM device_uplink  WHERE time_stamp > '2019-03-10 23:57:00' AND device_id IN (1,2) AND vessel_id IN (2,3) AND sub_network_id IN (156) ORDER BY time_stamp DESC"
+
+let get_device_uplink_7 = "SELECT device_uplink_id,device_id,sub_network_id,vessel_id,time_stamp,sub_network_name,device_eui,device_name,gateway_id_lora,gateway_name,rx_time,rx_rssi,rx_lora_snr,gateway_latitude,gateway_longitude,gateway_altitude,tx_frequency,tx_data_rate,adr,frame_counter,fport,encoded_data,gps_latitude,gps_longitude,gps_altitude,temperature,humidity,accelerometer,sos FROM device_uplink  WHERE device_id IN (1) AND vessel_id IN (2,3) AND sub_network_id IN (156) ORDER BY time_stamp DESC"
+
+let get_device_uplink_8 = "SELECT device_uplink_id,device_id,vessel_id,time_stamp,device_eui,device_name,gps_latitude,gps_longitude,gps_altitude,temperature,humidity,accelerometer,sos FROM device_uplink  WHERE ( (time_stamp > '2019-03-09 22:36:33' AND vessel_id = '2'))  ORDER BY time_stamp DESC"
+
+let get_device_uplink_9 = "SELECT device_uplink.device_uplink_id, device_uplink.sub_network_id, device_uplink.vessel_id, vessel.vessel_name,  device_uplink.device_id, device_uplink.device_name,device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer, device_uplink.sos, DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp FROM device_uplink LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id  WHERE ( (time_stamp > '2019-03-09 22:36:33' AND device_uplink.vessel_id = '2'))   ORDER BY time_stamp DESC"

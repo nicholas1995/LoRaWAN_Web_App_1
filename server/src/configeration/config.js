@@ -5,8 +5,8 @@ module.exports = {
         host     : 'localhost',
         user     : 'root',
         password : '',
-        //database: 'lora_console_test_database'
-        database: 'lora_console'
+        database: 'lora_console_test_database'
+        //database: 'lora_console'
     },
     authentication:{
         jwtSecret: 'project'

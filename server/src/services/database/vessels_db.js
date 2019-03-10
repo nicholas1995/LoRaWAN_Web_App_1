@@ -98,7 +98,6 @@ module.exports = {
   //This updates all the parameters of a sinlge vessel instance
   //using the information provided
   update_vessels_all_parameters: function(data, vessel_id) {
-    console.log(vessel_id);
     let sql = `UPDATE vessel
         SET vessel_name = '${data.vessel_name}'
         WHERE vessel_id = '${vessel_id}'`;

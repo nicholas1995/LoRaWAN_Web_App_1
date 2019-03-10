@@ -31,7 +31,7 @@ module.exports = {
         if (error) {
             switch (error.details[0].context.key) {
                 case 'first_name':
-                    console.log("service_profile_name");
+                    console.log("first_name");
                     res.status(422).send({error:'Invalid First Name'});
                     break;
                 case 'last_name':
