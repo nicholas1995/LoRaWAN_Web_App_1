@@ -231,6 +231,9 @@ const required_devices= function(value){
 const alpha_dash = helpers.regex('alpha_dash', /^[a-zA-Z\-\_]*$/);
 const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
 
+const alpha_space_country = helpers.regex('alpha_num_space_country', /^[a-zA-Z\-\ \_\&]*$/);
+const alpha_num_space_street = helpers.regex('alpha_num_space_street', /^[a-zA-Z0-9\-\ \_\#\&]*$/);
+
 
 export default {
 components:{
@@ -251,22 +254,22 @@ mixins: [validationMixin],
       },
       user_country: {
         required,
-        alpha_dash,
+        alpha_space_country,
         maxLength: maxLength(60),
       },      
       user_city: {
         required,
-        alpha_num_dash_space,
+        alpha_space_country,
         maxLength: maxLength(60),
       },   
       user_district: {
         required,
-        alpha_num_dash_space,
+        alpha_space_country,
         maxLength: maxLength(60),
       },   
       user_street: {
         required,
-        alpha_num_dash_space,
+        alpha_num_space_street,
         maxLength: maxLength(60),
       },      
       home_phone: {
@@ -449,7 +452,7 @@ computed: {
       const errors=[];
       if (!this.$v.user_country.$error)return errors
       !this.$v.user_country.required && errors.push('Country name is required.')
-      !this.$v.user_country.alpha_dash && errors.push('Country name must only contain letters and dashes.')      
+      !this.$v.user_country.alpha_space_country && errors.push('Countryname must only contain letters, spaces and special characters -,&,_')      
       !this.$v.user_country.maxLength && errors.push('Country name must be 32 characters or less.')
       return errors;
     },
@@ -457,7 +460,7 @@ computed: {
       const errors=[];
       if (!this.$v.user_city.$error)return errors
       !this.$v.user_city.required && errors.push('City name is required.')
-      !this.$v.user_city.alpha_num_dash_space && errors.push('City name must only contain letters, numbers, spaces and dashes.')      
+      !this.$v.user_city.alpha_space_country && errors.push('City name must only contain letters, spaces and special characters -,&,_')      
       !this.$v.user_city.maxLength && errors.push('City name must be 32 characters or less.')
       return errors;
     },
@@ -465,7 +468,7 @@ computed: {
       const errors=[];
       if (!this.$v.user_district.$error)return errors
       !this.$v.user_district.required && errors.push('District name is required.')
-      !this.$v.user_district.alpha_num_dash_space && errors.push('District name must only contain letters, numbers, spaces and dashes.')      
+      !this.$v.user_district.alpha_space_country && errors.push('District name must only contain letters, spaces and special characters -,&,_')      
       !this.$v.user_district.maxLength && errors.push('District name must be 32 characters or less.')
       return errors;
     },
@@ -473,7 +476,7 @@ computed: {
       const errors=[];
       if (!this.$v.user_street.$error)return errors
       !this.$v.user_street.required && errors.push('Street name is required.')
-      !this.$v.user_district.alpha_num_dash_space && errors.push('Street name must only contain letters, numbers, spaces and dashes.')      
+      !this.$v.user_district.alpha_num_space_street && errors.push('Street name must only contain letters, numbers, spaces and special characters -,_,&,#')      
       !this.$v.user_street.maxLength && errors.push('Street name must be 32 characters or less.')
       return errors;
     },

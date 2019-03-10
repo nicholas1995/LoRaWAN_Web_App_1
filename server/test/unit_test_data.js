@@ -468,6 +468,85 @@ let update_gateway_profie_2 = {
     gateway_profile_spreading_factors: [ 0 ],
     gateway_profile_bit_rate: 0 
 }
+
+//Activate User Account Token----------------------------------------------------------------------------------------------------------------
+let get_activate_user_account_token = {
+    activate_user_account_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdyZGZnaEBmZHNkZ2YuZGZnIiwidXNlcl9pZCI6IjcwIiwiaWF0IjoxNTUyMjM1NjExLCJleHAiOjE1NTI0MDg0MTF9.JPmEvWC5qb5TNfZOEnRXT0TEkceUh5uVV2W_x-_JkXA"
+}
+
+let create_activate_user_account_token ={
+    activate_user_account_token: "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVzdEB0dC5jb20iLCJ1c2VyX2lkIjoiNzEiLCJpYXQiOjE1NTIyMzY0NjUsImV4cCI6MTU1MjQwOTI2NX0.SKnG8iJqARhMxxB2xiZ96NU8sPDpYE9l5v-gP9pqm5A", 
+    user_id: 71
+}
+
+let delete_activate_user_account_token = {
+    activate_user_account_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdyZGZnaEBmZHNkZ2YuZGZnIiwidXNlcl9pZCI6IjcwIiwiaWF0IjoxNTUyMjM1NjExLCJleHAiOjE1NTI0MDg0MTF9.JPmEvWC5qb5TNfZOEnRXT0TEkceUh5uVV2W_x-_JkXA"
+}
+
+//User Reset Password Token----------------------------------------------------------------------------------------------------------------
+let get_user_reset_password_token = {
+    user_reset_password_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pY2hvbGFzYm9zczFAaG90bWFpbC5jb20iLCJ1c2VyX2lkIjoiNjUiLCJpYXQiOjE1NTIyMzY5MjUsImV4cCI6MTU1MjMyMzMyNX0.1QGgBBJ23Nw3VTexaobujyWbgKM0xwouQJ29rKrvkrc"
+}
+
+let create_user_reset_password_token ={
+    user_reset_password_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pY2hvbGFzLmptaXRjaGVsbEBvdXRsb29rLmNvbSIsInVzZXJfaWQiOiI2OCIsImlhdCI6MTU1MjIzNzAyNSwiZXhwIjoxNTUyMzIzNDI1fQ.lvT5Q71ZJsw7zZ5EQkK8Bt_KBIvw9xSeKc5YwcpbHtI", 
+    user_id: 68
+}
+
+let delete_user_reset_password_token ={
+    user_reset_password_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pY2hvbGFzLmptaXRjaGVsbEBvdXRsb29rLmNvbSIsInVzZXJfaWQiOiI2OCIsImlhdCI6MTU1MjIzNzAyNSwiZXhwIjoxNTUyMzIzNDI1fQ.lvT5Q71ZJsw7zZ5EQkK8Bt_KBIvw9xSeKc5YwcpbHtI", 
+}
+
+//Users----------------------------------------------------------------------------------------------------------------
+let add_user = {
+        user:{ first_name: 'Test',
+        last_name: 'Test',
+        user_country: 'test',
+        user_city: 'test',
+        user_district: 'test',
+        user_street: 'test',
+        home_phone: '4745764756',
+        mobile_phone: '7454564567',
+        email: 't@t.tt',
+        user_class: 'Fisher',
+        vessels: [] } ,
+    pw_encrypt: 'null'
+}
+
+let get_user_1 = {
+    user_id: 72
+}
+
+let delete_user ={
+    user_id: 72
+}
+
+let update_user_1 ={
+    data: { 
+        first_name: 'Nick',
+        last_name: 'Mitch',
+        user_country: 'Trinidad',
+        user_city: 'San Fernando',
+        user_district: 'sdfsd',
+        user_street: '18 Sunset Ridge La Romain',
+        home_phone: '8683229648',
+        mobile_phone: '8683229648',
+        user_class: 'Analyst',
+        vessels: { added: [], deleted: [] } 
+    },
+    user_id: '64'
+}
+
+
+let update_user_2 ={
+    email: "nicholas.jmitchell@outlook.com", 
+    value: 1
+}
+
+let update_user_3 ={
+    email: "nicholas.jmitchell@outlook.com", 
+}
+
 //Device Uplink Data----------------------------------------------------------------------------------------------------------------
 let create_devie_uplink = { applicationID: '156',
                                 applicationName: 'Marine_IoT',

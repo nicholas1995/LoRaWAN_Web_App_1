@@ -5,10 +5,10 @@ module.exports = {
         let data = req.body.user;
         const schema = {
             first_name: Joi.string().required().regex(
-                new RegExp('^[a-zA-Z]{2,32}$')
+                new RegExp('^[a-zA-Z\-]{2,32}$')
             ),
             last_name: Joi.string().required().regex(
-                new RegExp('^[a-zA-Z]{2,32}$')
+                new RegExp('^[a-zA-Z\-]{2,32}$')
             ),
             user_country: Joi.string().min(1).max(60),
             user_city: Joi.string().min(1).max(60),
@@ -90,10 +90,10 @@ module.exports = {
         let data = req.body.user;
         const schema = {
             first_name: Joi.string().required().regex(
-                new RegExp('^[a-zA-Z]{2,32}$')
+                new RegExp('^[a-zA-Z\-]{2,32}$')
             ),
             last_name: Joi.string().required().regex(
-                new RegExp('^[a-zA-Z]{2,32}$')
+                new RegExp('^[a-zA-Z\-]{2,32}$')
             ),
             user_country: Joi.string().min(1).max(60),
             user_city: Joi.string().min(1).max(60),

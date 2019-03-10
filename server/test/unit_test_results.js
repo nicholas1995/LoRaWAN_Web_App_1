@@ -1076,7 +1076,375 @@ let update_gateway_profile_2 = {
 	]
 }
 
+//Activate User Account Token----------------------------------------------------------------------------------------------------------------
+let get_activate_user_account_token = {
+	"data":
+	[
+		{
+			"activate_user_account_token_id": 1,
+			"activate_user_account_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImdyZGZnaEBmZHNkZ2YuZGZnIiwidXNlcl9pZCI6IjcwIiwiaWF0IjoxNTUyMjM1NjExLCJleHAiOjE1NTI0MDg0MTF9.JPmEvWC5qb5TNfZOEnRXT0TEkceUh5uVV2W_x-_JkXA",
+			"activate_user_account_token_time_stamp": "2019-03-10 12:33:34",
+			"user_id": 70
+		}
+	]
+}
 
+let create_activate_user_account_token = {
+	"data":
+	[
+		{
+			"activate_user_account_token_id": 2,
+			"activate_user_account_token": "yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVzdEB0dC5jb20iLCJ1c2VyX2lkIjoiNzEiLCJpYXQiOjE1NTIyMzY0NjUsImV4cCI6MTU1MjQwOTI2NX0.SKnG8iJqARhMxxB2xiZ96NU8sPDpYE9l5v-gP9pqm5A",
+			"activate_user_account_token_time_stamp": "2019-03-10 12:33:34",
+			"user_id": 71
+		}
+	]
+}
+
+//User Reset Password Token----------------------------------------------------------------------------------------------------------------
+let get_user_reset_password_token = {
+	"data":
+	[
+		{
+			"user_reset_password_token_id": 1,
+			"user_reset_password_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pY2hvbGFzYm9zczFAaG90bWFpbC5jb20iLCJ1c2VyX2lkIjoiNjUiLCJpYXQiOjE1NTIyMzY5MjUsImV4cCI6MTU1MjMyMzMyNX0.1QGgBBJ23Nw3VTexaobujyWbgKM0xwouQJ29rKrvkrc",
+			"user_reset_password_token_time_stamp": "2019-03-10 12:55:27",
+			"user_id": 65
+		}
+	]
+}
+
+let create_user_reset_password_token = {
+	"data":
+	[
+		{
+			"user_reset_password_token_id": 2,
+			"user_reset_password_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pY2hvbGFzLmptaXRjaGVsbEBvdXRsb29rLmNvbSIsInVzZXJfaWQiOiI2OCIsImlhdCI6MTU1MjIzNzAyNSwiZXhwIjoxNTUyMzIzNDI1fQ.lvT5Q71ZJsw7zZ5EQkK8Bt_KBIvw9xSeKc5YwcpbHtI",
+			"user_reset_password_token_time_stamp": "2019-03-10 12:57:07",
+			"user_id": 68
+		}
+	]
+}
+
+//Users----------------------------------------------------------------------------------------------------------------
+let add_user = {
+	"data":
+	[
+		{
+			"id": 72,
+			"email": "t@t.tt",
+			"first_name": "Test",
+			"last_name": "Test",
+			"password": "null",
+			"home_phone": "4745764756",
+			"mobile_phone": "7454564567",
+			"new_user": 1,
+			"date_created": "2019-03-10 13:15:19",
+			"user_class": "Fisher",
+			"user_country": "test",
+			"user_city": "test",
+			"user_district": "test",
+			"user_street": "test",
+			"user_reset_password": 0,
+			"user_account_activation": 0
+		}
+	]
+}
+
+let get_user_1 = {
+	"data":
+	[
+		{
+			"id": 72,
+			"email": "t@t.tt",
+			"first_name": "Test",
+			"last_name": "Test",
+			"password": "null",
+			"home_phone": "4745764756",
+			"mobile_phone": "7454564567",
+			"new_user": 1,
+			"date_created": "2019-03-10 13:15:19",
+			"user_class": "Fisher",
+			"user_country": "test",
+			"user_city": "test",
+			"user_district": "test",
+			"user_street": "test",
+			"user_reset_password": 0,
+			"user_account_activation": 0
+		}
+	]
+}
+
+let get_users_2 = {
+	"data":
+	[
+		{
+			"id": 3,
+			"email": "swimdara@hotmail.com",
+			"first_name": "Adara",
+			"last_name": "Mitchell",
+			"password": "$2a$05$SZ8Ma5nrCUTeg9NoXtEcgO/ozcgK2pJbEBCYiKK5nJfO1zKFrV5.e",
+			"home_phone": "2147483647",
+			"mobile_phone": "2222222222",
+			"new_user": 0,
+			"date_created": "2018-10-19 18:23:54",
+			"user_class": "Fisher",
+			"user_country": "Trinidad",
+			"user_city": "Bobby Town",
+			"user_district": "Bobs",
+			"user_street": "BB",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 4,
+			"email": "lorawanconsole@gmail.com",
+			"first_name": "Nick",
+			"last_name": "Mitchell",
+			"password": "$2a$05$i7bkbYG6X70iLCu8ougf9e4h2bL6srPGbJ8brsNxHPr6P0cjhsabS",
+			"home_phone": "2147483647",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2018-10-09 01:28:54",
+			"user_class": "Software Admin",
+			"user_country": "Trinidad",
+			"user_city": "POS",
+			"user_district": "WEST",
+			"user_street": "MALL",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 21,
+			"email": "gabrielle_gibson12@yahoo.com",
+			"first_name": "gabrielle",
+			"last_name": "gibson",
+			"password": "$2a$05$m2xiwBq3rT0ZAmD9r6s/1uroZ.0mlgyK2uFiolsPXRvRihlLchkdC",
+			"home_phone": "2222222222",
+			"mobile_phone": "2324523452",
+			"new_user": 1,
+			"date_created": "2019-01-24 22:27:24",
+			"user_class": "Software Admin",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "sdfsad",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 23,
+			"email": "gregory.mtchll@gmail.com",
+			"first_name": "Gregory",
+			"last_name": "Mitchell",
+			"password": "$2a$05$S3dRANelDigdIH3/dIu1Fu3B6itG.Dv7b4cJR328PGo.NpO01M3/O",
+			"home_phone": "1868687845",
+			"mobile_phone": "8683229648",
+			"new_user": 1,
+			"date_created": "2019-02-05 21:18:31",
+			"user_class": "IoT Network Admin",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "sdfdsgfd",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 24,
+			"email": "nicmitch0@gmail.com",
+			"first_name": "nicholas",
+			"last_name": "mitchell",
+			"password": "$2a$05$F9umQ/rhllAESbjgsYMveeDP.zE8y4hAVxSnKRaMaET44FxH21RVy",
+			"home_phone": "8683229648",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2019-02-05 21:20:18",
+			"user_class": "IoT Network Admin",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "sdfg sdfgsdf g",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 64,
+			"email": "nicholas.mitchell@my.uwi.edu",
+			"first_name": "nicholas",
+			"last_name": "mitchell",
+			"password": "$2a$05$1c4OKWNacyQbahYEVHk5t.oABuL6m95ryT.PncqoAA5rFnxeJ/Yw2",
+			"home_phone": "8683229648",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2019-02-15 21:21:17",
+			"user_class": "Analyst",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "sdfsd",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 65,
+			"email": "nicholasboss1@hotmail.com",
+			"first_name": "nicholas",
+			"last_name": "mitchell",
+			"password": "$2a$05$Pa0WNrE4de9IaoZzq1OUWuu6q.JlTe3wIZ/XdSQN3hv1O3CfisScO",
+			"home_phone": "8683229648",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2019-02-16 00:09:48",
+			"user_class": "IoT Network Admin",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "gfjhfg",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 68,
+			"email": "nicholas.jmitchell@outlook.com",
+			"first_name": "nicholas",
+			"last_name": "mitchell",
+			"password": "$2a$05$N4uXmScgq5bUZt77k.k3p.MJORhdPu8z5upAozYC4V3CgJg6OftCu",
+			"home_phone": "8683229648",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2019-03-07 12:39:46",
+			"user_class": "Fisher",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "34534",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		},
+		{
+			"id": 72,
+			"email": "t@t.tt",
+			"first_name": "Test",
+			"last_name": "Test",
+			"password": "null",
+			"home_phone": "4745764756",
+			"mobile_phone": "7454564567",
+			"new_user": 1,
+			"date_created": "2019-03-10 13:15:19",
+			"user_class": "Fisher",
+			"user_country": "test",
+			"user_city": "test",
+			"user_district": "test",
+			"user_street": "test",
+			"user_reset_password": 0,
+			"user_account_activation": 0
+		}
+	]
+}
+
+let get_users_3 = {
+	"data":
+	[
+		{
+			"email": "gabrielle_gibson12@yahoo.com"
+		},
+		{
+			"email": "gregory.mtchll@gmail.com"
+		},
+		{
+			"email": "lorawanconsole@gmail.com"
+		},
+		{
+			"email": "nicholas.jmitchell@outlook.com"
+		},
+		{
+			"email": "nicholas.mitchell@my.uwi.edu"
+		},
+		{
+			"email": "nicholasboss1@hotmail.com"
+		},
+		{
+			"email": "nicmitch0@gmail.com"
+		},
+		{
+			"email": "swimdara@hotmail.com"
+		}
+	]
+}
+
+let update_user_1 = {
+	"data":
+	[
+		{
+			"id": 64,
+			"email": "nicholas.mitchell@my.uwi.edu",
+			"first_name": "Nick",
+			"last_name": "Mitch",
+			"password": "$2a$05$1c4OKWNacyQbahYEVHk5t.oABuL6m95ryT.PncqoAA5rFnxeJ/Yw2",
+			"home_phone": "8683229648",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2019-02-15 21:21:17",
+			"user_class": "Analyst",
+			"user_country": "Trinidad",
+			"user_city": "San Fernando",
+			"user_district": "sdfsd",
+			"user_street": "18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		}
+	]
+}
+
+
+let update_user_2 = {
+	"data":
+	[
+		{
+			"id": 68,
+			"email": "nicholas.jmitchell@outlook.com",
+			"first_name": "nicholas",
+			"last_name": "mitchell",
+			"password": "$2a$05$N4uXmScgq5bUZt77k.k3p.MJORhdPu8z5upAozYC4V3CgJg6OftCu",
+			"home_phone": "8683229648",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2019-03-07 12:39:46",
+			"user_class": "Fisher",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "34534",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 1,
+			"user_account_activation": 1
+		}
+	]
+}
+
+let update_user_3 = {
+	"data":
+	[
+		{
+			"id": 68,
+			"email": "nicholas.jmitchell@outlook.com",
+			"first_name": "nicholas",
+			"last_name": "mitchell",
+			"password": "$2a$05$jp/YDnM2V5MZXCOBUjutXunVueWhWP9tB5atwUFZdRjKrWBEwdEA2",
+			"home_phone": "8683229648",
+			"mobile_phone": "8683229648",
+			"new_user": 0,
+			"date_created": "2019-03-07 12:39:46",
+			"user_class": "Fisher",
+			"user_country": "Trinidad & Tobago",
+			"user_city": "San Fernando",
+			"user_district": "34534",
+			"user_street": "#18 Sunset Ridge La Romain",
+			"user_reset_password": 0,
+			"user_account_activation": 1
+		}
+	]
+}
 //Device Uplink Data Tests ----------------------------------------------------------------------------------------------------------------
 
 create_device_uplink = {
