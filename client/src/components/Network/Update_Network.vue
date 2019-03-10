@@ -76,6 +76,7 @@ const unique= function(value){
   return x; 
 }
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
 
 export default {
   components:{
@@ -90,6 +91,7 @@ export default {
         u: unique,
       },      
       network_display_name: {
+        alpha_num_dash_space,
         required,
         maxLength: maxLength(80),
       }
@@ -173,6 +175,7 @@ export default {
     network_display_nameErrors(){
       const errors=[];
       if (!this.$v.network_display_name.$error)return errors
+      !this.$v.network_display_name.alpha_num_dash_space && errors.push('Display Name must only contain letters, numbers, dashes and spaces.')
       !this.$v.network_display_name.maxLength && errors.push('Display Name must be 80 characters or less.')
       !this.$v.network_display_name.required && errors.push('Display Name is required.')
       return errors;

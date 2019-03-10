@@ -127,22 +127,26 @@ const unique_vessel_international_radio_call_sign= function(value){
   return x; 
 }
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
 
 export default {
 mixins: [validationMixin],
   validations: {
       vessel_name: {
         required,
+        alpha_num_dash_space,
         maxLength: maxLength(80),
         u: unique_vessel_name,
       },    
       vessel_unique_vessel_identifier: {
         required,
+        alpha_num_dash,
         maxLength: maxLength(80),
         u: unique_vessel_unique_vessel_identifier,
       },
       vessel_international_radio_call_sign: {
         required,
+        alpha_num_dash,
         maxLength: maxLength(80),
         u: unique_vessel_international_radio_call_sign,
       },        
@@ -259,15 +263,17 @@ mixins: [validationMixin],
     vessel_name_errors(){
       const errors=[];
       if (!this.$v.vessel_name.$error)return errors
-      !this.$v.vessel_name.maxLength && errors.push('Name must be 80 characters or less.')
-      !this.$v.vessel_name.required && errors.push('Name is required.')
-      !this.$v.vessel_name.u && errors.push('Name must be unique.')
+      !this.$v.vessel_name.maxLength && errors.push('Vessel name must be 80 characters or less.')
+      !this.$v.vessel_name.alpha_num_dash_space && errors.push('Vessel name must only contain letters, numbers, dashes and spaces.')
+      !this.$v.vessel_name.required && errors.push('Vessel name is required.')
+      !this.$v.vessel_name.u && errors.push('Vessel name must be unique.')
       return errors;
     },
       vessel_unique_vessel_identifier_errors(){
       const errors=[];
       if (!this.$v.vessel_unique_vessel_identifier.$error)return errors
       !this.$v.vessel_unique_vessel_identifier.required && errors.push('Vessel Unique Vessel Identifier is required.')
+      !this.$v.vessel_unique_vessel_identifier.alpha_num_dash && errors.push('Vessel Unique Vessel Identifier must only contain letters, numbers and dashes.')
       !this.$v.vessel_unique_vessel_identifier.u && errors.push('Vessel Unique Vessel Identifier must be unique.')
       return errors;
     },
@@ -275,6 +281,7 @@ mixins: [validationMixin],
       const errors=[];
       if (!this.$v.vessel_international_radio_call_sign.$error)return errors
       !this.$v.vessel_international_radio_call_sign.required && errors.push('Vessel International Radio Call Sign is required.')
+      !this.$v.vessel_international_radio_call_sign.alpha_num_dash && errors.push('Vessel International Radio Call Sign must only contain letters, numbers and dashes.')
       !this.$v.vessel_international_radio_call_sign.u && errors.push('Vessel International Radio Call Sign must be unique.')
       return errors;
     },

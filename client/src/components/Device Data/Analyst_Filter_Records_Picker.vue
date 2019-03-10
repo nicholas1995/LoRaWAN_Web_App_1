@@ -32,13 +32,17 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import functions from "./../../services/functions/forms_functions.js"
 import { validationMixin } from 'vuelidate'
-import { required, maxLength } from 'vuelidate/lib/validators'
+import { required, maxLength, helpers } from 'vuelidate/lib/validators'
+
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
+
 
 export default {
   mixins: [validationMixin],
   validations: {
       analyst_filter_record_name: {
         required,
+        alpha_num_dash_space,
         maxLength: maxLength(80),
       }
     },
@@ -70,6 +74,7 @@ export default {
       const errors=[];
       if (!this.$v.analyst_filter_record_name.$error)return errors
       !this.$v.analyst_filter_record_name.maxLength && errors.push('Name must be 80 characters or less.')
+      !this.$v.analyst_filter_record_name.alpha_num_dash_space && errors.push('Name must only contain letters, numbers, spaces and dashes.')
       !this.$v.analyst_filter_record_name.required && errors.push('Name is required.')
       return errors;
     },

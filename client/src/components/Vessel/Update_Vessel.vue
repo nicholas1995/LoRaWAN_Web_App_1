@@ -58,13 +58,15 @@ const unique= function(value){
   } 
   return x; 
 }
-const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
+
 
 export default {
   mixins: [validationMixin],
   validations: {
       vessel_name: {
         u: unique,
+        alpha_num_dash_space,
         required,
         maxLength: maxLength(80)
       }
@@ -126,9 +128,10 @@ export default {
     vessel_nameErrors(){
       const errors=[];
       if (!this.$v.vessel_name.$error)return errors
-      !this.$v.vessel_name.maxLength && errors.push('Name must be 80 characters or less.')
-      !this.$v.vessel_name.required && errors.push('Name is required.')
-      !this.$v.vessel_name.u && errors.push('Name must be unique.')
+      !this.$v.vessel_name.maxLength && errors.push('Vessel name must be 80 characters or less.')
+      !this.$v.vessel_name.alpha_num_dash_space && errors.push('Vessel name must only contain letters, numbers, dashes and spaces.')
+      !this.$v.vessel_name.required && errors.push('Vessel name is required.')
+      !this.$v.vessel_name.u && errors.push('Vessel name must be unique.')
       return errors;
     }
   },

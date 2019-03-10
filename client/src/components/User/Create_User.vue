@@ -238,7 +238,9 @@ const required_devices= function(value){
   return x; 
 }
 
-const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
+const alpha_dash = helpers.regex('alpha_dash', /^[a-zA-Z\-\_]*$/);
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
+
 
 export default {
 components:{
@@ -247,27 +249,33 @@ components:{
 mixins: [validationMixin],
   validations: {
       first_name: {
+        alpha_dash,
         required,
         maxLength: maxLength(32),
         
       },      
       last_name: {
+        alpha_dash,
         required,
         maxLength: maxLength(32),
       },
       user_country: {
+        alpha_dash,
         required,
         maxLength: maxLength(60),
       },      
       user_city: {
+        alpha_num_dash_space,
         required,
         maxLength: maxLength(60),
       },   
       user_district: {
+        alpha_num_dash_space,
         required,
         maxLength: maxLength(60),
       },   
       user_street: {
+        alpha_num_dash_space,
         required,
         maxLength: maxLength(60),
       },   
@@ -434,6 +442,7 @@ mixins: [validationMixin],
     first_name_errors(){
       const errors=[];
       if (!this.$v.first_name.$error)return errors
+      !this.$v.first_name.alpha_dash && errors.push('First name must only contain letters and dashes.')
       !this.$v.first_name.required && errors.push('First name is required.')
       !this.$v.first_name.maxLength && errors.push('First name must be 32 characters or less.')
       return errors;
@@ -441,6 +450,7 @@ mixins: [validationMixin],
     last_name_errors(){
       const errors=[];
       if (!this.$v.last_name.$error)return errors
+      !this.$v.last_name.alpha_dash && errors.push('Last name must only contain letters and dashes.')
       !this.$v.last_name.required && errors.push('Last name is required.')
       !this.$v.last_name.maxLength && errors.push('Last name must be 32 characters or less.')
       return errors;
@@ -448,20 +458,23 @@ mixins: [validationMixin],
     user_country_errors(){
       const errors=[];
       if (!this.$v.user_country.$error)return errors
-      !this.$v.user_country.required && errors.push('Country is required.')
-      !this.$v.user_country.maxLength && errors.push('Country must be 32 characters or less.')
+      !this.$v.user_country.alpha_dash && errors.push('Country name must only contain letters and dashes.')      
+      !this.$v.user_country.required && errors.push('Country name is required.')
+      !this.$v.user_country.maxLength && errors.push('Country name must be 32 characters or less.')
       return errors;
     },
     user_city_errors(){
       const errors=[];
       if (!this.$v.user_city.$error)return errors
-      !this.$v.user_city.required && errors.push('City is required.')
-      !this.$v.user_city.maxLength && errors.push('City must be 32 characters or less.')
+      !this.$v.user_city.alpha_num_dash_space && errors.push('City name must only contain letters, numbers, spaces and dashes.')      
+      !this.$v.user_city.required && errors.push('City name is required.')
+      !this.$v.user_city.maxLength && errors.push('City name must be 32 characters or less.')
       return errors;
     },
     user_district_errors(){
       const errors=[];
       if (!this.$v.user_district.$error)return errors
+      !this.$v.user_district.alpha_num_dash_space && errors.push('District name must only contain letters, numbers, spaces and dashes.')      
       !this.$v.user_district.required && errors.push('District is required.')
       !this.$v.user_district.maxLength && errors.push('District must be 32 characters or less.')
       return errors;
@@ -469,8 +482,9 @@ mixins: [validationMixin],
     user_street_errors(){
       const errors=[];
       if (!this.$v.user_street.$error)return errors
-      !this.$v.user_street.required && errors.push('Street is required.')
-      !this.$v.user_street.maxLength && errors.push('Street must be 32 characters or less.')
+      !this.$v.user_street.alpha_num_dash_space && errors.push('Street name must only contain letters, numbers, spaces and dashes.')      
+      !this.$v.user_street.required && errors.push('Street name is required.')
+      !this.$v.user_street.maxLength && errors.push('Street name must be 32 characters or less.')
       return errors;
     },
     home_phone_errors(){

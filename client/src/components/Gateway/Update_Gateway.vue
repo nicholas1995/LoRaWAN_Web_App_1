@@ -234,7 +234,7 @@ const first_digit_not_0 = function(value){
 
 const hex = helpers.regex('hex', /^[a-fA-F0-9]*$/);
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
-
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
 
 export default {
   components:{
@@ -250,6 +250,7 @@ export default {
     },
     description: {
       required,
+      alpha_num_dash_space,
       maxLength: maxLength(200),
     },      
     network_name_form: {
@@ -304,6 +305,7 @@ export default {
       const errors=[];
       if (!this.$v.description.$error)return errors
       !this.$v.description.maxLength && errors.push('Description must be 200 characters or less')
+      !this.$v.description.alpha_num_dash_space && errors.push('Description must only contain letters, numbers, dashes and spaces')      
       !this.$v.description.required && errors.push('Description is required.')
       return errors;
     },

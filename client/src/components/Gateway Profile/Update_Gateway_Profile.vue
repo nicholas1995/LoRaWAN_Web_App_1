@@ -141,6 +141,8 @@ const first_digit_not_0 = function(value){
   return value;
 }
 
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
+
 export default {
   components:{
     tool_tips_forms
@@ -149,6 +151,7 @@ mixins: [validationMixin],
   validations: {
       gateway_profile_name: {
         required,
+        alpha_num_dash_space,
         maxLength: maxLength(80),
       },          
       gateway_profile_channels: {
@@ -274,6 +277,7 @@ mixins: [validationMixin],
       const errors=[];
       if (!this.$v.gateway_profile_name.$error)return errors
       !this.$v.gateway_profile_name.maxLength && errors.push('Name must be 80 characters or less.')
+      !this.$v.gateway_profile_name.alpha_num_dash_space && errors.push('Name must only contain letters, numbers, dashes and spaces.')
       !this.$v.gateway_profile_name.required && errors.push('Name is required.')
       return errors;
     },

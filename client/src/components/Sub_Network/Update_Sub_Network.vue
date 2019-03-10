@@ -2,7 +2,7 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+        <v-flex xs12 sm8 md6>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary ">
               <v-toolbar-title>Update Application</v-toolbar-title>
@@ -22,14 +22,16 @@
               </v-flex>
             <!--Description  -->
             <v-flex >
-              <v-text-field
+              <v-textarea
+                auto-grow
+                rows="1"
                 v-model="sub_network_description"
                 label= 'Description*'
                 :error-messages = "sub_network_description_Errors"
                 @keyup="$v.sub_network_description.$touch()" 
               >
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_descripton"></tool_tips_forms>  
-              </v-text-field>
+              </v-textarea>
               </v-flex>
             <!--Payload Codec-->
               <v-select
@@ -83,6 +85,8 @@ const unique= function(value){
     return x; 
 }
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
+
 
 export default {
   components:{
@@ -98,6 +102,7 @@ export default {
     },      
     sub_network_description: {
       required,
+      alpha_num_dash_space,
       maxLength: maxLength(200),
     }
   },
@@ -114,7 +119,8 @@ export default {
     sub_network_description_Errors(){
       const errors=[];
       if (!this.$v.sub_network_description.$error)return errors
-      !this.$v.sub_network_description.maxLength && errors.push('Description must be 60 characters or longer')
+      !this.$v.sub_network_description.alpha_num_dash_space && errors.push('Description only contain letters, numbers, dashes and spaces')
+      !this.$v.sub_network_description.maxLength && errors.push('Description must be less than 200 characters longer')
       return errors;
     }
   },

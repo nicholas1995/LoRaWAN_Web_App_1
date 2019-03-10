@@ -22,7 +22,7 @@
                       v-model="service_profile_name"
                       :error-messages = "service_profile_name_Errors"
                       label="Service Profile Name*"
-                      @blur="$v.service_profile_name.$touch()">
+                      @keyup="$v.service_profile_name.$touch()">
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_service_profile_name"></tool_tips_forms>
                     </v-text-field>
                   </v-flex>
@@ -192,6 +192,8 @@ const first_digit_not_0 = function(value){
   return value;
 }
 
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
+
 export default {
   components:{
     tool_tips_forms
@@ -200,6 +202,7 @@ mixins: [validationMixin],
   validations: {
       service_profile_name: {
         required,
+        alpha_num_dash_space,
         maxLength: maxLength(80),
       },      
       network_name_form: {
@@ -341,6 +344,7 @@ mixins: [validationMixin],
       const errors=[];
       if (!this.$v.service_profile_name.$error)return errors
       !this.$v.service_profile_name.maxLength && errors.push('Name must be 80 characters or less.')
+      !this.$v.service_profile_name.alpha_num_dash_space && errors.push('Name must only contain letters, numbers, dashes and spaces')
       !this.$v.service_profile_name.required && errors.push('Name is required.')
       return errors;
     },

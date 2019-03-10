@@ -110,6 +110,8 @@ const unique= function(value){
     return x; 
 }
 const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
+const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
+
 
 export default {
   components:{
@@ -125,6 +127,7 @@ export default {
     },      
     sub_network_description: {
       required,
+      alpha_num_dash_space,
       maxLength: maxLength(200),
     },      
     network_name_form: {
@@ -150,7 +153,8 @@ export default {
     sub_network_description_Errors(){
       const errors=[];
       if (!this.$v.sub_network_description.$error)return errors
-      !this.$v.sub_network_description.maxLength && errors.push('Description must be 200 characters or longer')
+      !this.$v.sub_network_description.maxLength && errors.push('Description must be less than 200 characters longer')
+      !this.$v.sub_network_description.alpha_num_dash_space && errors.push('Description only contain letters, numbers, dashes and spaces')
       !this.$v.sub_network_description.required && errors.push('Description is required.')
       return errors;
     },
