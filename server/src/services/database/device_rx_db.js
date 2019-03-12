@@ -8,7 +8,7 @@ module.exports = {
             encoded_data, gps_latitude, gps_longitude, gps_altitude, temperature, vessel_id, device_id)
         VALUES ('${data.applicationID}', '${data.applicationName}', '${data.deviceName}','${data.devEUI}', '${data.rxInfo[0].gatewayID}', '${data.rxInfo[0].name}','${data.rxInfo[0].time}', '${data.rxInfo[0].rssi}', '${data.rxInfo[0].loRaSNR}'
         ,'${data.rxInfo[0].location.latitude}', '${data.rxInfo[0].location.longitude}', '${data.rxInfo[0].location.altitude}','${data.txInfo.frequency}', '${data.txInfo.dr}', '${data.adr}','${data.fCnt}', '${data.fPort}', '${data.data}'
-        ,'${data.object.gpsLocation["1"]["latitude"]}', '${data.object.gpsLocation["1"]["longitude"]}', '${data.object.gpsLocation["1"]["altitude"]}', '${data.object.temperatureSensor["3"]}','${data.vessel_id}', '${data.device_id}')`;
+        ,${data.object.gpsLocation["1"]["latitude"]}, ${data.object.gpsLocation["1"]["longitude"]}, '${data.object.gpsLocation["1"]["altitude"]}', '${data.object.temperatureSensor["3"]}','${data.vessel_id}', '${data.device_id}')`;
         return db.queryAsync(sql);  
     },
     create_no_rxInfo: function (data) {
@@ -83,7 +83,7 @@ module.exports = {
         LEFT JOIN sub_network ON device_uplink.sub_network_id = sub_network.sub_network_id 
         LEFT JOIN network ON sub_network.network_id = network.network_id 
         WHERE gps_latitude > '${coordinate.lat.min}' AND gps_latitude < '${coordinate.lat.max}' 
-        AND gps_longitude > '${coordinate.lng.max}' AND gps_longitude < '${coordinate.lng.min}'
+        AND gps_longitude < '${coordinate.lng.max}' AND gps_longitude > '${coordinate.lng.min}'
         ORDER BY time_stamp DESC`;
         return db.queryAsync(sql);
     },

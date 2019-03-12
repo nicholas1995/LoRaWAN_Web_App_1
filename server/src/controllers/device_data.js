@@ -372,15 +372,15 @@ function create_sensor_data_search_coordinate_box(coordinate, buffer){
     let lat_min, lat_max;
     lat_min = coordinate.lat-buffer/2
     lat_max = coordinate.lat+buffer/2
-    lat_min = math.round(10000*lat_min)/10000
-    lat_max = math.round(10000*lat_max)/10000
+    lat_min = math.round(1000000*lat_min)/1000000
+    lat_max = math.round(1000000*lat_max)/1000000
 
     //LNG
     let lng_min, lng_max;
     lng_min = coordinate.lng-buffer/2
     lng_max = coordinate.lng+buffer/2
-    lng_min = math.round(10000*lng_min)/10000
-    lng_max = math.round(10000*lng_max)/10000
+    lng_min = math.round(1000000*lng_min)/1000000
+    lng_max = math.round(1000000*lng_max)/1000000
     return {
         lat: {
             min: lat_min,
@@ -393,52 +393,8 @@ function create_sensor_data_search_coordinate_box(coordinate, buffer){
     }
 }
 function generate_buffer_using_map_zoom(map_zoom){
-    switch (map_zoom) {
-        case 0:
-          return 6;
-        case 1:
-          return 4;
-        case 2:
-          return 2;
-        case 3:
-          return 2;
-        case 4:
-          return 1;
-        case 5:
-          return 1;
-        case 6:
-          return 0.5;
-        case 7:
-          return 0.4;
-        case 8:
-          return 0.25;
-        case 9:
-          return 0.1;
-        case 10:
-          return 0.04;
-        case 11:
-          return 0.02;
-        case 12:
-          return 0.009;
-        case 13:
-          return 0.006;
-        case 14:
-          return 0.002;
-        case 15:
-          return 0.001;
-        case 16:
-          return 0.001;
-        case 17:
-          return 0.001;
-        case 18:
-          return 0.0009;
-        case 19:
-          return 0.0007; 
-        case 20:
-          return 0.0001;
-        default:
-          return 0.0001;
-      }
+    if (map_zoom ==19) return 0.0001
+    else return (0.0001*(math.pow(2, (19-map_zoom))))
 }
 
 function convert_analsyt_filter_record_parameters_to_general_parameters_object(parameters){

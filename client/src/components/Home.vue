@@ -4,7 +4,7 @@
     <v-progress-linear  color="primary" height="1" :indeterminate="isLoading" ></v-progress-linear>
     <v-layout row wrap >
       <v-flex xs12 sm6 md2 class="pt-5">
-        <div v-show="this.device_uplink_sensor_data.length>0">
+        <div v-show="this.device_uplink_sensor_data.length>1">
         <v-select
           v-model="sensor_value_to_plot"
           :items="this.sensor_values"
@@ -182,10 +182,10 @@ export default {
         })
       this.device_uplink_sensor_data = this.device_uplink_sensor_data.data.device_uplink_sensor_data;
       this.length = this.device_uplink_sensor_data.length;
-      if(this.device_uplink_sensor_data.length > 0) {
+      if(this.device_uplink_sensor_data.length > 0) { //Will generate the info_window with the sensor data if 1 record returned
         this.create_marker(this.device_uplink_sensor_data[0], 1)
         this.$v.$touch(); //this will ensure that if the form is submitted before any of the 
-        google.charts.setOnLoadCallback(this.plot_graph(this.device_uplink_sensor_data));
+        if(this.device_uplink_sensor_data.length > 1) google.charts.setOnLoadCallback(this.plot_graph(this.device_uplink_sensor_data)); //will only plot graph if more than 1 record returned
       }
       else {
         this.create_marker(coordinate, 0);
@@ -211,7 +211,7 @@ export default {
             position,
             map: this.map,
             draggable: true,
-            animation: google.maps.Animation.BOUNCE,
+            //animation: google.maps.Animation.BOUNCE,
           });
         }
         if(this.markers != null ){this.markers.setMap(null)} //delete the marker from the map only after the first marker is created
@@ -224,7 +224,6 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     create_marker_square: async function(data){
-      console.log(data)
       //this method creates the markers for the square around the coordinate clicked
         let position = new google.maps.LatLng(data.gps_latitude, data.gps_longitude);
         let marker;
@@ -247,7 +246,7 @@ export default {
                       <b>Time Stamp</b>: ${data.time_stamp}<br>
                       <b>Organization Name</b>: ${data.network_name}<br>
                       <b>Application Name</b>: ${data.sub_network_name}<br>
-
+                      
                       <b>Temperature:</b>${data.temperature} <br>
                       <b>Humidity:</b>${data.humidity} <br>
                       <b>Accelerometer:</b>${data.accelerometer} <br>
@@ -409,15 +408,15 @@ export default {
     let lat_min, lat_max;
     lat_min = coordinate.lat-buffer/2
     lat_max = coordinate.lat+buffer/2
-    lat_min = math.round(10000*lat_min)/10000
-    lat_max = math.round(10000*lat_max)/10000
+    lat_min = math.round(1000000*lat_min)/1000000
+    lat_max = math.round(1000000*lat_max)/1000000
 
     //LNG
     let lng_min, lng_max;
     lng_min = coordinate.lng-buffer/2
     lng_max = coordinate.lng+buffer/2
-    lng_min = math.round(10000*lng_min)/10000
-    lng_max = math.round(10000*lng_max)/10000
+    lng_min = math.round(1000000*lng_min)/1000000
+    lng_max = math.round(1000000*lng_max)/1000000
     return {
         lat: {
             min: lat_min,
@@ -431,53 +430,10 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     generate_buffer_using_map_zoom: function (map_zoom){
+      console.log(map_zoom, (0.0001*(math.pow(2, (19-map_zoom)))))
       //Creates the buffer for the map box
-    switch (map_zoom) {
-        case 0:
-          return 6;
-        case 1:
-          return 4;
-        case 2:
-          return 2;
-        case 3:
-          return 2;
-        case 4:
-          return 1;
-        case 5:
-          return 1;
-        case 6:
-          return 0.5;
-        case 7:
-          return 0.4;
-        case 8:
-          return 0.25;
-        case 9:
-          return 0.1;
-        case 10:
-          return 0.04;
-        case 11:
-          return 0.02;
-        case 12:
-          return 0.009;
-        case 13:
-          return 0.006;
-        case 14:
-          return 0.002;
-        case 15:
-          return 0.001;
-        case 16:
-          return 0.001;
-        case 17:
-          return 0.001;
-        case 18:
-          return 0.0009;
-        case 19:
-          return 0.0007; 
-        case 20:
-          return 0.0001;
-        default:
-          return 0.0001;
-      }
+      if (map_zoom ==19) return 0.0001
+      else return (0.0001*(math.pow(2, (19-map_zoom))))
     },
   }
 };

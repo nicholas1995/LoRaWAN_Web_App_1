@@ -41,14 +41,14 @@ client.on('message', async function (topic, message) {
                     if (message.rxInfo) { 
                         //--------THIS IS JUST FOR THE SIMILATION
                         if(message.rxInfo[0].rssi ==1){//Trinidad north west
-                            message.object.gpsLocation["1"]["latitude"] = simulation.track_1[message.txInfo.frequency].lat;
-                            message.object.gpsLocation["1"]["longitude"] = simulation.track_1[message.txInfo.frequency].lng;
+                            message.object.gpsLocation["1"]["latitude"] = parseFloat(simulation.track_1[message.txInfo.frequency].lat);
+                            message.object.gpsLocation["1"]["longitude"] = parseFloat(simulation.track_1[message.txInfo.frequency].lng);
                         }else if(message.rxInfo[0].rssi ==2){//Tobago north west
-                            message.object.gpsLocation["1"]["latitude"] = simulation.tobago_tracks_1[message.txInfo.frequency].lat;
-                            message.object.gpsLocation["1"]["longitude"] = simulation.tobago_tracks_1[message.txInfo.frequency].lng;
+                            message.object.gpsLocation["1"]["latitude"] = parseFloat(simulation.tobago_tracks_1[message.txInfo.frequency].lat);
+                            message.object.gpsLocation["1"]["longitude"] = parseFloat(simulation.tobago_tracks_1[message.txInfo.frequency].lng);
                         }else if(message.rxInfo[0].rssi ==3){//Grenada
-                            message.object.gpsLocation["1"]["latitude"] = simulation.grenada_track_1[message.txInfo.frequency].lat;
-                            message.object.gpsLocation["1"]["longitude"] = simulation.grenada_track_1[message.txInfo.frequency].lng;
+                            message.object.gpsLocation["1"]["latitude"] = parseFloat(simulation.grenada_track_1[message.txInfo.frequency].lat);
+                            message.object.gpsLocation["1"]["longitude"] = parseFloat(simulation.grenada_track_1[message.txInfo.frequency].lng);
                         }
 
                         message.object.temperatureSensor["3"] = simulation.random_temperatue();
