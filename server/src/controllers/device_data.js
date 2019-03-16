@@ -67,7 +67,7 @@ function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers
             return "Device ID";
       case "sub_network_id":
         if(view == 'all'){
-            return "Sub-Network ID";
+            return "Application ID";
         }else if(view == 'self'){
             return null;
         }
@@ -77,7 +77,7 @@ function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers
             return "Time Stamp";
       case "sub_network_name":
         if(view == 'all'){
-            return "Sub Network Name";
+            return "Application Name";
         }else if(view == 'self'){
             return null;
         }
@@ -194,13 +194,13 @@ function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers
         return "device_uplink_id";
       case "Device ID":
         return "device_id";
-      case "Sub-Network ID":
+      case "Application ID":
         return "sub_network_id";
       case "Vessel ID":
         return "vessel_id";
       case "Time Stamp":
         return "time_stamp";
-      case "Sub Network Name":
+      case "Application Name":
         return "sub_network_name";
       case "Device EUI":
         return "device_eui";

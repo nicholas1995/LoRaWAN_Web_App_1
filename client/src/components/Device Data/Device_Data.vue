@@ -91,28 +91,31 @@
       </v-toolbar-items>
     </v-toolbar>
       <v-data-table
-            :headers="display"
-            :items="this.device_data"
-            :pagination.sync="pagination"
-            :loading="loading"
-            :rows-per-page-items= "rows_per_page_items"
-            class="elevation-1"
-            style="max-height: 700px; overflow-y: auto"
-            :total-items="number_of_records"
-          >
-          <template slot="no-data" >
-            <v-alert :value="this.allow_no_data" color="info" icon="warning" >
-              No data available.
-            </v-alert>
-          </template>
-        <template slot="items" slot-scope="myprops">
-          <tr style="height: 30px;"> 
-        <td v-for="header in display"
-        :key="header.text"
-        :class="['column sortable text-xs-left ', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']">
-        {{ myprops.item[header.value] }}
-        </td>
-          </tr>
+        :headers="display"
+        :items="this.device_data"
+        :pagination.sync="pagination"
+        :loading="loading"
+        :rows-per-page-items= "rows_per_page_items"
+        class="elevation-1"
+        style="max-height: 700px; overflow-y: auto"
+        :total-items="number_of_records"
+      >
+      <template slot="no-data" >
+        <v-alert :value="this.allow_no_data" color="info" icon="warning" >
+          No data available.
+        </v-alert>
+      </template>
+      <!-- This is where the magic happens. So each row item in the display array the the text "Name for user" is displayed at the top and all the records with which has that 
+          text as the key for the key:value pair is listed. These values come from the scoped slot which refers to the device data records. This is completed for all the items
+          in the display array-->
+      <template slot="items" slot-scope="myprops">
+        <tr style="max-height: 20px;"> 
+          <td v-for="header in display"
+          :key="header.text"
+          :class="['column sortable text-xs-left ', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']">
+          {{ myprops.item[header.value] }}
+          </td>
+        </tr>
       </template>
     </v-data-table>
   </v-content>
@@ -185,7 +188,7 @@ export default {
         header_names: [], //Array holding the headings
         value: [],
         display: [],
-        headers: [],
+        headers: [], //holds an array of objects  {text:, value: } text is the value to display while value is the name in the database
         start_date: null,
         start_time: null,
         end_date: null,

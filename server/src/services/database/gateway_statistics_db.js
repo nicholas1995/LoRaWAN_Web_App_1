@@ -20,10 +20,13 @@ module.exports = {
             if (parameters.end_date) {
                 sql_where.push(`time_stamp < '${parameters.end_date}'`);
             }
+            if (parameters.network_id) {
+                sql_where.push(`network_id IN (${parameters.network_id})`);
+            }
             if (parameters.gateway_id) {
                 sql_where.push(`gateway_id IN (${parameters.gateway_id})`);
             }
-            if (parameters.start_date || parameters.end_date || parameters.gateway_id) {
+            if (parameters.start_date || parameters.end_date || parameters.network_id || parameters.gateway_id) {
                 for (let i = 0; i < sql_where.length; i++) {
                     if (i < sql_where.length - 1) {
                         //will run every time but the last cause we do not want it ending with AND

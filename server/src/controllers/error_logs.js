@@ -106,13 +106,19 @@ module.exports = {
                 err.stack = err.stack.substr(0, string_positon_stack) + err.stack.substr(string_positon_stack+5)
                 console.log('TRUEEEe')
             } */
-            let user_id = req.user.id;
-            let error_user_class = req.user.user_class;
+            let user_id;
+            if (req.user) user_id= req.user.id;
+            else user_id = 'null';
+            let error_user_class;
+            if (req.user) error_user_class = req.user.user_class;
+            else error_user_class = "null";
             let error_path = req.route.path;
             let error_user_action = create_action(req);
             let error_method = req.route.stack[0].method;
             //let error_name= err.name;
-            let error_message = err.message;
+            let error_message;
+            if (err.message) error_message = err.message;
+            else error_message = 'null';
             let error_user_ip_address = req.headers['x-forwarded-for'] ||
                 req.connection.remoteAddress ||
                 req.socket.remoteAddress ||

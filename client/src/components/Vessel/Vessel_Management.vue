@@ -70,10 +70,10 @@ export default {
       headers: [
           { text: 'Actions', value: 'name', sortable: false },
           { text: 'Vessel ID', value: 'vessel_id' ,sortable: true},
-          { text: 'Vessel Name', value: 'vessel_name' , sortable: false },
+          { text: 'Vessel Name', value: 'vessel_name' , sortable: true },
           { text: 'Unique Vessel Identifier', value: 'vessel_unique_vessel_identifier' ,sortable: true},
-          { text: 'International Radio Call Sign', value: 'vessel_international_radio_call_sign' , sortable: false },
-          { text: 'Vessel Type', value: 'vessel_type' , sortable: false },
+          { text: 'International Radio Call Sign', value: 'vessel_international_radio_call_sign' , sortable: true },
+          { text: 'Vessel Type', value: 'vessel_type' , sortable: true },
           { text: 'Application ID', value: 'sub_network_id', sortable: true }
         ],
         vessels: [],

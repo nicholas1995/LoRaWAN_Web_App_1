@@ -15,6 +15,7 @@
     <v-layout row wrap>
       <v-flex xs4 sm6>
         <network_gateway_picker
+          @network_id = network_id_function($event)
           @gateway_id = gateway_id_function($event)
         ></network_gateway_picker>
       </v-flex>
@@ -155,6 +156,7 @@ export default {
         end_date_time: null, //This holds the end date and time in the format of the data in the db
         filter_parameters: {},
 
+        network_id: null,
         gateway_id: null,
 
         allow_no_data: false, //This is used to prevent the no data red notice from showing up when the page is now loaded... it will be enabled after the data is first fetched
@@ -307,6 +309,9 @@ export default {
           if(this.pagination.descending == false) this.filter_parameters["order"] = 'ASC';
           else this.filter_parameters["order"] = 'DESC';
         }
+        if(this.network_id){
+          this.filter_parameters["network_id"] = this.network_id;
+        }
         if(this.gateway_id){
           this.filter_parameters["gateway_id"] = this.gateway_id;
         }
@@ -324,6 +329,10 @@ export default {
         this.filter_parameters = {}; 
         this.loading = false;
       }else this.gateway_statistics = []
+    },
+    network_id_function: function(data){
+      if(data.length > 0 ){this.network_id = data}
+      else {this.network_id = null}
     },
     gateway_id_function: function(data){
       //The if else statements were used because in the Picker we always want to emit when the value changes not only when the array is greater than 0.

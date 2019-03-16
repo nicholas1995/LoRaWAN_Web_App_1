@@ -97,7 +97,7 @@ export default {
     network_name_form: async function(){
       this.gateway_name_form = []; 
       this.set_gateway_names_and_gateway_id_given_network_name_form(this.network_name_form);
-      this.$emit('gateway_id', this.gateway_id)
+      this.$emit('network_id', this.network_id)
      },
      gateway_name_form: async function(){
       if(this.gateway_name_form.length > 0){//will only run if we have a selected network

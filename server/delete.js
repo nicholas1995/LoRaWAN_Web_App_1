@@ -1,4 +1,4 @@
-var fs = require("fs");
+/* var fs = require("fs");
 const DB_DEVICE_UPLINK = require("./src/services/database/device_rx_db");
 
 require.extensions[".txt"] = function(module, filename) {
@@ -38,11 +38,11 @@ async function update_location(){
   }
   //console.log(coor);
 }
-update_location()
+update_location() */
 
 
 //------------------------------------------------------------------------------------------------------------------------
-/* //Just a compare funcion 
+/* //Just a compare funcion
 function compare(old_value, new_value) {
   let accounted_for = [];
   let added = [];
@@ -71,7 +71,7 @@ function compare(old_value, new_value) {
       //console.log('subnetwork deleted')
     }
   }
-  for(let i = 0; i< added.length; i++){ 
+  for(let i = 0; i< added.length; i++){
     added[i]=new_value[i]
   }
   console.log(deleted);
@@ -315,3 +315,34 @@ function byte_length_is_8(byte) {
   }
 }
  */
+
+
+//This is going to be testing on the database
+const DB_DEVICE_UPLINK = require("./src/services/database/device_rx_db");
+
+let sql_1 = "SELECT device_uplink_id,device_id,sub_network_id,vessel_id,device_name,rx_time,rx_rssi,rx_lora_snr,gateway_latitude,gateway_longitude,gateway_altitude,tx_frequency,tx_data_rate,adr,frame_counter,fport,encoded_data,gps_latitude,gps_longitude,gps_altitude,temperature,humidity,accelerometer,sos FROM device_uplink  WHERE time_stamp > '2019-03-01 23:04:00' AND time_stamp < '2019-03-22 23:55:00' AND device_id IN (1,6,8) AND vessel_id IN (2) AND sub_network_id IN (156) ORDER BY time_stamp DESC";
+
+async function update_location() {
+  let data_new, data_old;
+  let start_date, end_date;
+  let milli_seconds = 0;
+  n = 2000;
+  //console.log('Performing filtered fetch on all', n, 'device uplink records.')
+  console.log('Fetching all', n, 'device uplink records.')
+ 
+
+  for (let i = 0; i < 10; i++) {
+    start_date = new Date();
+    await DB_DEVICE_UPLINK.get_specified_parameters(sql_1)
+    //await DB_DEVICE_UPLINK.get('time_stamp', 'ASC')
+    .catch(err => {
+      throw err;
+    });
+    end_date = new Date();
+    console.log('Fetch #', i + 1, ":", (end_date.getTime() - start_date.getTime()), 'ms')
+    milli_seconds = milli_seconds + end_date.getTime() - start_date.getTime();
+  }
+  console.log("Average: ", milli_seconds / 10, 'ms');
+
+}
+setTimeout(update_location, 4000, "funky");

@@ -211,7 +211,7 @@ export default {
             position,
             map: this.map,
             draggable: true,
-            //animation: google.maps.Animation.BOUNCE,
+            animation: google.maps.Animation.BOUNCE,
           });
         }
         if(this.markers != null ){this.markers.setMap(null)} //delete the marker from the map only after the first marker is created

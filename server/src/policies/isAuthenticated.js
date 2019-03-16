@@ -3,28 +3,26 @@ const VError = require("verror");
 const db_user_reset_password_token = require("../services/database/user_reset_password_token_db")
 const db_activate_user_account_token = require("../services/database/activate_user_account_token_db")
 const user_controller = require("../controllers/user")
+const error_logger = require("../controllers/error_logs");
 
 module.exports = {
     authenticate: function(req,res, next){
         try{
             passport.authenticate('jwt', function(err, user, info) {
-                if(err){
+                if(err){ //Error validating Token.. log error 
                     throw err;
                 }
-                if(user){
+                if(user){ //Valid JWT.. Continue Processing request
                     req.user = user;
                     next();
                 }
-                else{
-                    throw err;
+                else{ //Either invalid token or expired token... throw to log
+                    throw info;
                 }
             })(req,res,next) 
         }catch(err){
-            //Error with token.... either expired or sum else.
-            let error = new VError(`Unauthorized Access`);
-            //console.log(error.message);
-            res.status(401).send({
-                error: 'Do not have access!'});
+            error_logger.error_logger(req, err)
+            res.status(401).send({error: 'Do not have access.'});
         }
     },
     authenticate_reset_password_token: async function(req, res, next){
