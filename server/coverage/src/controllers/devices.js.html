@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">4.12% </span>
+        <span class="strong">4.18% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>11/267</span>
+        <span class='fraction'>11/263</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>0/49</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">4.12% </span>
+        <span class="strong">4.18% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>11/267</span>
+        <span class='fraction'>11/263</span>
       </div>
     </div>
     <p class="quiet">
@@ -861,7 +861,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1058,7 +1058,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1067,14 +1067,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1449,7 +1449,7 @@ async function <span class="fstat-no" title="function not covered" >add_device_t
                 //Error creating vessel device relationship 
 <span class="cstat-no" title="statement not covered" >                throw error_message("create vessel device relationship : database", err.message);</span>
             });
-<span class="cstat-no" title="statement not covered" >        console.log("Device vessel relationship created. Default vessel");</span>
+        //console.log("Device vessel relationship created. Default vessel");
     }catch(err){
 <span class="cstat-no" title="statement not covered" >        throw err;</span>
     }
@@ -1646,7 +1646,7 @@ module.exports = {
 <span class="cstat-no" title="statement not covered" >                    error_location = 0;</span>
 <span class="cstat-no" title="statement not covered" >                    throw error_handler.error_message(err) ;</span>
                 });
-<span class="cstat-no" title="statement not covered" >            console.log('Device updated on lora app server');</span>
+            //console.log('Device updated on lora app server');
 <span class="cstat-no" title="statement not covered" >            await DB_VESSEL_DEVICE.delete_given_deivce_eui(data.device_eui)</span>
                 .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
                     //Error deleteing current relationship between that device and any previous vessel
@@ -1655,14 +1655,14 @@ module.exports = {
                 });
             //Relationship between device and any vessel deleted
 <span class="cstat-no" title="statement not covered" >            if (data.vessel_id) {</span>
-<span class="cstat-no" title="statement not covered" >                console.log("Device vessel relationship exists");</span>
+                //console.log("Device vessel relationship exists");
 <span class="cstat-no" title="statement not covered" >                await DB_VESSEL_DEVICE.create(data.device_id, data.device_eui, data.vessel_id)</span>
                     .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
                         //Error creating relationship between vessel and device
 <span class="cstat-no" title="statement not covered" >                        error_location = 4;</span>
 <span class="cstat-no" title="statement not covered" >                        throw error.error_message("create device : vessel device relationship : database", err.message);</span>
                     });
-<span class="cstat-no" title="statement not covered" >                console.log("Device vessel relationship created");</span>
+                //console.log("Device vessel relationship created");
             } else { //Device not assigned to vessel so it will be assigned to the default vessel
 <span class="cstat-no" title="statement not covered" >                await add_device_to_default_vessel(data.device_id, data.device_eui, data.sub_network_id)</span>
                     .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
@@ -1816,7 +1816,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Mar 03 2019 20:51:09 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Mar 16 2019 19:55:42 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

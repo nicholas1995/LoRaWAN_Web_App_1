@@ -20,31 +20,31 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">14.29% </span>
+        <span class="strong">65.22% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>3/21</span>
+        <span class='fraction'>15/23</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">33.33% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/6</span>
+        <span class='fraction'>2/6</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">0% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>0/1</span>
+        <span class='fraction'>1/1</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">14.29% </span>
+        <span class="strong">65.22% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>3/21</span>
+        <span class='fraction'>15/23</span>
       </div>
     </div>
     <p class="quiet">
       Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
     </p>
   </div>
-  <div class='status-line low'></div>
+  <div class='status-line medium'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -73,59 +73,71 @@
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const verify_access = require('./access_control_function');
 const VError = require("verror");
 &nbsp;
-module.exports = <span class="fstat-no" title="function not covered" >fu</span>nction(req, res, next){
-    let path = <span class="cstat-no" title="statement not covered" >req.route.path;</span>
-<span class="cstat-no" title="statement not covered" >    path = path.slice(4); </span>//remove the api from infront of the route '/api
-<span class="cstat-no" title="statement not covered" >    if(path.lastIndexOf('/') != 0){ //so that it will only happen when there is a second /</span>
-        let x = <span class="cstat-no" title="statement not covered" >path.indexOf('/',1);</span> //extract the string between then first and second /
-<span class="cstat-no" title="statement not covered" >        path = path.slice(1,x);</span>
-    }else{
-<span class="cstat-no" title="statement not covered" >        path = path.slice(1); </span>
-    }
-    let user_class = <span class="cstat-no" title="statement not covered" >req.user.user_class;</span>
-    let method = <span class="cstat-no" title="statement not covered" >req.route.stack[0].method;</span>
-    let access = <span class="cstat-no" title="statement not covered" >verify_access.check_permission(user_class, path, method);</span>
-<span class="cstat-no" title="statement not covered" >    if(access == 'all'){</span>
-<span class="cstat-no" title="statement not covered" >        req.access = 'all';</span>
-<span class="cstat-no" title="statement not covered" >        next()</span>
-    }else <span class="cstat-no" title="statement not covered" >if(access == 'self'){</span>
-<span class="cstat-no" title="statement not covered" >        req.access = 'self';</span>
-<span class="cstat-no" title="statement not covered" >        next();</span>
-        //res.status(403).send({error:"Do not have access!"}); //HAVE BUG HERE... NEED TO HAVE A SPECIAL next() FOR IF USER HAS ACCESS TO SELF ALONE
-    }else{
-        let err = <span class="cstat-no" title="statement not covered" >new VError(`Forbidden Access : user-${req.user.email} : path-${path} : method-${method}`);</span>
-<span class="cstat-no" title="statement not covered" >        console.log(err.message);</span>
-<span class="cstat-no" title="statement not covered" >        res.status(403).send({ error: "Forbidden" });</span>
+module.exports = function(req, res, next){
+    try{
+        let path = req.route.path;
+        path = path.slice(4); //remove the api from infront of the route '/api
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (path.lastIndexOf('/') != 0) { //so that it will only happen when there is a second /
+            let x = path.indexOf('/', 1); //extract the string between then first and second /
+            path = path.slice(1, x);
+        } else {
+<span class="cstat-no" title="statement not covered" >            path = path.slice(1);</span>
+        }
+        let user_class = req.user.user_class;
+        let method = req.route.stack[0].method;
+        let access = verify_access.check_permission(user_class, path, method);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (access == 'all') {
+            req.access = 'all';
+            next()
+        } else <span class="cstat-no" title="statement not covered" >if (access == 'self') {</span>
+<span class="cstat-no" title="statement not covered" >            req.access = 'self';</span>
+<span class="cstat-no" title="statement not covered" >            next();</span>
+            //res.status(403).send({error:"Do not have access!"}); //HAVE BUG HERE... NEED TO HAVE A SPECIAL next() FOR IF USER HAS ACCESS TO SELF ALONE
+        } else {
+            let err = <span class="cstat-no" title="statement not covered" >new VError(`Forbidden Access : user-${req.user.email} : path-${path} : method-${method}`);</span>
+<span class="cstat-no" title="statement not covered" >            console.log(err.message);</span>
+<span class="cstat-no" title="statement not covered" >            res.status(403).send({ error: "Forbidden" });</span>
+        }
+    }catch(err){
+<span class="cstat-no" title="statement not covered" >        console.log(err)</span>
     }
 }</pre></td></tr>
 </table></pre>
@@ -133,7 +145,7 @@ module.exports = <span class="fstat-no" title="function not covered" >fu</span>n
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Mar 03 2019 20:51:09 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Mar 16 2019 19:55:42 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

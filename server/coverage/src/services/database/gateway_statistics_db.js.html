@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.25% </span>
+        <span class="strong">5.88% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>2/32</span>
+        <span class='fraction'>2/34</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/19</span>
+        <span class='fraction'>0/22</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>0/4</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.25% </span>
+        <span class="strong">5.88% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>2/32</span>
+        <span class='fraction'>2/34</span>
       </div>
     </div>
     <p class="quiet">
@@ -113,7 +113,8 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -140,6 +141,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -172,9 +176,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,10 +204,13 @@ module.exports = {
 <span class="cstat-no" title="statement not covered" >            if (parameters.end_date) {</span>
 <span class="cstat-no" title="statement not covered" >                sql_where.push(`time_stamp &lt; '${parameters.end_date}'`);</span>
             }
+<span class="cstat-no" title="statement not covered" >            if (parameters.network_id) {</span>
+<span class="cstat-no" title="statement not covered" >                sql_where.push(`network_id IN (${parameters.network_id})`);</span>
+            }
 <span class="cstat-no" title="statement not covered" >            if (parameters.gateway_id) {</span>
 <span class="cstat-no" title="statement not covered" >                sql_where.push(`gateway_id IN (${parameters.gateway_id})`);</span>
             }
-<span class="cstat-no" title="statement not covered" >            if (parameters.start_date || parameters.end_date || parameters.gateway_id) {</span>
+<span class="cstat-no" title="statement not covered" >            if (parameters.start_date || parameters.end_date || parameters.network_id || parameters.gateway_id) {</span>
 <span class="cstat-no" title="statement not covered" >                for (let i = 0; i &lt; sql_where.length; i++) {</span>
 <span class="cstat-no" title="statement not covered" >                    if (i &lt; sql_where.length - 1) {</span>
                         //will run every time but the last cause we do not want it ending with AND
@@ -237,14 +242,12 @@ module.exports = {
             ORDER BY gateway_statistics_id DESC
             LIMIT 1`;
 <span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
-    },
-    create_gateway_statistics: <span class="fstat-no" title="function not covered" >fu</span>nction (gateway_id_lora, gateway_ip, time_stamp, gateway_latitude, gateway_longitude, 
-        gateway_altitude, location_source, configeration_version, rx_packets_received, rx_packets_received_ok, tx_packets_received, tx_packets_emitted) {
+    }, 
+    create_gateway_statistics: <span class="fstat-no" title="function not covered" >fu</span>nction (gateway_statistic) {
         let sql = <span class="cstat-no" title="statement not covered" >`INSERT INTO gateway_statistics</span>
-        (gateway_id_lora, gateway_ip, time_stamp, gateway_latitude, gateway_longitude, gateway_altitude, location_source, 
-            configeration_version, rx_packets_received, rx_packets_received_ok, tx_packets_received, tx_packets_emitted)
-        VALUES ('${gateway_id_lora}', '${gateway_ip}', '${time_stamp}', '${gateway_latitude}', '${gateway_longitude}' '${gateway_altitude}', '${location_source}', 
-        '${configeration_version}', '${rx_packets_received}', '${rx_packets_received_ok}', '${tx_packets_received}', '${tx_packets_emitted}') `;
+        (gateway_id, gateway_id_lora, gateway_name, network_id, time_stamp, rx_packets_received, rx_packets_received_ok, tx_packets_received, tx_packets_emitted)
+        VALUES ('${gateway_statistic.gateway_id}', '${gateway_statistic.gateway_id_lora}', '${gateway_statistic.gateway_name}','${gateway_statistic.network_id}', '${gateway_statistic.timestamp}', '${gateway_statistic.rxPacketsReceived}', 
+        '${gateway_statistic.rxPacketsReceivedOk}', '${gateway_statistic.txPacketsReceived}', '${gateway_statistic.txPacketsEmitted}') `;
 <span class="cstat-no" title="statement not covered" >        return db.queryAsync(sql);</span>
     },
 }</pre></td></tr>
@@ -253,7 +256,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Mar 03 2019 20:51:09 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Mar 16 2019 19:55:42 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../../prettify.js"></script>

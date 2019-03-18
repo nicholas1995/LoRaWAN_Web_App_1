@@ -460,6 +460,8 @@ export default {
           this.filter_parameters["network"] = this.network_id;
         }
         if(return_all_records == 0){//Return how much specified by the pagenation
+/*           let start_date = new Date();
+          let end_date; */
           await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value, this.self, return_all_records).then(result=>{
             if(result.status == 206){ //No Data returned 
             this.device_data = [];
@@ -467,6 +469,9 @@ export default {
             this.loading = false;
             this.number_of_records = 0; //sets to 0 if no records to display
             }else{
+/*             end_date = new Date();
+            let milli_seconds =  end_date.getTime() - start_date.getTime();
+            console.log('Total #', result.data.number_of_records, " Pagination: ", this.pagination.rowsPerPage, 'Time(ms): ', milli_seconds) */
             this.device_data = result.data.device_data;
             this.headers =  result.data.headers; 
             this.display = this.headers

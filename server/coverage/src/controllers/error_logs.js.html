@@ -20,14 +20,14 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.25% </span>
+        <span class="strong">5.56% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>3/48</span>
+        <span class='fraction'>3/54</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>0/14</span>
+        <span class='fraction'>0/20</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -35,9 +35,9 @@
         <span class='fraction'>0/7</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">6.25% </span>
+        <span class="strong">5.88% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>3/48</span>
+        <span class='fraction'>3/51</span>
       </div>
     </div>
     <p class="quiet">
@@ -190,7 +190,13 @@
 <a name='L142'></a><a href='#L142'>142</a>
 <a name='L143'></a><a href='#L143'>143</a>
 <a name='L144'></a><a href='#L144'>144</a>
-<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -298,12 +304,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -442,13 +454,19 @@ module.exports = {
                 err.stack = err.stack.substr(0, string_positon_stack) + err.stack.substr(string_positon_stack+5)
                 console.log('TRUEEEe')
             } */
-            let user_id = <span class="cstat-no" title="statement not covered" >req.user.id;</span>
-            let error_user_class = <span class="cstat-no" title="statement not covered" >req.user.user_class;</span>
+            let user_id;
+<span class="cstat-no" title="statement not covered" >            if (req.user) <span class="cstat-no" title="statement not covered" >user_id= req.user.id;</span></span>
+            else <span class="cstat-no" title="statement not covered" >user_id = 'null';</span>
+            let error_user_class;
+<span class="cstat-no" title="statement not covered" >            if (req.user) <span class="cstat-no" title="statement not covered" >error_user_class = req.user.user_class;</span></span>
+            else <span class="cstat-no" title="statement not covered" >error_user_class = "null";</span>
             let error_path = <span class="cstat-no" title="statement not covered" >req.route.path;</span>
             let error_user_action = <span class="cstat-no" title="statement not covered" >create_action(req);</span>
             let error_method = <span class="cstat-no" title="statement not covered" >req.route.stack[0].method;</span>
             //let error_name= err.name;
-            let error_message = <span class="cstat-no" title="statement not covered" >err.message;</span>
+            let error_message;
+<span class="cstat-no" title="statement not covered" >            if (err.message) <span class="cstat-no" title="statement not covered" >error_message = err.message;</span></span>
+            else <span class="cstat-no" title="statement not covered" >error_message = 'null';</span>
             let error_user_ip_address = <span class="cstat-no" title="statement not covered" >req.headers['x-forwarded-for'] ||</span>
                 req.connection.remoteAddress ||
                 req.socket.remoteAddress ||
@@ -484,7 +502,7 @@ module.exports = {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sun Mar 03 2019 20:51:09 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Mar 16 2019 19:55:42 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

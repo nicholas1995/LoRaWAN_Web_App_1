@@ -225,7 +225,7 @@ async function add_device_to_default_vessel(device_id, device_eui, sub_network_i
                 //Error creating vessel device relationship 
                 throw error_message("create vessel device relationship : database", err.message);
             });
-        console.log("Device vessel relationship created. Default vessel");
+        //console.log("Device vessel relationship created. Default vessel");
     }catch(err){
         throw err;
     }
@@ -422,7 +422,7 @@ module.exports = {
                     error_location = 0;
                     throw error_handler.error_message(err) ;
                 });
-            console.log('Device updated on lora app server');
+            //console.log('Device updated on lora app server');
             await DB_VESSEL_DEVICE.delete_given_deivce_eui(data.device_eui)
                 .catch(err => {
                     //Error deleteing current relationship between that device and any previous vessel
@@ -431,14 +431,14 @@ module.exports = {
                 });
             //Relationship between device and any vessel deleted
             if (data.vessel_id) {
-                console.log("Device vessel relationship exists");
+                //console.log("Device vessel relationship exists");
                 await DB_VESSEL_DEVICE.create(data.device_id, data.device_eui, data.vessel_id)
                     .catch(err => {
                         //Error creating relationship between vessel and device
                         error_location = 4;
                         throw error.error_message("create device : vessel device relationship : database", err.message);
                     });
-                console.log("Device vessel relationship created");
+                //console.log("Device vessel relationship created");
             } else { //Device not assigned to vessel so it will be assigned to the default vessel
                 await add_device_to_default_vessel(data.device_id, data.device_eui, data.sub_network_id)
                     .catch(err => {

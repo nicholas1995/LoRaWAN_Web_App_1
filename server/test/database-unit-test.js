@@ -1,4 +1,4 @@
-
+/* 
 var assert = require('assert');
 
 const db_network = require('../src/services/database/networks_db')
@@ -45,4 +45,4 @@ describe('Organization',  function(){
     });   
 
 
-});
+}); */

@@ -11,6 +11,95 @@ let AFR_1 = { headers: '"Device Uplink ID,Device ID,Sub-Network ID"',
             order: null,
             user_id: 68 };
 
+
+let DUR_1 = {
+	"data":
+		[
+			{
+				"device_uplink_id": 4072,
+				"device_id": 2,
+				"sub_network_id": "156",
+				"vessel_id": 3,
+				"time_stamp": "2019-03-18 01:08:02",
+				"sub_network_name": "Marine_IoT",
+				"device_eui": "2222222222222222",
+				"device_name": "Device_2",
+				"gateway_id_lora": "2222222222222222",
+				"gateway_name": "Gateway_1",
+				"rx_time": "2019-03-07T20:43:02Z",
+				"rx_rssi": "3",
+				"rx_lora_snr": "0.8193636",
+				"gateway_latitude": "10.248639",
+				"gateway_longitude": "10.248639",
+				"gateway_altitude": "0",
+				"tx_frequency": "0",
+				"tx_data_rate": "4",
+				"adr": "false",
+				"frame_counter": "0",
+				"fport": "1",
+				"encoded_data": "BGYAA2cKAAGIAaKx9pYIAANi",
+				"gps_latitude": 12.088338683329,
+				"gps_longitude": -61.8399810791016,
+				"gps_altitude": "8.66",
+				"temperature": "28.85",
+				"humidity": "25",
+				"accelerometer": "30",
+				"sos": 0
+			}
+		]
+}
+
+let DUR_2 = {
+	"_id": {
+		"$oid": "5c8f27b2a488b55a357f534c"
+	},
+	"applicationID": "156",
+	"applicationName": "Marine_IoT",
+	"deviceName": "Device_2",
+	"devEUI": "2222222222222222",
+	"rxInfo": [
+		{
+			"gatewayID": "2222222222222222",
+			"name": "Gateway_1",
+			"time": "2019-03-07T20:43:02Z",
+			"rssi": 3,
+			"loRaSNR": 0.8193636,
+			"location": {
+				"latitude": 10.248639,
+				"longitude": 10.248639,
+				"altitude": 0
+			}
+		}
+	],
+	"txInfo": {
+		"frequency": 0,
+		"dr": 4
+	},
+	"adr": false,
+	"fCnt": 0,
+	"fPort": 1,
+	"data": "BGYAA2cKAAGIAaKx9pYIAANi",
+	"object": {
+		"humiditySensor": {
+			"1": 30
+		},
+		"accelerometerSensor": {
+			"1": 25.67
+		},
+		"temperatureSensor": {
+			"3": 28.85
+		},
+		"gpsLocation": {
+			"1": {
+				"latitude": "12.088338683329036",
+				"longitude": "-61.83998107910156",
+				"altitude": 8.66
+			}
+		}
+	},
+	"vessel_id": 3,
+	"device_id": 2
+}
 //----------------------------------------------------------------------------------------------------------------Database Test----------------------------------------------------------------------------------------------------------------
 
 //Organization----------------------------------------------------------------------------------------------------------------
