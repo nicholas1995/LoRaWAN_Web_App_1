@@ -4,9 +4,9 @@
       <v-layout align-center justify-center>
         <v-flex xs12 sm12 md10>
           <v-toolbar light class="primary ">
-            <v-toolbar-title>Create Service Profile</v-toolbar-title>
+            <v-toolbar-title>Create Network Server</v-toolbar-title>
           </v-toolbar>
-            <v-stepper non-linear class = "elevation-5">
+            <v-stepper non-linear class = "elevation-5 form_background">
               <v-stepper-header>
                 <v-stepper-step editable step="1">Basic Information</v-stepper-step>
                 <v-divider></v-divider>
@@ -37,15 +37,15 @@
                     <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_network_service_profile"></tool_tips_forms>
                   </v-select>
                 <!--Message -->
-                  <div div class="text">
+                  <div div class="error--text">
                     {{message}} 
                   </div>
                 <!--Button -->
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="create_service_profile()">
                     Create Network Server
                   </v-btn>
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="$router.push(`/network_server`)">
                     Cancel
                   </v-btn>
@@ -94,15 +94,15 @@
                   </v-flex>
                 </div>
                 <!--Message -->
-                  <div div class="text">
+                  <div div class="error--text">
                     {{message}} 
                   </div>
                 <!--Button -->
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="create_service_profile()">
                     Create Service Profile
                   </v-btn>
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="$router.push(`/network_server`)">
                     Cancel
                   </v-btn>
@@ -131,15 +131,15 @@
                     </v-text-field>
                   </v-flex>
                 <!--Message -->
-                  <div div class="text">
+                  <div div class="error--text">
                     {{message}} 
                   </div>
                 <!--Button -->
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="create_service_profile()">
                     Create Service Profile
                   </v-btn>
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="$router.push(`/network_server`)">
                     Cancel
                   </v-btn>

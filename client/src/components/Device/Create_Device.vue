@@ -6,7 +6,7 @@
           <v-toolbar light class="primary ">
             <v-toolbar-title>Create Device</v-toolbar-title>
           </v-toolbar>
-            <v-stepper non-linear class = "elevation-5">
+            <v-stepper non-linear class = "elevation-5 form_background">
               <v-stepper-header>
                 <v-stepper-step editable step="1">Basic Information</v-stepper-step>
                 <v-divider></v-divider>
@@ -67,15 +67,15 @@
                         label="Skip Frame Counter"
                       ></v-checkbox>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="create_device()">
                       Create Device
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/device`)">
                       Cancel
                     </v-btn>
@@ -120,15 +120,15 @@
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_device_device_profile"></tool_tips_forms>
                     </v-select>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="create_device()">
                       Create Device
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/device`)">
                       Cancel
                     </v-btn>

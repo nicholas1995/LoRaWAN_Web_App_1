@@ -2,13 +2,13 @@
     <v-content>   
       <v-container fluid fill-height>
         <v-layout align-center justify-center >
-          <v-flex xs12 sm8 md4 >
+          <v-flex xs12 sm8 md6 >
             <v-card class=" elevation-10 ">
-              <v-toolbar light class="grey lighten-2 ">
+              <v-toolbar light class="primary">
                   <v-toolbar-title>Update Password</v-toolbar-title>
               </v-toolbar>
             </v-card>
-            <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5">
+            <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background">
               <!--Current Password-->
               <v-text-field 
                 v-model="current_password"
@@ -34,14 +34,14 @@
                   label="Re-enter Password*"
                   :error-messages = "new_password_confirm_errors" 
                 ></v-text-field>
-              <div class="text">
+              <div class="error--text">
               {{message}}
               </div>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button black--text"
                 @click="update_password"
               >Update Password 
               </v-btn>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button black--text"
                 @click.stop="$router.go(-1)">
                 Cancel
               </v-btn>

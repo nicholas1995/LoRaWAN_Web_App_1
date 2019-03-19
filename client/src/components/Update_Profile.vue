@@ -4,10 +4,10 @@
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md8>
           <v-card class=" elevation-10 ">
-            <v-toolbar light class="grey lighten-2 ">
+            <v-toolbar light class="primary">
               <v-toolbar-title>Update Profile</v-toolbar-title>
             </v-toolbar>
-            <v-stepper non-linear class = "elevation-5">
+            <v-stepper non-linear class = "elevation-5 form_background">
               <v-stepper-header>
                 <v-stepper-step editable step="1">Basic Information</v-stepper-step>
                 <v-divider></v-divider>
@@ -58,16 +58,16 @@
                   </v-flex>
                 </v-layout>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click="update_profile"
                       >
                       Update Profile
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.go(-1)">
                       Cancel
                     </v-btn>
@@ -102,16 +102,16 @@
                       @keyup="$v.user_street.$touch()" 
                     ></v-text-field>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click="update_profile"
                       >
                       Update Profile
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.go(-1)">
                       Cancel
                     </v-btn>

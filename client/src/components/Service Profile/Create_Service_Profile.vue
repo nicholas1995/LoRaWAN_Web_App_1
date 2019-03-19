@@ -6,7 +6,7 @@
           <v-toolbar light class="primary ">
             <v-toolbar-title>Create Service Profile</v-toolbar-title>
           </v-toolbar>
-            <v-stepper non-linear class = "elevation-5">
+            <v-stepper non-linear class = "elevation-5 form_background">
               <v-stepper-header>
                 <v-stepper-step editable step="1">Basic Information</v-stepper-step>
                 <v-divider></v-divider>
@@ -61,15 +61,15 @@
                   >
                   </v-checkbox>
                 <!--Message -->
-                  <div div class="text">
+                  <div div class="error--text">
                     {{message}} 
                   </div>
                 <!--Button -->
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="create_service_profile()">
                     Create Service Profile
                   </v-btn>
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="$router.push(`/service_profile`)">
                     Cancel
                   </v-btn>
@@ -110,15 +110,15 @@
                   </v-checkbox>
                 </div>
                 <!--Message -->
-                  <div div class="text">
+                  <div div class="error--text">
                     {{message}} 
                   </div>
                 <!--Button -->
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="create_service_profile()">
                     Create Service Profile
                   </v-btn>
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="$router.push(`/service_profile`)">
                     Cancel
                   </v-btn>
@@ -147,15 +147,15 @@
                     </v-text-field>
                   </v-flex>
                 <!--Message -->
-                  <div div class="text">
+                  <div div class="error--text">
                     {{message}} 
                   </div>
                 <!--Button -->
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="create_service_profile()">
                     Create Service Profile
                   </v-btn>
-                  <v-btn class="grey lighten-2"
+                  <v-btn class="button black--text"
                     @click.stop="$router.push(`/service_profile`)">
                     Cancel
                   </v-btn>

@@ -2,9 +2,9 @@
   <v-content v-if="this.access == 1"> 
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+        <v-flex xs12 sm8 md6>
           <v-card class=" elevation-10 ">
-            <v-toolbar light class="primary ">
+            <v-toolbar light class="primary">
               <v-toolbar-title>Create Application</v-toolbar-title>
             </v-toolbar>
           </v-card>
@@ -64,15 +64,15 @@
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_sub_network_payload_codec"></tool_tips_forms>
               </v-select>
               <!-- Message -->
-              <div div class="text">
+              <div div class="error--text">
                 {{message}}
               </div>
               <!-- Buttons -->
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="create_sub_network()">
                 Create Application
               </v-btn>
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="$router.push(`/subnetwork`)">
                 Cancel
               </v-btn>

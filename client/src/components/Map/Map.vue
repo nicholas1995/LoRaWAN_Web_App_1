@@ -41,13 +41,12 @@
         <v-tabs
         
           v-model="active_tab"
-          dark
           color="primary"
           show-arrows
           grow
           height=40
         >
-          <v-tabs-slider color=red></v-tabs-slider>
+          <v-tabs-slider color=black></v-tabs-slider>
           <v-tab
             v-for="i in device_data.length"
             :key="i"
@@ -66,13 +65,12 @@
         <v-tabs
           @input="update_controller_array($event, i)"
           v-model="active_tab_2[i]"
-          dark
           color="primary"
           show-arrows
           grow
           height=30
         >
-          <v-tabs-slider color="red"></v-tabs-slider>
+          <v-tabs-slider color="black"></v-tabs-slider>
           <v-tab
             v-for="j in controller_array_heading_text.length"
             :key="j"
@@ -103,19 +101,19 @@
                             </v-select>
                           </v-flex>
                           <v-flex xs12 sm12 md6 lg3>
-                            <v-btn class="grey lighten-2"  
+                            <v-btn class="button black--text"  
                               @click.stop="clear_all_device_tracks(i)">
                               Clear all device tracks
                             </v-btn>
                           </v-flex>  
                           <v-flex xs12 sm12 md6 lg3>
-                            <v-btn class="grey lighten-2" 
+                            <v-btn class="button black--text" 
                               @click.stop="clear_real_time_device_tracks(i)">
                               Clear device realtime tracks
                             </v-btn>
                           </v-flex> 
                           <v-flex xs12 sm12 md6 lg3>
-                            <v-btn class="grey lighten-2"
+                            <v-btn class="button black--text"
                               @click.stop="clear_historic_device_tracks(i)">
                               Clear device historic tracks
                             </v-btn>
@@ -134,7 +132,7 @@
                             </v-select>
                           </v-flex>
                           <v-flex xs12 sm12 md6 lg6>
-                            <v-btn class="grey lighten-2"  
+                            <v-btn class="button black--text"  
                               @click.stop="download_csv(device_real_time_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_real_time_data.csv`)">
                               Download device realtime tracks
                             </v-btn>
@@ -168,13 +166,13 @@
                           ></v-switch>
                         </v-flex>
                         <v-flex xs12 sm6 md6 lg4>
-                          <v-btn class="grey lighten-2" 
+                          <v-btn class="button black--text" 
                             @click.stop="generate_historic_device_tracks(i)">
                             Generate Historic Tracks
                           </v-btn>
                         </v-flex>
                         <v-flex xs12 sm6 md12 lg4>
-                          <v-btn class="grey lighten-2"  
+                          <v-btn class="button black--text"  
                             @click.stop="download_csv(device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)">
                             Download device historic tracks
                           </v-btn>

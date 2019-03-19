@@ -38,14 +38,14 @@
                 >
                 </v-checkbox>
               </v-form>
-              <div div class="text">
+              <div div class="error--text">
                 {{message}} 
               </div>
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="create_network()">
                 Create Organization
               </v-btn>
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="$router.push(`/network`)">
                 Cancel
               </v-btn>

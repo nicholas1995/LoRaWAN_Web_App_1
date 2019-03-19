@@ -2,7 +2,7 @@
   <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md4>
+        <v-flex xs12 sm8 md6>
           <v-card class=" elevation-10 ">
             <v-toolbar light class="primary">
               <v-toolbar-title>Update Organization</v-toolbar-title>
@@ -36,14 +36,14 @@
                 required
               ></v-checkbox>
 
-              <div div class="text">
+              <div div class="error--text">
                 {{message}}
               </div>
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="update_network()">
                 Update Organization
               </v-btn>
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="$router.push(`/network`)">
                 Cancel
               </v-btn>

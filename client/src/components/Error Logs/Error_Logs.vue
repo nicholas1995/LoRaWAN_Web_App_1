@@ -1,6 +1,6 @@
 <template>
   <v-content>
-    <v-toolbar class="elevation-1" color="grey lighten-3">
+    <v-toolbar class="elevation-1" color="primary">
       <v-toolbar-title>ERROR LOGS</v-toolbar-title>
       <v-divider
         class="mx-2"

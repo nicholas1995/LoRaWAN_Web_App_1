@@ -7,7 +7,7 @@
             <v-toolbar light class="primary">
               <v-toolbar-title>Update Device Profile</v-toolbar-title>
             </v-toolbar>
-              <v-stepper non-linear>
+              <v-stepper non-linear class = "elevation-5 form_background">
                 <v-stepper-header>
                   <v-stepper-step editable step="1">Basic Information</v-stepper-step>
                   <v-divider></v-divider>
@@ -60,15 +60,15 @@
                         </v-text-field>
                       </v-flex>
                       <!-- Message -->
-                        <div div class="text">
+                        <div div class="error--text">
                           {{message}}
                         </div>
                     <!--Buttons-->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="update_device_profile()">
                       Update Device Profile
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/device_profile`)">
                       Cancel
                     </v-btn>
@@ -136,15 +136,15 @@
                       </v-combobox>
                     </div>
                     <!-- Message -->
-                      <div div class="text">
+                      <div div class="error--text">
                         {{message}}
                       </div>
                     <!--Buttons-->
-                      <v-btn class="grey lighten-2"
+                      <v-btn class="button black--text"
                         @click.stop="update_device_profile()">
                         Update Device Profile
                       </v-btn>
-                      <v-btn class="grey lighten-2"
+                      <v-btn class="button black--text"
                         @click.stop="$router.push(`/device_profile`)">
                         Cancel
                       </v-btn>
@@ -203,15 +203,15 @@
                       </v-flex>
                     </div>
                     <!-- Message -->
-                      <div div class="text">
+                      <div div class="error--text">
                         {{message}}
                       </div>
                     <!--Buttons-->
-                      <v-btn class="grey lighten-2"
+                      <v-btn class="button black--text"
                         @click.stop="update_device_profile()">
                         Update Device Profile
                       </v-btn>
-                      <v-btn class="grey lighten-2"
+                      <v-btn class="button black--text"
                         @click.stop="$router.push(`/device_profile`)">
                         Cancel
                       </v-btn>
@@ -238,15 +238,15 @@
                       </v-flex>
                     </div>
                     <!-- Message -->
-                      <div div class="text">
+                      <div div class="error--text">
                         {{message}}
                       </div>
                     <!--Buttons-->
-                      <v-btn class="grey lighten-2"
+                      <v-btn class="button black--text"
                         @click.stop="update_device_profile()">
                         Update Device Profile
                       </v-btn>
-                      <v-btn class="grey lighten-2"
+                      <v-btn class="button black--text"
                         @click.stop="$router.push(`/device_profile`)">
                         Cancel
                       </v-btn>

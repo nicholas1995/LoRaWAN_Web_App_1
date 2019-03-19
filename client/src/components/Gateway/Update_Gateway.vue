@@ -6,7 +6,7 @@
           <v-toolbar light class="primary ">
             <v-toolbar-title>Update Gateway</v-toolbar-title>
           </v-toolbar>
-            <v-stepper non-linear class = "elevation-5">
+            <v-stepper non-linear class = "elevation-5 form_background">
               <v-stepper-header>
                 <v-stepper-step editable step="1">Basic Information</v-stepper-step>
                 <v-divider></v-divider>
@@ -60,15 +60,15 @@
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_profile"></tool_tips_forms>
                     </v-select>
                 <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="update_gateway()">
                       Update Gateway
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/gateway`)">
                       Cancel
                     </v-btn>
@@ -131,15 +131,15 @@
                     <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_gateway_location_source"></tool_tips_forms>
                   </v-select>
                 <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="update_gateway()">
                       Update Gateway
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/gateway`)">
                       Cancel
                     </v-btn>
@@ -173,15 +173,15 @@
                       </v-text-field>
                       </v-flex>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="update_gateway()">
                       Update Gateway
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/gateway`)">
                       Cancel
                     </v-btn>

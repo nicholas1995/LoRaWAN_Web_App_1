@@ -5,19 +5,20 @@
       <v-card >
         <v-toolbar class="primary">
           <v-toolbar-title>
-            <h2>{{title}}</h2> 
+            <h3>{{title}}</h3> 
           </v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn class="primary" flat @click="help_dialog = !help_dialog">
+            <v-btn class="button black--text" flat @click="help_dialog = !help_dialog">
               Close
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <device_data_help @title_emit="set_title($event)" v-if="$router.currentRoute.path=='/device_data'"></device_data_help>
+        <gateway_stats_help @title_emit="set_title($event)" v-if="$router.currentRoute.path=='/gateway_statistics'"></gateway_stats_help>
         <home_map_help @title_emit="set_title($event)" v-if="$router.currentRoute.path=='/'"></home_map_help>
         <interactive_map_help @title_emit="set_title($event)" v-if="$router.currentRoute.path=='/map'"></interactive_map_help>
-
+  
       </v-card>
     </v-dialog>
   </v-layout>
@@ -26,6 +27,7 @@
 
 <script>
 import device_data_help from './Device_Data_Help'
+import gateway_stats_help from './Gateway_Stats_Help'
 import home_map_help from './Home_Map_Help'
 import interactive_map_help from './Interactive_Map_Help'
 
@@ -34,6 +36,7 @@ import interactive_map_help from './Interactive_Map_Help'
 export default {
   components:{
     device_data_help,
+    gateway_stats_help,
     home_map_help,
     interactive_map_help,
   },

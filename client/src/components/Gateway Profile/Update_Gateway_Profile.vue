@@ -100,14 +100,14 @@
                 </div>
               </div>
               </v-form>
-              <div div class="text">
+              <div div class="error--text">
                 {{message}} 
               </div>
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="update_gateway_profile()">
                 Update Gateway Profile
               </v-btn>
-              <v-btn class="button"
+              <v-btn class="button black--text"
                 @click.stop="$router.push(`/gateway_profile`)">
                 Cancel
               </v-btn>

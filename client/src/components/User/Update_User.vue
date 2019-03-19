@@ -4,10 +4,10 @@
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md10>
           <v-card class=" elevation-10 ">
-            <v-toolbar light class="grey lighten-2 ">
+            <v-toolbar light class="primary">
               <v-toolbar-title>UPDATE USER</v-toolbar-title>
             </v-toolbar>
-            <v-stepper non-linear class = "elevation-5">
+            <v-stepper non-linear class = "elevation-5 form_background">
               <v-stepper-header>
                 <v-stepper-step editable step="1">Basic Information</v-stepper-step>
                 <v-divider></v-divider>
@@ -78,16 +78,16 @@
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_class"></tool_tips_forms>
                     </v-select>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click="update_user"
                       >
                       Update User
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/user`) ">
                       Cancel
                     </v-btn>
@@ -130,16 +130,16 @@
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_street"></tool_tips_forms>
                     </v-text-field>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click="update_user"
                       >
                       Update User
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/user`) ">
                       Cancel
                     </v-btn>
@@ -173,16 +173,16 @@
                       <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_user_vessels"></tool_tips_forms>
                     </v-combobox>
                   <!-- Message -->
-                    <div div class="text">
+                    <div div class="error--text">
                       {{message}}
                     </div>
                   <!-- Buttons -->
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click="update_user"
                       >
                       Update User
                     </v-btn>
-                    <v-btn class="grey lighten-2"
+                    <v-btn class="button black--text"
                       @click.stop="$router.push(`/user`) ">
                       Cancel
                     </v-btn>

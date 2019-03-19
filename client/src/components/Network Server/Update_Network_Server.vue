@@ -44,7 +44,7 @@
                 Update Network
               </v-btn>
               <v-btn class="button"
-                @click.stop="$router.push(`/network`)">
+                @click.stop="$router.push(`/network_server`)">
                 Cancel
               </v-btn>
           </v-card>
@@ -132,7 +132,7 @@ export default {
             break;
           }if(i == (this.networks.length -1)){
             if(confirm('Invalid Network ID') == true){
-              this.$router.push(`/network`)
+              this.$router.push(`/network_server`)
             }
           }
         }

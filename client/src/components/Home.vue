@@ -140,7 +140,7 @@ export default {
       this.bounds = new google.maps.LatLngBounds();
       const element = document.getElementById(this.map_name)
       this.map = new google.maps.Map(element, {
-        zoom: 11,
+        zoom: 9,
         center: new google.maps.LatLng(this.map_center.latitude, this.map_center.longitude),
         mapTypeId: google.maps.MapTypeId.HYBRID
       });
@@ -247,9 +247,9 @@ export default {
                       <b>Organization Name</b>: ${data.network_name}<br>
                       <b>Application Name</b>: ${data.sub_network_name}<br>
                       
-                      <b>Temperature:</b>${data.temperature} <br>
-                      <b>Humidity:</b>${data.humidity} <br>
-                      <b>Accelerometer:</b>${data.accelerometer} <br>
+                      <b>Temperature:</b>${data.temperature} °C<br>
+                      <b>Humidity:</b>${data.humidity} g/m3<br>
+                      <b>Accelerometer:</b>${data.accelerometer} g<br>
                       <b>GPS Latitude:</b> ${data.gps_latitude}<br>
                       <b>GPS Longitude:</b> ${data.gps_longitude}<br>
                       <button class="button button2" id="back_button"><h2><<</h2></button>.${this.i + 1}..of..${this.length}.

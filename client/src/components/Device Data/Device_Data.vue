@@ -64,7 +64,7 @@
         @number_of_records = number_of_records_analyst_filter_record_function($event)
       ></analyst_filter_records_picker>
     </div>
-    <v-toolbar class="elevation-1" color="grey lighten-3">
+    <v-toolbar class="elevation-1" color="primary">
       <v-toolbar-title>Device Uplink</v-toolbar-title>
       <v-divider
         class="mx-2"
@@ -75,7 +75,7 @@
       <v-toolbar-items >
         <v-menu :nudge-width="100">
           <v-toolbar-title slot="activator">
-            <v-btn flat class ="grey lighten-3" v-on:click="export_device_data" >Export Device Uplink Data</v-btn>
+            <v-btn flat class ="button black--text" v-on:click="export_device_data" >Export Device Uplink Data</v-btn>
           </v-toolbar-title>
           <v-list>
             <v-list-tile
@@ -87,7 +87,7 @@
             </v-list-tile>
           </v-list>
         </v-menu>
-        <v-btn flat class ="grey lighten-3" v-on:click="generate_function(0)">Generate Filtered Device Uplink Data</v-btn>
+        <v-btn flat class ="button black--text" v-on:click="generate_function(0)">Generate Filtered Device Uplink Data</v-btn>
       </v-toolbar-items>
     </v-toolbar>
       <v-data-table

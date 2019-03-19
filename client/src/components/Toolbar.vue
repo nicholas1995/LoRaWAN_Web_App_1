@@ -24,7 +24,7 @@
         <span>Help</span>
       </v-tooltip>
 
-      <v-btn class="primary" @click="login" flat v-if="this.$store.state.loginState">
+      <v-btn class="button black--text" @click="login" flat v-if="this.$store.state.loginState">
         Login
       </v-btn>
       <v-menu :nudge-width="100">
@@ -44,7 +44,7 @@
           </v-list-tile>
         </v-list>
       </v-menu>
-      <v-btn class="primary"  @click="logout" flat v-if="!this.$store.state.loginState">
+      <v-btn class="button black--text"  @click="logout" flat v-if="!this.$store.state.loginState">
         Logout
       </v-btn>
     </v-toolbar-items>

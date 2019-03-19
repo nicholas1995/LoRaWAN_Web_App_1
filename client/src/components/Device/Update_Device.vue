@@ -8,7 +8,7 @@
               <v-toolbar-title>Update Device</v-toolbar-title>
             </v-toolbar>
           </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
+          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
             <!--Device Name -->
             <v-flex >
               <v-text-field
@@ -70,15 +70,15 @@
                   label="Skip Frame Counter"
                 ></v-checkbox>
               <!-- Message -->
-              <div div class="text">
+              <div div class="error--text">
                 {{message}}
               </div>
               <!-- Buttons -->
-              <v-btn class="grey lighten-2"
+              <v-btn class="button black--text"
                 @click.stop="update_device()">
                 Update Device
               </v-btn>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button black--text"
                 @click.stop="$router.push(`/device`)">
                 Cancel
               </v-btn>

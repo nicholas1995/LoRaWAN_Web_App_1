@@ -27,7 +27,7 @@
         <date_time_picker v-bind:type_prop = 1 @date= end_date_function($event) @time= end_time_function($event)></date_time_picker>
       </v-flex>
     </v-layout>
-    <v-toolbar class="elevation-1" color="grey lighten-3">
+    <v-toolbar class="elevation-1 primary">
       <v-toolbar-title>Gateway Statistics</v-toolbar-title>
       <v-divider
         class="mx-2"
@@ -38,7 +38,7 @@
       <v-toolbar-items >
         <v-menu :nudge-width="100">
           <v-toolbar-title slot="activator">
-            <v-btn flat class ="grey lighten-3" v-on:click="export_gateway_statistics" >Export Gateway Stats</v-btn>
+            <v-btn flat class ="button black--text" v-on:click="export_gateway_statistics" >Export Gateway Stats</v-btn>
           </v-toolbar-title>
           <v-list>
             <v-list-tile
@@ -50,7 +50,7 @@
             </v-list-tile>
           </v-list>
         </v-menu>
-        <v-btn flat class ="grey lighten-3" v-on:click="generate_function()">Generate Filtered Gateway Stats</v-btn>
+        <v-btn flat class ="button black--text" v-on:click="generate_function()">Generate Filtered Gateway Stats</v-btn>
       </v-toolbar-items>
     </v-toolbar>
       <v-data-table

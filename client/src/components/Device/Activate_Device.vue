@@ -8,7 +8,7 @@
               <v-toolbar-title>Device Activation</v-toolbar-title>
             </v-toolbar>
           </v-card>
-          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 grey lighten-5" >
+          <v-card class=" elevation-5 pl-4 pr-4 pt-2 pb-2 form_background" >
             <v-form>
               <!--Device Address -->
               <v-flex >
@@ -56,10 +56,10 @@
                 <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_n_f_cnt_down"></tool_tips_forms>
               </v-text-field>
               </v-form>
-              <div div class="text">
+              <div div class="error--text">
                 {{message}} 
               </div>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button black--text"
                 @click.stop="activate_device()">
                 <div v-if="this.dev_addr ==''">
                   Activate Device
@@ -68,7 +68,7 @@
                   Re-Activate Device
                 </div>
               </v-btn>
-              <v-btn class="grey lighten-2"
+              <v-btn class="button black--text"
                 @click.stop="$router.push(`/device`)">
                 Cancel
               </v-btn>
