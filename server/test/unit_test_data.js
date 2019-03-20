@@ -29,7 +29,7 @@ let DUR = {
     "device_id": 2 
 }
 
-let dur = {"applicationID":"156","applicationName":"Marine_IoT","deviceName":"Device_2","devEUI":"2222222222222222","rxInfo":[{"gatewayID":"2222222222222222","name":"Gateway_1","time":"2019-03-07T20:43:02Z","rssi":3,"loRaSNR":0.8193636,"location":{"latitude":10.248639,"longitude":10.248639,"altitude":0}}],"txInfo":{"frequency":0,"dr":4},"adr":false,"fCnt":0,"fPort":1,"data":"BGYAA2cKAAGIAaKx9pYIAANi","object":{"humiditySensor":{"1":30},"accelerometerSensor":{"1":25.67},"temperatureSensor":{"3":28.85},"gpsLocation":{"1":{"latitude":"12.088338683329036","longitude":"-61.83998107910156","altitude":8.66}}},"vessel_id":3,"device_id":2}
+let device_uplink_record = {"applicationID":"156","applicationName":"Marine_IoT","deviceName":"Device_2","devEUI":"2222222222222222","rxInfo":[{"gatewayID":"2222222222222222","name":"Gateway_1","time":"2019-03-07T20:43:02Z","rssi":3,"loRaSNR":0.8193636,"location":{"latitude":10.248639,"longitude":10.248639,"altitude":0}}],"txInfo":{"frequency":0,"dr":4},"adr":false,"fCnt":0,"fPort":1,"data":"BGYAA2cKAAGIAaKx9pYIAANi","object":{"humiditySensor":{"1":30},"accelerometerSensor":{"1":25.67},"temperatureSensor":{"3":28.85},"gpsLocation":{"1":{"latitude":"12.088338683329036","longitude":"-61.83998107910156","altitude":8.66}}},"vessel_id":3,"device_id":2}
 let GSR = {
     "timestamp": "2019-02-08T00:00:00Z",
     "rxPacketsReceived": 5, 
@@ -37,6 +37,7 @@ let GSR = {
     "txPacketsReceived": 5, 
     "txPacketsEmitted": 5
 }
+let gateway_statistic_record = {"timestamp":"2019-02-8T00:00:00Z","rxPacketsReceived":5,"rxPacketsReceivedOk":5,"txPacketsReceived":5,"txPacketsEmitted":5}
 let date_1 = "2019-03-08T02:11:15Z"
 let date_2 = "2019-11-08T22:11:15Z"
 
