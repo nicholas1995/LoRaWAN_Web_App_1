@@ -18,51 +18,170 @@ function add_data_skip_line(data){
     });
 }
 
-// //-----------------------------------------------------USERS--------------------------------------------------------------
-// //------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------USERS--------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
 // describe('API AUTHORIZATION', function () {
-//     it("Should send Unauthorized(No token)", integration({
+//     it("Should return all the information about the speciifed user",integration({ //Test 1
+//         //--Unauthorized test.... no token sent in request
+//         app,
+//         before() {
+//             console.log("----------User API Integrations Tests--------")
+//             skip_line("let users_1 = ");
+//         },
+//         req: {
+//           method: "GET",
+//           url: "/api/users/65",
+//           headers: {//Software Admin Token
+//             Authorization:
+//               "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//           }
+//         },
+//         res: {
+//           status: 200
+//         },
+//         after(res) {
+//           add_data_skip_line(res.res.data);
+//         }
+//     }));
+//     it("Should return all users", integration({ //Test 2
+//         //--Unauthorized test.... no token sent in request
+//         app,
+//         before() {
+//             skip_line("let users_2 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/users",
+//             headers: {//Software Admin Token
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     }));
+//     it("Should create the speciifed user account", integration({ //Test 3
 //         //--Unauthorized test.... no token sent in request
 //         app,
 //         req: {
-//             method: "GET",
-//             url: "/users",
-//         },
-//         res: {
-//             status: 401
-//         }
-//     }));
-//     it("Should send Unauthorized(Incorrect token)", integration({
-//         //--Unauthorized test.... incorrect token sent in request
-//         app,
-//         req: {
-//             method: "GET",
-//             url: "/users",
-//             headers: {
+//             method: "POST",
+//             url: "/api/users",
+//             headers: {//Software Admin Token
 //                 Authorization:
-//                     "bearer 5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0NzAxNDg3MH0.QveJexEQq7PV4gt90Ymh-g3O3bdUh3P7Y4WcBMvqjmw"
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//             },
+//             data: {
+//                 user: {
+//                     first_name: 'Nicholas',
+//                     last_name: 'Mitchell',
+//                     user_country: 'Trinidad & Tobago',
+//                     user_city: 'San Fernando',
+//                     user_district: 'La Romain',
+//                     user_street: '#18 Sunset Ridge ',
+//                     home_phone: '8686977772',
+//                     mobile_phone: '8683229648',
+//                     email: 'nicholas.mitchell@my.uwi.edu',
+//                     user_class: 'Fisher',
+//                     vessels: [2, 3]
+//                 }
 //             }
 //         },
 //         res: {
-//             status: 401
+//             status: 200
 //         }
 //     }));
-//     it("Should send Unauthorized(Expired token)", integration({
-//         //--Unauthorized test.... expired token sent in request
+//     it("Should update the speciifed user account", integration({ //Test 4
+//         //--Unauthorized test.... no token sent in request
 //         app,
 //         req: {
-//             method: "GET",
-//             url: "/users",
-//             headers: {
+//             method: "PUT",
+//             url: "/api/users/74",
+//             headers: {//Software Admin Token
 //                 Authorization:
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU0MDAxMDg3MH0.X9DNwN2J0J--rBLBns1rLO5svswQZt24k17G_-Cjzj8"
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//             },
+//             data: {
+//                 user: {
+//                     first_name: 'Bobby',
+//                     last_name: 'Brown',
+//                     user_country: 'USA',
+//                     user_city: 'Town',
+//                     user_district: 'Lane',
+//                     user_street: '#18 Sunset Ridge ',
+//                     home_phone: '8683229648',
+//                     mobile_phone: '8683229648',
+//                     user_class: 'Software Admin',
+//                     vessels: { added: [], deleted: [] }
+//                 }
 //             }
 //         },
 //         res: {
-//             status: 401
+//             status: 200
+//         }
+//     }));
+//     it("Should return all the information about the speciifed user", integration({ //Test 5
+//         //--Unauthorized test.... no token sent in request
+//         app,
+//         before() {
+//             skip_line("let users_3 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/users/74",
+//             headers: {//Software Admin Token
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     }));
+//     it("Should delete the speciifed user", integration({ //Test 6
+//         //--Unauthorized test.... no token sent in request
+//         app,
+//         req: {
+//             method: "DELETE",
+//             url: "/api/users/74",
+//             headers: {//Software Admin Token
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         }
+//     }));
+//     it("Should return all users", integration({ //Test 7
+//         //--Unauthorized test.... no token sent in request
+//         app,
+//         before() {
+//             skip_line("let users_4 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/users",
+//             headers: {//Software Admin Token
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
 //         }
 //     }));
 // });
+
 //-----------------------------------------------------Organization-----------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 // describe('Organization API', function () {
@@ -1025,246 +1144,246 @@ function add_data_skip_line(data){
 
 //-----------------------------------------------------GATEWAYS-----------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
-describe('GATEWAY API', function () {
-    it("Should return the initial gateway information for the Map", integration({ //Test 1
-        app,
-        before() {
-            console.log("--------Gateway API Integration Tests--------")
-            skip_line("let gateways_1 = ");
-        },
-        req: {
-            method: "GET",
-            url: "/api/gateways/map",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }
-        },
-        res: {
-            status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-    })); 
-    it("Should return the most recent gateway information for specified gateway", integration({ //Test 2
-        app,
-        before() {
-            skip_line("let gateways_2 = ");
-        },
-        req: {
-            method: "GET",
-            url: "/api/gateways/map/refresh/1/2222222222222222",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }
-        },
-        res: {
-            status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-    })); 
-    it("Should return all the gateways in the database", integration({ //Test 3
-        app,
-        before() {
-            skip_line("let gateways_3 = ");
-        },
-        req: {
-            method: "GET",
-            url: "/api/gateways/database",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }
-        },
-        res: {
-            status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-    })); 
-    it("Should return the specified gateways", integration({ //Test 4
-        app,
-        before() {
-            skip_line("let gateways_4 = ");
-        },
-        req: {
-          method: "GET",
-          url: "/api/gateways/2222222222222222",
-          headers: {
-            Authorization:
-              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-          }
-        },
-        res: {
-          status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-      })); 
-    it("Should return all the gateways", integration({ //Test 5
-        app,
-        before() {
-            skip_line("let gateways_5 = ");
-        },
-        req: {
-          method: "GET",
-          url: "/api/gateways",
-          headers: {
-            Authorization:
-              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-          }
-        },
-        res: {
-          status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-      })); 
-    it("Should create the gateway", integration({ //Test 6
-        app,
-        req: {
-            method: "POST",
-            url: "/api/gateways",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }, data: {
-                gateway: {
-                    gateway_name: "Integration-Test-Gateway_Create",
-                    gateway_id_lora: "7777777777777777",
-                    gateway_description: "ITG Create Gateway",
-                    network_id: 342,
-                    network_server_id: 8,
-                    gateway_profile_id: "0c2a8804-406e-4e30-b4d9-6313ac0147db",
-                    gateway_accuracy: '2',
-                    gateway_altitude: "0",
-                    gateway_latitude: "5",
-                    gateway_longitude: "4",
-                    gateway_location_source: "UNKNOWN",
-                    discovery_enabled: false,
-                    fine_time_stamp_key: "45364364356345634563456454444444",
-                    fpga_id: "4363564564564564"
-                }
-            }
-        },
-        res: {
-            status: 201
-        }
-    })); 
-    it("Should update the specified gateway", integration({ //Test 7
-        app,
-        req: {
-            method: "PUT",
-            url: "/api/gateways/17",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }, data: {
-                gateway: {
-                    gateway_name: "Integration-Test-Gateway_Update",
-                    gateway_id: 17,
-                    gateway_id_lora: "7777777777777777",
-                    gateway_description: "ITG Update Gateway",
-                    network_id: 342,
-                    network_server_id: 8,
-                    gateway_profile_id: "0c2a8804-406e-4e30-b4d9-6313ac0147db",
-                    gateway_accuracy: '2',
-                    gateway_altitude: "0",
-                    gateway_latitude: "5",
-                    gateway_longitude: "4",
-                    gateway_location_source: "UNKNOWN",
-                    discovery_enabled: false,
-                    fine_time_stamp_key: "45364364356345634563456454444444",
-                    fpga_id: "4363564564564564"
-                }
-            }
-        },
-        res: {
-            status: 201
-        }
-    })); 
-    it("Should return the specified gateways", integration({ //Test 8
-        app,
-        before() {
-            skip_line("let gateways_6 = ");
-        },
-        req: {
-            method: "GET",
-            url: "/api/gateways/7777777777777777",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }
-        },
-        res: {
-            status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-    })); 
-    it("Should delete the specified gateway", integration({ //Test 9
-        app, 
-        req: {
-          method: "DELETE",
-          url: "/api/gateways/7777777777777777",
-          headers: {
-            Authorization:
-              "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-          }
-        },
-        res: {
-          status: 200
-        }
-      }));  
-    it("Should return all the gateways", integration({ //Test 10
-        app,
-        before() {
-            skip_line("let gateways_7 = ");
-        },
-        req: {
-            method: "GET",
-            url: "/api/gateways",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }
-        },
-        res: {
-            status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-    })); 
-    it("Should return all the gateways in the database", integration({ //Test 11
-        app,
-        before() {
-            skip_line("let gateways_8 = ");
-        },
-        req: {
-            method: "GET",
-            url: "/api/gateways/database",
-            headers: {
-                Authorization:
-                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-            }
-        },
-        res: {
-            status: 200
-        },
-        after(res) {
-            add_data_skip_line(res.res.data);
-        }
-    })); 
-});
+// describe('GATEWAY API', function () {
+//     it("Should return the initial gateway information for the Map", integration({ //Test 1
+//         app,
+//         before() {
+//             console.log("--------Gateway API Integration Tests--------")
+//             skip_line("let gateways_1 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/gateways/map",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     })); 
+//     it("Should return the most recent gateway information for specified gateway", integration({ //Test 2
+//         app,
+//         before() {
+//             skip_line("let gateways_2 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/gateways/map/refresh/1/2222222222222222",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     })); 
+//     it("Should return all the gateways in the database", integration({ //Test 3
+//         app,
+//         before() {
+//             skip_line("let gateways_3 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/gateways/database",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     })); 
+//     it("Should return the specified gateways", integration({ //Test 4
+//         app,
+//         before() {
+//             skip_line("let gateways_4 = ");
+//         },
+//         req: {
+//           method: "GET",
+//           url: "/api/gateways/2222222222222222",
+//           headers: {
+//             Authorization:
+//               "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//           }
+//         },
+//         res: {
+//           status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//       })); 
+//     it("Should return all the gateways", integration({ //Test 5
+//         app,
+//         before() {
+//             skip_line("let gateways_5 = ");
+//         },
+//         req: {
+//           method: "GET",
+//           url: "/api/gateways",
+//           headers: {
+//             Authorization:
+//               "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//           }
+//         },
+//         res: {
+//           status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//       })); 
+//     it("Should create the gateway", integration({ //Test 6
+//         app,
+//         req: {
+//             method: "POST",
+//             url: "/api/gateways",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }, data: {
+//                 gateway: {
+//                     gateway_name: "Integration-Test-Gateway_Create",
+//                     gateway_id_lora: "7777777777777777",
+//                     gateway_description: "ITG Create Gateway",
+//                     network_id: 342,
+//                     network_server_id: 8,
+//                     gateway_profile_id: "0c2a8804-406e-4e30-b4d9-6313ac0147db",
+//                     gateway_accuracy: '2',
+//                     gateway_altitude: "0",
+//                     gateway_latitude: "5",
+//                     gateway_longitude: "4",
+//                     gateway_location_source: "UNKNOWN",
+//                     discovery_enabled: false,
+//                     fine_time_stamp_key: "45364364356345634563456454444444",
+//                     fpga_id: "4363564564564564"
+//                 }
+//             }
+//         },
+//         res: {
+//             status: 201
+//         }
+//     })); 
+//     it("Should update the specified gateway", integration({ //Test 7
+//         app,
+//         req: {
+//             method: "PUT",
+//             url: "/api/gateways/17",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }, data: {
+//                 gateway: {
+//                     gateway_name: "Integration-Test-Gateway_Update",
+//                     gateway_id: 17,
+//                     gateway_id_lora: "7777777777777777",
+//                     gateway_description: "ITG Update Gateway",
+//                     network_id: 342,
+//                     network_server_id: 8,
+//                     gateway_profile_id: "0c2a8804-406e-4e30-b4d9-6313ac0147db",
+//                     gateway_accuracy: '2',
+//                     gateway_altitude: "0",
+//                     gateway_latitude: "5",
+//                     gateway_longitude: "4",
+//                     gateway_location_source: "UNKNOWN",
+//                     discovery_enabled: false,
+//                     fine_time_stamp_key: "45364364356345634563456454444444",
+//                     fpga_id: "4363564564564564"
+//                 }
+//             }
+//         },
+//         res: {
+//             status: 201
+//         }
+//     })); 
+//     it("Should return the specified gateways", integration({ //Test 8
+//         app,
+//         before() {
+//             skip_line("let gateways_6 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/gateways/7777777777777777",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     })); 
+//     it("Should delete the specified gateway", integration({ //Test 9
+//         app, 
+//         req: {
+//           method: "DELETE",
+//           url: "/api/gateways/7777777777777777",
+//           headers: {
+//             Authorization:
+//               "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//           }
+//         },
+//         res: {
+//           status: 200
+//         }
+//       }));  
+//     it("Should return all the gateways", integration({ //Test 10
+//         app,
+//         before() {
+//             skip_line("let gateways_7 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/gateways",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     })); 
+//     it("Should return all the gateways in the database", integration({ //Test 11
+//         app,
+//         before() {
+//             skip_line("let gateways_8 = ");
+//         },
+//         req: {
+//             method: "GET",
+//             url: "/api/gateways/database",
+//             headers: {
+//                 Authorization:
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+//             }
+//         },
+//         res: {
+//             status: 200
+//         },
+//         after(res) {
+//             add_data_skip_line(res.res.data);
+//         }
+//     })); 
+// });
 // //-----------------------------------------------------NETWORK SERVERS----------------------------------------------------
 // //------------------------------------------------------------------------------------------------------------------------
 // describe('NETWORK SERVER API', function () {
