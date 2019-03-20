@@ -196,7 +196,6 @@ export default {
           this.$emit('message_display',{message:result.data.message, type:result.data.type})  
           this.$router.push(`/network`) 
       }).catch(err => {
-                console.log(err)
           this.message = err.response.data.error;
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
       })

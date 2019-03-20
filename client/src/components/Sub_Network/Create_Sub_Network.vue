@@ -317,7 +317,7 @@ export default {
           service_profile_id: this.service_profile_id,
           payload_codec: this.payload_codec_form
         }).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})   
           this.$router.push(`/subnetwork`)
         }).catch(err => {
           this.message = err.response.data.error;

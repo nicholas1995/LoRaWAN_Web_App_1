@@ -322,7 +322,7 @@ mixins: [validationMixin],
           vessel_type: this.vessel_type_form,
           sub_network_id: this.sub_network_id,
         }).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
           this.$router.push(`/vessel`)
         }).catch(err => {
           this.message = err.response.data.error;
