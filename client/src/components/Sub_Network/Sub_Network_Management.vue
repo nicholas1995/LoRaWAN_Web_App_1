@@ -129,7 +129,7 @@ export default {
   },
   methods: {
     delete_sub_network(sub_network){
-      if(confirm('Are you sure you want to delete this Sub-Network?') == true){
+      if(confirm('Are you sure you want to delete this Application?') == true){
         AuthenticationService.delete_sub_networks(sub_network.sub_network_id).then(result => {
           this.sub_networks = result.data.sub_networks_lora;
           this.$emit('message_display',{message:result.data.message, type:result.data.type}) 

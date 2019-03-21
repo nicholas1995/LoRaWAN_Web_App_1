@@ -3,7 +3,8 @@ const db = require("../../db");
 module.exports = {
     get_gateway_statistics: function () {
         let sql = `SELECT *
-        FROM gateway_statistics`;
+        FROM gateway_statistics
+        ORDER BY time_stamp DESC`;
         return db.queryAsync(sql);
     },
     get_gateway_statistics_filtered: function(parameters, columns){

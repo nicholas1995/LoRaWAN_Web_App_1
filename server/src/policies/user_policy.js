@@ -5,7 +5,7 @@ module.exports = {
         let data = req.body.user;
         const schema = {
             first_name: Joi.string().required().regex(
-                new RegExp('^[a-zA-Z\-]{2,32}$')
+                new RegExp('^[a-zA-Z\-\_]{2,32}$')
             ),
             last_name: Joi.string().required().regex(
                 new RegExp('^[a-zA-Z\-]{2,32}$')

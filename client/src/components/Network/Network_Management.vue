@@ -120,7 +120,7 @@ export default {
   
   methods: {
     delete_network(network){
-      if(confirm('Are you sure you want to delete this network?') == true){
+      if(confirm('Are you sure you want to delete this Organization?') == true){
         AuthenticationService.delete_networks(network.network_id).then(result => {
           this.networks = result.data.networks_lora;
           this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 

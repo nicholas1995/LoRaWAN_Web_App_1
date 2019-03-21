@@ -3,7 +3,8 @@ const db = require("../../db");
 module.exports = {
   get_logs: function() {
     let sql = `SELECT *
-        FROM error_log`;
+        FROM error_log
+        ORDER BY error_time_stamp DESC`;
     return db.queryAsync(sql);
   },
   create_log: function (user_id, error_user_class, error_user_action, error_user_device, error_user_ip_address, error_message, error_stack) {

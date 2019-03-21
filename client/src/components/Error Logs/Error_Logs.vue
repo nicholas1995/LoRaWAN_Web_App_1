@@ -11,7 +11,6 @@
     <v-data-table
       :headers="headers"
       :items="error_logs"
-      hide-actions
       class="elevation-1"
     >
       <template slot="items" slot-scope="props">

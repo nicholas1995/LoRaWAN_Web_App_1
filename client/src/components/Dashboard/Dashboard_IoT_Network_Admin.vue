@@ -18,6 +18,7 @@ export default {
       alert('You do not have access to this page');
       this.$router.push('login');
     }
+    this.$router.push('device')
   },
   computed: {
 
