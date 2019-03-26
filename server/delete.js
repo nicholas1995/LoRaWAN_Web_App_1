@@ -432,6 +432,27 @@ client.on('connect', () => {
     setInterval(send_message, 1);
     setInterval(send_message, 1);
     setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
 
   });
   client.subscribe("gateway/#", () => {
@@ -445,6 +466,7 @@ client.on('message', async function (topic, message) {
 })
 
 function send_message(){
+  if(i< 50000){
   var now = new Date();
   data = {
     applicationID: "156",
@@ -484,7 +506,6 @@ function send_message(){
   data = Buffer.from(JSON.stringify(data));
   i = i+1;
   client.publish("application/156/device/2222222222222222/rx", data, () => {
-    console.log(i);
   });
     now = null;
    now = new Date();
@@ -526,7 +547,6 @@ function send_message(){
   data = Buffer.from(JSON.stringify(data));
   i = i + 1;
   client.publish("application/156/device/2222222222222222/rx", data, () => {
-    console.log(i);
   });
   now = null;
 
@@ -569,7 +589,6 @@ function send_message(){
   data = Buffer.from(JSON.stringify(data));
   i = i + 1;
   client.publish("application/156/device/2222222222222222/rx", data, () => {
-    console.log(i);
   });
   now = null;
 
@@ -612,7 +631,6 @@ function send_message(){
   data = Buffer.from(JSON.stringify(data));
   i = i + 1;
   client.publish("application/156/device/2222222222222222/rx", data, () => {
-    console.log(i);
   });
   now = null;
 
@@ -655,7 +673,6 @@ function send_message(){
   data = Buffer.from(JSON.stringify(data));
   i = i + 1;
   client.publish("application/156/device/2222222222222222/rx", data, () => {
-    console.log(i);
   });
   now = null;
 
@@ -698,6 +715,6 @@ function send_message(){
   data = Buffer.from(JSON.stringify(data));
   i = i + 1;
   client.publish("application/156/device/2222222222222222/rx", data, () => {
-    console.log(i);
   });
+}
 }

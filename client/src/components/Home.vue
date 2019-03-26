@@ -319,41 +319,46 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     plot_graph: function(device_uplink_sensor_data) {
-      if(this.sensor_value_to_plot != ''){
-        this.isLoading = true;
-        let sensor_array_position = this.get_sensor_array_position(this.sensor_value_to_plot);
+      try{
+        if(this.sensor_value_to_plot != ''){
+          this.isLoading = true;
+          let sensor_array_position = this.get_sensor_array_position(this.sensor_value_to_plot);
 
-        this.chart.clearChart(); 
-        var data = new google.visualization.DataTable();
-        data.addColumn('datetime', 'Date');
-        data.addColumn('number', this.sensor_value_to_plot);
-        let sensor_data = this.generate_graph_data(device_uplink_sensor_data, sensor_array_position);
-        data.addRows(sensor_data);
-        var options = {
-          title: this.sensor_value_graph_info[sensor_array_position].graph_title,
-          hAxis: {
-            title: 'Time'
-          },
-          vAxis: {
-            title: this.sensor_value_graph_info[sensor_array_position].v_axis
-          },
-          series: {
-            1: {curveType: 'function'}
-          },
-          pointSize: 5, //Sets the size of the point on the graph
-          explorer: {
-             maxZoomIn: .001,
-             keepInBounds: true,
-             zoomDelta: 0.9,
-             axis: 'horizontal',
-          },
-          lineDashStyle: [4,1],
-          curveType: 'function',
-          //legend: { position: 'top' }
-        };
-        this.chart.draw(data, options);
-        this.isLoading = false;
+          this.chart.clearChart(); 
+          var data = new google.visualization.DataTable();
+          data.addColumn('datetime', 'Date');
+          data.addColumn('number', this.sensor_value_to_plot);
+          let sensor_data = this.generate_graph_data(device_uplink_sensor_data, sensor_array_position);
+          data.addRows(sensor_data);
+          var options = {
+            title: this.sensor_value_graph_info[sensor_array_position].graph_title,
+            hAxis: {
+              title: 'Time'
+            },
+            vAxis: {
+              title: this.sensor_value_graph_info[sensor_array_position].v_axis
+            },
+            series: {
+              1: {curveType: 'function'}
+            },
+            pointSize: 5, //Sets the size of the point on the graph
+            explorer: {
+              maxZoomIn: .001,
+              keepInBounds: true,
+              zoomDelta: 0.9,
+              axis: 'horizontal',
+            },
+            lineDashStyle: [4,1],
+            curveType: 'function',
+            //legend: { position: 'top' }
+          };
+          this.chart.draw(data, options);
+          this.isLoading = false;
+        }
+      }catch(err){
+        console.log(err)
       }
+
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     generate_graph_data: function(device_uplink_sensor_data, sensor_array_position){

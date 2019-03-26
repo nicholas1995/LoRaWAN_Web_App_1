@@ -536,7 +536,7 @@ module.exports = {
             let headers;
             let sql_where = [];
             let where = '';
-            let sql = `SELECT * FROM device_uplink `;
+            let sql = `SELECT device_uplink_id, device_id, vessel_id, time_stamp, device_eui, device_name, gps_latitude, gps_longitude, gps_altitude, temperature, humidity, accelerometer, sos FROM device_uplink `;
             let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
                 .catch(err => {
                     //Error fetching vessels for user

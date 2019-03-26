@@ -547,11 +547,11 @@ mixins: [validationMixin],
           user_class: this.user_class_selected,
           vessels: this.vessel_ids
         }).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})  
           this.$router.push(`/user`) 
         }).catch(err => {
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
         }) 
         this.vessel_ids = [];
       }

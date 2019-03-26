@@ -27,7 +27,7 @@
                   :error-messages = "new_password_confirm_errors" 
                 ></v-text-field>
               </div>
-              <div class="text">
+              <div class="error--text">
               {{message}}
               </div>
               <v-btn class="button black--text"

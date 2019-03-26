@@ -170,7 +170,7 @@ module.exports = {
       };  
       res.status(200).send({message: 'User created.', type: 'success' });
     }catch(err){
-      console.log(err);
+      res.status(500).send({ message: "Error creating user account", type: "error" });
     }  
   },
   resend_activate_account_request : async function(req, res, token_old, user_information){

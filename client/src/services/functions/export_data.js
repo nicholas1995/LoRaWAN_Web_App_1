@@ -1,4 +1,4 @@
-function convertArrayOfObjectsToCSV(args) {
+function convertArrayOfObjectsToCSV(args) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
     var result, ctr, keys, columnDelimiter, lineDelimiter, data;
     data = args.data || null;
     if (data == null || !data.length) {
@@ -23,7 +23,7 @@ function convertArrayOfObjectsToCSV(args) {
     return result;
   }
 exports = {
-    download_csv: function(args, download_data) {
+  download_csv: function (args, download_data) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
         var data, filename, link;
         var csv = convertArrayOfObjectsToCSV({
           data: download_data

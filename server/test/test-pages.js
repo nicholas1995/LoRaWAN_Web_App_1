@@ -21,108 +21,108 @@ function add_data_skip_line(data){
 //-----------------------------------------------------USERS--------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------------------
 // describe('API AUTHORIZATION', function () {
-//     it("Should return all the information about the speciifed user",integration({ //Test 1
-//         //--Unauthorized test.... no token sent in request
-//         app,
-//         before() {
-//             console.log("----------User API Integrations Tests--------")
-//             skip_line("let users_1 = ");
-//         },
-//         req: {
-//           method: "GET",
-//           url: "/api/users/65",
-//           headers: {//Software Admin Token
-//             Authorization:
-//               "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
-//           }
-//         },
-//         res: {
-//           status: 200
-//         },
-//         after(res) {
-//           add_data_skip_line(res.res.data);
-//         }
-//     }));
-//     it("Should return all users", integration({ //Test 2
-//         //--Unauthorized test.... no token sent in request
-//         app,
-//         before() {
-//             skip_line("let users_2 = ");
-//         },
-//         req: {
-//             method: "GET",
-//             url: "/api/users",
-//             headers: {//Software Admin Token
-//                 Authorization:
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
-//             }
-//         },
-//         res: {
-//             status: 200
-//         },
-//         after(res) {
-//             add_data_skip_line(res.res.data);
-//         }
-//     }));
-//     it("Should create the speciifed user account", integration({ //Test 3
-//         //--Unauthorized test.... no token sent in request
-//         app,
-//         req: {
-//             method: "POST",
-//             url: "/api/users",
-//             headers: {//Software Admin Token
-//                 Authorization:
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
-//             },
-//             data: {
-//                 user: {
-//                     first_name: 'Nicholas',
-//                     last_name: 'Mitchell',
-//                     user_country: 'Trinidad & Tobago',
-//                     user_city: 'San Fernando',
-//                     user_district: 'La Romain',
-//                     user_street: '#18 Sunset Ridge ',
-//                     home_phone: '8686977772',
-//                     mobile_phone: '8683229648',
-//                     email: 'nicholas.mitchell@my.uwi.edu',
-//                     user_class: 'Fisher',
-//                     vessels: [2, 3]
-//                 }
-//             }
-//         },
-//         res: {
-//             status: 200
-//         }
-//     }));
-//     it("Should update the speciifed user account", integration({ //Test 4
-//         //--Unauthorized test.... no token sent in request
-//         app,
-//         req: {
-//             method: "PUT",
-//             url: "/api/users/74",
-//             headers: {//Software Admin Token
-//                 Authorization:
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
-//             },
-//             data: {
-//                 user: {
-//                     first_name: 'Bobby',
-//                     last_name: 'Brown',
-//                     user_country: 'USA',
-//                     user_city: 'Town',
-//                     user_district: 'Lane',
-//                     user_street: '#18 Sunset Ridge ',
-//                     home_phone: '8683229648',
-//                     mobile_phone: '8683229648',
-//                     user_class: 'Software Admin',
-//                     vessels: { added: [], deleted: [] }
-//                 }
-//             }
-//         },
-//         res: {
-//             status: 200
-//         }
-//     }));
+    // it("Should return all the information about the speciifed user",integration({ //Test 1
+    //     //--Unauthorized test.... no token sent in request
+    //     app,
+    //     before() {
+    //         console.log("----------User API Integrations Tests--------")
+    //         skip_line("let users_1 = ");
+    //     },
+    //     req: {
+    //       method: "GET",
+    //       url: "/api/users/24",
+    //       headers: {//Software Admin Token
+    //         Authorization:
+    //               "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTM2MTY2NDUsImV4cCI6MTU1MzkxOTA0NX0.0p4dBVAxUtm3j5M4SdYwGRutKYukzZCkpiz1IdigE5w"
+    //       }
+    //     },
+    //     res: {
+    //       status: 200
+    //     },
+    //     after(res) {
+    //       add_data_skip_line(res.res.data);
+    //     }
+    // }));
+    // it("Should return all users", integration({ //Test 2
+    //     //--Unauthorized test.... no token sent in request
+    //     app,
+    //     before() {
+    //         skip_line("let users_2 = ");
+    //     },
+    //     req: {
+    //         method: "GET",
+    //         url: "/api/users",
+    //         headers: {//Software Admin Token
+    //             Authorization:
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTM2MTY2NDUsImV4cCI6MTU1MzkxOTA0NX0.0p4dBVAxUtm3j5M4SdYwGRutKYukzZCkpiz1IdigE5w"
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     },
+    //     after(res) {
+    //         add_data_skip_line(res.res.data);
+    //     }
+    // }));
+    // it("Should create the speciifed user account", integration({ //Test 3
+    //     //--Unauthorized test.... no token sent in request
+    //     app,
+    //     req: {
+    //         method: "POST",
+    //         url: "/api/users",
+    //         headers: {//Software Admin Token
+    //             Authorization:
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTM2MTY2NDUsImV4cCI6MTU1MzkxOTA0NX0.0p4dBVAxUtm3j5M4SdYwGRutKYukzZCkpiz1IdigE5w"
+    //         },
+    //         data: {
+    //             user: {
+    //                 first_name: 'Nicholas',
+    //                 last_name: 'Mitchell',
+    //                 user_country: 'Trinidad & Tobago',
+    //                 user_city: 'San Fernando',
+    //                 user_district: 'La Romain',
+    //                 user_street: '#18 Sunset Ridge ',
+    //                 home_phone: '8686977772',
+    //                 mobile_phone: '8683229648',
+    //                 email: 'nicholas.mitchell@my.uwi.edu',
+    //                 user_class: 'Fisher',
+    //                 vessels: [2, 3]
+    //             }
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     }
+    // }));
+    // it("Should update the speciifed user account", integration({ //Test 4
+    //     //--Unauthorized test.... no token sent in request
+    //     app,
+    //     req: {
+    //         method: "PUT",
+    //         url: "/api/users/27",
+    //         headers: {//Software Admin Token
+    //             Authorization:
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTM2MTY2NDUsImV4cCI6MTU1MzkxOTA0NX0.0p4dBVAxUtm3j5M4SdYwGRutKYukzZCkpiz1IdigE5w"
+    //         },
+    //         data: {
+    //             user: {
+    //                 first_name: 'Bobby',
+    //                 last_name: 'Brown',
+    //                 user_country: 'USA',
+    //                 user_city: 'Town',
+    //                 user_district: 'Lane',
+    //                 user_street: '#18 Sunset Ridge ',
+    //                 home_phone: '8683229648',
+    //                 mobile_phone: '8683229648',
+    //                 user_class: 'Software Admin',
+    //                 vessels: { added: [], deleted: [3] }
+    //             }
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     }
+    // }));
 //     it("Should return all the information about the speciifed user", integration({ //Test 5
 //         //--Unauthorized test.... no token sent in request
 //         app,
@@ -131,10 +131,10 @@ function add_data_skip_line(data){
 //         },
 //         req: {
 //             method: "GET",
-//             url: "/api/users/74",
+//             url: "/api/users/27",
 //             headers: {//Software Admin Token
 //                 Authorization:
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTM2MTY2NDUsImV4cCI6MTU1MzkxOTA0NX0.0p4dBVAxUtm3j5M4SdYwGRutKYukzZCkpiz1IdigE5w"
 //             }
 //         },
 //         res: {
@@ -149,10 +149,10 @@ function add_data_skip_line(data){
 //         app,
 //         req: {
 //             method: "DELETE",
-//             url: "/api/users/74",
+//             url: "/api/users/27",
 //             headers: {//Software Admin Token
 //                 Authorization:
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTM2MTY2NDUsImV4cCI6MTU1MzkxOTA0NX0.0p4dBVAxUtm3j5M4SdYwGRutKYukzZCkpiz1IdigE5w"
 //             }
 //         },
 //         res: {
@@ -170,7 +170,7 @@ function add_data_skip_line(data){
 //             url: "/api/users",
 //             headers: {//Software Admin Token
 //                 Authorization:
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTMwMzQxMjQsImV4cCI6MTU1MzA3NzMyNH0.3-XhEj5zg6he-ye8UPNOlJJIkos0GZeBHV5bmrwybTw"
+//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTM2MTY2NDUsImV4cCI6MTU1MzkxOTA0NX0.0p4dBVAxUtm3j5M4SdYwGRutKYukzZCkpiz1IdigE5w"
 //             }
 //         },
 //         res: {
@@ -1914,223 +1914,243 @@ function add_data_skip_line(data){
 //     })); 
 // });
 
-// //-----------------------------------------------------DEVICE UPLINK------------------------------------------------------
-// //------------------------------------------------------------------------------------------------------------------------
-// describe('DEVICE UPLINK API', function () {
-//     // //Performance Test
-//     // let start_date, end_date, milli_seconds = 0;
-//     // let n = 4000
-//     // //console.log('Performance API test with ', n, 'records, (NO PAGEINATION)')
-//     // console.log('Performance API test with ', n, 'records, (PAGEINATION - 1000)')
+//-----------------------------------------------------DEVICE UPLINK------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+describe('DEVICE UPLINK API', function () {
+    // //Performance Test
+    // let start_date, end_date, milli_seconds = 0;
+    // let n = 4000
+    // //console.log('Performance API test with ', n, 'records, (NO PAGEINATION)')
+    // console.log('Performance API test with ', n, 'records, (PAGEINATION - 1000)')
 
-//     // for(let i = 0; i< 10; i++){
-//     //     it("Should return the initial set of deivce uplink data", integration({
-//     //         app,
-//     //         before(){
-//     //             start_date = new Date()
-//     //         },
-//     //         req: {
-//     //             method: "GET",
-//     //             url: "/api/devices/uplink/initial/page/1/rows_per_page/100",
-//     //             headers: {
-//     //                 Authorization:
-//     //                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-//     //             }
-//     //         },
-//     //         res: {
-//     //             status: 200
-//     //         },
-//     //         after(res) {
-//     //             end_date = new Date();
-//     //             milli_seconds = milli_seconds + end_date.getTime() - start_date.getTime();
-//     //             if (i == 9) console.log("Average: ", milli_seconds / 10, "ms");
-//     //         }
-//     //     })); 
-//     // }
-//     it("Should return the initial set of deivce uplink data",integration({ //Test 1
-//         app,
-//         before() {
-//             console.log('--------Device Uplink Data API Integration Tests--------')
-//             skip_line("let device_uplink_data_1 = ");
-//         },
-//         req: {
-//           method: "GET",
-//           url: "/api/devices/uplink/initial/page/1/rows_per_page/25",
-//           headers: {
-//             Authorization:
-//               "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
-//           }
-//         },
-//         res: {
-//           status: 200
-//         },
-//         after(res) {
-//           add_data_skip_line(res.res.data);
-//         }
-//       })
-//     ); 
-//     it("Should return the initial set of deivce uplink data for self", integration({ //Test 2
-//         app,
-//         before() {
-//             skip_line("let device_uplink_data_2 = ");
-//         },
-//         req: {
-//             method: "GET",
-//             url: "/api/devices/uplink/initial/page/1/rows_per_page/25/self",
-//             headers: {
-//                 Authorization: //This is a tempory JWT.... will expire soon
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
-//             }
-//         },
-//         res: {
-//             status: 200
-//         },
-//         after(res) {
-//             add_data_skip_line(res.res.data);
-//         }
-//     }));
-//     let parameters_1 = {
-//         network: null,
-//         page: 1,
-//         rows_per_page: 25,
-//         start_date: "2019-03-01 11:55:00",
-//         sub_network: null,
-//         device: [1],
-//         vessel: [2]
-//     }
-//     parameters_1 = JSON.stringify(parameters_1); 
-//     let columns_1 = ["Device Uplink ID", "Device ID", "Vessel ID", "Time Stamp", "GPS Longitude", "GPS Altitude", "Temperature", "Humidity", "Accelerometer", "SOS"];
-//     it("Should return the filtered set of deivce uplink data for self", integration({ //Test 3
-//         app,
-//         before() {
-//             skip_line("let device_uplink_data_3 = ");
-//         },
-//         req: {
-//             method: "GET",
-//             url: `/api/devices/uplink/parameters/${parameters_1}/columns/${columns_1}/return_all_records/0/access/false`,
-//             headers: {
-//                 Authorization: //This is a tempory JWT.... will expire soon
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
-//             }
-//         },
-//         res: {
-//             status: 200
-//         },
-//         after(res) {
-//             add_data_skip_line(res.res.data);
-//         }
-//     })); 
-//     it("Should return the filtered set of deivce uplink data", integration({ //Test 4
-//         app,
-//         before() {
-//             skip_line("let device_uplink_data_4 = ");
-//         },
-//         req: {
-//             method: "GET",
-//             url: `/api/devices/uplink/parameters/${parameters_1}/columns/${columns_1}/return_all_records/0`,
-//             headers: {
-//                 Authorization: //This is a tempory JWT.... will expire soon
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
-//             }
-//         },
-//         res: {
-//             status: 200
-//         },
-//         after(res) {
-//             add_data_skip_line(res.res.data);
-//         }
-//     })); 
-//     // it("Should return the filtered set of deivce uplink data", integration({
-//     //     app,
-//     //     req: {
-//     //         method: "GET",
-//     //         url: `/api/devices/uplink/filter_record/columns/${columns_1}`,
-//     //         headers: {
-//     //             Authorization: //This is a tempory JWT.... will expire soon
-//     //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
-//     //         }
-//     //     },
-//     //     res: {
-//     //         status: 200
-//     //     },
-//     // after(res) {
-//     //     add_data_skip_line(res.res.data);
-//     // }
-//     // })); 
-//     let parameters_2 = {
-//         device: 1,
-//         end_date: "2019-03-22 00:00:00",
-//         max_record_amt: 50,
-//         start_date: "2019-03-07 00:00:00"
-//     }
-//     parameters_2 = JSON.stringify(parameters_2); 
-//     it("Should return the historic data for the map adhereing to the parameters set", integration({ //Test 5
-//         app,
-//         before() {
-//             skip_line("let device_uplink_data_5 = ");
-//         },
-//         req: {
-//             method: "GET",
-//             url: `/api/devices/uplink/historical/parameters/${parameters_2}`,
-//             headers: {
-//                 Authorization: //This is a tempory JWT.... will expire soon
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
-//             }
-//         },
-//         res: {
-//             status: 200
-//         },
-//         after(res) {
-//             add_data_skip_line(res.res.data);
-//         }
-//     })); 
-//     it("Should return the coordinates to create the heat map", integration({ //Test 6
-//         app,
-//         before() {
-//             skip_line("let device_uplink_data_6 = ");
-//         },
-//         req: {
-//             method: "GET",
-//             url: `/api/device_coordinates`,
-//             headers: {
-//                 Authorization: //This is a tempory JWT.... will expire soon
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
-//             }
-//         },
-//         res: {
-//             status: 200
-//         },
-//         after(res) {
-//             add_data_skip_line(res.res.data);
-//         }
-//     })); 
-//     let coordinate_1 = {
-//         lat: 10.70259522788738,
-//         lng: -61.69463578300781,
-//         zoom_level: 11
-//     }
-//     coordinate_1 = JSON.stringify(coordinate_1); 
-//     it("Should return the sensor data around the coordinate", integration({ //Test 7
-//         app,
-//         before() {
-//             skip_line("let device_uplink_data_7 = ");
-//         },
-//         req: {
-//             method: "GET",
-//             url: `/api/sensor_data/coordinate/${coordinate_1}`,
-//             headers: {
-//                 Authorization: //This is a tempory JWT.... will expire soon
-//                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
-//             }
-//         },
-//         res: {
-//             status: 200
-//         },
-//         after(res) {
-//             add_data_skip_line(res.res.data);
-//         }
-//     })); 
-// });
+    // for(let i = 0; i< 10; i++){
+    //     it("Should return the initial set of deivce uplink data", integration({
+    //         app,
+    //         before(){
+    //             start_date = new Date()
+    //         },
+    //         req: {
+    //             method: "GET",
+    //             url: "/api/devices/uplink/initial/page/1/rows_per_page/100",
+    //             headers: {
+    //                 Authorization:
+    //                     "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+    //             }
+    //         },
+    //         res: {
+    //             status: 200
+    //         },
+    //         after(res) {
+    //             end_date = new Date();
+    //             milli_seconds = milli_seconds + end_date.getTime() - start_date.getTime();
+    //             if (i == 9) console.log("Average: ", milli_seconds / 10, "ms");
+    //         }
+    //     })); 
+    // }
+    // it("Should return the initial set of deivce uplink data",integration({ //Test 1
+    //     app,
+    //     before() {
+    //         console.log('--------Device Uplink Data API Integration Tests--------')
+    //         skip_line("let device_uplink_data_1 = ");
+    //     },
+    //     req: {
+    //       method: "GET",
+    //       url: "/api/devices/uplink/initial/page/1/rows_per_page/25",
+    //       headers: {
+    //         Authorization:
+    //           "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJuaWNob2xhcy5qbWl0Y2hlbGxAb3V0bG9vay5jb20iLCJ1c2VyX2NsYXNzIjoiSW9UIE5ldHdvcmsgQWRtaW4iLCJpYXQiOjE1NDY5NzE2NzAsImV4cCI6MTU5OTkxMDg3MH0.PsNvL_RTlFwcnYL-CH-sW7xt7rv9-mjiGtobLWgAS_Q"
+    //       }
+    //     },
+    //     res: {
+    //       status: 200
+    //     },
+    //     after(res) {
+    //       add_data_skip_line(res.res.data);
+    //     }
+    //   })
+    // ); 
+    // it("Should return the initial set of deivce uplink data for self", integration({ //Test 2
+    //     app,
+    //     before() {
+    //         skip_line("let device_uplink_data_2 = ");
+    //     },
+    //     req: {
+    //         method: "GET",
+    //         url: "/api/devices/uplink/initial/page/1/rows_per_page/25/self",
+    //         headers: {
+    //             Authorization: //This is a tempory JWT.... will expire soon
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     },
+    //     after(res) {
+    //         add_data_skip_line(res.res.data);
+    //     }
+    // }));
+    it("Should return the initial set of deivce uplink data for self", integration({ //Test 2.1
+        app,
+        before() {
+            skip_line("let device_uplink_data_2_1 = ");
+        },
+        req: {
+            method: "GET",
+            url: "/api/devices/uplink/initial/page/1/rows_per_page/25/self",
+            headers: {
+                Authorization: //This is a tempory JWT.... will expire soon
+                    "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywiZW1haWwiOiJzd2ltZGFyYUBob3RtYWlsLmNvbSIsInVzZXJfY2xhc3MiOiJGaXNoZXIiLCJpYXQiOjE1NTM2Mjk1MjYsImV4cCI6MTU1Mzk1MzUyNn0.GcVLma3fiTByPF6eAFFmsZQL5seQ1zbehcbLymSffH8"
+            }
+        },
+        res: {
+            status: 200
+        },
+        after(res) {
+            add_data_skip_line(res.res.data);
+        }
+    }));
+    // let parameters_1 = {
+    //     network: null,
+    //     page: 1,
+    //     rows_per_page: 25,
+    //     start_date: "2019-03-01 11:55:00",
+    //     sub_network: null,
+    //     device: [1],
+    //     vessel: [2]
+    // }
+    // parameters_1 = JSON.stringify(parameters_1); 
+    // let columns_1 = ["Device Uplink ID", "Device ID", "Vessel ID", "Time Stamp", "GPS Longitude", "GPS Altitude", "Temperature", "Humidity", "Accelerometer", "SOS"];
+    // it("Should return the filtered set of deivce uplink data for self", integration({ //Test 3
+    //     app,
+    //     before() {
+    //         skip_line("let device_uplink_data_3 = ");
+    //     },
+    //     req: {
+    //         method: "GET",
+    //         url: `/api/devices/uplink/parameters/${parameters_1}/columns/${columns_1}/return_all_records/0/access/false`,
+    //         headers: {
+    //             Authorization: //This is a tempory JWT.... will expire soon
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     },
+    //     after(res) {
+    //         add_data_skip_line(res.res.data);
+    //     }
+    // })); 
+    // it("Should return the filtered set of deivce uplink data", integration({ //Test 4
+    //     app,
+    //     before() {
+    //         skip_line("let device_uplink_data_4 = ");
+    //     },
+    //     req: {
+    //         method: "GET",
+    //         url: `/api/devices/uplink/parameters/${parameters_1}/columns/${columns_1}/return_all_records/0`,
+    //         headers: {
+    //             Authorization: //This is a tempory JWT.... will expire soon
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     },
+    //     after(res) {
+    //         add_data_skip_line(res.res.data);
+    //     }
+    // })); 
+    // // it("Should return the filtered set of deivce uplink data", integration({
+    // //     app,
+    // //     req: {
+    // //         method: "GET",
+    // //         url: `/api/devices/uplink/filter_record/columns/${columns_1}`,
+    // //         headers: {
+    // //             Authorization: //This is a tempory JWT.... will expire soon
+    // //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
+    // //         }
+    // //     },
+    // //     res: {
+    // //         status: 200
+    // //     },
+    // // after(res) {
+    // //     add_data_skip_line(res.res.data);
+    // // }
+    // // })); 
+    // let parameters_2 = {
+    //     device: 1,
+    //     end_date: "2019-03-22 00:00:00",
+    //     max_record_amt: 50,
+    //     start_date: "2019-03-07 00:00:00"
+    // }
+    // parameters_2 = JSON.stringify(parameters_2); 
+    // it("Should return the historic data for the map adhereing to the parameters set", integration({ //Test 5
+    //     app,
+    //     before() {
+    //         skip_line("let device_uplink_data_5 = ");
+    //     },
+    //     req: {
+    //         method: "GET",
+    //         url: `/api/devices/uplink/historical/parameters/${parameters_2}`,
+    //         headers: {
+    //             Authorization: //This is a tempory JWT.... will expire soon
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     },
+    //     after(res) {
+    //         add_data_skip_line(res.res.data);
+    //     }
+    // })); 
+    // it("Should return the coordinates to create the heat map", integration({ //Test 6
+    //     app,
+    //     before() {
+    //         skip_line("let device_uplink_data_6 = ");
+    //     },
+    //     req: {
+    //         method: "GET",
+    //         url: `/api/device_coordinates`,
+    //         headers: {
+    //             Authorization: //This is a tempory JWT.... will expire soon
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     },
+    //     after(res) {
+    //         add_data_skip_line(res.res.data);
+    //     }
+    // })); 
+    // let coordinate_1 = {
+    //     lat: 10.70259522788738,
+    //     lng: -61.69463578300781,
+    //     zoom_level: 11
+    // }
+    // coordinate_1 = JSON.stringify(coordinate_1); 
+    // it("Should return the sensor data around the coordinate", integration({ //Test 7
+    //     app,
+    //     before() {
+    //         skip_line("let device_uplink_data_7 = ");
+    //     },
+    //     req: {
+    //         method: "GET",
+    //         url: `/api/sensor_data/coordinate/${coordinate_1}`,
+    //         headers: {
+    //             Authorization: //This is a tempory JWT.... will expire soon
+    //                 "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NjgsImVtYWlsIjoibmljaG9sYXMuam1pdGNoZWxsQG91dGxvb2suY29tIiwidXNlcl9jbGFzcyI6IkZpc2hlciIsImlhdCI6MTU1Mjc3MjA2OSwiZXhwIjoxNTUyODE1MjY5fQ.9TGQeadyVo4u4TG6yLYSP_fV-vIVIwX7CawCGxqxEi0"
+    //         }
+    //     },
+    //     res: {
+    //         status: 200
+    //     },
+    //     after(res) {
+    //         add_data_skip_line(res.res.data);
+    //     }
+    // })); 
+});
 
 
 // //-----------------------------------------------------GATEWAY STATS------------------------------------------------------

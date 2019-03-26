@@ -224,7 +224,7 @@ function return_date_time(date, time){
   return date_time;
 }
 
-function convertArrayOfObjectsToCSV(args) {
+function convertArrayOfObjectsToCSV(args) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
     var result, ctr, keys, columnDelimiter, lineDelimiter, data;
     data = args.data || null;
     if (data == null || !data.length) {
@@ -331,7 +331,7 @@ export default {
       historic_device_track_max_record_amt: [5,10,20,50,100,150,200,400, 'Unlimited'], //This is used to limit the amount of records which will be returned for a historic device track
       historic_device_track_max_record_amt_form: [],//this will be a 2d array which holds the actual amount selected by the user
 
-      device_real_time_tracking_interval: [0.5,1,2,5,10,20], //This is used to set the interval to set the real time tracking of the devices
+      device_real_time_tracking_interval: [0.5,1,2,5,10,20,40], //This is used to set the interval to set the real time tracking of the devices
       device_real_time_tracking_interval_form: [], //2d array which holds the values in the 2d array for the real time tracking
 
       device_real_time_location_interval: [0.5,1,2,5,10,20], //This is used to set the interval to set the real time location of the devices
@@ -1007,7 +1007,7 @@ export default {
       }
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
-    download_csv: function(download_data, name) {
+    download_csv: function(download_data, name) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
       if(download_data.length >0){
         var data, filename, link;
         var csv = convertArrayOfObjectsToCSV({

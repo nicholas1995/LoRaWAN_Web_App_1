@@ -20,9 +20,9 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">13.21% </span>
+        <span class="strong">12.61% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>14/106</span>
+        <span class='fraction'>14/111</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">0% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>0/46</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">20% </span>
+        <span class="strong">12.5% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/15</span>
+        <span class='fraction'>2/16</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">13.21% </span>
+        <span class="strong">12.61% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/106</span>
+        <span class='fraction'>14/111</span>
       </div>
     </div>
     <p class="quiet">
@@ -220,7 +220,14 @@
 <a name='L172'></a><a href='#L172'>172</a>
 <a name='L173'></a><a href='#L173'>173</a>
 <a name='L174'></a><a href='#L174'>174</a>
-<a name='L175'></a><a href='#L175'>175</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -239,8 +246,12 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -273,6 +284,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -397,7 +411,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const mqtt = require("mqtt");
 // to be changed to own local server/service
 //const client = mqtt.connect("mqtt:broker.mqttdashboard.com"); //TO TEST USING HIVEMQ
-const client = mqtt.connect("mqtt:localhost:1883");
+let client = mqtt.connect("mqtt:localhost:1883");
 &nbsp;
 const VESSEL_DEVICE_DB = require("./database/vessel_device_db");
 const GATEWAY_DB = require("./database/gateway_db");
@@ -412,9 +426,13 @@ client.on('connect', () =&gt; {
     client.subscribe("application/#", () =&gt; {
         console.log("subscribed to all applications");
     }); 
-    client.subscribe("gateway/#", () =&gt; {
-      console.log("subscribed to all gateways"); 
+    client.subscribe("gateway/#", <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >      console.log("subscribed to all gateways"); </span>
     });
+});
+&nbsp;
+client.on('offline', <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >    console.log("Error Connecting to MQTT Broker")</span>
 });
 &nbsp;
 client.on('message', <span class="fstat-no" title="function not covered" >as</span>ync function (topic, message) {
@@ -448,6 +466,9 @@ client.on('message', <span class="fstat-no" title="function not covered" >as</sp
                         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >                        message.object.temperatureSensor["3"] = simulation.random_temperatue();</span>
+<span class="cstat-no" title="statement not covered" >                        message.object.humiditySensor["4"] = 22;</span>
+<span class="cstat-no" title="statement not covered" >                        message.object["accelerometerSensor"] = {"3": 21};</span>
+<span class="cstat-no" title="statement not covered" >                        message.object["sosSensor"] = { "0": 0 };</span>
 <span class="cstat-no" title="statement not covered" >                        await DEVICE_RX.create(message)</span>
                             .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; {
                                 //Error adding rx device data to the database
@@ -574,7 +595,7 @@ function <span class="fstat-no" title="function not covered" >extract_device_eui
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Mar 19 2019 22:37:43 GMT-0400 (Atlantic Standard Time)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Mar 26 2019 15:50:06 GMT-0400 (Atlantic Standard Time)
 </div>
 </div>
 <script src="../../prettify.js"></script>

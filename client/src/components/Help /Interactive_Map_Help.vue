@@ -45,16 +45,16 @@ export default {
         { divider: true },
         {
           question: '<u><b>What does the number associated with each marker represent?',
-          answer: `The numbers assoicated with each icon represents the unique id of either the device or gateway the marker is associated with. `
+          answer: `The numbers assoicated with each marker represents the unique id of either the device or gateway the marker is associated with. `
         },
         { divider: true },
         {
-          question: '<u><b>How do I see the sensor data assoicated with a device or gateway?',
-          answer: `To view the most resent sensor data with either a device or gateway, right click on the marker.`
+          question: '<u><b>How do I see the sensor data assoicated with a device or the stats associated with a gateway?',
+          answer: `To view the most resent sensor data for a device or the most recent stats for a gateway, right click on the marker associated with the device or gateway.`
         },
         { divider: true },
         {
-          question: '<u><b>Whey does a gateway marker tell display "No Sats Available"?',
+          question: '<u><b>Why does a gateway marker display "No Sats Available"?',
           answer: `This message is displayed if there are no gateway stats associated with the gateway.`
         },
         { divider: true },
@@ -77,7 +77,7 @@ export default {
         {
           question: '<u><b>What does the control panel do?',
           answer: `The control panel is used to individually control the displaying options for the devices. A devices control panel can be selected by either directly selecting the tab which 
-          dislays the devices ID and name or by using the pickers to select the device. The options displayed with be only refer to the device whose tab is currently open.`
+          dislays the devices ID and name or by using the pickers to select the device. The options displayed only refer to the device whose tab is currently open.`
         },
         { divider: true },
         {

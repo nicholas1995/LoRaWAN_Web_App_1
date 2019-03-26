@@ -1,7 +1,7 @@
 const mqtt = require("mqtt");
 // to be changed to own local server/service
 //const client = mqtt.connect("mqtt:broker.mqttdashboard.com"); //TO TEST USING HIVEMQ
-const client = mqtt.connect("mqtt:localhost:1883");
+let client = mqtt.connect("mqtt:localhost:1883");
 
 const VESSEL_DEVICE_DB = require("./database/vessel_device_db");
 const GATEWAY_DB = require("./database/gateway_db");
@@ -19,6 +19,10 @@ client.on('connect', () => {
     client.subscribe("gateway/#", () => {
       console.log("subscribed to all gateways"); 
     });
+});
+
+client.on('offline', () => {
+    console.log("Error Connecting to MQTT Broker")
 });
 
 client.on('message', async function (topic, message) {
@@ -52,6 +56,9 @@ client.on('message', async function (topic, message) {
                         }
 
                         message.object.temperatureSensor["3"] = simulation.random_temperatue();
+                        message.object.humiditySensor["4"] = 22;
+                        message.object["accelerometerSensor"] = {"3": 21};
+                        message.object["sosSensor"] = { "0": 0 };
                         await DEVICE_RX.create(message)
                             .catch(err => {
                                 //Error adding rx device data to the database

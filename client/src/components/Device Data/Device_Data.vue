@@ -132,7 +132,7 @@ import date_time_functions from "../../services/functions/date_time.js"
 import functions from "./../../services/functions/forms_functions.js"
 
 
-function convertArrayOfObjectsToCSV(args) {
+function convertArrayOfObjectsToCSV(args) { //Source : https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
   var result, ctr, keys, columnDelimiter, lineDelimiter, data;
   data = args.data || null;
   if (data == null || !data.length) {
@@ -238,14 +238,14 @@ export default {
         //-------------------------Start-------------------------
         let result;
         if(this.$store.state.user_class !='Fisher' && this.self ==false){
-          result = await AuthenticationService.get_device_data_initial(1, 50) //Set them initially because the variable is not generated as yet
+          result = await AuthenticationService.get_device_data_initial(1, 25) //Set them initially because the variable is not generated as yet
           .catch(err => {
             //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
             throw err;
             })
         }else{
-          result = await AuthenticationService.get_device_data_initial_self(1, 50) //Set them initially because the variable is not generated as yet
+          result = await AuthenticationService.get_device_data_initial_self(1, 25) //Set them initially because the variable is not generated as yet
           .catch(err => {
             //Error getting the device data from the server
             this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
@@ -386,7 +386,7 @@ export default {
       this.end_time = time;
       this.end_date_time = null;
     },
-    download_csv: function(name) {
+    download_csv: function(name) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/)
       var data, filename, link;
       var csv = convertArrayOfObjectsToCSV({
         data: this.export_data
@@ -462,7 +462,7 @@ export default {
         if(return_all_records == 0){//Return how much specified by the pagenation
 /*           let start_date = new Date();
           let end_date; */
-          await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value, this.self, return_all_records).then(result=>{
+          await AuthenticationService.device_rx_filtered(this.filter_parameters, this.value, this.self, return_all_records).then(result=>{ 
             if(result.status == 206){ //No Data returned 
             this.device_data = [];
             this.filter_parameters = {}; 
