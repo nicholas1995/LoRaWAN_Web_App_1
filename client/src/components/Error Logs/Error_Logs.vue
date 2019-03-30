@@ -1,5 +1,5 @@
 <template>
-  <v-content>
+  <v-content v-if="this.access == 1">
     <v-toolbar class="elevation-1" color="primary">
       <v-toolbar-title>ERROR LOGS</v-toolbar-title>
       <v-divider
@@ -47,16 +47,46 @@ export default {
           { text: 'Error Message', value: 'error_message', sortable: false },
           { text: 'Stack', value: 'error_stack', sortable: false },
         ],
-        error_logs: []
+        error_logs: [],
+        access: 0,
     }
   },
-  created: function () {
-    AuthenticationService.get_error_logs().then(result => {
-      this.error_logs = JSON.parse(result.data.error_logs);
-      this.$emit('message_display',{message:result.data.message, type:result.data.type})   
-    }).catch(err => {
-      this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
-    })
+  created: async function () {
+    try {
+      if (this.$store.state.loginState == false) {
+        //User logged in
+        await AuthenticationService.check_permissions("error_logs", "get").catch(err => {
+            console.log(err)
+            throw err;
+          });
+          this.access =1;
+        //---------------------------Start------------------------
+        await AuthenticationService.get_error_logs().then(result => {
+          this.error_logs = JSON.parse(result.data.error_logs);
+          this.$emit('message_display',{message:result.data.message, type:result.data.type})   
+        }).catch(err => {
+          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+        })
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }   
+
   },
   props:[
   ],

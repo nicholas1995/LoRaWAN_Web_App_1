@@ -29,6 +29,7 @@ import { required } from 'vuelidate/lib/validators'
 import AuthenticationService from "../services/AuthenticationService.js";
 import functions from "./../services/functions/forms_functions.js"
 import math from "mathjs"
+import date_time from "../services/functions/date_time.js";
 
 
 /*
@@ -51,22 +52,14 @@ export default {
   data: function () {
     return {
       map_name: this.name + "-map",
-      markerCoordinates: [],
       map: null,
       bounds: null,
       markers: null,
       marker_sqare: [], //this is an array to hold the marker values
       polyline_tracker: [], //array which holds the polyline data
-      flightPath: null,
-      markerCluster: null,
       map_center: {latitude: "10.7277795", longitude: "-61.2105507"},
       coordinates: [],
-      contentString: [],
       heat_map: null, //variable for the heat map
-      icon_url: ["http://maps.google.com/mapfiles/ms/icons/red-dot.png","http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
-      "http://maps.google.com/mapfiles/ms/icons/green-dot.png","http://maps.google.com/mapfiles/ms/icons/purple-dot.png",
-      "http://maps.google.com/mapfiles/ms/icons/orange-dot.png","http://maps.google.com/mapfiles/ms/icons/pink-dot.png",
-      "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"],
       
       i: 0, //this is used to track which value of the positon data returned is being displayed
       length: 0, //this is used to hold the length of the data array
@@ -243,7 +236,7 @@ export default {
       if(sensor_data_present == 1){
         var content = `<div>
                       <h3>Sensor Data</h3>
-                      <b>Time Stamp</b>: ${data.time_stamp}<br>
+                      <b>Time Stamp</b>: ${this.convert_date(data.time_stamp)}<br>
                       <b>Organization Name</b>: ${data.network_name}<br>
                       <b>Application Name</b>: ${data.sub_network_name}<br>
                       
@@ -280,6 +273,22 @@ export default {
               info_window.open(this.map,marker);
           };
         })(marker,content,info_window));
+    },
+    convert_date: function(date){
+      let full_date;
+      if(date == "" || date == null){
+        full_date = "N/A"
+      }else{
+        date = new Date(date);
+        let month = date_time.return_month(date.getMonth()); //returns the month in 3 letters
+        let day = date_time.add_zero(date.getDate());
+        let year = date.getUTCFullYear() -2000; //converts the full year to 2 digits 
+        let hour = date_time.add_zero(date.getHours());
+        let minutes = date_time.add_zero(date.getUTCMinutes());
+        let seconds = date_time.add_zero(date.getUTCSeconds());
+        full_date = day+"-"+month+"-"+year +" " + hour +":"+ minutes+":"+ seconds;
+      }
+      return full_date;
     },
   //--------------------------------------------------------------------------------------------------------------------------------------------
     create_polyline: function(coordinate){
@@ -435,7 +444,6 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     generate_buffer_using_map_zoom: function (map_zoom){
-      console.log(map_zoom, (0.0001*(math.pow(2, (19-map_zoom)))))
       //Creates the buffer for the map box
       if (map_zoom ==19) return 0.0001
       else return (0.0001*(math.pow(2, (19-map_zoom))))

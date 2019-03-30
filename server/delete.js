@@ -40,7 +40,6 @@
 // }
 // update_location() */
 
-
 // //------------------------------------------------------------------------------------------------------------------------
 // /* //Just a compare funcion
 // function compare(old_value, new_value) {
@@ -78,8 +77,6 @@
 //   console.log(added);
 // }
 // compare([1,3,7,9], [2,11,1,3]); */
-
-
 
 // //This updates the location of the uplink data in the databse using those from the text file
 // /* var fs = require("fs");
@@ -213,7 +210,6 @@
 //   return (dec >>> 0).toString(2);
 // }
 
-
 // function nibble_to_hex(nibble) {
 //   switch (nibble) {
 //     case "0000":
@@ -316,7 +312,6 @@
 // }
 //  */
 
-
 // //This is going to be testing on the database
 // const DB_DEVICE_UPLINK = require("./src/services/database/device_rx_db");
 
@@ -329,7 +324,6 @@
 //   n = 2000;
 //   //console.log('Performing filtered fetch on all', n, 'device uplink records.')
 //   console.log('Fetching all', n, 'device uplink records.')
- 
 
 //   for (let i = 0; i < 10; i++) {
 //     start_date = new Date();
@@ -346,19 +340,13 @@
 
 // }
 // setTimeout(update_location, 4000, "funky");
-const EventEmitter = require('events');
 
-class MyEmitter extends EventEmitter { }
-
-const myEmitter = new MyEmitter();
-// increase the limit
-myEmitter.setMaxListeners(0);
 let i = 0;
 const mqtt = require("mqtt");
 // to be changed to own local server/service
 const client = mqtt.connect("mqtt:broker.mqttdashboard.com"); //TO TEST USING HIVEMQ
 
-client.on('connect', () => {
+client.on("connect", () => {
   client.subscribe("application/#", () => {
     console.log("subscribed to all applications");
     setInterval(send_message, 1);
@@ -401,16 +389,7 @@ client.on('connect', () => {
     setInterval(send_message, 1);
     setInterval(send_message, 1);
     setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
-    setInterval(send_message, 1);
+    setInterval(send_message, 1); setInterval(send_message, 1);
     setInterval(send_message, 1);
     setInterval(send_message, 1);
     setInterval(send_message, 1);
@@ -454,267 +433,315 @@ client.on('connect', () => {
     setInterval(send_message, 1);
     setInterval(send_message, 1);
 
-  });
-  client.subscribe("gateway/#", () => {
-    console.log("subscribed to all gateways");
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
+    setInterval(send_message, 1);
   });
 });
 
-client.on('message', async function (topic, message) {
-  //console.log(topic);
-  //message = message.toString();
-})
-
-function send_message(){
-  if(i< 50000){
-  var now = new Date();
-  data = {
-    applicationID: "156",
-    applicationName: "Marine_IoT",
-    deviceName: "Device_2",
-    devEUI: "2222222222222222",
-    rxInfo: [
-      {
-        gatewayID: "2222222222222222",
-        name: "Gateway_1",
-        time: `${now}`,
-        rssi: 3,
-        loRaSNR: 0.8193636,
-        location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
-      }
-    ],
-    txInfo: { frequency: i, dr: 4 },
-    adr: false,
-    fCnt: 0,
-    fPort: 1,
-    data: "BGYAA2cKAAGIAaKx9pYIAANi",
-    object: {
-      humiditySensor: { "1": 30 },
-      accelerometerSensor: { "1": 25.67 },
-      temperatureSensor: { "3": 28.85 },
-      gpsLocation: {
-        "1": {
-          latitude: "12.088338683329036",
-          longitude: "-61.83998107910156",
-          altitude: 8.66
+function send_message() {
+  if (i == 0) console.log(new Date());
+  if (i <= 50000) {
+    var now = new Date();
+    data = {
+      applicationID: "156",
+      applicationName: "Marine_IoT",
+      deviceName: "Device_2",
+      devEUI: "2222222222222222",
+      rxInfo: [
+        {
+          gatewayID: "2222222222222222",
+          name: "Gateway_1",
+          time: `${now}`,
+          rssi: 3,
+          loRaSNR: 0.8193636,
+          location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
         }
-      }
-    },
-    vessel_id: 3,
-    device_id: 2
-  };
-  data = Buffer.from(JSON.stringify(data));
-  i = i+1;
-  client.publish("application/156/device/2222222222222222/rx", data, () => {
-  });
+      ],
+      txInfo: { frequency: i, dr: 4 },
+      adr: false,
+      fCnt: 0,
+      fPort: 1,
+      data: "BGYAA2cKAAGIAaKx9pYIAANi",
+      object: {
+        humiditySensor: { "1": 30 },
+        accelerometerSensor: { "1": 25.67 },
+        temperatureSensor: { "3": 28.85 },
+        gpsLocation: {
+          "1": {
+            latitude: "12.088338683329036",
+            longitude: "-61.83998107910156",
+            altitude: 8.66
+          }
+        }
+      },
+      vessel_id: 3,
+      device_id: 2
+    };
+    data = Buffer.from(JSON.stringify(data));
+    console.log(i);
+    i = i + 1;
+    client.publish(
+      "application/156/device/2222222222222222/rx",
+      data,
+      () => {}
+    );
     now = null;
-   now = new Date();
-  data = {
-    applicationID: "156",
-    applicationName: "Marine_IoT",
-    deviceName: "Device_2",
-    devEUI: "2222222222222222",
-    rxInfo: [
-      {
-        gatewayID: "2222222222222222",
-        name: "Gateway_1",
-        time: `${now}`,
-        rssi: 3,
-        loRaSNR: 0.8193636,
-        location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
-      }
-    ],
-    txInfo: { frequency: i, dr: 4 },
-    adr: false,
-    fCnt: 0,
-    fPort: 1,
-    data: "BGYAA2cKAAGIAaKx9pYIAANi",
-    object: {
-      humiditySensor: { "1": 30 },
-      accelerometerSensor: { "1": 25.67 },
-      temperatureSensor: { "3": 28.85 },
-      gpsLocation: {
-        "1": {
-          latitude: "12.088338683329036",
-          longitude: "-61.83998107910156",
-          altitude: 8.66
+    now = new Date();
+    data = {
+      applicationID: "156",
+      applicationName: "Marine_IoT",
+      deviceName: "Device_2",
+      devEUI: "2222222222222222",
+      rxInfo: [
+        {
+          gatewayID: "2222222222222222",
+          name: "Gateway_1",
+          time: `${now}`,
+          rssi: 3,
+          loRaSNR: 0.8193636,
+          location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
         }
-      }
-    },
-    vessel_id: 3,
-    device_id: 2
-  };
-  data = Buffer.from(JSON.stringify(data));
-  i = i + 1;
-  client.publish("application/156/device/2222222222222222/rx", data, () => {
-  });
-  now = null;
+      ],
+      txInfo: { frequency: i, dr: 4 },
+      adr: false,
+      fCnt: 0,
+      fPort: 1,
+      data: "BGYAA2cKAAGIAaKx9pYIAANi",
+      object: {
+        humiditySensor: { "1": 30 },
+        accelerometerSensor: { "1": 25.67 },
+        temperatureSensor: { "3": 28.85 },
+        gpsLocation: {
+          "1": {
+            latitude: "12.088338683329036",
+            longitude: "-61.83998107910156",
+            altitude: 8.66
+          }
+        }
+      },
+      vessel_id: 3,
+      device_id: 2
+    };
+    data = Buffer.from(JSON.stringify(data));
+    console.log("Buffer length in bytes: ", data.length)
+    console.log(i);
+    i = i + 1;
+    client.publish(
+      "application/156/device/2222222222222222/rx",
+      data,
+      () => {}
+    );
+    now = null;
 
-  now = new Date();
-  data = {
-    applicationID: "156",
-    applicationName: "Marine_IoT",
-    deviceName: "Device_2",
-    devEUI: "2222222222222222",
-    rxInfo: [
-      {
-        gatewayID: "2222222222222222",
-        name: "Gateway_1",
-        time: `${now}`,
-        rssi: 3,
-        loRaSNR: 0.8193636,
-        location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
-      }
-    ],
-    txInfo: { frequency: i, dr: 4 },
-    adr: false,
-    fCnt: 0,
-    fPort: 1,
-    data: "BGYAA2cKAAGIAaKx9pYIAANi",
-    object: {
-      humiditySensor: { "1": 30 },
-      accelerometerSensor: { "1": 25.67 },
-      temperatureSensor: { "3": 28.85 },
-      gpsLocation: {
-        "1": {
-          latitude: "12.088338683329036",
-          longitude: "-61.83998107910156",
-          altitude: 8.66
+    now = new Date();
+    data = {
+      applicationID: "156",
+      applicationName: "Marine_IoT",
+      deviceName: "Device_2",
+      devEUI: "2222222222222222",
+      rxInfo: [
+        {
+          gatewayID: "2222222222222222",
+          name: "Gateway_1",
+          time: `${now}`,
+          rssi: 3,
+          loRaSNR: 0.8193636,
+          location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
         }
-      }
-    },
-    vessel_id: 3,
-    device_id: 2
-  };
-  data = Buffer.from(JSON.stringify(data));
-  i = i + 1;
-  client.publish("application/156/device/2222222222222222/rx", data, () => {
-  });
-  now = null;
+      ],
+      txInfo: { frequency: i, dr: 4 },
+      adr: false,
+      fCnt: 0,
+      fPort: 1,
+      data: "BGYAA2cKAAGIAaKx9pYIAANi",
+      object: {
+        humiditySensor: { "1": 30 },
+        accelerometerSensor: { "1": 25.67 },
+        temperatureSensor: { "3": 28.85 },
+        gpsLocation: {
+          "1": {
+            latitude: "12.088338683329036",
+            longitude: "-61.83998107910156",
+            altitude: 8.66
+          }
+        }
+      },
+      vessel_id: 3,
+      device_id: 2
+    };
+    data = Buffer.from(JSON.stringify(data));
+    console.log(i);
+    i = i + 1;
+    client.publish(
+      "application/156/device/2222222222222222/rx",
+      data,
+      () => {}
+    );
+    now = null;
 
-  now = new Date();
-  data = {
-    applicationID: "156",
-    applicationName: "Marine_IoT",
-    deviceName: "Device_2",
-    devEUI: "2222222222222222",
-    rxInfo: [
-      {
-        gatewayID: "2222222222222222",
-        name: "Gateway_1",
-        time: `${now}`,
-        rssi: 3,
-        loRaSNR: 0.8193636,
-        location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
-      }
-    ],
-    txInfo: { frequency: i, dr: 4 },
-    adr: false,
-    fCnt: 0,
-    fPort: 1,
-    data: "BGYAA2cKAAGIAaKx9pYIAANi",
-    object: {
-      humiditySensor: { "1": 30 },
-      accelerometerSensor: { "1": 25.67 },
-      temperatureSensor: { "3": 28.85 },
-      gpsLocation: {
-        "1": {
-          latitude: "12.088338683329036",
-          longitude: "-61.83998107910156",
-          altitude: 8.66
+    now = new Date();
+    data = {
+      applicationID: "156",
+      applicationName: "Marine_IoT",
+      deviceName: "Device_2",
+      devEUI: "2222222222222222",
+      rxInfo: [
+        {
+          gatewayID: "2222222222222222",
+          name: "Gateway_1",
+          time: `${now}`,
+          rssi: 3,
+          loRaSNR: 0.8193636,
+          location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
         }
-      }
-    },
-    vessel_id: 3,
-    device_id: 2
-  };
-  data = Buffer.from(JSON.stringify(data));
-  i = i + 1;
-  client.publish("application/156/device/2222222222222222/rx", data, () => {
-  });
-  now = null;
+      ],
+      txInfo: { frequency: i, dr: 4 },
+      adr: false,
+      fCnt: 0,
+      fPort: 1,
+      data: "BGYAA2cKAAGIAaKx9pYIAANi",
+      object: {
+        humiditySensor: { "1": 30 },
+        accelerometerSensor: { "1": 25.67 },
+        temperatureSensor: { "3": 28.85 },
+        gpsLocation: {
+          "1": {
+            latitude: "12.088338683329036",
+            longitude: "-61.83998107910156",
+            altitude: 8.66
+          }
+        }
+      },
+      vessel_id: 3,
+      device_id: 2
+    };
+    data = Buffer.from(JSON.stringify(data));
+    console.log(i);
+    i = i + 1;
+    client.publish(
+      "application/156/device/2222222222222222/rx",
+      data,
+      () => {}
+    );
+    now = null;
 
-  now = new Date();
-  data = {
-    applicationID: "156",
-    applicationName: "Marine_IoT",
-    deviceName: "Device_2",
-    devEUI: "2222222222222222",
-    rxInfo: [
-      {
-        gatewayID: "2222222222222222",
-        name: "Gateway_1",
-        time: `${now}`,
-        rssi: 3,
-        loRaSNR: 0.8193636,
-        location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
-      }
-    ],
-    txInfo: { frequency: i, dr: 4 },
-    adr: false,
-    fCnt: 0,
-    fPort: 1,
-    data: "BGYAA2cKAAGIAaKx9pYIAANi",
-    object: {
-      humiditySensor: { "1": 30 },
-      accelerometerSensor: { "1": 25.67 },
-      temperatureSensor: { "3": 28.85 },
-      gpsLocation: {
-        "1": {
-          latitude: "12.088338683329036",
-          longitude: "-61.83998107910156",
-          altitude: 8.66
+    now = new Date();
+    data = {
+      applicationID: "156",
+      applicationName: "Marine_IoT",
+      deviceName: "Device_2",
+      devEUI: "2222222222222222",
+      rxInfo: [
+        {
+          gatewayID: "2222222222222222",
+          name: "Gateway_1",
+          time: `${now}`,
+          rssi: 3,
+          loRaSNR: 0.8193636,
+          location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
         }
-      }
-    },
-    vessel_id: 3,
-    device_id: 2
-  };
-  data = Buffer.from(JSON.stringify(data));
-  i = i + 1;
-  client.publish("application/156/device/2222222222222222/rx", data, () => {
-  });
-  now = null;
+      ],
+      txInfo: { frequency: i, dr: 4 },
+      adr: false,
+      fCnt: 0,
+      fPort: 1,
+      data: "BGYAA2cKAAGIAaKx9pYIAANi",
+      object: {
+        humiditySensor: { "1": 30 },
+        accelerometerSensor: { "1": 25.67 },
+        temperatureSensor: { "3": 28.85 },
+        gpsLocation: {
+          "1": {
+            latitude: "12.088338683329036",
+            longitude: "-61.83998107910156",
+            altitude: 8.66
+          }
+        }
+      },
+      vessel_id: 3,
+      device_id: 2
+    };
+    data = Buffer.from(JSON.stringify(data));
+    console.log(i);
+    i = i + 1;
+    client.publish(
+      "application/156/device/2222222222222222/rx",
+      data,
+      () => {}
+    );
+    now = null;
 
-  now = new Date();
-  data = {
-    applicationID: "156",
-    applicationName: "Marine_IoT",
-    deviceName: "Device_2",
-    devEUI: "2222222222222222",
-    rxInfo: [
-      {
-        gatewayID: "2222222222222222",
-        name: "Gateway_1",
-        time: `${now}`,
-        rssi: 3,
-        loRaSNR: 0.8193636,
-        location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
-      }
-    ],
-    txInfo: { frequency: i, dr: 4 },
-    adr: false,
-    fCnt: 0,
-    fPort: 1,
-    data: "BGYAA2cKAAGIAaKx9pYIAANi",
-    object: {
-      humiditySensor: { "1": 30 },
-      accelerometerSensor: { "1": 25.67 },
-      temperatureSensor: { "3": 28.85 },
-      gpsLocation: {
-        "1": {
-          latitude: "12.088338683329036",
-          longitude: "-61.83998107910156",
-          altitude: 8.66
+    now = new Date();
+    data = {
+      applicationID: "156",
+      applicationName: "Marine_IoT",
+      deviceName: "Device_2",
+      devEUI: "2222222222222222",
+      rxInfo: [
+        {
+          gatewayID: "2222222222222222",
+          name: "Gateway_1",
+          time: `${now}`,
+          rssi: 3,
+          loRaSNR: 0.8193636,
+          location: { latitude: 10.248639, longitude: 10.248639, altitude: 0 }
         }
-      }
-    },
-    vessel_id: 3,
-    device_id: 2
-  };
-  data = Buffer.from(JSON.stringify(data));
-  i = i + 1;
-  client.publish("application/156/device/2222222222222222/rx", data, () => {
-  });
-}
+      ],
+      txInfo: { frequency: i, dr: 4 },
+      adr: false,
+      fCnt: 0,
+      fPort: 1,
+      data: "BGYAA2cKAAGIAaKx9pYIAANi",
+      object: {
+        humiditySensor: { "1": 30 },
+        accelerometerSensor: { "1": 25.67 },
+        temperatureSensor: { "3": 28.85 },
+        gpsLocation: {
+          "1": {
+            latitude: "12.088338683329036",
+            longitude: "-61.83998107910156",
+            altitude: 8.66
+          }
+        }
+      },
+      vessel_id: 3,
+      device_id: 2
+    };
+    data = Buffer.from(JSON.stringify(data));
+    console.log(i);
+    i = i + 1;
+    client.publish(
+      "application/156/device/2222222222222222/rx",
+      data,
+      () => {}
+    );
+  }
 }

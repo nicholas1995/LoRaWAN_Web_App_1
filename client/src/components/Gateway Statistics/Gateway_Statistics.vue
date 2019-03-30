@@ -143,7 +143,7 @@ export default {
         gateway_statistics: [],
         loading: true,
         pagination: {},
-        rows_per_page_items: [ 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
+        rows_per_page_items: [ 50, 100, 250, 1000, 2000 ],
         headers: [], //Array of objects that holds all the headers database and table names {value: , text: } (static)
         header_names: [], //Array holding the headings, onlt the text (static)
         value: [], //Currently selected list of headers which will be displayed in the picker 

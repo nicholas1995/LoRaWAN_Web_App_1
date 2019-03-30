@@ -1,5 +1,5 @@
 <template>
-    <v-content>   
+    <v-content v-if="this.access == 1">   
       <v-container fluid fill-height>
         <v-layout align-center justify-center >
           <v-flex xs12 sm8 md6 >
@@ -93,8 +93,34 @@ export default {
       current_password: "",
       new_password: "",
       new_password_confirm: "",
-      message: ""
+      message: "",
+      access: 0,
     };
+  },
+    created: async function(){
+    try {
+      if (this.$store.state.loginState == false) {
+        //---------------------------Start------------------------
+        this.access = 1;
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }   
   },
    computed: {
     current_password_errors(){

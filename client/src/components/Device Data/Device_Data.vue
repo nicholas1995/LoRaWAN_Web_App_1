@@ -184,7 +184,7 @@ export default {
         device_data: [],
         loading: true,
         pagination: {},
-        rows_per_page_items: [ 25, 50, 100, 250, 1000, { "text": "$vuetify.dataIterator.rowsPerPageAll", "value": -1 } ],
+        rows_per_page_items: [ 25, 50, 100, 250, 1000, 2000 ],
         header_names: [], //Array holding the headings
         value: [],
         display: [],
@@ -413,12 +413,16 @@ export default {
         })
     },
     export_device_data: async function(option){
-      await this.generate_function(1);
-      if(this.export_data.length > 0){
-        if(option =="Local Storage"){
-          this.download_csv("device_uplink_data.csv")
-        }else if(option == 'Email'){
-          this.download_email();
+      if(this.number_of_records > 40000){
+        alert('Amount of records attempting to be exported exceeds 40000. Please reduce.');
+        }else{
+        await this.generate_function(1);
+        if(this.export_data.length > 0){
+          if(option =="Local Storage"){
+            this.download_csv("device_uplink_data.csv")
+          }else if(option == 'Email'){
+            this.download_email();
+          }
         }
       }
     },
@@ -474,7 +478,7 @@ export default {
             console.log('Total #', result.data.number_of_records, " Pagination: ", this.pagination.rowsPerPage, 'Time(ms): ', milli_seconds) */
             this.device_data = result.data.device_data;
             this.headers =  result.data.headers; 
-            this.display = this.headers
+            this.display = this.headers;
             this.filter_parameters = {}; 
             this.loading = false;  
             this.number_of_records = result.data.number_of_records;

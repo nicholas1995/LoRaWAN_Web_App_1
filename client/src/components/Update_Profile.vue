@@ -1,5 +1,5 @@
 <template>
-  <v-content >
+  <v-content v-if="this.access == 1">
     <v-container fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md8>
@@ -188,16 +188,20 @@ mixins: [validationMixin],
       mobile_phone: "", 
       email: "",
       message: "",
+      access: 0
 
     };
   },
   created: async function(){
-    try{
+    try {
+      if (this.$store.state.loginState == false) {
+        //---------------------------Start------------------------
         let user_information = await AuthenticationService.get_profile()
           .catch(err => {
             //Error getting profile information from user
             throw err;
           })
+        this.access = 1;
         user_information = JSON.parse(user_information.data.user_information);
         this.first_name = user_information.first_name;
         this.last_name = user_information.last_name;
@@ -208,10 +212,25 @@ mixins: [validationMixin],
         this.home_phone = user_information.home_phone;
         this.mobile_phone = user_information.mobile_phone;
         this.email = user_information.email;
-        console.log(user_information)
-    }catch(err){
-      console.log(err);
-    }
+      }else{
+        alert('Please login.');
+        this.$router.push('/login');
+      }
+    }catch (err) {
+      if(err.response.status == "401"){
+        //Unauthorized.... token expired
+        alert('Token expired please login.');
+        this.$store.commit('logout');
+        this.$router.push('/login');
+      }else if(err.response.status == "403"){
+        //Do not have access to this resource
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }else{
+        alert('You do not have access to this page');
+        this.$router.push('/dashboard');
+      }
+    }   
   },
 
   computed: {

@@ -801,7 +801,7 @@ module.exports = {
                 .catch(err => {
                     throw err;
                 })
-                device_uplink_sensor_data = convert_dates(device_uplink_sensor_data, 'self')
+                //device_uplink_sensor_data = convert_dates(device_uplink_sensor_data, 'self') //This is done so the graph will plot on firefox
             res.status(200).send({device_uplink_sensor_data: device_uplink_sensor_data, message: 'Sensor data fetched.', type: 'success'})  
         }catch(err){
             console.log(err)
