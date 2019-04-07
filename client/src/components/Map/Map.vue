@@ -224,7 +224,9 @@ function return_date_time(date, time){
   return date_time;
 }
 
-function convertArrayOfObjectsToCSV(args) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
+function convertArrayOfObjectsToCSV(args) { 
+  //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
+  //The code used to convert the array to a CSV and to export it is not original. It was found on an online article.
     var result, ctr, keys, columnDelimiter, lineDelimiter, data;
     data = args.data || null;
     if (data == null || !data.length) {
@@ -1007,7 +1009,9 @@ export default {
       }
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
-    download_csv: function(download_data, name) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
+    download_csv: function(download_data, name) { 
+      //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
+      //The code used to convert the array to a CSV and to export it is not original. It was found on an online article.
       if(download_data.length >0){
         var data, filename, link;
         var csv = convertArrayOfObjectsToCSV({

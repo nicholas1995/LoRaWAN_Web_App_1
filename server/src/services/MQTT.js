@@ -41,7 +41,7 @@ client.on('message', async function (topic, message) {
             if(data[0]){ //if device is assocaited with a gateway
                 message["vessel_id"] = data[0].vessel_id;
                 message["device_id"] = data[0].device_id;
-                if (topic_information.event == 'rx') {
+                if (topic_information.event == 'rx') { 
                     if (message.rxInfo) { 
                         //--------THIS IS JUST FOR THE SIMILATION
                         if(message.rxInfo[0].rssi ==1){//Trinidad north west
@@ -53,8 +53,10 @@ client.on('message', async function (topic, message) {
                         }else if(message.rxInfo[0].rssi ==3){//Grenada
                             message.object.gpsLocation["1"]["latitude"] = parseFloat(simulation.grenada_track_1[message.txInfo.frequency].lat);
                             message.object.gpsLocation["1"]["longitude"] = parseFloat(simulation.grenada_track_1[message.txInfo.frequency].lng);
+                        }else if(message.rxInfo[0].rssi == 4) {//South Trinidad
+                            message.object.gpsLocation["1"]["latitude"] = parseFloat(simulation.trinidad_south_tracks_1[message.txInfo.frequency].lat);
+                            message.object.gpsLocation["1"]["longitude"] = parseFloat(simulation.trinidad_south_tracks_1[message.txInfo.frequency].lng);
                         }
-
                         message.object.temperatureSensor["3"] = simulation.random_temperatue();
                         message.object.humiditySensor["4"] = 22;
                         message.object["accelerometerSensor"] = {"3": 21};

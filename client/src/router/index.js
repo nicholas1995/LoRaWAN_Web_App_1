@@ -58,6 +58,8 @@ import Update_Profile from "../components/Update_Profile";
 import Update_Password from "../components/Update_Password";
 import Device_Data from "../components/Device Data/Device_Data.vue";
 import Error_Logs from "../components/Error Logs/Error_Logs.vue";
+import Activity_Logs from "../components/Activity Logs/Activity_Logs.vue";
+
 
 
 
@@ -86,7 +88,7 @@ export default new Router({
       path: "/map",
       name: "map",
       component: Device_Gateway_Map
-    }, 
+    },
     //-------------------------Network-------------------------
     {
       path: "/network",
@@ -193,11 +195,11 @@ export default new Router({
       name: "service_profile_update",
       component: Update_Service_Profile
     },
-   //-------------------------Device_Profile-------------------------
-   {
-    path: "/device_profile",
-    name: "device_profile",
-    component: Device_Profile
+    //-------------------------Device_Profile-------------------------
+    {
+      path: "/device_profile",
+      name: "device_profile",
+      component: Device_Profile
     },
     {
       path: "/device_profile/create",
@@ -206,14 +208,14 @@ export default new Router({
     },
     {
       path: "/device_profile/update/:device_profile_id_lora", //reasons sending the lora instead of the database is because we do not need to fetch all the profiles from the server for this form this there are no requriements to the name
-      name: "device_profile_update", 
+      name: "device_profile_update",
       component: Update_Device_Profile
     },
-   //-------------------------Gateway_Profile-------------------------
-   {
-    path: "/gateway_profile",
-    name: "gateway_profile",
-    component: Gateway_Profile
+    //-------------------------Gateway_Profile-------------------------
+    {
+      path: "/gateway_profile",
+      name: "gateway_profile",
+      component: Gateway_Profile
     },
     {
       path: "/gateway_profile/create",
@@ -221,8 +223,8 @@ export default new Router({
       component: Create_Gateway_Profile
     },
     {
-      path: "/gateway_profile/update/:gateway_profile_id_lora", 
-      name: "gateway_profile_update", 
+      path: "/gateway_profile/update/:gateway_profile_id_lora",
+      name: "gateway_profile_update",
       component: Update_Gateway_Profile
     },
     //-------------------------Network Server-------------------------
@@ -269,7 +271,6 @@ export default new Router({
       component: Activate_Account
     },
 
-
     {
       path: "/update_profile",
       name: "update_profile",
@@ -289,6 +290,11 @@ export default new Router({
       path: "/error_logs",
       name: "error_logs",
       component: Error_Logs
+    },
+    {
+      path: "/activity_logs",
+      name: "activity_logs",
+      component: Activity_Logs
     }
   ]
 });

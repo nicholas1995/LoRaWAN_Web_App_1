@@ -71,6 +71,9 @@ const ACL = {
     error_logs: {
       read: "All"
     },
+    activity_logs: {
+      read: "All"
+    },
     email: {
       create: "All"
     }
@@ -105,6 +108,9 @@ const ACL = {
       read: "All"
     },
     error_logs: {
+      read: "All"
+    },
+    activity_logs: {
       read: "All"
     },
     email: {

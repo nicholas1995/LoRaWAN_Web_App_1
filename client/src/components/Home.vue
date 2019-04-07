@@ -135,7 +135,8 @@ export default {
       this.map = new google.maps.Map(element, {
         zoom: 9,
         center: new google.maps.LatLng(this.map_center.latitude, this.map_center.longitude),
-        mapTypeId: google.maps.MapTypeId.HYBRID
+        mapTypeId: google.maps.MapTypeId.HYBRID,
+        minZoom: 8
       });
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------

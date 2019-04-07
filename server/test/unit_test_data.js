@@ -1,4 +1,4 @@
-/* //UTC = unit test case
+//UTC = unit test case input data
 let user = { id: 4, email: 'lorawanconsole@gmail.com', user_class: 'Software Admin' }
 let jwt_1 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTE5MTk5MDIsImV4cCI6MTU1MTk2MzEwMn0.TJtFBlyUoOZWZnx7-8ntKaN-Y--WNj4gT9KUcDLVIZE"; //Valid JWT
 let jwt_2 = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJsb3Jhd2FuY29uc29sZUBnbWFpbC5jb20iLCJ1c2VyX2NsYXNzIjoiU29mdHdhcmUgQWRtaW4iLCJpYXQiOjE1NTE5MjE1ODQsImV4cCI6MTU1MTk2NDc4NH0.x_4dhke2fjE-YKf3_5aWklIcCzrNd_JFJs_Xy8wSfGY"; //JWT signed with different secret
@@ -741,4 +741,4 @@ let create_gateway_stat = {
         txPacketsReceived: 5,
         txPacketsEmitted: 5,
     }
-} */
+} 

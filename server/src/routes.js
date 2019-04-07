@@ -334,6 +334,10 @@ module.exports = ((app) => {
     //Error Logs (Get)
     app.get(`/api/error_logs`, authenticate.authenticate, grant_access, activity_logs.activity_log, error_logs.get);
 
+    //----------------------Activity Logs-----------------
+    //Activity Logs (Get)
+    app.get(`/api/activity_logs`, authenticate.authenticate, grant_access, activity_logs.activity_log, activity_logs.get);
+
     //----------------------Home Page Map-----------------
     //Uplink Data (Get Coordinates) 
     app.get('/api/device_coordinates', device_data.get_gps_coordinates)

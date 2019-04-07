@@ -52,5 +52,17 @@ module.exports = {
         }catch(err){
 
         }
+    },
+    get: async function(req, res, next){ //This is used to return the activity logs to the client
+        try {
+            let activity_logs = await DB_ACTIVITY_LOG.get_logs()
+                .catch(err => {
+                    //Error getting activity logs
+                    throw err;
+                })
+            res.status(200).send({ activity_logs: activity_logs, message: 'Activity Logs Fetched.', type: 'success' });
+        } catch (err) {
+            console.log(err)
+        }
     }
 }

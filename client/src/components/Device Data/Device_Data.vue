@@ -132,7 +132,9 @@ import date_time_functions from "../../services/functions/date_time.js"
 import functions from "./../../services/functions/forms_functions.js"
 
 
-function convertArrayOfObjectsToCSV(args) { //Source : https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
+function convertArrayOfObjectsToCSV(args) { 
+  //Source : https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
+  //The code used to convert the array to a CSV and to export it is not original. It was found on an online article.
   var result, ctr, keys, columnDelimiter, lineDelimiter, data;
   data = args.data || null;
   if (data == null || !data.length) {
@@ -386,7 +388,9 @@ export default {
       this.end_time = time;
       this.end_date_time = null;
     },
-    download_csv: function(name) { //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/)
+    download_csv: function(name) { 
+      //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/)
+      //The code used to convert the array to a CSV and to export it is not original. It was found on an online article.
       var data, filename, link;
       var csv = convertArrayOfObjectsToCSV({
         data: this.export_data

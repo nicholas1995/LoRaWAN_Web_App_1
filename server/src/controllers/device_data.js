@@ -446,24 +446,6 @@ function filter_uique_devices_from_device_list(devices){
     }
 }
 
-function get_distance_km_from_lat_lng(lat1,lng1,lat2,lng2) {
-    var R = 6371; // Radius of the earth in km
-    var dstance_lat = deg_to_rad(lat2-lat1);  // deg_to_rad below
-    var distance_lng = deg_to_rad(lng2-lng1); 
-    var a = 
-      Math.sin(dstance_lat/2) * Math.sin(dstance_lat/2) +
-      Math.cos(deg_to_rad(lat1)) * Math.cos(deg_to_rad(lat2)) * 
-      Math.sin(distance_lng/2) * Math.sin(distance_lng/2)
-      ; 
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    var d = R * c; // Distance in km
-    return d;
-  }
-  
-function deg_to_rad(deg) {
-    return deg * (Math.PI/180) 
-}
-
 function reduce_return_record_amount(device_data, limit){
     //This is used for the histroric device tracks to limit the amount of records to the input parameter limit. It ensures that the first and last record is returned and evenly distributes the remaing data to be returnred 
     if(limit == null || limit == 'Unlimited') return device_data

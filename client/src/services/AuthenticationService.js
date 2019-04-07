@@ -436,6 +436,12 @@ export default {
         return Api.get(`/api/error_logs`);
     },
 
+    //Activity Logs
+    get_activity_logs() {
+        Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
+        return Api.get(`/api/activity_logs`);
+    },
+
     //Home Page (This is an unprotected route)
     get_device_coordinates(){
         return Api.get(`/api/device_coordinates`);
