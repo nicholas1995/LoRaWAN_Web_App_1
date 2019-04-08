@@ -125,7 +125,7 @@ export default {
         //-------------------------START-------------------------
         this.networks = await AuthenticationService.get_networks()
           .catch(err => {
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
+            this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type}) 
           })
         this.networks = this.networks.data.networks_lora;
         for(let i = 0; i< this.networks.length; i++){
@@ -196,8 +196,8 @@ export default {
           this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})   
           this.$router.push(`/network`) 
       }).catch(err => {
-          this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})   
+        this.message = err.response.data.error;
+        this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type}) 
       })
       }
     } 

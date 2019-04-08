@@ -342,7 +342,7 @@ module.exports = {
             } else if (error_location == 1) {
                 res.status(201).send({ message: "Gateway to create gateway record in database", type: 'info' })
             } else {
-                res.status(500).send({ message: 'Error', type: 'error' })
+                res.status(500).send({ message: 'Error creating gateway', type: 'error' })
             }
         }
     },
@@ -373,7 +373,7 @@ module.exports = {
             } else if (error_location == 1) {
                 res.status(201).send({message: "Failed to update gateway record in database.", type: 'info' })
             } else {
-                res.status(500).send({ message: 'Error', type: 'error' })
+                res.status(500).send({ message: 'Error updating gateway', type: 'error' })
             }
         }
     },
@@ -415,7 +415,7 @@ module.exports = {
                 gateways_lora = JSON.stringify([]);
                 res.status(200).send({ gateways_lora: gateways_lora, message: "Gateway deleted. Failed to fetch gateways", type: 'info' })
             } else {
-                res.status(500).send({ message: 'Error', type: 'error' })
+                res.status(500).send({ message: 'Error deleting gateway', type: 'error' })
             }
         }
     }

@@ -175,7 +175,7 @@ module.exports = {
                 networks_lora = JSON.stringify(networks_lora);
                 res.status(200).send({ networks_lora: networks_lora, message: "Organization created on LoRa app server. Error creating organization in database", type: 'info' })
             } else {
-                res.status(500).send({ message: 'Error', type: 'error' })
+                res.status(500).send({ message: 'Error creating organization', type: 'error' })
             }
         }
     },
@@ -212,7 +212,7 @@ module.exports = {
                 networks_lora = JSON.stringify(networks_lora);
                 res.status(200).send({ networks_lora: networks_lora, message: "Organizations updated on LoRa app server. Error updating organization in database", type: 'info' })
             } else {
-                res.status(500).send({ message: 'Error', type: 'error' })
+                res.status(500).send({ message: 'Error updating organization', type: 'error' })
             }
         }
     },
@@ -255,7 +255,7 @@ module.exports = {
             else if (error_location == 2) {
                 res.status(200).send({ networks_lora: networks_lora, message: "Organization deleted. Error updating organization in database", type: 'info' })
             } else {
-                res.status(500).send({ message: 'Error', type: 'error' })
+                res.status(500).send({ message: 'Error deleting organization', type: 'error' })
             }
         }
     }

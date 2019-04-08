@@ -225,7 +225,7 @@ mixins: [validationMixin],
         //Get Gateway Profile
         this.gateway_profile_update = await AuthenticationService.get_gateway_profile(this.$route.params.gateway_profile_id_lora)
           .catch(err => {
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})      
           })
           this.gateway_profile_update = this.gateway_profile_update.data.gateway_profiles;
           this.gateway_profile_name = this.gateway_profile_update.gateway_profile_name
@@ -345,7 +345,7 @@ mixins: [validationMixin],
           this.$router.push(`/gateway_profile`)
         }).catch(err => {
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})      
         })
       }
     },

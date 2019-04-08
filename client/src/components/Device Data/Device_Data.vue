@@ -429,7 +429,7 @@ export default {
           }else if(option == 'Email'){
             this.download_email();
           }
-        }
+        }else alert('No records to export.');
       }
     },
     generate_function: async function(return_all_records){

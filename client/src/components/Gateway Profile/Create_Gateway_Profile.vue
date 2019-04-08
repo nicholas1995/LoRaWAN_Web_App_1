@@ -251,7 +251,7 @@ mixins: [validationMixin],
             };
           }
         }).catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})  
         });
       }else{
         alert('Please login.');
@@ -354,7 +354,7 @@ mixins: [validationMixin],
           this.$router.push(`/gateway_profile`)
         }).catch(err => {
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})     
         })
       }
     },

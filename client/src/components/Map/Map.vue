@@ -1045,7 +1045,7 @@ export default {
               else if(this.controller[i].action == "historic_tracking"){type =2}
               this.download_email(download_data, name, type);
             }
-          }
+          }else alert('No records to export.');
         }
       }
     },

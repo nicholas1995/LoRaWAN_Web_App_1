@@ -95,7 +95,7 @@ export default {
         //--------------Start-------------------
         this.gateway_profiles = await AuthenticationService.get_gateway_profiles()
         .catch(err => {
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})      
         })
         this.gateway_profiles = this.gateway_profiles.data.gateway_profiles_lora;
       }else{
@@ -128,7 +128,7 @@ export default {
           this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a network on the lora app server
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   
         })
       }; 
     }

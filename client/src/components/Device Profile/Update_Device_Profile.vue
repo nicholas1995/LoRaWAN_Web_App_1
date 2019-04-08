@@ -427,7 +427,7 @@ mixins: [validationMixin],
         //Get Device Profiles
         this.device_profile_update = await AuthenticationService.get_device_profile(this.$route.params.device_profile_id_lora)
           .catch(err => {
-            this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})      
+            this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})     
           })
           this.device_profile_update = this.device_profile_update.data.device_profiles;
           this.device_profile_name = this.device_profile_update.device_profile_name;
@@ -631,7 +631,7 @@ mixins: [validationMixin],
           this.$router.push(`/device_profile`)
         }).catch(err => {
           this.message = err.response.data.error;
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    
+          this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})      
         })
       }
     },
