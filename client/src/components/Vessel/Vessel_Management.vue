@@ -131,7 +131,7 @@ export default {
       if(confirm('Are you sure you want to delete this vessel?') == true){
         AuthenticationService.delete_vessels(vessel.vessel_id).then(result => {
           this.vessels = result.data.vessels_db;
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a vessel on the lora app server
           this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   

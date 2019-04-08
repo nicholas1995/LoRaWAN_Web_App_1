@@ -17,6 +17,7 @@
                 :error-messages = "vessel_nameErrors"
                 @keyup="$v.vessel_name.$touch()" 
               >
+                <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_name"></tool_tips_forms>
               </v-text-field>
               </v-flex>
               <div div class="error--text">
@@ -43,7 +44,8 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import { validationMixin } from 'vuelidate'
 import { maxLength, helpers, required } from 'vuelidate/lib/validators'
-
+import {description_vessel_name} from "../../services/functions/form_descriptions_tool_tips.js";
+import tool_tips_forms from "../Tool_Tip_Forms";
 const unique= function(value){
    let i;
   let x = 1; //0 fail, 1 pass
@@ -62,6 +64,9 @@ const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\
 
 
 export default {
+  components:{
+    tool_tips_forms
+  },
   mixins: [validationMixin],
   validations: {
       vessel_name: {
@@ -77,7 +82,8 @@ export default {
       vessel_update: '',
       access: 0,
       vessel_name: "",
-      message: ""
+      message: "",
+      description_vessel_name: description_vessel_name,
     };
   },
   created: async function () {
@@ -143,7 +149,7 @@ export default {
       }else{
         this.message = "";
         AuthenticationService.update_vessels({vessel_name: this.vessel_name}, this.$route.params.vessel_id).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})  
           this.$router.push(`/vessel`)
       }).catch(err => {
           this.message = err.response.data.error; 

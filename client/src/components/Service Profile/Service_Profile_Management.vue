@@ -126,7 +126,7 @@ export default {
       if(confirm('Are you sure you want to delete this service profile?') == true){
         AuthenticationService.delete_service_profiles(service_profile.service_profile_id_lora).then(result => {
           this.service_profiles = result.data.service_profiles;
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
         }).catch(err => {
           //Error requesting through the server to delete a service_profile on the lora app server
           this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   

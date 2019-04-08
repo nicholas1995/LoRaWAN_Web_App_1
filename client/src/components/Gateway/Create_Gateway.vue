@@ -177,6 +177,7 @@
                     <v-text-field
                       v-model="fine_time_stamp_key"
                       label="Fine Time Stamp Key"
+                      maxlength="32"
                       :error-messages = "fine_time_stamp_key_Errors"
                       @keyup="$v.fine_time_stamp_key.$touch()" 
                     >
@@ -188,6 +189,7 @@
                     <v-text-field
                       v-model="fpga_id"
                       label="FPGA ID"
+                      maxlength="16"
                       :error-messages = "fpga_id_Errors"
                       @keyup="$v.fpga_id.$touch()" 
                     >
@@ -383,7 +385,7 @@ export default {
       const errors=[];
       if (!this.$v.gateway_altitude.$error)return errors
       !this.$v.gateway_altitude.required && errors.push('Gateway altitude is required.')  
-      !this.$v.gateway_altitude.numeric && errors.push('Gateway altitudez must be a number.')     
+      !this.$v.gateway_altitude.numeric && errors.push('Gateway altitude must be a number.')     
       !this.$v.gateway_altitude.num && errors.push('Reference altitude cannot start with 0.')     
       return errors;
     }, 

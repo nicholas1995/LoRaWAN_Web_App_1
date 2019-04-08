@@ -125,7 +125,7 @@ export default {
       if(confirm('Are you sure you want to delete this device profile?') == true){
         AuthenticationService.delete_device_profiles(device_profile_id_lora).then(result => {
           this.device_profiles = result.data.device_profiles;
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})  
         }).catch(err => {
           //Error requesting through the server to delete a network on the lora app server
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})  

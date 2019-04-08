@@ -19,6 +19,7 @@
                   :error-messages = "vessel_name_errors"
                   label="Vessel Name*"
                   @keyup="$v.vessel_name.$touch()">
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_name"></tool_tips_forms>
                 </v-text-field>
               </v-flex>       
             <!--Unique Vessel Identifier --> 
@@ -28,6 +29,7 @@
                   :error-messages = "vessel_unique_vessel_identifier_errors"
                   label="Unique Vessel Identifier*"
                   @keyup="$v.vessel_unique_vessel_identifier.$touch()">
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_unique_vessel_identifier"></tool_tips_forms>
                 </v-text-field>
               </v-flex>
             <!--International radio call sign --> 
@@ -37,6 +39,7 @@
                   :error-messages = "vessel_international_radio_call_sign_errors"
                   label="International Radio Call Sign*"
                   @keyup="$v.vessel_international_radio_call_sign.$touch()">
+                  <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_international_radio_call_sign"></tool_tips_forms>
                 </v-text-field>
               </v-flex>
             <!--Vessel Type-->
@@ -47,6 +50,7 @@
                 :error-messages = "vessel_type_form_errors"
                 @blur="$v.vessel_type_form.$touch()" 
               >
+              <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_type"></tool_tips_forms>
               </v-select>
             <!--Network Name-->
               <v-select
@@ -56,6 +60,7 @@
                 :error-messages = "network_name_form_Errors"
                 @blur="$v.network_name_form.$touch()" 
               >
+              <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_organization"></tool_tips_forms>
               </v-select>
             <!--Sub-Network Name-->
               <v-select
@@ -65,6 +70,7 @@
                 :error-messages = "sub_network_name_form_Errors"
                 @blur="$v.sub_network_name_form.$touch()" 
               >
+              <tool_tips_forms slot="append-outer" v-bind:description_prop="this.description_vessel_application"></tool_tips_forms>
               </v-select>
               </v-form>
               <div div class="error--text">
@@ -91,7 +97,9 @@
 import AuthenticationService from "../../services/AuthenticationService.js";
 import functions from "../../services/functions/forms_functions.js"
 import { validationMixin } from 'vuelidate'
+import {description_vessel_name, description_vessel_unique_vessel_identifier, description_vessel_international_radio_call_sign, description_vessel_type, description_vessel_organization, description_vessel_application,} from "../../services/functions/form_descriptions_tool_tips.js";
 import { required, maxLength, helpers } from 'vuelidate/lib/validators'
+import tool_tips_forms from "../Tool_Tip_Forms";
 
 
 const unique_vessel_name= function(value){
@@ -130,6 +138,9 @@ const alpha_num_dash = helpers.regex('alpha_num_dash', /^[a-zA-Z0-9\-\_]*$/);
 const alpha_num_dash_space = helpers.regex('alpha_num_dash_space', /^[a-zA-Z0-9\-\ \_]*$/);
 
 export default {
+  components:{
+    tool_tips_forms
+  },
 mixins: [validationMixin],
   validations: {
       vessel_name: {
@@ -141,7 +152,7 @@ mixins: [validationMixin],
       vessel_unique_vessel_identifier: {
         required,
         alpha_num_dash,
-        maxLength: maxLength(80),
+        maxLength: maxLength(20),
         u: unique_vessel_unique_vessel_identifier,
       },
       vessel_international_radio_call_sign: {
@@ -177,7 +188,14 @@ mixins: [validationMixin],
       sub_network_name_form: '', //this is the variable that holds the selected sub_network 'id:name'
       network_id: '', //this is the variable that holds the id of the selected network
       sub_network_id: '',
-      message: ""
+      message: "",
+
+      description_vessel_name: description_vessel_name,
+      description_vessel_unique_vessel_identifier: description_vessel_unique_vessel_identifier,
+      description_vessel_international_radio_call_sign: description_vessel_international_radio_call_sign,
+      description_vessel_type: description_vessel_type,
+      description_vessel_organization: description_vessel_organization,
+      description_vessel_application: description_vessel_application,
     };
   },
   created: async function () { //get all the networks and sub-networks on creation of the component. This is done so we do not need to keep fetching data from the lora app server
@@ -272,6 +290,7 @@ mixins: [validationMixin],
       vessel_unique_vessel_identifier_errors(){
       const errors=[];
       if (!this.$v.vessel_unique_vessel_identifier.$error)return errors
+      !this.$v.vessel_unique_vessel_identifier.maxLength && errors.push('Vessel Unique Vessel Identifier must be 20 characters or less.')
       !this.$v.vessel_unique_vessel_identifier.required && errors.push('Vessel Unique Vessel Identifier is required.')
       !this.$v.vessel_unique_vessel_identifier.alpha_num_dash && errors.push('Vessel Unique Vessel Identifier must only contain letters, numbers and dashes.')
       !this.$v.vessel_unique_vessel_identifier.u && errors.push('Vessel Unique Vessel Identifier must be unique.')
@@ -289,7 +308,6 @@ mixins: [validationMixin],
       const errors=[];
       if (!this.$v.vessel_type_form.$error)return errors
       !this.$v.vessel_type_form.required && errors.push('Vessel Type is required.')
-      !this.$v.vessel_type_form.u && errors.push('Vessel Type must be unique.')
       return errors;
     },
     network_name_form_Errors(){

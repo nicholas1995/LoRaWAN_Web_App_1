@@ -739,14 +739,20 @@ module.exports = {
     },
     export_via_email: async function(req, res){
         try{ ///NEED TO ADD IN EXCEPTION HANDLER FOR WHEN THE DATA IS TO LARGER TO SEND OVER EMAIL
+            let option = req.params.option; 
+            let type = null; 
+            let file_name = null;
+            if (option == 0) { type = 'Filtered Device Uplink Data'; file_name = 'device_uplink_data.csv'}
+            else if(option == 1) {type = 'Device Real Time Tracks'; file_name ='device_real_time_tracks.csv'}
+            else if(option ==2) {type = 'Device Historic Tracks'; file_name = 'device_historic_tracks.csv'}
             let device_uplink_data_csv = req.body.device_uplink_data_csv;
             var mailOptions = {
                 from: 'lorawanconsole@gmail.com',
                 to: req.user.email,
                 subject: 'Device Uplink Data(Private Marine IoT Network Console)',
-                text: 'See attached the filtered device uplink data.',
+                text: `See attached the ${type}.`,
                 attachments: [{   
-                    filename: 'device_uplink_data.csv',
+                    filename: file_name,
                     content: device_uplink_data_csv 
                 }],
                 };
@@ -755,8 +761,7 @@ module.exports = {
                     //error sending gateway statistics
                     throw err;
                 });
-                console.log('Email send:' ,email_result.response)
-                res.status(200).send({message: 'Gateway statistics sent via email.', type: 'success'})
+                res.status(200).send({message: `${type} exported via email.`, type: 'success'})
         }catch(err){
             console.log(err)
         }

@@ -132,10 +132,20 @@
                             </v-select>
                           </v-flex>
                           <v-flex xs12 sm12 md6 lg6>
-                            <v-btn class="button black--text"  
-                              @click.stop="download_csv(device_real_time_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_real_time_data.csv`)">
-                              Download device realtime tracks
-                            </v-btn>
+                            <v-menu :nudge-width="100">
+                              <v-toolbar-title slot="activator">
+                                <v-btn class ="button black--text" v-on:click="export_device_data" >Export Device Realtime Tracks</v-btn>
+                              </v-toolbar-title>
+                              <v-list>
+                                <v-list-tile
+                                  v-for="item in export_options"
+                                  :key="item"
+                                  v-on:click="export_device_data(item, (i-1), device_real_time_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_real_time_data.csv`)"
+                                >
+                                  <v-list-tile-title v-text="item"></v-list-tile-title>
+                                </v-list-tile>
+                              </v-list>
+                            </v-menu>
                           </v-flex>  
                         </v-layout>
                       </div>
@@ -172,10 +182,20 @@
                           </v-btn>
                         </v-flex>
                         <v-flex xs12 sm6 md12 lg4>
-                          <v-btn class="button black--text"  
-                            @click.stop="download_csv(device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)">
-                            Download device historic tracks
-                          </v-btn>
+                          <v-menu :nudge-width="100">
+                            <v-toolbar-title slot="activator">
+                              <v-btn class ="button black--text" v-on:click="export_device_data" >Export Device Historic Tracks</v-btn>
+                            </v-toolbar-title>
+                            <v-list>
+                              <v-list-tile
+                                v-for="item in export_options"
+                                :key="item"
+                                v-on:click="export_device_data(item, (i-1), device_historic_tracking_data[(i-1)], `${device_data[(i-1)].device_name}_historic_data.csv`)"
+                              >
+                                <v-list-tile-title v-text="item"></v-list-tile-title>
+                              </v-list-tile>
+                            </v-list>
+                          </v-menu>
                         </v-flex>  
                       </v-layout>
                       </div>
@@ -338,6 +358,8 @@ export default {
 
       device_real_time_location_interval: [0.5,1,2,5,10,20], //This is used to set the interval to set the real time location of the devices
       device_real_time_location_interval_form: [], //2d array which holds the values in the 2d array for the real time location
+
+      export_options: ["Local Storage", "Email"],
     }
   },
   mounted: async function () {
@@ -1009,6 +1031,36 @@ export default {
       }
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
+    export_device_data: async function(option, i, download_data, name){
+      if(name != null){ //This will handle the false click event when the button is initailly clicked to view the options from the menu. We only want to handle this when we select an option
+        if(download_data.length > 40000){
+          alert('Amount of records attempting to be exported exceeds 40000. Please reduce.');
+          }else{
+          if(download_data.length > 0){
+            if(option =="Local Storage"){
+              this.download_csv(download_data, name)
+            }else if(option == 'Email'){
+              let type = null; //this holds either 1 or 2 where 1 is for real time tracking and 2 is for historic tracking
+              if(this.controller[i].action == "real_time_tracking"){type =1}
+              else if(this.controller[i].action == "historic_tracking"){type =2}
+              this.download_email(download_data, name, type);
+            }
+          }
+        }
+      }
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
+    download_email: async function(download_data, name, type){
+      let device_uplink_data_csv = convertArrayOfObjectsToCSV({
+        data: download_data
+      });
+      let result = await AuthenticationService.device_uplink_export_via_email(device_uplink_data_csv, type)
+        .catch(err => {
+          console.log(err);
+        })
+      this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
+    },
+    //--------------------------------------------------------------------------------------------------------------------------------------------
     download_csv: function(download_data, name) { 
       //Source: https://halistechnology.com/2015/05/28/use-javascript-to-export-your-data-as-csv/
       //The code used to convert the array to a CSV and to export it is not original. It was found on an online article.
@@ -1028,6 +1080,7 @@ export default {
         link.setAttribute('href', data);
         link.setAttribute('download', filename);
         link.click();
+        this.$store.commit('set_snackbar',{message: "Device Tracking data exported", type: "success"})         
       }
       else{
         alert(`No data to be exported.`)

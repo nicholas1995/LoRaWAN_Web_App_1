@@ -30,6 +30,7 @@
                       <v-text-field
                         v-model="device_eui"
                         label="Device EUI*"
+                        maxlength="16"
                         :error-messages = "device_eui_Errors"
                         @keyup="$v.device_eui.$touch()" 
                       >

@@ -276,15 +276,17 @@ export default {
       link.setAttribute('href', data);
       link.setAttribute('download', filename);
       link.click();
+      this.$store.commit('set_snackbar',{message: "Gateway stats exported", type: "success"}) 
     },
     download_email: async function(){
       let csv_data = convertArrayOfObjectsToCSV({
         data: this.gateway_statistics
       });
-      await AuthenticationService.gateway_statistics_export_via_email(csv_data)
+      let result = await AuthenticationService.gateway_statistics_export_via_email(csv_data)
         .catch(err => {
           console.log(err);
         })
+      this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
     },
     export_gateway_statistics: function(option){
       if(this.gateway_statistics.length > 0){

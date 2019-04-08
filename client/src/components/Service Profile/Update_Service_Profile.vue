@@ -350,7 +350,7 @@ mixins: [validationMixin],
           dr_min: this.dr_min,
           dr_max: this.dr_max,
         }, this.service_profile_update.service_profile_id_lora).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})   
           this.$router.push(`/service_profile`)
         }).catch(err => {
           this.message = err.response.data.error;

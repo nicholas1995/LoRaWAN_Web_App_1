@@ -627,7 +627,7 @@ mixins: [validationMixin],
           supports_class_c : this.supports_class_c,
           class_c_timeout : this.class_c_timeout,
         }, this.$route.params.device_profile_id_lora).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})   
           this.$router.push(`/device_profile`)
         }).catch(err => {
           this.message = err.response.data.error;

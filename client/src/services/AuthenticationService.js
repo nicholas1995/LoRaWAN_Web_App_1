@@ -425,9 +425,10 @@ export default {
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
         return Api.get(`/api/devices/uplink/initial/page/${page}/rows_per_page/${rows_per_page}/self`);
     }, 
-    device_uplink_export_via_email(device_uplink_data_csv){
+    device_uplink_export_via_email(device_uplink_data_csv, option){
+        //options: 0- filtered device uplink data, 1- device real time tracks, 2- device historic tracks
         Api.defaults.headers.common["Authorization"] = `bearer ${store.state.token}`;
-        return Api.post(`/api/email/devices/uplink/export_email`, {device_uplink_data_csv});
+        return Api.post(`/api/email/devices/uplink/export_email/${option}`, {device_uplink_data_csv});
     },
 
     //Error Logs

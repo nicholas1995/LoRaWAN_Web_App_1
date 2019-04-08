@@ -160,7 +160,7 @@ export default {
       if(confirm('Are you sure you want to delete this Device?') == true){
         AuthenticationService.delete_devices(device.device_eui).then(result => {
           this.devices  = result.data.devices_lora;
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
         }).catch(err => {
           //Error deleting device 
           this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})    

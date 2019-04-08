@@ -346,7 +346,7 @@ export default {
           reference_altitude: this.reference_altitude,
           skip_frame_counter: this.skip_frame_counter,
         }, this.device_update.device_eui).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})  
           this.$router.push(`/device`)
         }).catch(err => {
           //Error trying to update device

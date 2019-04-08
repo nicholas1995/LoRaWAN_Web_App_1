@@ -146,14 +146,14 @@ export default {
       if (!this.$v.sub_network_name.$error)return errors
       !this.$v.sub_network_name.u && errors.push('Name must be unique')
       !this.$v.sub_network_name.alpha_num_dash && errors.push('Name must only contain letters, numbers and dashes.')
-      !this.$v.sub_network_name.maxLength && errors.push('Name must be 20 characters or longer.')
+      !this.$v.sub_network_name.maxLength && errors.push('Name must be less than 80 characters.')
       !this.$v.sub_network_name.required && errors.push('Name is required.')
       return errors;
     },
     sub_network_description_Errors(){
       const errors=[];
       if (!this.$v.sub_network_description.$error)return errors
-      !this.$v.sub_network_description.maxLength && errors.push('Description must be less than 200 characters longer')
+      !this.$v.sub_network_description.maxLength && errors.push('Description must be less than 200 characters long')
       !this.$v.sub_network_description.alpha_num_dash_space && errors.push('Description only contain letters, numbers, dashes and spaces')
       !this.$v.sub_network_description.required && errors.push('Description is required.')
       return errors;
@@ -185,7 +185,7 @@ export default {
       sub_network_name: '',
       sub_network_description: '',
       payload_codec: ['Cayenne LPP', 'None'],
-      payload_codec_form: 'None',
+      payload_codec_form: 'Cayenne LPP',
       network_name_form: '', //this is the variable that holds the selected network 'id-name'
       service_profile_form: '', //this is the variable that holds the selected service profile 'id-name'
       network_id: '', //this is the variable that holds the id of the selected network

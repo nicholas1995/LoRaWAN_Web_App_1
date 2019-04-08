@@ -341,7 +341,7 @@ mixins: [validationMixin],
           gateway_profile_spreading_factors : this.gateway_profile_spreading_factors,
           gateway_profile_bit_rate : this.gateway_profile_bit_rate,
         }, this.$route.params.gateway_profile_id_lora).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})   
           this.$router.push(`/gateway_profile`)
         }).catch(err => {
           this.message = err.response.data.error;

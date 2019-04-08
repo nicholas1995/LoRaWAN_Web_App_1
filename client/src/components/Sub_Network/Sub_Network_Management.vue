@@ -132,7 +132,7 @@ export default {
       if(confirm('Are you sure you want to delete this Application?') == true){
         AuthenticationService.delete_sub_networks(sub_network.sub_network_id).then(result => {
           this.sub_networks = result.data.sub_networks_lora;
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
         }).catch(err => {
           this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})  
         })

@@ -534,7 +534,7 @@ computed: {
           user_class: this.user_class_selected,
           vessels: vessels_updated,
         }, this.$route.params.user_id).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})  
           this.$router.push(`/user`) 
         }).catch(err => {
           this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type})    

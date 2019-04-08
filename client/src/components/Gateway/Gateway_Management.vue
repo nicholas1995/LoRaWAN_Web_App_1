@@ -127,7 +127,7 @@ export default {
       if(confirm('Are you sure you want to delete this Gateway?') == true){
         AuthenticationService.delete_gateways(gateway.gateway_id_lora).then(result => {
           this.gateways  = result.data.gateways_lora;
-          this.$emit('message_display',{message:result.data.message, type:result.data.type}) 
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
         }).catch(err => {
           //Error deleting gateways from the lora server
           this.$store.commit('set_snackbar',{message:err.response.data.message, type:err.response.data.type})   

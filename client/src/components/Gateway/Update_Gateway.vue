@@ -567,7 +567,7 @@ export default {
           fine_time_stamp_key: this.fine_time_stamp_key,
           fpga_id: this.fpga_id,
         }, this.gateway_update.gateway_id).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})   
           this.$router.push(`/gateway`)
         }).catch(err => {
           //Error trying to create subnetwork

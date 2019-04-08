@@ -406,15 +406,17 @@ export default {
       link.setAttribute('href', data);
       link.setAttribute('download', filename);
       link.click();
+      this.$store.commit('set_snackbar',{message: "Device Data exported", type: "success"}) 
     },
     download_email: async function(){
       let device_uplink_data_csv = convertArrayOfObjectsToCSV({
         data: this.export_data
       });
-      await AuthenticationService.device_uplink_export_via_email(device_uplink_data_csv)
+      let result = await AuthenticationService.device_uplink_export_via_email(device_uplink_data_csv, 0)
         .catch(err => {
           console.log(err);
         })
+      this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
     },
     export_device_data: async function(option){
       if(this.number_of_records > 40000){

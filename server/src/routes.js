@@ -328,7 +328,7 @@ module.exports = ((app) => {
     app.get("/api/devices/uplink/historical/parameters/:parameters", authenticate.authenticate, grant_access, activity_logs.activity_log, device_data.get_historical);
 
     //Device (Export via email)
-    app.post("/api/email/devices/uplink/export_email", authenticate.authenticate, grant_access, activity_logs.activity_log, device_data.export_via_email);
+    app.post("/api/email/devices/uplink/export_email/:option", authenticate.authenticate, grant_access, activity_logs.activity_log, device_data.export_via_email);
 
     //----------------------Error Logs-----------------
     //Error Logs (Get)

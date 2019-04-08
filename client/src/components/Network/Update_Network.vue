@@ -193,7 +193,7 @@ export default {
           network_display_name: this.network_display_name,
           network_can_have_gateways: this.network_can_have_gateways
       }, this.$route.params.network_id).then(result => {
-          this.$emit('message_display',{message:result.data.message, type:result.data.type})  
+          this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type})   
           this.$router.push(`/network`) 
       }).catch(err => {
           this.message = err.response.data.error;

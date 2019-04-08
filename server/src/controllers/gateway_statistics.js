@@ -211,7 +211,7 @@ module.exports = {
                 throw err;
             });
             console.log('Email send:' ,email_result.response)
-            res.status(200).send({message: 'Gateway statistics sent via email.', type: 'success'})
+            res.status(200).send({message: 'Gateway Stats exported via email.', type: 'success'})
         }catch(err){
             console.log(err)
         }
