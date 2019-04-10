@@ -1,5 +1,20 @@
 <template>
   <v-content>
+    <div id="floating-panel">
+      <v-flex>
+          <v-jumbotron :gradient="gradient_legend" height="30px">
+
+            <v-layout row wrap>
+              <v-flex text-md-left>
+                <b>Low concentration of sensor data</b>
+              </v-flex>
+              <v-flex text-md-right>
+                <b>High concentration of sensor data</b>
+              </v-flex>
+            </v-layout>
+          </v-jumbotron>
+      </v-flex>
+    </div>
     <div class="google-map" :id="map_name"></div>
     <v-progress-linear  color="primary" height="1" :indeterminate="isLoading" ></v-progress-linear>
     <v-layout row wrap >
@@ -15,6 +30,7 @@
         </v-select>
         </div>
       </v-flex>
+
       <v-flex xs12 sm6 md10 >
         <div class="google-chart" id="chart_div"></div>
       </v-flex>
@@ -86,23 +102,18 @@ export default {
 
         }
       ],
-      gradient: [
-          'rgba(0, 255, 255, 0)',
-          'rgba(0, 255, 255, 1)',
-          'rgba(0, 191, 255, 1)',
-          'rgba(0, 127, 255, 1)',
-          'rgba(0, 63, 255, 1)',
-          'rgba(0, 0, 255, 1)',
-          'rgba(0, 0, 223, 1)',
-          'rgba(0, 0, 191, 1)',
-          'rgba(0, 0, 159, 1)',
-          'rgba(0, 0, 127, 1)',
-          'rgba(63, 0, 91, 1)',
-          'rgba(127, 0, 63, 1)',
-          'rgba(191, 0, 31, 1)',
-          'rgba(255, 0, 0, 1)'
-        ]
-
+      gradient: ["rgba(102, 255, 0, 0)",
+        "rgba(102, 255, 0, 1)",
+        "rgba(147, 255, 0, 1)",
+        "rgba(193, 255, 0, 1)",
+        "rgba(238, 255, 0, 1)",
+        "rgba(244, 227, 0, 1)",
+        "rgba(249, 198, 0, 1)",
+        "rgba(255, 170, 0, 1)",
+        "rgba(255, 113, 0, 1)",
+        "rgba(255, 57, 0, 1)",
+        "rgba(255, 0, 0, 1)"],
+    gradient_legend: "to right, rgba(102, 255, 0, 1),rgba(147, 255, 0, 1),rgba(193, 255, 0, 1),rgba(238, 255, 0, 1),rgba(244, 227, 0, 1),rgba(249, 198, 0, 1),rgba(255, 170, 0, 1),rgba(255, 113, 0, 1),rgba(255, 57, 0, 1),rgba(255, 0, 0, 1)"
     }
   },
   mounted: async function () {
@@ -161,7 +172,7 @@ export default {
       });
       this.heat_map.set('opacity', this.heat_map.get('opacity') ? null : 1);
       this.heat_map.set('radius', this.heat_map.get('radius') ? null : 10);
-      //this.heat_map.set('gradient', this.heat_map.get('gradient') ? null : this.gradient);
+      this.heat_map.set('gradient', this.heat_map.get('gradient') ? null : this.gradient);
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     map_click_event_handler: async function(event){
@@ -512,6 +523,13 @@ export default {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+}
+#floating-panel {
+  width: 50%;
+  position: absolute;
+  left: 25%;
+  top: 5px;
+  z-index: 1;
 }
 
 </style>
