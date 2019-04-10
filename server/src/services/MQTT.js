@@ -58,8 +58,10 @@ client.on('message', async function (topic, message) {
                             message.object.gpsLocation["1"]["longitude"] = parseFloat(simulation.trinidad_south_tracks_1[message.txInfo.frequency].lng);
                         }
                         message.object.temperatureSensor["3"] = simulation.random_temperatue();
-                        message.object.humiditySensor["4"] = 22;
-                        message.object["accelerometerSensor"] = {"3": 21};
+                        message.object.humiditySensor["4"] = simulation.random_humidity();
+                        message.object["accelerometerSensorX"] = { "3": simulation.random_acceleration()};
+                        message.object["accelerometerSensorY"] = { "3": simulation.random_acceleration()};
+                        message.object["accelerometerSensorZ"] = { "3": simulation.random_acceleration()};
                         message.object["sosSensor"] = { "0": 0 };
                         await DEVICE_RX.create(message)
                             .catch(err => {

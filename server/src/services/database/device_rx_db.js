@@ -5,11 +5,11 @@ module.exports = {
         let sql = `INSERT INTO device_uplink
         (sub_network_id, sub_network_name, device_name, device_eui, gateway_id_lora, gateway_name, rx_time, rx_rssi, rx_lora_snr, 
             gateway_latitude, gateway_longitude, gateway_altitude, tx_frequency, tx_data_rate, adr, frame_counter, fport, 
-            encoded_data, gps_latitude, gps_longitude, gps_altitude, temperature, humidity, accelerometer, sos, vessel_id, device_id)
+            encoded_data, gps_latitude, gps_longitude, gps_altitude, temperature, humidity, accelerometer_x, accelerometer_y, accelerometer_z, sos, vessel_id, device_id)
         VALUES ('${data.applicationID}', '${data.applicationName}', '${data.deviceName}','${data.devEUI}', '${data.rxInfo[0].gatewayID}', '${data.rxInfo[0].name}','${data.rxInfo[0].time}', '${data.rxInfo[0].rssi}', '${data.rxInfo[0].loRaSNR}'
         ,'${data.rxInfo[0].location.latitude}', '${data.rxInfo[0].location.longitude}', '${data.rxInfo[0].location.altitude}','${data.txInfo.frequency}', '${data.txInfo.dr}', '${data.adr}','${data.fCnt}', '${data.fPort}', '${data.data}'
         ,${data.object.gpsLocation["1"]["latitude"]}, ${data.object.gpsLocation["1"]["longitude"]}, '${data.object.gpsLocation["1"]["altitude"]}', '${data.object.temperatureSensor["3"]}', '${data.object.humiditySensor["4"]}'
-        , '${data.object.accelerometerSensor["3"]}', '${data.object.sosSensor["0"]}', '${data.vessel_id}', '${data.device_id}')`;
+        , '${data.object.accelerometerSensorX["3"]}', '${data.object.accelerometerSensorY["3"]}', '${data.object.accelerometerSensorZ["3"]}', '${data.object.sosSensor["0"]}', '${data.vessel_id}', '${data.device_id}')`;
         return db.queryAsync(sql);  
     },
     create_no_rxInfo: function (data) {
@@ -43,7 +43,7 @@ module.exports = {
     get_most_recent_specified_device_self(device_data){
             //This returns the most recent device uplink for the specified device over the period that the user was assigned to the vessel the device was on. It also only returns the data that the fisher has access too.
             let sql = `SELECT device_uplink.device_uplink_id, device_uplink.sub_network_id, device_uplink.vessel_id, vessel.vessel_name,  device_uplink.device_id, device_uplink.device_name,
-            device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer, device_uplink.sos,
+            device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer_x, device_uplink.accelerometer_y, device_uplink.accelerometer_z, device_uplink.sos,
             DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
             FROM device_uplink
             LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id `
@@ -79,7 +79,7 @@ module.exports = {
     get_device_uplink_sensor_data_based_on_coordinates(coordinate){
         //This function accepts a set of gps coordinates where the lat and lng are 2 values each which set a bound and returns the sensor data corresponding to that point
         //This is used for the homepage map
-        let sql = `SELECT device_uplink.sub_network_id, sub_network.sub_network_name, sub_network.network_id, network.network_name, time_stamp, gps_latitude, gps_longitude, temperature, humidity, accelerometer
+        let sql = `SELECT device_uplink.sub_network_id, sub_network.sub_network_name, sub_network.network_id, network.network_name, time_stamp, gps_latitude, gps_longitude, temperature, humidity, accelerometer_x, accelerometer_y, accelerometer_z
         FROM device_uplink
         LEFT JOIN sub_network ON device_uplink.sub_network_id = sub_network.sub_network_id 
         LEFT JOIN network ON sub_network.network_id = network.network_id 

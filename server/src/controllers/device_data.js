@@ -177,8 +177,12 @@ function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers
             return "GPS Altitude";
       case "temperature":
             return "Temperature";
-      case "accelerometer":
-            return "Accelerometer";
+      case "accelerometer_x":
+            return "Acceleration X-Axis";
+    case "accelerometer_y":
+            return "Acceleration Y-Axis";
+    case "accelerometer_z":
+            return "Acceleration Z-Axis";
       case "humidity":
             return "Humidity";
       case "sos":
@@ -242,8 +246,12 @@ function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers
         return "gps_altitude";
       case "Temperature":
         return "temperature";
-      case "Accelerometer":
-        return "accelerometer";
+        case "Acceleration X-Axis":
+        return "accelerometer_x";
+        case "Acceleration Y-Axis":
+        return "accelerometer_y";
+        case "Acceleration Z-Axis":
+        return "accelerometer_z";
       case "Humidity":
         return "humidity";
     case "SOS":
@@ -518,7 +526,7 @@ module.exports = {
             let headers;
             let sql_where = [];
             let where = '';
-            let sql = `SELECT device_uplink_id, device_id, vessel_id, time_stamp, device_eui, device_name, gps_latitude, gps_longitude, gps_altitude, temperature, humidity, accelerometer, sos FROM device_uplink `;
+            let sql = `SELECT device_uplink_id, device_id, vessel_id, time_stamp, device_eui, device_name, gps_latitude, gps_longitude, gps_altitude, temperature, humidity, accelerometer_x, accelerometer_y, accelerometer_z, sos FROM device_uplink `;
             let user_vessels = await DB_USER_VESSEL.get_user_vessel(null, req.user.id, null, null)
                 .catch(err => {
                     //Error fetching vessels for user
@@ -972,7 +980,7 @@ module.exports = {
                 access = 'self';
                 //We set this over so we can ensure the fisher only gets access to the data to have available to them
                 sql = `SELECT device_uplink.device_uplink_id, device_uplink.sub_network_id, device_uplink.vessel_id, vessel.vessel_name,  device_uplink.device_id, device_uplink.device_name,
-                        device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer, device_uplink.sos,
+                        device_uplink.gps_latitude, device_uplink.gps_longitude, device_uplink.gps_altitude, device_uplink.temperature, device_uplink.humidity, device_uplink.accelerometer_x, device_uplink.accelerometer_y, device_uplink.accelerometer_z, device_uplink.sos,
                         DATE_FORMAT(device_uplink.time_stamp, GET_FORMAT(DATETIME, 'JIS')) AS time_stamp
                         FROM device_uplink
                         LEFT JOIN vessel ON device_uplink.vessel_id = vessel.vessel_id `;

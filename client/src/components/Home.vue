@@ -64,7 +64,7 @@ export default {
       i: 0, //this is used to track which value of the positon data returned is being displayed
       length: 0, //this is used to hold the length of the data array
       device_uplink_sensor_data: [],
-      sensor_values: ["Temperature", "Humidity", "Accelerometer"],
+      sensor_values: ["Temperature", "Humidity", "Acceleration"],
       chart: '', //variable which holds the chart instance
       isLoading: false,
       sensor_value_to_plot: 'Temperature', //Plot Temperature by Default
@@ -75,12 +75,15 @@ export default {
           value_to_plot: 'temperature'
         },{
           graph_title: 'Humidity vs Time',
-          v_axis: 'Humidity (g/m3)',
+          v_axis: 'Humidity %',
           value_to_plot: 'humidity'
         },{
-          graph_title: 'Accelerometer vs Time',
-          v_axis: 'Accelerometer (g)',
-          value_to_plot: 'accelerometer'
+          graph_title: 'Acceleration vs Time',
+          v_axis: 'Acceleration (g)',
+          value_to_plot_1: 'accelerometer_x',
+          value_to_plot_2: 'accelerometer_y',
+          value_to_plot_3: 'accelerometer_z',
+
         }
       ],
       gradient: [
@@ -242,10 +245,12 @@ export default {
                       <b>Application Name</b>: ${data.sub_network_name}<br>
                       
                       <b>Temperature:</b>${data.temperature} °C<br>
-                      <b>Humidity:</b>${data.humidity} g/m3<br>
-                      <b>Accelerometer:</b>${data.accelerometer} g<br>
-                      <b>GPS Latitude:</b> ${data.gps_latitude}<br>
-                      <b>GPS Longitude:</b> ${data.gps_longitude}<br>
+                      <b>Humidity:</b> ${data.humidity}%<br>
+                      <b>Acceleration X-Axis:</b>${data.accelerometer_x} g<br>
+                      <b>Acceleration Y-Axis:</b>${data.accelerometer_y} g<br>
+                      <b>Acceleration Z-Axis:</b>${data.accelerometer_z} g<br>
+                      <b>GPS Latitude:</b> ${data.gps_latitude} °N<br>
+                      <b>GPS Longitude:</b> ${data.gps_longitude} °W<br>
                       <button class="button button2" id="back_button"><h2><<</h2></button>.${this.i + 1}..of..${this.length}.
                       <button class="button button2" id="foward_button"><h2>>></h2></button>
                   </div>`;
@@ -336,10 +341,23 @@ export default {
 
           this.chart.clearChart(); 
           var data = new google.visualization.DataTable();
-          data.addColumn('datetime', 'Date');
-          data.addColumn('number', this.sensor_value_to_plot);
-          let sensor_data = this.generate_graph_data(device_uplink_sensor_data, sensor_array_position);
-          data.addRows(sensor_data);
+          if(this.sensor_value_to_plot != "Acceleration"){
+            data.addColumn('datetime', 'Date');
+            data.addColumn('number', this.sensor_value_to_plot);
+            let sensor_data = this.generate_graph_data(device_uplink_sensor_data, sensor_array_position);
+                        console.log(sensor_data)
+            data.addRows(sensor_data);
+          }else{
+            data.addColumn('datetime', 'Date');
+            data.addColumn('number', 'X-Axis');
+            data.addColumn('number', 'Y-Axis');
+            data.addColumn('number', 'Z-Axis');
+
+            let sensor_data = this.generate_graph_data(device_uplink_sensor_data, sensor_array_position);
+            console.log(sensor_data)
+            data.addRows(sensor_data);
+          }
+
           var options = {
             title: this.sensor_value_graph_info[sensor_array_position].graph_title,
             hAxis: {
@@ -372,6 +390,7 @@ export default {
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     generate_graph_data: function(device_uplink_sensor_data, sensor_array_position){
+      console.log(sensor_array_position)
       //This function generates the data in the format for the graph. It takes as an input parameter an array of all the device uplink sensor data which will be used on the map
       //and retunrs an object with 3 arrays one for temperature_data, accelerometer_data and humidity_data.
 /*       let return_data = [];
@@ -381,12 +400,28 @@ export default {
       return return_data; */
       let return_data = [];
       let value ;
-      for (var i=0; i<device_uplink_sensor_data.length; i++){
-          //value = parseFloat(Math.round(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot] * 100) / 100).toFixed(2);
-          value = parseFloat(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot]);
-          value = Math.round(value * 10) / 10;
-          return_data.push([new Date(device_uplink_sensor_data[i].time_stamp), value]);
+      if(sensor_array_position != 2){
+        for (var i=0; i<device_uplink_sensor_data.length; i++){
+            //value = parseFloat(Math.round(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot] * 100) / 100).toFixed(2);
+            console.log(sensor_array_position, this.sensor_value_graph_info[sensor_array_position].value_to_plot)
+            value = parseFloat(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot]);
+            value = Math.round(value * 10) / 10;
+            return_data.push([new Date(device_uplink_sensor_data[i].time_stamp), value]);
+        }
+      }else{
+        let value_1, value_2;
+        for (var i=0; i<device_uplink_sensor_data.length; i++){
+            //value = parseFloat(Math.round(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot] * 100) / 100).toFixed(2);
+            value = parseFloat(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot_1]);
+            value = Math.round(value * 100) / 100;
+            value_1 = parseFloat(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot_2]);
+            value_1 = Math.round(value_1 * 100) / 100;
+            value_2 = parseFloat(device_uplink_sensor_data[i][this.sensor_value_graph_info[sensor_array_position].value_to_plot_3]);
+            value_2 = Math.round(value_2 * 100) / 100;
+            return_data.push([new Date(device_uplink_sensor_data[i].time_stamp), value, value_1, value_2]);
+        }
       }
+
       return return_data;
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
@@ -394,7 +429,7 @@ export default {
       //This is used to get the array positon of the sensor to plot so we can get the info about the axis from the array of objects defined above
       if(sensor == 'Temperature') return 0
       else if(sensor =='Humidity') return 1
-      else if(sensor =='Accelerometer') return 2
+      else if(sensor =='Acceleration') return 2
     },
     //--------------------------------------------------------------------------------------------------------------------------------------------
     create_box_aroung_coordinate: function(coordinate){

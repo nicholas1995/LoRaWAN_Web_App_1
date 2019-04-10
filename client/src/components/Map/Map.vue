@@ -653,12 +653,14 @@ export default {
         content = `<div>
                       <h3>Device Sensor Data</h3>
                       <b>Time Stamp</b>: ${device.time_stamp}<br>
-                      <b>Temperature:</b> ${device.temperature}<br>
-                      <b>Humidity:</b>${device.humidity} <br>
-                      <b>Accelerometer:</b>${device.accelerometer} <br>
+                      <b>Temperature:</b> ${device.temperature} °C<br>
+                      <b>Humidity:</b> ${device.humidity}%<br>
+                      <b>Acceleration X-Axis:</b>${device.accelerometer_x} g<br>
+                      <b>Acceleration Y-Axis:</b>${device.accelerometer_y} g<br>
+                      <b>Acceleration Z-Axis:</b>${device.accelerometer_z} g<br>
                       <b>SOS:</b>${device.sos} <br>
-                      <b>GPS Latitude:</b> ${device.gps_latitude}<br>
-                      <b>GPS Longitude:</b> ${device.gps_longitude}<br>
+                      <b>GPS Latitude:</b> ${device.gps_latitude} °N<br>
+                      <b>GPS Longitude:</b> ${device.gps_longitude} °W<br>
                   </div>`;
       google.maps.event.addListener(marker,'rightclick', (function(marker,content,info_window){ 
         return function() {

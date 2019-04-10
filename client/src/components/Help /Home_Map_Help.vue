@@ -74,7 +74,7 @@ export default {
         { divider: true},
         {
           question: '<u><b>How do I plot a different sensor?',
-          answer: `You can plot the temperature, humdity as well as accelerometer over time. To change the parameter being plotted select from the picker the value to plot.`
+          answer: `You can plot the temperature, humdity as well as acceleration over time. To change the parameter being plotted select from the picker the value to plot.`
         },
         { divider: true},
         {

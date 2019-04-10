@@ -3,6 +3,11 @@ function random_number(min, max){
     var subtractor =  Math.floor(Math.random()*(max*precision-min*precision+1*precision)+min*precision)/ (1*precision);
     return subtractor
 }
+function random_number_humidity(min, max) {
+    var precision = 1; // 2 decimals
+    var subtractor = Math.floor(Math.random() * (max * precision - min * precision + 1 * precision) + min * precision) / (1 * precision);
+    return subtractor
+}
 module.exports = {
     random_temperatue: function(){
         let temperature; 
@@ -23,6 +28,12 @@ module.exports = {
         }
         return temperature;
       },
+    random_humidity: function(){
+        return random_number_humidity(80, 100)
+    },
+    random_acceleration: function(){
+        return random_number(0, 1)
+    },
     track_1: [{lat: "10.715936036343724", lng: "-61.666860580444336"},
       {lat: "10.716905874608388", lng: "-61.667375564575195"},
       {lat: "10.717201042159227", lng: "-61.66748821735382"},

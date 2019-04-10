@@ -8,8 +8,8 @@
         multiple
         clearable
         small-chips
-        append-icon="select_all"
-        @click:append="select_all_headers()"
+        append-outer-icon="select_all"
+        @click:append-outer="select_all_headers()"
       ></v-combobox>
     </v-flex>
     <div v-if="this.$store.state.user_class !='Fisher' && this.self ==false ">
