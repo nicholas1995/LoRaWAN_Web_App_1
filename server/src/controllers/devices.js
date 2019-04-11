@@ -554,7 +554,7 @@ module.exports = {
         }catch(err){
             err = error_handler.error_message("Error getting device activation", err);
             error_handler.error_logger(req, err);
-            console.log(err);
+            //console.log(err);
         }
 
 

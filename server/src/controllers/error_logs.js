@@ -49,11 +49,11 @@ module.exports = {
     },
     error_message: function(current_error, previous_error){
         let error = '';
-        console.log(current_error.errno)
+        //console.log(current_error.errno)
         if(typeof current_error.response !== 'undefined'){//an error returned from the lora app server
-            console.log(1)
+            //console.log(1)
             if(previous_error == null){//this is the lowest level error
-                console.log(1.1)
+               // console.log(1.1)
                 error = new VError({
                     'name': current_error.errno,
                     'info': {
@@ -64,7 +64,7 @@ module.exports = {
                     }
                 }, '"%s" {Path: "%s", Method: "%s", Status: "%s"}', current_error.response.data.error, current_error.response.request.path, current_error.response.request.method, current_error.response.status)
             }else{//Not the lowest error
-                console.log(1.2)
+              //  console.log(1.2)
                 error = new VError({
                     'name': current_error.response.statusText,
                     'cause': previous_error,
@@ -77,22 +77,22 @@ module.exports = {
                 }, "%s", current_error)
             }
         }else{//Not an error returned from the lora app server
-            console.log(2)
+           // console.log(2)
             if(previous_error == null){
-                console.log(2.1)
+              //  console.log(2.1)
                 //current error will be an object in this case
                 error = new VError({
                     'name' : current_error.errno,
                 },"%s", current_error.message);
             }else{
-                console.log(2.2)
+             //   console.log(2.2)
                 //Current error will be a string in this case
                 error = new VError({
                     'cause' : previous_error
                 },"%s", current_error);
             }
         }
-        console.log(error.name)
+       // console.log(error.name)
         return error;
     },
     error_logger: async function (req, err) {

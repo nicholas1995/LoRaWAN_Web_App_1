@@ -519,6 +519,7 @@ module.exports = {
             }
         } catch (err) { 
             console.log(err);
+            res.status(500).send({ message: "Failed to get device uplink records", type: 'error' });
         }
     },
     get_self: async function (req, res) {
@@ -573,6 +574,7 @@ module.exports = {
             }
         } catch (err) {
             console.log(err);
+            res.status(500).send({ message: "Failed to get device uplink records", type: 'error' });
         }
     }, 
     get_filtered: async function(req, res){
@@ -676,6 +678,7 @@ module.exports = {
             }
         }catch(err){ 
             console.log(err);
+            res.status(500).send({ message: "Failed to get device uplink records", type: 'error' });
         }
     },
     get_filter_analyst_filter_record: async function(req, res){
@@ -743,6 +746,7 @@ module.exports = {
             }
         }catch(err){
             console.log(err);
+            res.status(500).send({ message: "Failed to get filter records", type: 'error' });
         }
     },
     export_via_email: async function(req, res){
@@ -772,6 +776,7 @@ module.exports = {
                 res.status(200).send({message: `${type} exported via email.`, type: 'success'})
         }catch(err){
             console.log(err)
+            res.status(500).send({ message: "Failed to export records via email.", type: 'error' });
         }
     },
     get_gps_coordinates: async function(req, res){
@@ -784,6 +789,7 @@ module.exports = {
             res.status(200).send({device_coordinates: gps_device_uplink_coordinates, message: 'Device Coordinates Fetched.', type: 'success'})  
         }catch(err){
             console.log(err)
+            res.status(500).send({ message: "Failed to create heat map.", type: 'error' });
         }
     },
     get_device_sensor_data_based_on_coordinates: async function(req, res){
@@ -800,6 +806,7 @@ module.exports = {
             res.status(200).send({device_uplink_sensor_data: device_uplink_sensor_data, message: 'Sensor data fetched.', type: 'success'})  
         }catch(err){
             console.log(err)
+            res.status(500).send({ message: "Failed to fetch records.", type: 'error' });
         }
     },
     //MAP METHODSSSS
@@ -887,11 +894,11 @@ module.exports = {
         } catch (err) {
             console.log(err);
             if (error_location == 0) {
-                res.status(500).send({ message: "Failed to get device", type: 'error' });
+                res.status(500).send({ message: "Failed to get device.", type: 'error' });
             } else if (error_location == 1) {
-                res.status(500).send({ message: "Your are ", type: 'info' });
+                res.status(500).send({ message: "Failed to get device.", type: 'info' });
             } else if (error_location == 2) {
-                res.status(500).send({ message: "Failed to get device", type: 'error' });
+                res.status(500).send({ message: "Failed to get device.", type: 'error' });
             }
         }
     },
@@ -965,6 +972,7 @@ module.exports = {
             res.status(200).send({ device_data: device_data, message: 'Devices data', type: 'success' }); 
         }catch(err){
             console.log(err)
+            res.status(500).send({ message: "Failed to refresh device information.", type: 'error' });            
         }
     },
     get_historical: async function(req, res){
@@ -1057,6 +1065,7 @@ module.exports = {
             }
         }catch(err){
             console.log(err);
+            res.status(500).send({ message: "Failed to get device historic data.", type: 'error' });
         }
     },
 } 

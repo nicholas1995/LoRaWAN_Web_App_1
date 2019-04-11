@@ -442,6 +442,7 @@ export default {
           .catch(err => {
             //Error gettin most recent 
             console.log(err)
+            this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
           })
         device_data_update = device_data_update.data.device_data[0]; //Update the latest record
         this.device_data[i] = device_data_update;
@@ -480,6 +481,7 @@ export default {
       .catch(err => {
         //Error fetching the device data
         console.log(err)
+        this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
       })
       if(result.data.device_data.length == 0) {
         //This will occur if the user is not assigned to any vessels or no data is stored for the devices the user is assigned to.
@@ -530,6 +532,7 @@ export default {
       .catch(err => {
         //Error getting gateway information from server
         console.log(err);
+        this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
       })
       let gateway_data = result.data.gateways
       for(let i =0; i< gateway_data.length; i++){
@@ -603,6 +606,7 @@ export default {
         .catch(err => {
           //Error gettin most recent 
           console.log(err)
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
         })
       device = device.data.device_data[0];
       let i = this.find_device_array_position(device.device_id)
@@ -617,6 +621,7 @@ export default {
         .catch(err => {
           //Error gettin most recent 
           console.log(err)
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
         })
       gateway = gateway.data.gateway_data;
       let position = new google.maps.LatLng(gateway.gateway_latitude, gateway.gateway_longitude);
@@ -735,6 +740,7 @@ export default {
         .catch(err => {
           //Error gettin most recent 
           console.log(err)
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
         })
       device_data_update = device_data_update.data.device_data[0];
       this.device_data[i] = device_data_update;
@@ -777,6 +783,7 @@ export default {
         .catch(err => {
           //Error gettin most recent 
           console.log(err)
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
         })
         device_data_update = device_data_update.data.device_data[0];
         //Prevents the marker from updating if the location does not change or if the same id is present (ie same data packet)
@@ -863,7 +870,7 @@ export default {
       }).catch(err => {
           //Error getting the devices from the server
           console.log(err)
-          this.$emit('message_display',{message:err.response.data.message, type:err.response.data.type}) 
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
           throw err;
       }) 
       return data;
@@ -1059,6 +1066,7 @@ export default {
       let result = await AuthenticationService.device_uplink_export_via_email(device_uplink_data_csv, type)
         .catch(err => {
           console.log(err);
+          this.$store.commit('set_snackbar',{message: err.response.data.message, type: err.response.data.type})    
         })
       this.$store.commit('set_snackbar',{message: result.data.message, type: result.data.type}) 
     },

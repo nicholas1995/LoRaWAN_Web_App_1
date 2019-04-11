@@ -12,7 +12,7 @@
         </v-text-field>
       </v-flex>
     <v-flex xs12 sm6 md2>
-      <v-btn class ="grey lighten-3" v-on:click="create_analyst_filter_record" >Create Filter Record</v-btn>
+      <v-btn class="button black--text" v-on:click="create_analyst_filter_record" >Create Filter Record</v-btn>
     </v-flex>
     <v-flex xs12 sm6 md3 class = "pl-4">
     <!--Analyst Filter Record Name --> 

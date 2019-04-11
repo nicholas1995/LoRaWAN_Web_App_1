@@ -15,9 +15,10 @@ module.exports = {
     create_no_rxInfo: function (data) {
         let sql = `INSERT INTO device_uplink
         (sub_network_id, sub_network_name, device_name, device_eui, tx_frequency, tx_data_rate, adr, frame_counter, fport, 
-            encoded_data, gps_latitude, gps_longitude, gps_altitude, vessel_id, device_id)
+            encoded_data, gps_latitude, gps_longitude, gps_altitude, temperature, humidity, accelerometer_x, accelerometer_y, accelerometer_z, sos, vessel_id, device_id)
         VALUES ('${data.applicationID}', '${data.applicationName}', '${data.deviceName}','${data.devEUI}', '${data.txInfo.frequency}', '${data.txInfo.dr}', '${data.adr}','${data.fCnt}', '${data.fPort}', '${data.data}'
-        ,'${data.object.gpsLocation["1"]["latitude"]}', '${data.object.gpsLocation["1"]["longitude"]}', '${data.object.gpsLocation["1"]["altitude"]}', '${data.vessel_id}', '${data.device_id}')`;
+        ,${data.object.gpsLocation["1"]["latitude"]}, ${data.object.gpsLocation["1"]["longitude"]}, '${data.object.gpsLocation["1"]["altitude"]}', '${data.object.temperatureSensor["3"]}', '${data.object.humiditySensor["4"]}'
+        , '${data.object.accelerometerSensorX["3"]}', '${data.object.accelerometerSensorY["3"]}', '${data.object.accelerometerSensorZ["3"]}', '${data.object.sosSensor["0"]}', '${data.vessel_id}', '${data.device_id}')`;
         return db.queryAsync(sql);
     },
     get: function(order_by, order){
