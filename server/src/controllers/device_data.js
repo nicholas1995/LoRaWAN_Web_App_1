@@ -170,19 +170,19 @@ function device_uplink_headers_database_to_table_LUT(device_uplink_table_headers
             return null;
         }
       case "gps_latitude":
-            return "GPS Latitude";
+            return "GPS Latitude (°N)";
       case "gps_longitude":
-            return "GPS Longitude";
+            return "GPS Longitude (°W)";
       case "gps_altitude":
-            return "GPS Altitude";
+            return "GPS Altitude (m)";
       case "temperature":
-            return "Temperature";
+            return "Temperature (°C)";
       case "accelerometer_x":
-            return "Acceleration X-Axis";
+            return "Acceleration X-Axis (g)";
     case "accelerometer_y":
-            return "Acceleration Y-Axis";
+            return "Acceleration Y-Axis (g)";
     case "accelerometer_z":
-            return "Acceleration Z-Axis";
+            return "Acceleration Z-Axis (g)";
       case "humidity":
             return "Humidity";
       case "sos":
@@ -238,23 +238,23 @@ function device_uplink_headers_table_to_database_LUT(device_uplink_table_headers
         return "fport";
       case "Encoded Data":
         return "encoded_data";
-      case "GPS Latitude":
+      case "GPS Latitude (°N)":
         return "gps_latitude";
-      case "GPS Longitude":
+      case "GPS Longitude (°W)":
         return "gps_longitude";
-      case "GPS Altitude":
+      case "GPS Altitude (m)":
         return "gps_altitude";
-      case "Temperature":
+      case "Temperature (°C)":
         return "temperature";
-        case "Acceleration X-Axis":
+      case "Acceleration X-Axis (g)":
         return "accelerometer_x";
-        case "Acceleration Y-Axis":
+      case "Acceleration Y-Axis (g)":
         return "accelerometer_y";
-        case "Acceleration Z-Axis":
+      case "Acceleration Z-Axis (g)":
         return "accelerometer_z";
       case "Humidity":
         return "humidity";
-    case "SOS":
+      case "SOS":
         return "sos";
       default:
         return "Null";
