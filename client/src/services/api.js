@@ -5,6 +5,6 @@ import axios from 'axios';
 //dynamically set the header we would need to implement Api.defaults.headers.common['Authorization'] = `bearer ${store.state.token}`;
 //where ever we want to put the header 
 const instance = axios.create({
-  baseURL: `http://localhost:3000/`,
+  baseURL: `https://nicholas-mitchell-app-1000.herokuapp.com/`,
 });
 export default instance;  
