@@ -1,12 +1,11 @@
 //Holds all the confgeration data for the server
 module.exports = {
-    port: '3000',
+    port: process.env.PORT || 3000,
     db:{    
-        host     : 'localhost',
-        user     : 'root',
-        password : '',
-        //database: 'lora_console_test_database'
-        database: 'lora_console'
+        host     : 'remotemysql.com',
+        user     : 'HrcXEFIUVL',
+        password : '6kYWrvihEb',
+        database: 'HrcXEFIUVL'
     },
     authentication:{
         jwtSecret: 'project'
